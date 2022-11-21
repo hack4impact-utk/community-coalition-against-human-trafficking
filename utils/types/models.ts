@@ -10,6 +10,9 @@ export interface ItemDefinition {
   name: string
   category?: string | Category
   attributes?: (string | Attribute)[]
+  internal: boolean
+  lowStockThreshold: number
+  criticalStockThreshold: number
 }
 
 export interface InventoryItem {

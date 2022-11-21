@@ -22,11 +22,13 @@ const ItemDefinitionSchema = new Schema({
   },
   lowStockThreshold: {
     type: Number,
-    required: true,
+    required: false,
+    default: -1,
   },
   criticalStockThreshold: {
     type: Number,
-    required: true,
+    required: false,
+    default: -1,
   },
 })
 
