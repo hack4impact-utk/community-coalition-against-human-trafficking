@@ -18,8 +18,10 @@ export interface ItemDefinition {
 export interface InventoryItem {
   _id?: string
   itemDefinition: string | ItemDefinition
-  attributeIds: string[]
-  attributeValues: string[]
+  attributes?: {
+    attribute: string | Attribute
+    value: string | number
+  }[]
   quantity: number
   assignee: string | User
 }

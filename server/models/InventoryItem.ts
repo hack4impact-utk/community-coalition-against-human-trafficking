@@ -1,18 +1,24 @@
 import { model, Schema, Document, models, Model } from 'mongoose'
 import { InventoryItem } from '../../utils/types'
 
+const attributeValueSchema = new Schema({
+  attribute: {
+    type: { type: Schema.Types.ObjectId, ref: 'Attribute' },
+    required: true,
+  },
+  value: {
+    type: Schema.Types.Mixed,
+    required: true,
+  },
+})
+
 const InventoryItemSchema = new Schema({
   itemDefinition: {
     type: { type: Schema.Types.ObjectId, ref: 'ItemDefinition' },
     required: true,
   },
-  attributeIds: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'Attribute' }],
-    required: false,
-    default: [],
-  },
-  attributeValues: {
-    type: [String],
+  attributes: {
+    type: [attributeValueSchema],
     required: false,
     default: [],
   },
