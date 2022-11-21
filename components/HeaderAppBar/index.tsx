@@ -1,4 +1,4 @@
-// Things to fix: the color of the app bar is blue, but idk how to change that to make it white like 
+// Things to fix: the color of the app bar is blue, but idk how to change that to make it white like
 // the figma example
 
 import * as React from 'react'
@@ -38,7 +38,7 @@ export default function HeaderAppBar() {
     <AppBar position="static">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -46,7 +46,7 @@ export default function HeaderAppBar() {
               aria-haspopup="true"
               color="inherit"
             >
-            <MenuIcon/>
+              <MenuIcon />
             </IconButton>
             <Menu
               id="menu-appbar"
@@ -65,17 +65,15 @@ export default function HeaderAppBar() {
               sx={{
                 display: { xs: 'block', md: 'none' },
               }}
-            >
-            </Menu>
+            ></Menu>
           </Box>
           {/* keeps the sign in user circle in the right most corner */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
 
           <Box sx={{ flexGrow: 0 }}>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            </IconButton>
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
