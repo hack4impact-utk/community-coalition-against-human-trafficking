@@ -34,6 +34,6 @@ export interface Category {
 export interface Attribute {
   _id?: string
   name: string
-  possibleValues: 'test' | 'number' | string[]
+  possibleValues: 'text' | 'number' | string[]
   color: string
 }
