@@ -7,16 +7,17 @@ import Collapse from '@mui/material/Collapse'
 // other mui dependencies
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
-
 // icons and text
+// import Typography from '@mui/material/Typography'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import SettingsIcon from '@mui/icons-material/Settings'
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined'
 import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined'
 import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlined'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
+// List component
 import ListItem from '../ListItem/'
-
+// List components from MUI
 import List from '@mui/material/List'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -40,7 +41,6 @@ export default function NavigationDrawer() {
     setOpen(!open)
   }
   // Drawer setup
-  // TODO ICONS
   return (
     <Box sx={{ display: 'flex' }}>
       <Drawer
@@ -68,12 +68,14 @@ export default function NavigationDrawer() {
             {open ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <List component="div" disablePadding sx={{ pl: 0.25 }}>
+            {/* <Typography font-size="0.1rem"> */}
+            <List component="div" disablePadding sx={{ pl: 0.8 }}>
               <ListItem text="General" />
               <ListItem text="Categories" />
               <ListItem text="Items" />
               <ListItem text="Item Attributes" />
             </List>
+            {/*</Typography>*/}
           </Collapse>
         </Box>
       </Drawer>
