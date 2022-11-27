@@ -16,7 +16,7 @@ import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined'
 import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlined'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
 // List component
-import ListItem from '../ListItem/'
+import NavigationDrawerListItem from '../NavigationDrawerListItem'
 // List components from MUI
 import List from '@mui/material/List'
 import ListItemText from '@mui/material/ListItemText'
@@ -33,6 +33,7 @@ export default function NavigationDrawer() {
       alt="CCAHT-logo"
       height="70"
       width="239"
+      style={{ objectFit: 'contain' }}
     />
   )
   // state handlers for expandable lists in drawer
@@ -50,14 +51,35 @@ export default function NavigationDrawer() {
         }}
       >
         <Box>
-          <Box sx={{ pr: 3, mt: 5 }}>{logo}</Box>
+          <Box
+            sx={{
+              display: 'flex',
+              px: 2,
+              pt: 2,
+              justifyContent: 'center',
+            }}
+          >
+            {logo}
+          </Box>
           <br />
           {/* Drawer using ListItem functional component*/}
-          <ListItem icon={<AssignmentLateOutlinedIcon />} text="Dashboard" />
-          <ListItem icon={<UnarchiveOutlinedIcon />} text="Check In" />
-          <ListItem icon={<ArchiveOutlinedIcon />} text="Check Out" />
-          <ListItem icon={<AssignmentOutlinedIcon />} text="Inventory" />
-          <ListItem icon={<AccessTimeIcon />} text="History" />
+          <NavigationDrawerListItem
+            icon={<AssignmentLateOutlinedIcon />}
+            text="Dashboard"
+          />
+          <NavigationDrawerListItem
+            icon={<UnarchiveOutlinedIcon />}
+            text="Check In"
+          />
+          <NavigationDrawerListItem
+            icon={<ArchiveOutlinedIcon />}
+            text="Check Out"
+          />
+          <NavigationDrawerListItem
+            icon={<AssignmentOutlinedIcon />}
+            text="Inventory"
+          />
+          <NavigationDrawerListItem icon={<AccessTimeIcon />} text="History" />
 
           {/* Collapsable Drawer using ListItem functional component*/}
           <ListItemButton onClick={handleClick}>
@@ -70,10 +92,10 @@ export default function NavigationDrawer() {
           <Collapse in={open} timeout="auto" unmountOnExit>
             {/* <Typography font-size="0.1rem"> */}
             <List component="div" disablePadding sx={{ pl: 0.8 }}>
-              <ListItem text="General" />
-              <ListItem text="Categories" />
-              <ListItem text="Items" />
-              <ListItem text="Item Attributes" />
+              <NavigationDrawerListItem text="General" />
+              <NavigationDrawerListItem text="Categories" />
+              <NavigationDrawerListItem text="Items" />
+              <NavigationDrawerListItem text="Item Attributes" />
             </List>
             {/*</Typography>*/}
           </Collapse>

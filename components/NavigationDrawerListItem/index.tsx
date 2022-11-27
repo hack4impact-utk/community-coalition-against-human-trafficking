@@ -7,7 +7,7 @@ interface ListProps {
   icon?: React.ReactNode
 }
 
-function ListItem({ icon, text }: ListProps) {
+function NavigationDrawerListItem({ icon, text }: ListProps) {
   return (
     <div>
       <ListItemButton>
@@ -18,4 +18,4 @@ function ListItem({ icon, text }: ListProps) {
   )
 }
 
-export default ListItem
+export default NavigationDrawerListItem
