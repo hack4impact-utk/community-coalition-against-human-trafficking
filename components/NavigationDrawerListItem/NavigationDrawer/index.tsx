@@ -10,20 +10,23 @@ import ExpandMore from '@mui/icons-material/ExpandMore'
 // icons and text
 // import Typography from '@mui/material/Typography'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
-import SettingsIcon from '@mui/icons-material/Settings'
+import SettingsIcon from '@mui/icons-material/SettingsOutlined'
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined'
 import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined'
 import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlined'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
 // List component
-import NavigationDrawerListItem from '../NavigationDrawerListItem'
+import NavigationDrawerListItem from '..'
 // List components from MUI
 import List from '@mui/material/List'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemButton from '@mui/material/ListItemButton'
 
-export default function NavigationDrawer(open: boolean) {
+interface NavigationDrawerProps {
+  open: boolean
+}
+export default function NavigationDrawer({ open }: NavigationDrawerProps) {
   // Params for the Drawer
   const drawerWidth = 280
   // Logo definition
@@ -68,11 +71,11 @@ export default function NavigationDrawer(open: boolean) {
             text="Dashboard"
           />
           <NavigationDrawerListItem
-            icon={<UnarchiveOutlinedIcon />}
+            icon={<ArchiveOutlinedIcon />}
             text="Check In"
           />
           <NavigationDrawerListItem
-            icon={<ArchiveOutlinedIcon />}
+            icon={<UnarchiveOutlinedIcon />}
             text="Check Out"
           />
           <NavigationDrawerListItem
