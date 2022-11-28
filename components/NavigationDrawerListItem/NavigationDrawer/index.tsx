@@ -26,7 +26,9 @@ import ListItemButton from '@mui/material/ListItemButton'
 interface NavigationDrawerProps {
   open: boolean
 }
-export default function NavigationDrawer({ open }: NavigationDrawerProps) {
+export default function NavigationDrawer({
+  open = true,
+}: NavigationDrawerProps) {
   // Params for the Drawer
   const drawerWidth = 280
   // Logo definition
