@@ -50,7 +50,7 @@ export default function NavigationDrawer() {
           width: drawerWidth,
         }}
       >
-        <Box>
+        <Box sx={{ width: drawerWidth }}>
           <Box
             sx={{
               display: 'flex',
