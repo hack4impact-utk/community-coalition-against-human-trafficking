@@ -5,17 +5,29 @@ import ListItemButton from '@mui/material/ListItemButton'
 interface ListProps {
   text: string
   icon?: React.ReactNode
+  collapsable?: boolean
 }
 
-function NavigationDrawerListItem({ icon, text }: ListProps) {
-  return (
+function NavigationDrawerListItem({
+  collapsable = false,
+  icon,
+  text,
+}: ListProps) {
+  return collapsable ? (
     <div>
       <ListItemButton>
         <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText primary={text} />
+        <ListItemText
+          primary={text}
+          primaryTypographyProps={{ variant: 'body2' }}
+        />
       </ListItemButton>
     </div>
+  ) : (
+    <ListItemButton>
+      <ListItemIcon>{icon}</ListItemIcon>
+      <ListItemText primary={text} />{' '}
+    </ListItemButton>
   )
 }
-
 export default NavigationDrawerListItem

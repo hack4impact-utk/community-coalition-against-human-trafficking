@@ -92,10 +92,13 @@ export default function NavigationDrawer(open: boolean) {
           <Collapse in={CollapseOpen} timeout="auto" unmountOnExit>
             {/* <Typography font-size="0.1rem"> */}
             <List component="div" disablePadding sx={{ pl: 0.8 }}>
-              <NavigationDrawerListItem text="General" />
-              <NavigationDrawerListItem text="Categories" />
-              <NavigationDrawerListItem text="Items" />
-              <NavigationDrawerListItem text="Item Attributes" />
+              <NavigationDrawerListItem text="General" collapsable={true} />
+              <NavigationDrawerListItem text="Categories" collapsable={true} />
+              <NavigationDrawerListItem text="Items" collapsable={true} />
+              <NavigationDrawerListItem
+                text="Item Attributes"
+                collapsable={true}
+              />
             </List>
             {/*</Typography>*/}
           </Collapse>
