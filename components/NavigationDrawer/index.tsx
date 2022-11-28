@@ -23,7 +23,7 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemButton from '@mui/material/ListItemButton'
 
-export default function NavigationDrawer() {
+export default function NavigationDrawer(open: boolean) {
   // Params for the Drawer
   const drawerWidth = 280
   // Logo definition
@@ -37,12 +37,12 @@ export default function NavigationDrawer() {
     />
   )
   // state handlers for expandable lists in drawer
-  const [open, setOpen] = React.useState(true)
+  const [CollapseOpen, setOpen] = React.useState(true)
   const handleClick = () => {
-    setOpen(!open)
+    setOpen(!CollapseOpen)
   }
   // Drawer setup
-  return (
+  return open ? (
     <Box sx={{ display: 'flex' }}>
       <Drawer
         variant="permanent"
@@ -87,9 +87,9 @@ export default function NavigationDrawer() {
               <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary="Settings" />
-            {open ? <ExpandLess /> : <ExpandMore />}
+            {CollapseOpen ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
-          <Collapse in={open} timeout="auto" unmountOnExit>
+          <Collapse in={CollapseOpen} timeout="auto" unmountOnExit>
             {/* <Typography font-size="0.1rem"> */}
             <List component="div" disablePadding sx={{ pl: 0.8 }}>
               <NavigationDrawerListItem text="General" />
@@ -102,5 +102,7 @@ export default function NavigationDrawer() {
         </Box>
       </Drawer>
     </Box>
+  ) : (
+    <div></div>
   )
 }
