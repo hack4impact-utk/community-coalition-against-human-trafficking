@@ -26,7 +26,7 @@ function NavigationDrawerListItem({
   ) : (
     <ListItemButton>
       <ListItemIcon>{icon}</ListItemIcon>
-      <ListItemText primary={text} />{' '}
+      <ListItemText primary={text} />
     </ListItemButton>
   )
 }
