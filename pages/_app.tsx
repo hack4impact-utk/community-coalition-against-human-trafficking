@@ -1,6 +1,6 @@
 import { Box } from '@mui/system'
 import type { AppProps } from 'next/app'
-import NavigationDrawer from '../components/NavigationDrawerListItem/NavigationDrawer'
+import NavigationDrawer from '../components/NavigationDrawer'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

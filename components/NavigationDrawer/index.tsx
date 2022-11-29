@@ -16,7 +16,7 @@ import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined'
 import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlined'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
 // List component
-import NavigationDrawerListItem from '..'
+import NavigationDrawerListItem from './NavigationDrawerListItem'
 // List components from MUI
 import List from '@mui/material/List'
 import ListItemText from '@mui/material/ListItemText'
@@ -71,20 +71,28 @@ export default function NavigationDrawer({
           <NavigationDrawerListItem
             icon={<AssignmentLateOutlinedIcon />}
             text="Dashboard"
+            route="/dashboard"
           />
           <NavigationDrawerListItem
             icon={<ArchiveOutlinedIcon />}
             text="Check In"
+            route="/checkIn"
           />
           <NavigationDrawerListItem
             icon={<UnarchiveOutlinedIcon />}
             text="Check Out"
+            route="/checkOut"
           />
           <NavigationDrawerListItem
             icon={<AssignmentOutlinedIcon />}
             text="Inventory"
+            route="/inventory"
           />
-          <NavigationDrawerListItem icon={<AccessTimeIcon />} text="History" />
+          <NavigationDrawerListItem
+            icon={<AccessTimeIcon />}
+            text="History"
+            route="/history"
+          />
 
           {/* Collapsable Drawer using ListItem functional component*/}
           <ListItemButton onClick={handleClick}>
