@@ -16,7 +16,11 @@ import { blue } from '@mui/material/colors'
 
 const settings = ['Sign out']
 
-export default function HeaderAppBar() {
+interface HeaderAppBarProps {
+  setDrawerOpen: (status: boolean) => void 
+}
+
+export default function HeaderAppBar(props: HeaderAppBarProps) {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
@@ -35,7 +39,7 @@ export default function HeaderAppBar() {
   }
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" color="transparent">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
