@@ -4,9 +4,18 @@ import NavigationDrawer from '../components/NavigationDrawer'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <Box sx={{ display: 'flex' }}>
-      <NavigationDrawer />
-      <Component {...pageProps} />
-    </Box>
+    <>
+      <Box sx={{ display: 'flex' }}>
+        <NavigationDrawer />
+        <Component {...pageProps} />
+      </Box>
+      <style jsx global>{`
+        html,
+        body {
+          padding: 0;
+          margin: 0;
+        }
+      `}</style>
+    </>
   )
 }

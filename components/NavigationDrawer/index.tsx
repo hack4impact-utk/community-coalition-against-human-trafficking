@@ -127,7 +127,7 @@ export default function NavigationDrawer({
             />
             <NavigationDrawerListItem
               text="Item Attributes"
-              collapsable={true}
+              collapsable
               route="/settings/attributes"
             />
           </List>
