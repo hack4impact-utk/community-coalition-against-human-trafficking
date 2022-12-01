@@ -8,25 +8,14 @@ interface ListProps {
   collapsable?: boolean
 }
 
-function NavigationDrawerListItem({
-  collapsable = false,
-  icon,
-  text,
-}: ListProps) {
-  return collapsable ? (
-    <div>
-      <ListItemButton>
-        <ListItemIcon>{icon}</ListItemIcon>
-        <ListItemText
-          primary={text}
-          primaryTypographyProps={{ variant: 'body2' }}
-        />
-      </ListItemButton>
-    </div>
-  ) : (
+function NavigationDrawerListItem({ collapsable, icon, text }: ListProps) {
+  return (
     <ListItemButton>
       <ListItemIcon>{icon}</ListItemIcon>
-      <ListItemText primary={text} />
+      <ListItemText
+        primary={text}
+        primaryTypographyProps={{ variant: collapsable ? 'body2' : 'body1' }}
+      />
     </ListItemButton>
   )
 }
