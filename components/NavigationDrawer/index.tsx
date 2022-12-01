@@ -7,6 +7,7 @@ import Collapse from '@mui/material/Collapse'
 // other mui dependencies
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
+import { useMediaQuery, useTheme } from '@mui/material'
 // icons and text
 // import Typography from '@mui/material/Typography'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
@@ -25,12 +26,16 @@ import ListItemButton from '@mui/material/ListItemButton'
 
 interface NavigationDrawerProps {
   open: boolean
+  setDrawerOpen: (status: boolean) => void
 }
 export default function NavigationDrawer({
-  open = true,
+  open,
+  setDrawerOpen,
 }: NavigationDrawerProps) {
   // Params for the Drawer
   const drawerWidth = 280
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   // Logo definition
   const logo = (
     <Image
@@ -42,83 +47,92 @@ export default function NavigationDrawer({
     />
   )
   // state handlers for expandable lists in drawer
-  const [CollapseOpen, setOpen] = React.useState(true)
+  const [collapseOpen, setOpen] = React.useState(false)
   const handleClick = () => {
-    setOpen(!CollapseOpen)
+    setOpen(!collapseOpen)
   }
   // Drawer setup
-  return open ? (
-    <Box sx={{ display: 'flex' }}>
-      <Drawer
-        variant="permanent"
-        sx={{
-          width: drawerWidth,
-        }}
-      >
-        <Box sx={{ width: drawerWidth }}>
-          <Box
-            sx={{
-              display: 'flex',
-              px: 2,
-              pt: 2,
-              justifyContent: 'center',
-            }}
-          >
-            {logo}
-          </Box>
-          <br />
-          {/* Drawer using ListItem functional component*/}
-          <NavigationDrawerListItem
-            icon={<AssignmentLateOutlinedIcon />}
-            text="Dashboard"
-            route="/dashboard"
-          />
-          <NavigationDrawerListItem
-            icon={<ArchiveOutlinedIcon />}
-            text="Check In"
-            route="/checkIn"
-          />
-          <NavigationDrawerListItem
-            icon={<UnarchiveOutlinedIcon />}
-            text="Check Out"
-            route="/checkOut"
-          />
-          <NavigationDrawerListItem
-            icon={<AssignmentOutlinedIcon />}
-            text="Inventory"
-            route="/inventory"
-          />
-          <NavigationDrawerListItem
-            icon={<AccessTimeIcon />}
-            text="History"
-            route="/history"
-          />
-
-          {/* Collapsable Drawer using ListItem functional component*/}
-          <ListItemButton onClick={handleClick}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" />
-            {CollapseOpen ? <ExpandLess /> : <ExpandMore />}
-          </ListItemButton>
-          <Collapse in={CollapseOpen} timeout="auto" unmountOnExit>
-            {/* <Typography font-size="0.1rem"> */}
-            <List component="div" disablePadding sx={{ pl: 0.8 }}>
-              <NavigationDrawerListItem text="General" collapsable={true} />
-              <NavigationDrawerListItem text="Categories" collapsable={true} />
-              <NavigationDrawerListItem text="Items" collapsable={true} />
-              <NavigationDrawerListItem
-                text="Item Attributes"
-                collapsable={true}
-              />
-            </List>
-            {/*</Typography>*/}
-          </Collapse>
+  return (
+    <Drawer
+      variant={isMobile ? 'temporary' : 'permanent'}
+      sx={{
+        width: drawerWidth,
+      }}
+      open={open}
+      onClose={() => setDrawerOpen(false)}
+    >
+      <Box sx={{ width: drawerWidth }}>
+        <Box
+          sx={{
+            display: 'flex',
+            px: 2,
+            pt: 2,
+            justifyContent: 'center',
+          }}
+        >
+          {logo}
         </Box>
-      </Drawer>
-    </Box>
-  ) : (
-    <div></div>
+        <br />
+        {/* Drawer using ListItem functional component*/}
+        <NavigationDrawerListItem
+          icon={<AssignmentLateOutlinedIcon />}
+          text="Dashboard"
+          route="/dashboard"
+        />
+        <NavigationDrawerListItem
+          icon={<ArchiveOutlinedIcon />}
+          text="Check In"
+          route="/checkIn"
+        />
+        <NavigationDrawerListItem
+          icon={<UnarchiveOutlinedIcon />}
+          text="Check Out"
+          route="/checkOut"
+        />
+        <NavigationDrawerListItem
+          icon={<AssignmentOutlinedIcon />}
+          text="Inventory"
+          route="/inventory"
+        />
+        <NavigationDrawerListItem
+          icon={<AccessTimeIcon />}
+          text="History"
+          route="/history"
+        />
+
+        {/* Collapsable Drawer using ListItem functional component*/}
+        <ListItemButton onClick={handleClick}>
+          <ListItemIcon>
+            <SettingsIcon />
+          </ListItemIcon>
+          <ListItemText primary="Settings" />
+          {collapseOpen ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+        <Collapse in={collapseOpen} timeout="auto" unmountOnExit>
+          <List component="div" disablePadding sx={{ pl: 0.8 }}>
+            <NavigationDrawerListItem
+              text="General"
+              collapsable
+              route="/settings"
+            />
+            <NavigationDrawerListItem
+              text="Categories"
+              collapsable
+              route="/settings/categories"
+            />
+            <NavigationDrawerListItem
+              text="Items"
+              collapsable
+              route="/settings/items"
+            />
+            <NavigationDrawerListItem
+              text="Item Attributes"
+              collapsable={true}
+              route="/settings/attributes"
+            />
+          </List>
+        </Collapse>
+      </Box>
+    </Drawer>
   )
 }
