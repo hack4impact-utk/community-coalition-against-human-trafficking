@@ -17,7 +17,7 @@ import { blue } from '@mui/material/colors'
 const settings = ['Sign out']
 
 interface HeaderAppBarProps {
-  setDrawerOpen: (status: boolean) => void 
+  setDrawerOpen: (status: boolean) => void
 }
 
 export default function HeaderAppBar(props: HeaderAppBarProps) {
@@ -34,50 +34,51 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   }
 
   return (
-    <AppBar position="static" color="transparent" sx={{px:2}}>
-        <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              color="inherit"
-              onClick={() => props.setDrawerOpen(true)}
-            >
-            </IconButton>
-          </Box>
-          {/* keeps the sign in user circle in the right most corner */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
+    <AppBar position="static" color="transparent" sx={{ px: 2 }}>
+      <Toolbar disableGutters>
+        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <IconButton
+            size="large"
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            color="inherit"
+            onClick={() => props.setDrawerOpen(true)}
+          >
+            <MenuIcon />
+          </IconButton>
+        </Box>
+        {/* keeps the sign in user circle in the right most corner */}
+        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-            </IconButton>
-            <Menu
-              sx={{ mt: '45px' }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
+        <Box sx={{ flexGrow: 0 }}>
+          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+          </IconButton>
+          <Menu
+            sx={{ mt: '45px' }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting) => (
+              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <Typography textAlign="center">{setting}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Box>
+      </Toolbar>
     </AppBar>
   )
 }
