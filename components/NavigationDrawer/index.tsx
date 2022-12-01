@@ -105,10 +105,7 @@ export default function NavigationDrawer({
             <NavigationDrawerListItem text="General" collapsable />
             <NavigationDrawerListItem text="Categories" collapsable />
             <NavigationDrawerListItem text="Items" collapsable />
-            <NavigationDrawerListItem
-              text="Item Attributes"
-              collapsable={true}
-            />
+            <NavigationDrawerListItem text="Item Attributes" collapsable />
           </List>
         </Collapse>
       </Box>
