@@ -15,7 +15,7 @@ export default function test() {
     return (
       <>
         <p>You are not logged in</p>
-        <button onClick={() => signIn()}>Sign in</button>
+        <button onClick={() => signIn("google")}>Sign in</button>
       </>
     )
   }
