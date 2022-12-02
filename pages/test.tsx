@@ -5,8 +5,8 @@ export default function test() {
   if (session) {
     return (
       <>
-        <p>Logged in as {session.user.email}</p>
-        <p>Your name is {session.user.name}</p>
+        <p>Logged in as {session.user?.email}</p>
+        <p>Your name is {session.user?.name}</p>
         <p>Your image URL is {session.user?.image}</p>
         <button onClick={() => signOut()}>Sign out</button>
       </>
