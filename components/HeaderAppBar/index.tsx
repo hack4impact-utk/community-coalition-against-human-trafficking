@@ -1,6 +1,3 @@
-// Things to fix: the color of the app bar is blue, but idk how to change that to make it white like
-// the figma example
-
 import * as React from 'react'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -53,7 +50,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
 
         <Box sx={{ flexGrow: 0 }}>
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Avatar/>
           </IconButton>
           <Menu
             sx={{ mt: '45px' }}
