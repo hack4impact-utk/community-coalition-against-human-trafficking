@@ -1,9 +1,14 @@
+import { Box } from '@mui/system'
 import type { AppProps } from 'next/app'
+import NavigationDrawer from '../components/NavigationDrawer'
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      <Component {...pageProps} />
+      <Box sx={{ display: 'flex' }}>
+        <NavigationDrawer />
+        <Component {...pageProps} />
+      </Box>
       <style jsx global>{`
         html,
         body {
