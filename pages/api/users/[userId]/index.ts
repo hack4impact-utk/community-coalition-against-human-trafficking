@@ -20,6 +20,7 @@ export default async function handler(
       throw new ApiError(400, 'Bad Request')
     }
 
+    // get user to verify identity
     const user = await getUser(req.query.userId as string)
 
     switch (req.method) {
@@ -34,6 +35,7 @@ export default async function handler(
       case 'DELETE': {
         await serverAuth(req, res, user?.email)
         await deleteUser(req.query.userId as string)
+
         return res.status(200).json({
           success: true,
           payload: {},
@@ -43,6 +45,7 @@ export default async function handler(
         await serverAuth(req, res, user?.email)
         const updatedUser = JSON.parse(req.body) as User
         await updateUser(req.query.userId as string, updatedUser)
+
         return res.status(200).json({
           success: true,
           payload: {},
