@@ -6,10 +6,8 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Menu from '@mui/material/Menu'
 import MenuIcon from '@mui/icons-material/Menu'
-import Container from '@mui/material/Container'
 import Avatar from '@mui/material/Avatar'
 import MenuItem from '@mui/material/MenuItem'
-import { blue } from '@mui/material/colors'
 
 const settings = ['Sign out']
 
@@ -50,7 +48,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
 
         <Box sx={{ flexGrow: 0 }}>
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar/>
+            <Avatar />
           </IconButton>
           <Menu
             sx={{ mt: '45px' }}
