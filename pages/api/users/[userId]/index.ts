@@ -24,8 +24,7 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        const session = await serverAuth(req, res, user?.email)
-        console.log(session)
+        await serverAuth(req, res, user?.email)
 
         return res.status(200).json({
           success: true,
