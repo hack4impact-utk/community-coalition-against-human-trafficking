@@ -2,6 +2,7 @@ import { Box } from '@mui/system'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import NavigationDrawer from '../components/NavigationDrawer'
+import HeaderAppBar from '../components/HeaderAppBar'
 
 export default function App({
   Component,
@@ -11,6 +12,7 @@ export default function App({
     <>
       <SessionProvider session={session}>
         <Box sx={{ display: 'flex' }}>
+          <HeaderAppBar />
           <NavigationDrawer />
           <Component {...pageProps} />
         </Box>
