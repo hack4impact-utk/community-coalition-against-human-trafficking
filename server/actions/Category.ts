@@ -32,7 +32,7 @@ export async function getCategory(id: string) {
 }
 
 /**
- * Updates the existing Category object given the id of a new Category
+ * Updates an existing Category object (identified by id) with a new Category object
  * @param id The id of the Category object being updated
  * @param category The Category object to update the existing Category object with
  * @returns The updated Category object
