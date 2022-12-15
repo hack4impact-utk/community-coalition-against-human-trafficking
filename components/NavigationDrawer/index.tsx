@@ -77,20 +77,28 @@ export default function NavigationDrawer({
         <NavigationDrawerListItem
           icon={<AssignmentLateOutlinedIcon />}
           text="Dashboard"
+          route="/dashboard"
         />
         <NavigationDrawerListItem
           icon={<ArchiveOutlinedIcon />}
           text="Check In"
+          route="/checkIn"
         />
         <NavigationDrawerListItem
           icon={<UnarchiveOutlinedIcon />}
           text="Check Out"
+          route="/checkOut"
         />
         <NavigationDrawerListItem
           icon={<AssignmentOutlinedIcon />}
           text="Inventory"
+          route="/inventory"
         />
-        <NavigationDrawerListItem icon={<AccessTimeIcon />} text="History" />
+        <NavigationDrawerListItem
+          icon={<AccessTimeIcon />}
+          text="History"
+          route="/history"
+        />
 
         {/* Collapsable Drawer using ListItem functional component*/}
         <ListItemButton onClick={handleClick}>
@@ -102,10 +110,26 @@ export default function NavigationDrawer({
         </ListItemButton>
         <Collapse in={collapseOpen} timeout="auto" unmountOnExit>
           <List component="div" disablePadding sx={{ pl: 0.8 }}>
-            <NavigationDrawerListItem text="General" collapsable />
-            <NavigationDrawerListItem text="Categories" collapsable />
-            <NavigationDrawerListItem text="Items" collapsable />
-            <NavigationDrawerListItem text="Item Attributes" collapsable />
+            <NavigationDrawerListItem
+              text="General"
+              collapsable
+              route="/settings"
+            />
+            <NavigationDrawerListItem
+              text="Categories"
+              collapsable
+              route="/settings/categories"
+            />
+            <NavigationDrawerListItem
+              text="Items"
+              collapsable
+              route="/settings/items"
+            />
+            <NavigationDrawerListItem
+              text="Item Attributes"
+              collapsable
+              route="/settings/attributes"
+            />
           </List>
         </Collapse>
       </Box>

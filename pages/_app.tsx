@@ -2,8 +2,9 @@ import { Box } from '@mui/system'
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import NavigationDrawer from '../components/NavigationDrawer'
-import { ThemeProvider } from '@mui/material'
-import theme from '../utils/theme'
+import HeaderAppBar from '../components/HeaderAppBar'
+import React from 'react'
+import DefaultLayout from '../components/DefaultLayout'
 
 export default function App({
   Component,
@@ -11,21 +12,18 @@ export default function App({
 }: AppProps) {
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <SessionProvider session={session}>
-          <Box sx={{ display: 'flex' }}>
-            <NavigationDrawer />
-            <Component {...pageProps} />
-          </Box>
-          <style jsx global>{`
-            html,
-            body {
-              padding: 0;
-              margin: 0;
-            }
-          `}</style>
-        </SessionProvider>
-      </ThemeProvider>
+      <SessionProvider session={session}>
+        <DefaultLayout>
+          <Component {...pageProps} />
+        </DefaultLayout>
+        <style jsx global>{`
+          html,
+          body {
+            padding: 0;
+            margin: 0;
+          }
+        `}</style>
+      </SessionProvider>
     </>
   )
 }
