@@ -3,6 +3,8 @@ import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import NavigationDrawer from '../components/NavigationDrawer'
 import HeaderAppBar from '../components/HeaderAppBar'
+import React from 'react'
+import DefaultLayout from '../components/DefaultLayout'
 
 export default function App({
   Component,
@@ -11,11 +13,9 @@ export default function App({
   return (
     <>
       <SessionProvider session={session}>
-        <Box sx={{ display: 'flex' }}>
-          <HeaderAppBar />
-          <NavigationDrawer />
+        <DefaultLayout>
           <Component {...pageProps} />
-        </Box>
+        </DefaultLayout>
         <style jsx global>{`
           html,
           body {
