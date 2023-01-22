@@ -30,7 +30,7 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        const updatedCategory = JSON.parse(req.body) as Category
+        const updatedCategory = req.body as Category
         await updateCategory(categoryId, updatedCategory)
 
         return res.status(200).json({
