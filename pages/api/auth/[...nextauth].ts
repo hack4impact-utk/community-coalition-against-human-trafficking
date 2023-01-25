@@ -3,6 +3,7 @@ import { MongoClient } from 'mongodb'
 import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
+// open a connection to the database used only for the NextAuth adapter
 const client = new MongoClient(process.env.MONGODB_URI)
 const clientPromise = client.connect()
 
