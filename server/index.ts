@@ -21,9 +21,9 @@ if (!cached) {
 
 /**
  * Create and cache a MongoDB connection using mongoose
- * @returns {Promise<mongoose.Connection>}
+ * @returns {Promise<mongoose.Mongoose>}
  */
-async function dbConnect(): Promise<mongoose.Connection> {
+async function dbConnect(): Promise<mongoose.Mongoose> {
   if (cached.conn) {
     return cached.conn
   }
@@ -33,7 +33,7 @@ async function dbConnect(): Promise<mongoose.Connection> {
       bufferCommands: false,
     }
 
-    cached.promise = mongoose.connect(MONGODB_URI!, opts).then((mongoose) => {
+    cached.promise = mongoose.connect(MONGODB_URI, opts).then((mongoose) => {
       return mongoose
     })
   }
