@@ -9,6 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Image from 'next/image'
 import { useSession } from 'next-auth/react'
+import { Avatar } from '@mui/material'
 
 const settings = ['Sign out']
 
@@ -50,8 +51,10 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
 
         <Box sx={{ flexGrow: 0 }}>
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            if (!!session && !!session.user && !!session.user.image)
-            {<Image src={session!.user!.image!} alt="profile picture" />}
+            <Avatar
+              src={session?.user?.image || ''}
+              imgProps={{ referrerPolicy: 'no-referrer' }}
+            />
           </IconButton>
           <Menu
             sx={{ mt: '45px' }}
