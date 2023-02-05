@@ -9,17 +9,12 @@ export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
-  const [navDrawerOpen, setNavDrawerOpen] = useState(false)
-
   return (
     <>
       <SessionProvider session={session}>
         <Box sx={{ display: 'flex' }}>
-          <NavigationDrawer
-            open={navDrawerOpen}
-            setDrawerOpen={setNavDrawerOpen}
-          />
-          <HeaderAppBar setDrawerOpen={setNavDrawerOpen} />
+          <NavigationDrawer />
+          <HeaderAppBar />
           <Box sx={{ marginTop: 7 }}>
             <Component {...pageProps} />
           </Box>
