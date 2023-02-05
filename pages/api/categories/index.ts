@@ -4,8 +4,8 @@ import { ApiError, Category } from '../../../utils/types'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from '../auth/[...nextauth]'
 
-// @route GET api/categories - Returns a list of all Categories in the database - Public
-// @route POST /api/categories - Create a category from request body - Public
+// @route GET api/categories - Returns a list of all Categories in the database - Private
+// @route POST /api/categories - Create a category from request body - Private
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse

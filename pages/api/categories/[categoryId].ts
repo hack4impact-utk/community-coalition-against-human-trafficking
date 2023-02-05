@@ -8,9 +8,9 @@ import { ApiError, Category } from '../../../utils/types'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from '../auth/[...nextauth]'
 
-// @route GET api/categories/[categoryId] - Returns a single Category object given a categoryId - Public
-// @route PUT api/users/[categoryId] - Updates an existing Category object (identified by categoryId) with a new Category object - Public
-// @route DELETE api/users/[categoryId] - Deletes a single Category object (identified by categoryId) - Public
+// @route GET api/categories/[categoryId] - Returns a single Category object given a categoryId - Private
+// @route PUT api/users/[categoryId] - Updates an existing Category object (identified by categoryId) with a new Category object - Private
+// @route DELETE api/users/[categoryId] - Deletes a single Category object (identified by categoryId) - Private
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
