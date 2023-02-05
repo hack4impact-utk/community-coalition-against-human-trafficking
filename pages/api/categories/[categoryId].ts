@@ -22,7 +22,7 @@ export default async function handler(
     const categoryId = req.query.categoryId as string
     switch (req.method) {
       case 'GET': {
-        const category = getCategory(categoryId)
+        const category = await getCategory(categoryId)
 
         return res.status(200).json({
           success: true,
