@@ -6,8 +6,10 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Menu from '@mui/material/Menu'
 import MenuIcon from '@mui/icons-material/Menu'
-import Avatar from '@mui/material/Avatar'
 import MenuItem from '@mui/material/MenuItem'
+import Image from 'next/image'
+import { useSession } from 'next-auth/react'
+import { Avatar } from '@mui/material'
 
 const settings = ['Sign out']
 
@@ -19,6 +21,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   )
+  const { data: session } = useSession()
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
@@ -48,6 +51,10 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
 
         <Box sx={{ flexGrow: 0 }}>
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+            <Avatar
+              src={session?.user?.image || ''}
+              imgProps={{ referrerPolicy: 'no-referrer' }}
+            />
             <Avatar />
           </IconButton>
           <Menu
