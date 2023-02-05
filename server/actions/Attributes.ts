@@ -22,13 +22,13 @@ export async function getAttributes() {
 }
 
 /**
- * Finds an attribute with the parameters given by the attribute parameter
- * Specifically, it finds the attribute in the database that corresponds with the name of the attribute passed in
+ * Finds an attribute by its id
+ * @id The id of the Attribute object to find
  * @returns The Attribute given by the attribute parameter
  */
-export async function findAttribute(attribute: Attribute) {
+export async function getAttribute(id: string) {
   await mongoDb()
-  return await AttributeSchema.find({ name: attribute.name })
+  return await AttributeSchema.findById(id)
 }
 
 /**
