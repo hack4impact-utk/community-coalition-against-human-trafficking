@@ -32,7 +32,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   }
 
   return (
-    <AppBar position="static" color="transparent" sx={{ px: 2 }}>
+    <AppBar color="transparent" sx={{ px: 2 }}>
       <Toolbar disableGutters>
         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
           <IconButton
@@ -55,6 +55,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
               src={session?.user?.image || ''}
               imgProps={{ referrerPolicy: 'no-referrer' }}
             />
+            <Avatar />
           </IconButton>
           <Menu
             sx={{ mt: '45px' }}
