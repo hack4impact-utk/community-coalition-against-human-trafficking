@@ -5,15 +5,23 @@ import {
   deleteAttribute,
 } from '../../../server/actions/Attributes'
 import { ApiError, Attribute } from '../../../utils/types'
+import { unstable_getServerSession } from 'next-auth'
+import { authOptions } from '../auth/[...nextauth]'
 
-// @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId
-// @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by categoryId) with a new Category object
-// @route DELETE api/attributes/[attributeId] - Deletes a single Atttribute object (identified by attributeId)
+// @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId - Private
+// @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by categoryId) with a new Category object - Private
+// @route DELETE api/attributes/[attributeId] - Deletes a single Atttribute object (identified by attributeId) - Private
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
+    // ensure user is logged in
+    const session = await unstable_getServerSession(req, res, authOptions)
+    if (!session) {
+      throw new ApiError(401, 'You must be authenticated to make this request.')
+    }
+
     // ensure that attributeId is passed in
     if (!req || !req.query || !req.query.attributeId) {
       throw new ApiError(400, 'Bad Request')
