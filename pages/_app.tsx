@@ -7,7 +7,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <HeaderAppBar />
       <Component {...pageProps} />
-      <GoogleSignInButton />
+
     </>
   )
 }
