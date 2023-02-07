@@ -55,7 +55,6 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
               src={session?.user?.image || ''}
               imgProps={{ referrerPolicy: 'no-referrer' }}
             />
-            <Avatar />
           </IconButton>
           <Menu
             sx={{ mt: '45px' }}
