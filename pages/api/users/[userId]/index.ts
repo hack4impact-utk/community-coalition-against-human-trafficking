@@ -4,7 +4,7 @@ import {
   getUser,
   updateUser,
 } from '../../../../server/actions/User'
-import { serverAuth } from '../../../../utils/auth'
+import { userEndpointServerAuth } from '../../../../utils/auth'
 import { ApiError, User } from '../../../../utils/types'
 
 // @route   GET api/users/[userId] - Returns a single User object for user with userId - Private
@@ -25,7 +25,7 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        await serverAuth(req, res, user?.email)
+        await userEndpointServerAuth(req, res, user?.email)
 
         return res.status(200).json({
           success: true,
@@ -33,7 +33,7 @@ export default async function handler(
         })
       }
       case 'DELETE': {
-        await serverAuth(req, res, user?.email)
+        await userEndpointServerAuth(req, res, user?.email)
         await deleteUser(req.query.userId as string)
 
         return res.status(200).json({
@@ -42,7 +42,7 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        await serverAuth(req, res, user?.email)
+        await userEndpointServerAuth(req, res, user?.email)
         const updatedUser = JSON.parse(req.body) as User
         await updateUser(req.query.userId as string, updatedUser)
 

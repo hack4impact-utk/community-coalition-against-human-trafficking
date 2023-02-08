@@ -5,8 +5,7 @@ import {
   getAttributes,
 } from '../../../server/actions/Attributes'
 import { ApiError, Attribute } from '../../../utils/types'
-import { unstable_getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]'
+import { serverAuth } from '../../../utils/auth'
 
 // @route GET api/attributes - Returns a list of all Attributes in the database - Private
 // @route POST api/attributes - Create an Attribute from request body - Private
@@ -16,10 +15,7 @@ export default async function hanlder(
 ) {
   try {
     // ensure user is logged in
-    const session = await unstable_getServerSession(req, res, authOptions)
-    if (!session) {
-      throw new ApiError(401, 'You must be authenticated to make this request.')
-    }
+    await serverAuth(req, res)
 
     switch (req.method) {
       case 'GET': {
