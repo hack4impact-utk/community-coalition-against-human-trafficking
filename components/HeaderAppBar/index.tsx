@@ -8,6 +8,7 @@ import Menu from '@mui/material/Menu'
 import MenuIcon from '@mui/icons-material/Menu'
 import Avatar from '@mui/material/Avatar'
 import MenuItem from '@mui/material/MenuItem'
+import { signOut } from 'next-auth/react'
 
 const settings = ['Sign out']
 
@@ -25,6 +26,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   }
 
   const handleCloseUserMenu = () => {
+    signOut()
     setAnchorElUser(null)
   }
 
@@ -48,7 +50,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
 
         <Box sx={{ flexGrow: 0 }}>
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar/>
+            <Avatar />
           </IconButton>
           <Menu
             sx={{ mt: '45px' }}
