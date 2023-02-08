@@ -5,6 +5,7 @@ import NavigationDrawer from '../components/NavigationDrawer'
 import HeaderAppBar from '../components/HeaderAppBar'
 import React from 'react'
 import DefaultLayout from '../components/DefaultLayout'
+import { useState } from 'react'
 
 export default function App({
   Component,
@@ -13,9 +14,13 @@ export default function App({
   return (
     <>
       <SessionProvider session={session}>
-        <DefaultLayout>
-          <Component {...pageProps} />
-        </DefaultLayout>
+        <Box sx={{ display: 'flex' }}>
+          <NavigationDrawer />
+          <HeaderAppBar />
+          <Box sx={{ marginTop: 7 }}>
+            <Component {...pageProps} />
+          </Box>
+        </Box>
         <style jsx global>{`
           html,
           body {
