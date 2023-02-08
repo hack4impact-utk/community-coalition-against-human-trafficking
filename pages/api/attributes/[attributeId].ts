@@ -5,8 +5,7 @@ import {
   deleteAttribute,
 } from '../../../server/actions/Attributes'
 import { ApiError, Attribute } from '../../../utils/types'
-import { unstable_getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]'
+import { serverAuth } from '../../../utils/auth'
 
 // @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId - Private
 // @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by categoryId) with a new Category object - Private
@@ -17,10 +16,7 @@ export default async function handler(
 ) {
   try {
     // ensure user is logged in
-    const session = await unstable_getServerSession(req, res, authOptions)
-    if (!session) {
-      throw new ApiError(401, 'You must be authenticated to make this request.')
-    }
+    await serverAuth(req, res)
 
     // ensure that attributeId is passed in
     if (!req || !req.query || !req.query.attributeId) {

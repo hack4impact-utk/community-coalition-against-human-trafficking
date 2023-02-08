@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { createCategory, getCategories } from '../../../server/actions/Category'
 import { ApiError, Category } from '../../../utils/types'
-import { unstable_getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]'
+import { serverAuth } from '../../../utils/auth'
 
 // @route GET api/categories - Returns a list of all Categories in the database - Private
 // @route POST /api/categories - Create a category from request body - Private
@@ -12,10 +11,7 @@ export default async function handler(
 ) {
   try {
     // ensure user is logged in
-    const session = await unstable_getServerSession(req, res, authOptions)
-    if (!session) {
-      throw new ApiError(401, 'You must be authenticated to make this request.')
-    }
+    await serverAuth(req, res)
 
     switch (req.method) {
       case 'GET': {

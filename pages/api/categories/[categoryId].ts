@@ -5,8 +5,7 @@ import {
   deleteCategory,
 } from '../../../server/actions/Category'
 import { ApiError, Category } from '../../../utils/types'
-import { unstable_getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]'
+import { serverAuth } from '../../../utils/auth'
 
 // @route GET api/categories/[categoryId] - Returns a single Category object given a categoryId - Private
 // @route PUT api/users/[categoryId] - Updates an existing Category object (identified by categoryId) with a new Category object - Private
@@ -17,10 +16,7 @@ export default async function handler(
 ) {
   try {
     // ensure user is logged in
-    const session = await unstable_getServerSession(req, res, authOptions)
-    if (!session) {
-      throw new ApiError(401, 'You must be authenticated to make this request.')
-    }
+    await serverAuth(req, res)
 
     // ensure that categoryId is passed in
     if (!req || !req.query || !req.query.categoryId) {

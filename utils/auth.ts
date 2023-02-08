@@ -25,3 +25,10 @@ export async function userEndpointServerAuth(
 
   return session
 }
+
+export async function serverAuth(req: NextApiRequest, res: NextApiResponse) {
+  const session = await unstable_getServerSession(req, res, authOptions)
+  if (!session) {
+    throw new ApiError(401, 'You must be authenticated to make this request.')
+  }
+}
