@@ -1,11 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { createCategory, getCategories } from '../../../server/actions/Category'
-import { ApiError, Category } from '../../../utils/types'
+import {
+  createAttribute,
+  getAttribute,
+  getAttributes,
+} from '../../../server/actions/Attributes'
+import { ApiError, Attribute } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
 
-// @route GET api/categories - Returns a list of all Categories in the database - Private
-// @route POST /api/categories - Create a category from request body - Private
-export default async function handler(
+// @route GET api/attributes - Returns a list of all Attributes in the database - Private
+// @route POST api/attributes - Create an Attribute from request body - Private
+export default async function hanlder(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -15,16 +19,16 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        const categories = await getCategories()
+        const attributes = await getAttributes()
 
         return res.status(200).json({
-          success: true,
-          payload: categories,
+          succcess: true,
+          payload: attributes,
         })
       }
       case 'POST': {
-        const category = req.body as Category
-        await createCategory(category)
+        const attribute = req.body as Attribute
+        await createAttribute(attribute)
 
         return res.status(200).json({
           success: true,
