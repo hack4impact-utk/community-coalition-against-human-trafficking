@@ -8,7 +8,7 @@ import { ApiError, Attribute } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
 
 // @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId - Private
-// @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by categoryId) with a new Category object - Private
+// @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by attributeId) with a new Attribute object - Private
 // @route DELETE api/attributes/[attributeId] - Deletes a single Atttribute object (identified by attributeId) - Private
 export default async function handler(
   req: NextApiRequest,
