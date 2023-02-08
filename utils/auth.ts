@@ -3,7 +3,11 @@ import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from '../pages/api/auth/[...nextauth]'
 import { ApiError } from './types'
 
-export async function serverAuth(
+/**
+ * This function ensures that the person making the server call is logged in AND that the email passed in as
+ * a parameter matches the email attached to their session.
+ */
+export async function userEndpointServerAuth(
   req: NextApiRequest,
   res: NextApiResponse,
   userEmail?: string
@@ -20,4 +24,11 @@ export async function serverAuth(
   }
 
   return session
+}
+
+export async function serverAuth(req: NextApiRequest, res: NextApiResponse) {
+  const session = await unstable_getServerSession(req, res, authOptions)
+  if (!session) {
+    throw new ApiError(401, 'You must be authenticated to make this request.')
+  }
 }
