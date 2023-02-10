@@ -29,8 +29,12 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   }
 
   const handleCloseUserMenu = () => {
-    signOut()
     setAnchorElUser(null)
+  }
+
+  const onSignOut = () => {
+    signOut()
+    handleCloseUserMenu()
   }
 
   return (
@@ -75,7 +79,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
             onClose={handleCloseUserMenu}
           >
             {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              <MenuItem key={setting} onClick={onSignOut}>
                 <Typography textAlign="center">{setting}</Typography>
               </MenuItem>
             ))}
