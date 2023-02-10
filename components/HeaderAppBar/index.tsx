@@ -38,7 +38,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   }
 
   return (
-    <AppBar color="transparent" sx={{ px: 2 }}>
+    <AppBar color="transparent" position="relative" sx={{ px: 2 }}>
       <Toolbar disableGutters>
         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
           <IconButton
