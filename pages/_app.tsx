@@ -1,13 +1,26 @@
 import type { AppProps } from 'next/app'
-import HeaderAppBar from '../components/HeaderAppBar'
-import GoogleSignInButton from '../components/GoogleSignInButton'
+import { SessionProvider } from 'next-auth/react'
+import React from 'react'
+import DefaultLayout from '../components/DefaultLayout'
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   return (
     <>
-      <HeaderAppBar />
-      <Component {...pageProps} />
-
+      <SessionProvider session={session}>
+        <DefaultLayout>
+          <Component {...pageProps} />
+        </DefaultLayout>
+        <style jsx global>{`
+          html,
+          body {
+            padding: 0;
+            margin: 0;
+          }
+        `}</style>
+      </SessionProvider>
     </>
   )
 }
