@@ -37,3 +37,10 @@ export interface Attribute {
   possibleValues: 'text' | 'number' | string[]
   color: string
 }
+
+export type ServerModel =
+  | User
+  | ItemDefinition
+  | InventoryItem
+  | Category
+  | Attribute
