@@ -8,7 +8,6 @@ import Menu from '@mui/material/Menu'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { signOut } from 'next-auth/react'
-import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 import { Avatar } from '@mui/material'
 
