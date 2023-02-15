@@ -13,6 +13,15 @@ export async function getUser(id: string) {
 }
 
 /**
+ * Gets all User objects from the database
+ * @returns A single User object
+ */
+export async function getUsers() {
+  await mongoDb()
+  return await UserSchema.find()
+}
+
+/**
  * Creates a new User object in the database
  * @param user - The User object to create
  * @returns The newly created User object from the database
