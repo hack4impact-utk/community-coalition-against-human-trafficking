@@ -14,7 +14,7 @@ export async function getUser(id: string) {
 
 /**
  * Gets all User objects from the database
- * @returns A single User object
+ * @returns ALL user objects
  */
 export async function getUsers() {
   await mongoDb()
