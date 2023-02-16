@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError } from '../../../utils/types'
-import { serverAuth } from '../../../utils/auth'
 import { getItemDefinitions } from '../../../server/actions/ItemDefinitions'
+import { ApiError, ItemDefinition } from '../../../utils/types'
+import { serverAuth } from '../../../utils/auth'
+import { createItemDefinition } from '../../../server/actions/ItemDefinition'
 
-// @route GET api/categories - Returns a list of all Categories in the database - Private
-// @route POST /api/categories - Create a category from request body - Private
+// @route GET api/itemDefintions - Returns a list of all itemDefintions in the database - Private
+// @route POST /api/itemDefintions - Create a itemDefinition from request body - Private
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -20,6 +21,15 @@ export default async function handler(
         return res.status(200).json({
           success: true,
           payload: item,
+        })
+      }
+      case 'POST': {
+        const itemDefinition = req.body as ItemDefinition
+        await createItemDefinition(itemDefinition)
+
+        return res.status(200).json({
+          success: true,
+          payload: {},
         })
       }
       default: {

@@ -7,7 +7,6 @@ import Typography from '@mui/material/Typography'
 import Menu from '@mui/material/Menu'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import Image from 'next/image'
 import { useSession } from 'next-auth/react'
 import { Avatar } from '@mui/material'
 
@@ -32,7 +31,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   }
 
   return (
-    <AppBar color="transparent" sx={{ px: 2 }}>
+    <AppBar color="transparent" position="relative" sx={{ px: 2 }}>
       <Toolbar disableGutters>
         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
           <IconButton

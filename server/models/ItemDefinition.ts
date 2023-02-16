@@ -37,4 +37,8 @@ export interface ItemDefinitionDocument
     Document {}
 
 export default (models.ItemDefinition as Model<ItemDefinitionDocument>) ||
-  model<ItemDefinitionDocument>('ItemDefinition', ItemDefinitionSchema)
+  model<ItemDefinitionDocument>(
+    'ItemDefinition',
+    ItemDefinitionSchema,
+    'itemDefinitions'
+  )
