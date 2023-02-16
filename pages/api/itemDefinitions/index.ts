@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getItemDefinitions } from '../../../server/actions/ItemDefinitions'
+import { getItemDefinitions } from '../../../server/actions/ItemDefinition'
 import { ApiError, ItemDefinition } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
 import { createItemDefinition } from '../../../server/actions/ItemDefinition'
@@ -16,11 +16,11 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        const item = await getItemDefinitions()
+        const items = await getItemDefinitions()
 
         return res.status(200).json({
           success: true,
-          payload: item,
+          payload: items,
         })
       }
       case 'POST': {
