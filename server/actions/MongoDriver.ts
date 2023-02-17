@@ -16,7 +16,6 @@ export async function getEntity<Schema extends Document>(
   dbSchema: Model<Schema>,
   id: string
 ) {
-  validateObjectId(id)
   await mongoDb()
 
   let response = await dbSchema.findById(id)
@@ -24,9 +23,9 @@ export async function getEntity<Schema extends Document>(
   return response
 }
 
-// TODO have this return a 204 if there was nothing found!
 /**
  * Returns all entities from a collection
+ * @param dbSchema The collection schema to get entities from
  * @returns A list of all entities in the collection
  */
 export async function getEntities<Schema extends Document>(
@@ -35,13 +34,13 @@ export async function getEntities<Schema extends Document>(
   await mongoDb()
 
   let response = await dbSchema.find()
-  if (!response) throw new ApiError(404, 'No entities found')
   return response
 }
 
 /**
  * Creates a new Entity object in the database
- * @param user - The Entity object to create
+ * @param dbSchema The collection schema to get entities from
+ * @param document - The Entity object to create
  * @returns The _id of the newly created Entity object in the database
  */
 export async function createEntity<
@@ -56,14 +55,14 @@ export async function createEntity<
 
 /**
  * Updates the existing Entity object with _id of entityId with the new entity
+ * @param dbSchema The collection schema to get entities from
  * @param id - _id of the Entity object to update
- * @param user - The new Entity object to update the existing Entity object with
+ * @param document - The new Entity object to update the existing Entity object with
  */
 export async function updateEntity<
   Schema extends Document,
   T extends ServerModel
 >(dbSchema: Model<Schema>, id: string, document: T) {
-  validateObjectId(id)
   await mongoDb()
 
   let response = await dbSchema.findByIdAndUpdate(id, document)
@@ -72,13 +71,13 @@ export async function updateEntity<
 
 /**
  * Deletes the Entity object with the given entityId
+ * @param dbSchema The collection schema to get entities from
  * @param id - The _id of the Entity object to delete
  */
 export async function deleteEntity<Schema extends Document>(
   dbSchema: Model<Schema>,
   id: string
 ) {
-  validateObjectId(id)
   await mongoDb()
 
   dbSchema.findByIdAndDelete(id, (response: any) => {
@@ -89,18 +88,3 @@ export async function deleteEntity<Schema extends Document>(
 }
 
 function findEntity<T>(schema: any, filter: T) {}
-
-/**
- * Validates a given id to ensure it is a valid ObjectId. Throws an error if invalid.
- * @param id - The ObjectId to validate
- */
-function validateObjectId(id: string) {
-  let isValid: boolean = false
-  if (ObjectId.isValid(id)) {
-    if (String(new ObjectId(id)) === id) isValid = true
-  }
-
-  if (!isValid) {
-    throw new ApiError(400, 'Invalid document Id')
-  }
-}

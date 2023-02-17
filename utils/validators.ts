@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb'
+
 interface Property {
   key: string
   types: string
@@ -47,6 +49,18 @@ export function validateInventoryItem(inventoryItem: any) {
  */
 export function validateUser(user: any) {
   return validateProperties(userModelProperties, user)
+}
+
+/**
+ * Validates a given id to ensure it is a valid ObjectId. Throws an error if invalid.
+ * @param id - The ObjectId to validate
+ */
+export function validateObjectId(id: string) {
+  if (!id) return false
+  if (ObjectId.isValid(id)) {
+    if (String(new ObjectId(id)) === id) return true
+  }
+  return false
 }
 
 // NOTE: this ignores the _id field
