@@ -3,6 +3,7 @@ import { getItemDefinitions } from '../../../server/actions/ItemDefinition'
 import { ApiError, ItemDefinition } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
 import { createItemDefinition } from '../../../server/actions/ItemDefinition'
+import { apiItemDefinitionValidation } from '../../../utils/apiValidators'
 
 // @route GET api/itemDefintions - Returns a list of all itemDefintions in the database - Private
 // @route POST /api/itemDefintions - Create a itemDefinition from request body - Private
@@ -17,13 +18,14 @@ export default async function handler(
     switch (req.method) {
       case 'GET': {
         const items = await getItemDefinitions()
-
-        return res.status(200).json({
+        const resStatus = items.length ? 200 : 204
+        return res.status(resStatus).json({
           success: true,
           payload: items,
         })
       }
       case 'POST': {
+        apiItemDefinitionValidation(req.body)
         const itemDefinition = req.body as ItemDefinition
         await createItemDefinition(itemDefinition)
 

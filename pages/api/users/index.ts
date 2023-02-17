@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { createUser, getUsers } from '../../../server/actions/User'
 import { ApiError, User } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
+import { apiUserValidation } from '../../../utils/apiValidators'
 
 // @route   POST /api/users - Create a user from request body. - Public
 export default async function handler(
@@ -10,6 +11,7 @@ export default async function handler(
 ) {
   try {
     if (req.method === 'POST') {
+      apiUserValidation(req.body)
       const user = req.body as User
       await createUser(user)
 
@@ -20,10 +22,10 @@ export default async function handler(
     } else if (req.method === 'GET') {
       await serverAuth(req, res)
       const users = await getUsers()
-
-      return res.status(200).json({
+      const resStatus = users.length ? 200 : 204
+      return res.status(resStatus).json({
         success: true,
-        payload: { users },
+        payload: users,
       })
     }
   } catch (e) {

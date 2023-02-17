@@ -4,6 +4,11 @@ import {
   getUser,
   updateUser,
 } from '../../../../server/actions/User'
+import {
+  apiObjectIdValidation,
+  apiRequestValidation,
+  apiUserValidation,
+} from '../../../../utils/apiValidators'
 import { userEndpointServerAuth } from '../../../../utils/auth'
 import { ApiError, User } from '../../../../utils/types'
 
@@ -15,25 +20,24 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    // ensure that userId is passed
-    if (!req || !req.query || !req.query.userId) {
-      throw new ApiError(400, 'Bad Request')
-    }
+    apiRequestValidation(req)
+
+    apiObjectIdValidation(req.query.userId)
 
     // get user to verify identity
+    const userId = req.query.userId as string
     const user = await getUser(req.query.userId as string)
+
+    await userEndpointServerAuth(req, res, user?.email)
 
     switch (req.method) {
       case 'GET': {
-        await userEndpointServerAuth(req, res, user?.email)
-
         return res.status(200).json({
           success: true,
           payload: user,
         })
       }
       case 'DELETE': {
-        await userEndpointServerAuth(req, res, user?.email)
         await deleteUser(req.query.userId as string)
 
         return res.status(200).json({
@@ -42,7 +46,7 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        await userEndpointServerAuth(req, res, user?.email)
+        apiUserValidation(JSON.parse(req.body)) //TODO is the JSON.parse necessary?
         const updatedUser = JSON.parse(req.body) as User
         await updateUser(req.query.userId as string, updatedUser)
 

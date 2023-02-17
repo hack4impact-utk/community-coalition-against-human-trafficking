@@ -6,6 +6,12 @@ import {
 } from '../../../server/actions/Attributes'
 import { ApiError, Attribute } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
+import { validateAttribute, validateObjectId } from '../../../utils/validators'
+import {
+  apiAttributeValidation,
+  apiObjectIdValidation,
+  apiRequestValidation,
+} from '../../../utils/apiValidators'
 
 // @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId - Private
 // @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by attributeId) with a new Attribute object - Private
@@ -18,12 +24,11 @@ export default async function handler(
     // ensure user is logged in
     await serverAuth(req, res)
 
-    // ensure that attributeId is passed in
-    if (!req || !req.query || !req.query.attributeId) {
-      throw new ApiError(400, 'Bad Request')
-    }
+    apiRequestValidation(req)
 
+    apiObjectIdValidation(req.query.attributeId)
     const attributeId = req.query.attributeId as string
+
     switch (req.method) {
       case 'GET': {
         const attribute = await getAttribute(attributeId)
@@ -34,7 +39,9 @@ export default async function handler(
         })
       }
       case 'PUT': {
+        apiAttributeValidation(req.body)
         const updatedAttribute = req.body as Attribute
+
         await updateAttribute(attributeId, updatedAttribute)
 
         return res.status(200).json({

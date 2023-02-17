@@ -6,6 +6,11 @@ import {
 } from '../../../server/actions/ItemDefinition'
 import { ApiError, ItemDefinition } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
+import {
+  apiItemDefinitionValidation,
+  apiObjectIdValidation,
+  apiRequestValidation,
+} from '../../../utils/apiValidators'
 
 // @route GET api/itemDefintions/[itemDefinitionId] - Returns a single ItemDefinition object given a itemDefinitionId - Private
 // @route PUT api/users/[itemDefinitionId] - Updates an existing ItemDefinition object (identified by itemDefinitionId) with a new ItemDefinition object - Private
@@ -18,11 +23,9 @@ export default async function handler(
     // ensure user is logged in
     await serverAuth(req, res)
 
-    // ensure that itemDefinitionId is passed in
-    if (!req || !req.query || !req.query.itemDefinitionId) {
-      throw new ApiError(400, 'Bad Request')
-    }
+    apiRequestValidation(req)
 
+    apiObjectIdValidation(req.query.itemDefinitionId)
     const itemDefinitionId = req.query.itemDefinitionId as string
     switch (req.method) {
       case 'GET': {
@@ -34,6 +37,7 @@ export default async function handler(
         })
       }
       case 'PUT': {
+        apiItemDefinitionValidation(req.body)
         const updatedItemDefinition = req.body as ItemDefinition
         await updateItemDefinition(itemDefinitionId, updatedItemDefinition)
 

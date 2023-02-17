@@ -6,6 +6,11 @@ import {
 } from '../../../server/actions/Category'
 import { ApiError, Category } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
+import {
+  apiCategoryValidation,
+  apiObjectIdValidation,
+  apiRequestValidation,
+} from '../../../utils/apiValidators'
 
 // @route GET api/categories/[categoryId] - Returns a single Category object given a categoryId - Private
 // @route PUT api/users/[categoryId] - Updates an existing Category object (identified by categoryId) with a new Category object - Private
@@ -18,12 +23,11 @@ export default async function handler(
     // ensure user is logged in
     await serverAuth(req, res)
 
-    // ensure that categoryId is passed in
-    if (!req || !req.query || !req.query.categoryId) {
-      throw new ApiError(400, 'Bad Request')
-    }
+    apiRequestValidation(req)
 
+    apiObjectIdValidation(req.query.categoryId)
     const categoryId = req.query.categoryId as string
+
     switch (req.method) {
       case 'GET': {
         const category = await getCategory(categoryId)
@@ -34,6 +38,7 @@ export default async function handler(
         })
       }
       case 'PUT': {
+        apiCategoryValidation(req.body)
         const updatedCategory = req.body as Category
         await updateCategory(categoryId, updatedCategory)
 

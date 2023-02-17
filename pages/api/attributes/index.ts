@@ -6,6 +6,8 @@ import {
 } from '../../../server/actions/Attributes'
 import { ApiError, Attribute } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
+import { validateAttribute } from '../../../utils/validators'
+import { apiAttributeValidation } from '../../../utils/apiValidators'
 
 // @route GET api/attributes - Returns a list of all Attributes in the database - Private
 // @route POST api/attributes - Create an Attribute from request body - Private
@@ -27,8 +29,9 @@ export default async function hanlder(
         })
       }
       case 'POST': {
+        apiAttributeValidation(req.body)
         const attribute: Attribute = req.body
-        console.log(attribute)
+
         await createAttribute(attribute)
 
         return res.status(201).json({
