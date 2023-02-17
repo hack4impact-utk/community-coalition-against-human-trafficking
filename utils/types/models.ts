@@ -2,7 +2,7 @@ export interface User {
   _id?: string
   name: string
   email: string
-  imageUrl: string
+  image: string
 }
 
 export interface ItemDefinition {
