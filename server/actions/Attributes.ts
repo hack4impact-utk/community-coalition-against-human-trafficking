@@ -1,6 +1,13 @@
 import mongoDb from '../index'
 import AttributeSchema from '../models/Attribute'
 import { Attribute } from '../../utils/types'
+import {
+  createEntity,
+  deleteEntity,
+  getEntities,
+  getEntity,
+  updateEntity,
+} from './MongoDriver'
 
 /**
  * Creates a new Attribute object in the database
@@ -8,8 +15,9 @@ import { Attribute } from '../../utils/types'
  * @returns The newly created Attribute object from the database
  */
 export async function createAttribute(attribute: Attribute) {
+  console.log(attribute)
   await mongoDb()
-  return await AttributeSchema.create(attribute)
+  return await createEntity(AttributeSchema, attribute)
 }
 
 /**
@@ -18,7 +26,7 @@ export async function createAttribute(attribute: Attribute) {
  */
 export async function getAttributes() {
   await mongoDb()
-  return await AttributeSchema.find()
+  return await getEntities(AttributeSchema)
 }
 
 /**
@@ -28,7 +36,7 @@ export async function getAttributes() {
  */
 export async function getAttribute(id: string) {
   await mongoDb()
-  return await AttributeSchema.findById(id)
+  return await getEntity(AttributeSchema, id)
 }
 
 /**
@@ -39,7 +47,7 @@ export async function getAttribute(id: string) {
  */
 export async function updateAttribute(id: string, attribute: Attribute) {
   await mongoDb()
-  return await AttributeSchema.findByIdAndUpdate(id, attribute)
+  return await updateEntity(AttributeSchema, id, attribute)
 }
 
 /**
@@ -48,5 +56,5 @@ export async function updateAttribute(id: string, attribute: Attribute) {
  */
 export async function deleteAttribute(id: string) {
   await mongoDb()
-  await AttributeSchema.findByIdAndDelete(id)
+  await deleteEntity(AttributeSchema, id)
 }

@@ -24,6 +24,7 @@ export async function getEntity<Schema extends Document>(
   return response
 }
 
+// TODO have this return a 204 if there was nothing found!
 /**
  * Returns all entities from a collection
  * @returns A list of all entities in the collection
@@ -86,6 +87,8 @@ export async function deleteEntity<Schema extends Document>(
     }
   })
 }
+
+function findEntity<T>(schema: any, filter: T) {}
 
 /**
  * Validates a given id to ensure it is a valid ObjectId. Throws an error if invalid.

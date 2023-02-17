@@ -16,8 +16,8 @@ export default async function handler(
     switch (req.method) {
       case 'GET': {
         const categories = await getCategories()
-
-        return res.status(200).json({
+        const resStatus = categories.length > 0 ? 200 : 204
+        return res.status(resStatus).json({
           success: true,
           payload: categories,
         })

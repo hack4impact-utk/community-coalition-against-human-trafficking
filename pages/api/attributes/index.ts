@@ -20,17 +20,18 @@ export default async function hanlder(
     switch (req.method) {
       case 'GET': {
         const attributes = await getAttributes()
-
-        return res.status(200).json({
+        const resStatus = attributes.length ? 200 : 204
+        return res.status(resStatus).json({
           succcess: true,
           payload: attributes,
         })
       }
       case 'POST': {
-        const attribute = req.body as Attribute
+        const attribute: Attribute = req.body
+        console.log(attribute)
         await createAttribute(attribute)
 
-        return res.status(200).json({
+        return res.status(201).json({
           success: true,
           payload: {},
         })
