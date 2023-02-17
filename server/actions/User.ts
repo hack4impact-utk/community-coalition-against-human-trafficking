@@ -1,6 +1,13 @@
 import mongoDb from '../index'
 import UserSchema from '../models/User'
 import { User } from '../../utils/types'
+import {
+  createEntity,
+  deleteEntity,
+  getEntities,
+  getEntity,
+  updateEntity,
+} from './MongoDriver'
 
 /**
  * Gets a single User object from the database with the given userId
@@ -9,7 +16,7 @@ import { User } from '../../utils/types'
  */
 export async function getUser(id: string) {
   await mongoDb()
-  return await UserSchema.findById(id)
+  return await getEntity(UserSchema, id)
 }
 
 /**
@@ -18,7 +25,7 @@ export async function getUser(id: string) {
  */
 export async function getUsers() {
   await mongoDb()
-  return await UserSchema.find()
+  return await getEntities(UserSchema)
 }
 
 /**
@@ -29,7 +36,7 @@ export async function getUsers() {
 export async function createUser(user: User) {
   await mongoDb()
 
-  return await UserSchema.create(user)
+  return await createEntity(UserSchema, user)
 }
 
 /**
@@ -41,7 +48,7 @@ export async function createUser(user: User) {
 export async function updateUser(id: string, user: User) {
   await mongoDb()
 
-  return await UserSchema.findByIdAndUpdate(id, user)
+  return await updateEntity(UserSchema, id, user)
 }
 
 /**
@@ -51,5 +58,5 @@ export async function updateUser(id: string, user: User) {
 export async function deleteUser(id: string) {
   await mongoDb()
 
-  await UserSchema.findByIdAndDelete(id)
+  await deleteEntity(UserSchema, id)
 }

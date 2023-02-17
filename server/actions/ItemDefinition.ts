@@ -1,6 +1,13 @@
 import mongoDb from '../index'
 import ItemDefinitionSchema from '../models/ItemDefinition'
 import { ItemDefinition } from '../../utils/types'
+import {
+  createEntity,
+  deleteEntity,
+  getEntities,
+  getEntity,
+  updateEntity,
+} from './MongoDriver'
 
 /**
  * Creates a new ItemDefinition object in the database
@@ -9,7 +16,7 @@ import { ItemDefinition } from '../../utils/types'
  */
 export async function createItemDefinition(itemDefinition: ItemDefinition) {
   await mongoDb()
-  return await ItemDefinitionSchema.create(itemDefinition)
+  return await createEntity(ItemDefinitionSchema, itemDefinition)
 }
 /**
  * Finds an itemDefinition by its id
@@ -18,7 +25,7 @@ export async function createItemDefinition(itemDefinition: ItemDefinition) {
  */
 export async function getItemDefinition(id: string) {
   await mongoDb()
-  return await ItemDefinitionSchema.findById(id)
+  return await getEntity(ItemDefinitionSchema, id)
 }
 
 /**
@@ -27,7 +34,7 @@ export async function getItemDefinition(id: string) {
  */
 export async function getItemDefinitions() {
   await mongoDb()
-  return await ItemDefinitionSchema.find()
+  return await getEntities(ItemDefinitionSchema)
 }
 
 /**
@@ -41,7 +48,7 @@ export async function updateItemDefinition(
   itemDefinition: ItemDefinition
 ) {
   await mongoDb()
-  return await ItemDefinitionSchema.findByIdAndUpdate(id, itemDefinition)
+  return await updateEntity(ItemDefinitionSchema, id, itemDefinition)
 }
 
 /**
@@ -50,5 +57,5 @@ export async function updateItemDefinition(
  */
 export async function deleteItemDefinition(id: string) {
   await mongoDb()
-  await ItemDefinitionSchema.findByIdAndDelete(id)
+  await deleteEntity(ItemDefinitionSchema, id)
 }

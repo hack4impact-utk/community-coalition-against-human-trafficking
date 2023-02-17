@@ -15,7 +15,6 @@ import {
  * @returns The newly created Attribute object from the database
  */
 export async function createAttribute(attribute: Attribute) {
-  console.log(attribute)
   await mongoDb()
   return await createEntity(AttributeSchema, attribute)
 }

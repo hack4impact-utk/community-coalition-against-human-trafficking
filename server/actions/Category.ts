@@ -1,6 +1,13 @@
 import mongoDb from '../index'
 import CategorySchema from '../models/Category'
 import { Category } from '../../utils/types'
+import {
+  createEntity,
+  deleteEntity,
+  getEntities,
+  getEntity,
+  updateEntity,
+} from './MongoDriver'
 
 /**
  * Creates a new Category object in the database
@@ -9,7 +16,7 @@ import { Category } from '../../utils/types'
  */
 export async function createCategory(category: Category) {
   await mongoDb()
-  return await CategorySchema.create(category)
+  return await createEntity(CategorySchema, category)
 }
 
 /**
@@ -18,7 +25,7 @@ export async function createCategory(category: Category) {
  */
 export async function getCategories() {
   await mongoDb()
-  return await CategorySchema.find()
+  return await getEntities(CategorySchema)
 }
 
 /**
@@ -28,7 +35,7 @@ export async function getCategories() {
  */
 export async function getCategory(id: string) {
   await mongoDb()
-  return await CategorySchema.findById(id)
+  return await getEntity(CategorySchema, id)
 }
 
 /**
@@ -39,7 +46,7 @@ export async function getCategory(id: string) {
  */
 export async function updateCategory(id: string, category: Category) {
   await mongoDb()
-  return await CategorySchema.findByIdAndUpdate(id, category)
+  return await updateEntity(CategorySchema, id, category)
 }
 
 /**
@@ -48,5 +55,5 @@ export async function updateCategory(id: string, category: Category) {
  */
 export async function deleteCategory(id: string) {
   await mongoDb()
-  await CategorySchema.findByIdAndDelete(id)
+  await deleteEntity(CategorySchema, id)
 }
