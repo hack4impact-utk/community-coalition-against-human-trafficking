@@ -3,9 +3,6 @@ import { useEffect, useState } from 'react'
 import { addURLQueryParam, removeURLQueryParam } from '../utils/queryParams'
 
 export default function Test() {
-  const router = useRouter()
-  const [path, setPath] = useState("")
-
   // IMPORTANT
   // router.query isn't really updated until router.push() or router.replace() is called
   // However, when called in the util functions, router.query is still outdated
@@ -14,31 +11,25 @@ export default function Test() {
   // This has to due with how nextjs router is made and timings/refreshing the page
   // The workaround is to wait for the router object itself to update in a useEffect
   // Here is how I would access the path in code -- I would just use a state variable
+  const router = useRouter()
+  const [path, setPath] = useState("")
   useEffect(() => setPath(router.asPath), [router])
 
   // proof that this works:
   useEffect(() => console.log(path), [path])
 
-  // Test functions made to test out the util functions
-  const addParam = (key: string) => {
-    addURLQueryParam(router, key, 'test')
-  }
-
-  const removeParam = (key: string) => {
-    removeURLQueryParam(router, key)
-  }
 
   return (
     <>
-      <button onClick={() => addParam('hi1')}>add key 1</button>
-      <button onClick={() => addParam('hi2')}>add key 2</button>
-      <button onClick={() => addParam('hi3')}>add key 3</button>
-      <button onClick={() => addParam('hi4')}>add key 4</button>
-      <button onClick={() => addParam('hi5')}>add key 5</button>
+      <button onClick={() => addURLQueryParam(router, "hi1", "test")}>add key 1</button>
+      <button onClick={() => addURLQueryParam(router, "hi2", "test")}>add key 2</button>
+      <button onClick={() => addURLQueryParam(router, "hi3", "test")}>add key 3</button>
+      <button onClick={() => addURLQueryParam(router, "hi4", "test")}>add key 4</button>
+      <button onClick={() => addURLQueryParam(router, "hi5", "test")}>add key 5</button>
 
-      <button onClick={() => removeParam('hi1')}>delete key 1</button>
-      <button onClick={() => removeParam('hi2')}>delete key 2</button>
-      <button onClick={() => removeParam('hi3')}>delete key 3</button>
+      <button onClick={() => removeURLQueryParam(router, "hi1")}>delete key 1</button>
+      <button onClick={() => removeURLQueryParam(router, "hi2")}>delete key 2</button>
+      <button onClick={() => removeURLQueryParam(router, "hi3")}>delete key 3</button>
     </>
   )
 }
