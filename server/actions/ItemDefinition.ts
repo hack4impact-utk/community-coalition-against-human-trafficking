@@ -22,6 +22,15 @@ export async function getItemDefinition(id: string) {
 }
 
 /**
+ * Finds all itemDefinitions
+ * @returns All itemDefinitions
+ */
+export async function getItemDefinitions() {
+  await mongoDb()
+  return await ItemDefinitionSchema.find()
+}
+
+/**
  * Updates an existing ItemDefinition object (identified by id) with a new ItemDefinition object
  * @param id The id of the ItemDefinition objecting being updated
  * @param itemDefinition The ItemDefinition object to update the existing ItemDefinition object with
