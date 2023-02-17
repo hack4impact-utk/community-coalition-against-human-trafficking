@@ -1,17 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import {
-  getAttribute,
-  updateAttribute,
-  deleteAttribute,
-} from '../../../server/actions/Attributes'
 import { ApiError, Attribute } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
-import { validateAttribute, validateObjectId } from '../../../utils/validators'
 import {
   apiAttributeValidation,
   apiObjectIdValidation,
   apiRequestValidation,
 } from '../../../utils/apiValidators'
+import * as MongoDriver from '../../../server/actions/MongoDriver'
+import AttributeSchema from '../../../server/models/Attribute'
 
 // @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId - Private
 // @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by attributeId) with a new Attribute object - Private
@@ -31,7 +27,10 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        const attribute = await getAttribute(attributeId)
+        const attribute = await MongoDriver.getEntity(
+          AttributeSchema,
+          attributeId
+        )
 
         return res.status(200).json({
           success: true,
@@ -42,7 +41,11 @@ export default async function handler(
         apiAttributeValidation(req.body)
         const updatedAttribute = req.body as Attribute
 
-        await updateAttribute(attributeId, updatedAttribute)
+        await MongoDriver.updateEntity(
+          AttributeSchema,
+          attributeId,
+          updatedAttribute
+        )
 
         return res.status(200).json({
           succcess: true,
@@ -50,7 +53,7 @@ export default async function handler(
         })
       }
       case 'DELETE': {
-        await deleteAttribute(attributeId)
+        await MongoDriver.deleteEntity(AttributeSchema, attributeId)
 
         return res.status(200).json({
           success: true,

@@ -88,3 +88,11 @@ export async function deleteEntity<Schema extends Document>(
 }
 
 function findEntity<T>(schema: any, filter: T) {}
+
+export function MongoDriver(
+  AttributeSchema: any,
+  attributeId: string,
+  updatedAttribute: Attribute
+) {
+  throw new Error('Function not implemented.')
+}

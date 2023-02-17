@@ -1,9 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import {
-  getCategory,
-  updateCategory,
-  deleteCategory,
-} from '../../../server/actions/Category'
+import { getCategory } from '../../../server/actions/Category'
 import { ApiError, Category } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
 import {
@@ -11,6 +7,8 @@ import {
   apiObjectIdValidation,
   apiRequestValidation,
 } from '../../../utils/apiValidators'
+import * as MongoDriver from '../../../server/actions/MongoDriver'
+import CategorySchema from '../../../server/models/Category'
 
 // @route GET api/categories/[categoryId] - Returns a single Category object given a categoryId - Private
 // @route PUT api/users/[categoryId] - Updates an existing Category object (identified by categoryId) with a new Category object - Private
@@ -40,7 +38,11 @@ export default async function handler(
       case 'PUT': {
         apiCategoryValidation(req.body)
         const updatedCategory = req.body as Category
-        await updateCategory(categoryId, updatedCategory)
+        await MongoDriver.updateEntity(
+          CategorySchema,
+          categoryId,
+          updatedCategory
+        )
 
         return res.status(200).json({
           success: true,
@@ -48,7 +50,7 @@ export default async function handler(
         })
       }
       case 'DELETE': {
-        await deleteCategory(categoryId)
+        await MongoDriver.deleteEntity(CategorySchema, categoryId)
 
         return res.status(200).json({
           success: true,

@@ -1,16 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import {
-  deleteUser,
-  getUser,
-  updateUser,
-} from '../../../../server/actions/User'
-import {
   apiObjectIdValidation,
   apiRequestValidation,
   apiUserValidation,
-} from '../../../../utils/apiValidators'
-import { userEndpointServerAuth } from '../../../../utils/auth'
-import { ApiError, User } from '../../../../utils/types'
+} from '../../../utils/apiValidators'
+import { userEndpointServerAuth } from '../../../utils/auth'
+import { ApiError, User } from '../../../utils/types'
+import * as MongoDriver from '../../../server/actions/MongoDriver'
+import UserSchema from '../../../server/models/User'
 
 // @route   GET api/users/[userId] - Returns a single User object for user with userId - Private
 // @route   DELETE api/users/[userId] - Deletes a single User object for user with userId - Private
@@ -26,9 +23,9 @@ export default async function handler(
 
     // get user to verify identity
     const userId = req.query.userId as string
-    const user = await getUser(req.query.userId as string)
+    const user = await MongoDriver.getEntity(UserSchema, userId)
 
-    await userEndpointServerAuth(req, res, user?.email)
+    await userEndpointServerAuth(req, res, user.email)
 
     switch (req.method) {
       case 'GET': {
@@ -38,7 +35,7 @@ export default async function handler(
         })
       }
       case 'DELETE': {
-        await deleteUser(req.query.userId as string)
+        await MongoDriver.deleteEntity(UserSchema, userId)
 
         return res.status(200).json({
           success: true,
@@ -48,7 +45,7 @@ export default async function handler(
       case 'PUT': {
         apiUserValidation(JSON.parse(req.body)) //TODO is the JSON.parse necessary?
         const updatedUser = JSON.parse(req.body) as User
-        await updateUser(req.query.userId as string, updatedUser)
+        await MongoDriver.updateEntity(UserSchema, userId, updatedUser)
 
         return res.status(200).json({
           success: true,

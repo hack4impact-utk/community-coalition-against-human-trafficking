@@ -2,8 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getItemDefinitions } from '../../../server/actions/ItemDefinition'
 import { ApiError, ItemDefinition } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
-import { createItemDefinition } from '../../../server/actions/ItemDefinition'
 import { apiItemDefinitionValidation } from '../../../utils/apiValidators'
+import * as MongoDriver from '../../../server/actions/MongoDriver'
+import ItemDefinitionSchema from '../../../server/models/Category'
 
 // @route GET api/itemDefintions - Returns a list of all itemDefintions in the database - Private
 // @route POST /api/itemDefintions - Create a itemDefinition from request body - Private
@@ -27,7 +28,7 @@ export default async function handler(
       case 'POST': {
         apiItemDefinitionValidation(req.body)
         const itemDefinition = req.body as ItemDefinition
-        await createItemDefinition(itemDefinition)
+        await MongoDriver.createEntity(ItemDefinitionSchema, itemDefinition)
 
         return res.status(200).json({
           success: true,

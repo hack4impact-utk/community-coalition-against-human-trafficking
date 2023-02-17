@@ -1,13 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import {
-  createAttribute,
-  getAttribute,
-  getAttributes,
-} from '../../../server/actions/Attributes'
 import { ApiError, Attribute } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
-import { validateAttribute } from '../../../utils/validators'
 import { apiAttributeValidation } from '../../../utils/apiValidators'
+import * as MongoDriver from '../../../server/actions/MongoDriver'
+import AttributeSchema from '../../../server/models/Attribute'
 
 // @route GET api/attributes - Returns a list of all Attributes in the database - Private
 // @route POST api/attributes - Create an Attribute from request body - Private
@@ -21,7 +17,7 @@ export default async function hanlder(
 
     switch (req.method) {
       case 'GET': {
-        const attributes = await getAttributes()
+        const attributes = await MongoDriver.getEntities(AttributeSchema)
         const resStatus = attributes.length ? 200 : 204
         return res.status(resStatus).json({
           succcess: true,
@@ -32,7 +28,7 @@ export default async function hanlder(
         apiAttributeValidation(req.body)
         const attribute: Attribute = req.body
 
-        await createAttribute(attribute)
+        await MongoDriver.createEntity(AttributeSchema, attribute)
 
         return res.status(201).json({
           success: true,

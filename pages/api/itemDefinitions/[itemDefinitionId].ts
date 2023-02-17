@@ -1,9 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import {
-  getItemDefinition,
-  updateItemDefinition,
-  deleteItemDefinition,
-} from '../../../server/actions/ItemDefinition'
+import { getItemDefinition } from '../../../server/actions/ItemDefinition'
 import { ApiError, ItemDefinition } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
 import {
@@ -11,6 +7,8 @@ import {
   apiObjectIdValidation,
   apiRequestValidation,
 } from '../../../utils/apiValidators'
+import * as MongoDriver from '../../../server/actions/MongoDriver'
+import ItemDefinitionSchema from '../../../server/models/Category'
 
 // @route GET api/itemDefintions/[itemDefinitionId] - Returns a single ItemDefinition object given a itemDefinitionId - Private
 // @route PUT api/users/[itemDefinitionId] - Updates an existing ItemDefinition object (identified by itemDefinitionId) with a new ItemDefinition object - Private
@@ -39,7 +37,11 @@ export default async function handler(
       case 'PUT': {
         apiItemDefinitionValidation(req.body)
         const updatedItemDefinition = req.body as ItemDefinition
-        await updateItemDefinition(itemDefinitionId, updatedItemDefinition)
+        await MongoDriver.updateEntity(
+          ItemDefinitionSchema,
+          itemDefinitionId,
+          updatedItemDefinition
+        )
 
         return res.status(200).json({
           success: true,
@@ -47,7 +49,7 @@ export default async function handler(
         })
       }
       case 'DELETE': {
-        await deleteItemDefinition(itemDefinitionId)
+        await MongoDriver.deleteEntity(ItemDefinitionSchema, itemDefinitionId)
 
         return res.status(200).json({
           success: true,
