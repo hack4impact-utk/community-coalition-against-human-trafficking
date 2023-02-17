@@ -8,7 +8,6 @@ import { getEntities, getEntity } from './MongoDriver'
  * @returns The ItemDefinition given by the itemDefinition parameter
  */
 export async function getItemDefinition(id: string) {
-  await mongoDb()
   return await getEntity(ItemDefinitionSchema, id)
 }
 
@@ -17,6 +16,5 @@ export async function getItemDefinition(id: string) {
  * @returns All itemDefinitions
  */
 export async function getItemDefinitions() {
-  await mongoDb()
   return await getEntities(ItemDefinitionSchema)
 }

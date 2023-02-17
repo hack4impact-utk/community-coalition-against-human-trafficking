@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getCategory } from '../../../server/actions/Category'
 import { ApiError, Category } from '../../../utils/types'
 import { serverAuth } from '../../../utils/auth'
 import {
@@ -28,7 +27,7 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        const category = await getCategory(categoryId)
+        const category = await MongoDriver.getEntity(CategorySchema, categoryId)
 
         return res.status(200).json({
           success: true,
