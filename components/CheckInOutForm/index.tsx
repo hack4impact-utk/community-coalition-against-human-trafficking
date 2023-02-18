@@ -30,6 +30,7 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
   return (
     <>
       <FormControl fullWidth>
+        {/* Staff member, Date, and Item input fields */}
         {kioskMode && (
           <Autocomplete
             options={users.map((user) => user.name)}
@@ -61,6 +62,7 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
             )
           }
         />
+        {/* Quantity input field and +- buttons */}
         <Box sx={{ display: 'flex', alignSelf: 'center', marginTop: 3 }}>
           <Typography
             variant="h4"
