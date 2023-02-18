@@ -63,7 +63,10 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
           onChange={(_e, name) => setitemDefinitionName(name)}
         />
         <Box sx={{ display: 'flex', alignSelf: 'center', marginTop: 3 }}>
-          <Typography variant="h4" sx={{ marginRight: 2, alignSelf: 'center' }}>
+          <Typography
+            variant="h4"
+            sx={{ marginRight: 2, alignSelf: 'center', fontSize: 28 }}
+          >
             Quantity
           </Typography>
           <TextField
