@@ -68,14 +68,12 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
           </Typography>
           <TextField
             sx={{
-              width: 50,
-              height: '100%',
+              width: 56,
               marginRight: 1.5,
-              alignSelf: 'center',
             }}
-            defaultValue={1}
             value={quantity}
-            onChange={(event) => setQuantity(Number(event.target.value))}
+            //                   || 0 Necessary to prevent typing a negative number
+            onChange={(event) => setQuantity(Number(event.target.value) || 0)}
             type="tel"
             InputProps={{
               inputProps: { min: 1, style: { textAlign: 'center' } },
@@ -85,7 +83,6 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'space-evenly',
             }}
           >
             <IconButton
@@ -111,7 +108,9 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
                 border: '1px solid',
                 borderColor: colors.lightGray,
               }}
-              onClick={() => setQuantity(quantity - 1)}
+              onClick={() => {
+                if (quantity > 1) setQuantity(quantity - 1)
+              }}
             >
               <RemoveOutlinedIcon sx={{ width: 15, height: 15 }} />
             </IconButton>
