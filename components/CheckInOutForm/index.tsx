@@ -12,6 +12,7 @@ import React from 'react'
 import { ItemDefinition, User } from '../../utils/types'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined'
+import colors from '../../utils/colors'
 
 interface Props {
   kioskMode: boolean
@@ -94,7 +95,7 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
                 borderRadius: 1.5,
                 color: 'black',
                 border: '1px solid',
-                borderColor: '#c4c4c4',
+                borderColor: colors.lightGray,
                 marginBottom: 1,
               }}
               onClick={() => setQuantity(quantity + 1)}
@@ -108,7 +109,7 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
                 borderRadius: 1.5,
                 color: 'black',
                 border: '1px solid',
-                borderColor: '#c4c4c4',
+                borderColor: colors.lightGray,
               }}
               onClick={() => setQuantity(quantity - 1)}
             >
