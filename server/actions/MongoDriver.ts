@@ -80,19 +80,18 @@ export async function deleteEntity<Schema extends Document>(
 ) {
   await mongoDb()
 
-  dbSchema.findByIdAndDelete(id, (response: any) => {
+  await dbSchema.findByIdAndDelete(id, (response: any) => {
     if (!response) {
       throw new ApiError(404, entityNotFoundMessage)
     }
   })
 }
 
-function findEntity<T>(schema: any, filter: T) {}
+export async function findEntity<
+  Schema extends Document,
+  T extends ServerModel
+>(dbSchema: Model<Schema>, filterDocument: T) {
+  await mongoDb()
 
-export function MongoDriver(
-  AttributeSchema: any,
-  attributeId: string,
-  updatedAttribute: Attribute
-) {
-  throw new Error('Function not implemented.')
+  return await dbSchema.find(filterDocument)
 }
