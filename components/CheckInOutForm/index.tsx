@@ -23,29 +23,22 @@ interface Props {
 function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
   const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
   const [quantity, setQuantity] = React.useState<number>(1)
-  const [staffName, setStaffName] = React.useState<string | null>()
-  const [itemDefinitionName, setitemDefinitionName] = React.useState<
-    string | null
-  >()
-
-  let userNames: string[] = []
-  users.forEach((user) => userNames.push(user.name))
-
-  let itemDefinitionNames: string[] = []
-  itemDefinitions.forEach((itemDefinition) =>
-    itemDefinitionNames.push(itemDefinition.name)
-  )
+  const [selectedStaff, setSelectedStaff] = React.useState<User | null>()
+  const [selectedItemDefinition, setSelectedItemDefinition] =
+    React.useState<ItemDefinition | null>()
 
   return (
     <>
       <FormControl fullWidth>
         {kioskMode && (
           <Autocomplete
-            options={userNames}
+            options={users.map((user) => user.name)}
             renderInput={(params) => (
               <TextField {...params} label="Staff Member" />
             )}
-            onChange={(_e, name) => setStaffName(name)}
+            onChange={(_e, name) =>
+              setSelectedStaff(users.find((user) => name === user.name))
+            }
           />
         )}
         <Box sx={{ marginTop: 4 }}>
@@ -57,10 +50,16 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
           />
         </Box>
         <Autocomplete
-          options={itemDefinitionNames}
+          options={itemDefinitions.map((itemDefinition) => itemDefinition.name)}
           sx={{ marginTop: 4 }}
           renderInput={(params) => <TextField {...params} label="Item" />}
-          onChange={(_e, name) => setitemDefinitionName(name)}
+          onChange={(_e, name) =>
+            setSelectedItemDefinition(
+              itemDefinitions.find(
+                (itemDefinition) => name === itemDefinition.name
+              )
+            )
+          }
         />
         <Box sx={{ display: 'flex', alignSelf: 'center', marginTop: 3 }}>
           <Typography
