@@ -44,6 +44,7 @@ export default function NavigationDrawer({
       height="70"
       width="239"
       style={{ objectFit: 'contain' }}
+      priority
     />
   )
   // state handlers for expandable lists in drawer
