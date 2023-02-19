@@ -3,7 +3,7 @@ import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 import { ItemDefinition, User } from '../../utils/types'
-import QuantityForm from './quantityForm'
+import QuantityForm from './QuantityForm'
 
 interface Props {
   kioskMode: boolean
