@@ -95,8 +95,7 @@ function validateProperties(
   }
 
   // checks validity of all object properties.
-  let objKeys = Object.keys(obj)
-  for (const objKey of objKeys) {
+  for (const objKey in obj) {
     let i = modelProperties.findIndex((prop) => prop.key === objKey)
 
     // property is not part of server model

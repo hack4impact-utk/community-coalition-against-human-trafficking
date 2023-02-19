@@ -87,11 +87,18 @@ export async function deleteEntity<Schema extends Document>(
   })
 }
 
-export async function findEntity<
+export async function findEntities<
   Schema extends Document,
   T extends ServerModel
->(dbSchema: Model<Schema>, filterDocument: T) {
+>(dbSchema: Model<Schema>, filterDocument: Partial<T> | T) {
   await mongoDb()
-
-  return await dbSchema.find(filterDocument)
+  let queryString = ''
+  for (const key in filterDocument) {
+    queryString += `${key}, ${
+      typeof filterDocument[key] === 'string'
+        ? `'${filterDocument[key]}'`
+        : filterDocument[key]
+    },`
+  }
+  return await dbSchema.find({ queryString })
 }
