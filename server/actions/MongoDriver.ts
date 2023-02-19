@@ -1,10 +1,9 @@
 import mongoDb from '../index'
-import { Document, Model } from 'mongoose'
+import { Document, FilterQuery, Model } from 'mongoose'
 import '../../utils/types'
-import { ApiError, ServerModel } from '../../utils/types'
+import { ApiError, ItemDefinition, ServerModel } from '../../utils/types'
 
-const ObjectId = require('mongoose').Types.ObjectId
-const entityNotFoundMessage = 'Entity does not exist'
+const ENTITY_NOT_FOUND_MESSAGE = 'Entity does not exist'
 
 /**
  * Gets a single Entity object from the database with the given id
@@ -19,7 +18,7 @@ export async function getEntity<Schema extends Document>(
   await mongoDb()
 
   let response = await dbSchema.findById(id)
-  if (!response) throw new ApiError(404, entityNotFoundMessage)
+  if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
   return response
 }
 
@@ -41,7 +40,7 @@ export async function getEntities<Schema extends Document>(
  * Creates a new Entity object in the database
  * @param dbSchema The collection schema to get entities from
  * @param document - The Entity object to create
- * @returns The _id of the newly created Entity object in the database
+ * @returns The newly created Entity object in the database
  */
 export async function createEntity<
   Schema extends Document,
@@ -54,10 +53,10 @@ export async function createEntity<
 }
 
 /**
- * Updates the existing Entity object with _id of entityId with the new entity
+ * Replaces the existing Entity object with the given id with a new entity
  * @param dbSchema The collection schema to get entities from
  * @param id - _id of the Entity object to update
- * @param document - The new Entity object to update the existing Entity object with
+ * @param document - The new Entity object to replace the existing Entity object with
  */
 export async function updateEntity<
   Schema extends Document,
@@ -66,11 +65,11 @@ export async function updateEntity<
   await mongoDb()
 
   let response = await dbSchema.findByIdAndUpdate(id, document)
-  if (!response) throw new ApiError(404, entityNotFoundMessage)
+  if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
 }
 
 /**
- * Deletes the Entity object with the given entityId
+ * Deletes the Entity object with the given id
  * @param dbSchema The collection schema to get entities from
  * @param id - The _id of the Entity object to delete
  */
@@ -82,7 +81,7 @@ export async function deleteEntity<Schema extends Document>(
 
   await dbSchema.findByIdAndDelete(id, (response: any) => {
     if (!response) {
-      throw new ApiError(404, entityNotFoundMessage)
+      throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
     }
   })
 }
@@ -91,14 +90,15 @@ export async function findEntities<
   Schema extends Document,
   T extends ServerModel
 >(dbSchema: Model<Schema>, filterDocument: Partial<T> | T) {
+  // if a blank filter is applied, it returns all entities in the database
+  if (Object.keys(filterDocument).length < 1) return []
+
   await mongoDb()
-  let queryString = ''
+  let query: FilterQuery<ItemDefinition> = {}
   for (const key in filterDocument) {
-    queryString += `${key}, ${
-      typeof filterDocument[key] === 'string'
-        ? `'${filterDocument[key]}'`
-        : filterDocument[key]
-    },`
+    console.log('here')
+    query[key] = filterDocument[key]
   }
-  return await dbSchema.find({ queryString })
+  console.log(query)
+  return await dbSchema.find(query)
 }

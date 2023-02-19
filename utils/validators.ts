@@ -6,7 +6,7 @@ interface Property {
   required: boolean
 }
 
-interface ValidationResult {
+export interface ValidationResult {
   success: boolean
   message?: string
 }
@@ -14,7 +14,7 @@ interface ValidationResult {
 /**
  * Checks the validity of an Attribute object. Does not validate child objects.
  * @param attribute The Attribute object to test
- * @returns true if the object was valid, false if not
+ * @returns A ValidationResult object
  */
 export function validateAttribute(attribute: any) {
   return validateProperties(attributeModelProperties, attribute)
@@ -23,7 +23,7 @@ export function validateAttribute(attribute: any) {
 /**
  * Checks the validity of an Category object. Does not validate child objects.
  * @param category The Category object to test
- * @returns true if the object was valid, false if not
+ * @returns A ValidationResult object
  */
 export function validateCategory(category: any) {
   return validateProperties(categoryModelProperties, category)
@@ -32,7 +32,7 @@ export function validateCategory(category: any) {
 /**
  * Checks the validity of an ItemDefinition object. Does not validate child objects.
  * @param itemDefinition The ItemDefinition object to test
- * @returns true if the object was valid, false if not
+ * @returns A ValidationResult object
  */
 export function validateItemDefinition(itemDefinition: any) {
   return validateProperties(itemDefinitionModelProperties, itemDefinition)
@@ -41,7 +41,7 @@ export function validateItemDefinition(itemDefinition: any) {
 /**
  * Checks the validity of an InventoryItem object. Does not validate child objects.
  * @param inventoryItem The InventoryItem object to test
- * @returns true if the object was valid, false if not
+ * @returns A ValidationResult object
  */
 export function validateInventoryItem(inventoryItem: any) {
   return validateProperties(inventoryItemModelProperties, inventoryItem)
@@ -50,7 +50,7 @@ export function validateInventoryItem(inventoryItem: any) {
 /**
  * Checks the validity of an User object. Does not validate child objects.
  * @param user The User object to test
- * @returns true if the object was valid, false if not
+ * @returns A ValidationResult object
  */
 export function validateUser(user: any) {
   return validateProperties(userModelProperties, user)
@@ -59,6 +59,7 @@ export function validateUser(user: any) {
 /**
  * Validates a given id to ensure it is a valid ObjectId. Throws an error if invalid.
  * @param id - The ObjectId to validate
+ * @returns true if the objectId was valid, false if not
  */
 export function validateObjectId(id: string) {
   if (!id) return false
@@ -68,6 +69,12 @@ export function validateObjectId(id: string) {
   return false
 }
 
+/**
+ * Generic object validator that checks for required fields, extra fields, and type mismatches
+ * @param modelProperties An array of Property objects
+ * @param obj The object to validate
+ * @returns A ValidationResult object
+ */
 function validateProperties(
   modelProperties: Property[],
   obj: any

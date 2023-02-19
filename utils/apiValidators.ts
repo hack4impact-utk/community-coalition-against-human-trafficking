@@ -5,6 +5,7 @@ import {
   validateItemDefinition,
   validateObjectId,
   validateUser,
+  ValidationResult,
 } from './validators'
 
 const BAD_REQUEST_BODY_PREFIX = 'Bad Request Body: '
@@ -17,27 +18,25 @@ export function apiObjectIdValidation(id: any) {
 
 export function apiAttributeValidation(attribute: any) {
   let response = validateAttribute(attribute)
-  if (!response.success) {
-    throw new ApiError(400, BAD_REQUEST_BODY_PREFIX + response.message)
-  }
+  badBodyValidationResponse(response)
 }
 
 export function apiCategoryValidation(category: any) {
   let response = validateCategory(category)
-  if (!response.success) {
-    throw new ApiError(400, BAD_REQUEST_BODY_PREFIX + response.message)
-  }
+  badBodyValidationResponse(response)
 }
 
 export function apiItemDefinitionValidation(itemDefinition: any) {
   let response = validateItemDefinition(itemDefinition)
-  if (!response.success) {
-    throw new ApiError(400, BAD_REQUEST_BODY_PREFIX + response.message)
-  }
+  badBodyValidationResponse(response)
 }
 
 export function apiUserValidation(user: any) {
   let response = validateUser(user)
+  badBodyValidationResponse(response)
+}
+
+function badBodyValidationResponse(response: ValidationResult) {
   if (!response.success) {
     throw new ApiError(400, BAD_REQUEST_BODY_PREFIX + response.message)
   }
