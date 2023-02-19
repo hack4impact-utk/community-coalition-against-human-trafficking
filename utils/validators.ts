@@ -6,6 +6,11 @@ interface Property {
   required: boolean
 }
 
+interface ValidationResult {
+  success: boolean
+  message?: string
+}
+
 /**
  * Checks the validity of an Attribute object. Does not validate child objects.
  * @param attribute The Attribute object to test
@@ -63,41 +68,55 @@ export function validateObjectId(id: string) {
   return false
 }
 
-// NOTE: this ignores the _id field
-function validateProperties(modelProperties: Property[], obj: any): boolean {
-  if (typeof obj !== 'object') return false
+function validateProperties(
+  modelProperties: Property[],
+  obj: any
+): ValidationResult {
+  let result: ValidationResult = {
+    success: false,
+  }
+
+  if (typeof obj !== 'object') {
+    result.message = 'Validation target is not an instance of an object'
+    return result
+  }
 
   // ensures all required properties are present
   let isValidObject = true
-  modelProperties.forEach((modelProp) => {
+  for (const modelProp of modelProperties) {
     if (
       isValidObject &&
       modelProp.required &&
       !obj.hasOwnProperty(modelProp.key)
-    )
-      isValidObject = false
-  })
+    ) {
+      result.message = `Missing required property '${modelProp.key}'`
+      return result
+    }
+  }
 
-  if (!isValidObject) return false
-
-  // checks validity of all object properties
+  // checks validity of all object properties.
   let objKeys = Object.keys(obj)
-  objKeys.forEach((objKey) => {
-    if (objKey === '_id' || !isValidObject) return
+  for (const objKey of objKeys) {
     let i = modelProperties.findIndex((prop) => prop.key === objKey)
 
     // property is not part of server model
     if (i < 0) {
-      isValidObject = false
-      return
+      console.error()
+      result.message = `Property '${objKey}' is not a valid property`
+      return result
     }
 
     // type mismatch
-    if (modelProperties[i].types.includes(typeof obj[objKey]))
-      isValidObject = false
-  })
+    if (!modelProperties[i].types.includes(typeof obj[objKey])) {
+      result.message = `Type mismatch in property '${objKey}'. Expected type '${
+        modelProperties[i].types
+      }' but got type '${typeof obj[objKey]}' `
+      return result
+    }
+  }
 
-  return isValidObject
+  result.success = true
+  return result
 }
 
 /*
@@ -109,6 +128,11 @@ function validateProperties(modelProperties: Property[], obj: any): boolean {
  */
 
 const attributeModelProperties: Property[] = [
+  {
+    key: '_id',
+    types: 'string',
+    required: false,
+  },
   {
     key: 'name',
     types: 'string',
@@ -128,6 +152,11 @@ const attributeModelProperties: Property[] = [
 
 const categoryModelProperties: Property[] = [
   {
+    key: '_id',
+    types: 'string',
+    required: false,
+  },
+  {
     key: 'name',
     types: 'string',
     required: true,
@@ -135,6 +164,11 @@ const categoryModelProperties: Property[] = [
 ]
 
 const itemDefinitionModelProperties: Property[] = [
+  {
+    key: '_id',
+    types: 'string',
+    required: false,
+  },
   {
     key: 'name',
     types: 'string',
@@ -169,6 +203,11 @@ const itemDefinitionModelProperties: Property[] = [
 
 const inventoryItemModelProperties: Property[] = [
   {
+    key: '_id',
+    types: 'string',
+    required: false,
+  },
+  {
     key: 'itemDefinition',
     types: 'string|object',
     required: true,
@@ -191,6 +230,11 @@ const inventoryItemModelProperties: Property[] = [
 ]
 
 const userModelProperties: Property[] = [
+  {
+    key: '_id',
+    types: 'string',
+    required: false,
+  },
   {
     key: 'name',
     types: 'string',

@@ -7,7 +7,7 @@ import {
   validateUser,
 } from './validators'
 
-const BAD_REQUEST_BODY_MESSAGE = 'Bad Request Body'
+const BAD_REQUEST_BODY_PREFIX = 'Bad Request Body: '
 
 export function apiRequestValidation(req: any) {
   if (!req || !req.query) {
@@ -22,25 +22,29 @@ export function apiObjectIdValidation(id: any) {
 }
 
 export function apiAttributeValidation(attribute: any) {
-  if (!validateAttribute(attribute)) {
-    throw new ApiError(400, BAD_REQUEST_BODY_MESSAGE)
+  let response = validateAttribute(attribute)
+  if (!response.success) {
+    throw new ApiError(400, BAD_REQUEST_BODY_PREFIX + response.message)
   }
 }
 
 export function apiCategoryValidation(category: any) {
-  if (!validateCategory(category)) {
-    throw new ApiError(400, BAD_REQUEST_BODY_MESSAGE)
+  let response = validateCategory(category)
+  if (!response.success) {
+    throw new ApiError(400, BAD_REQUEST_BODY_PREFIX + response.message)
   }
 }
 
 export function apiItemDefinitionValidation(itemDefinition: any) {
-  if (!validateItemDefinition(itemDefinition)) {
-    throw new ApiError(400, BAD_REQUEST_BODY_MESSAGE)
+  let response = validateItemDefinition(itemDefinition)
+  if (!response.success) {
+    throw new ApiError(400, BAD_REQUEST_BODY_PREFIX + response.message)
   }
 }
 
 export function apiUserValidation(user: any) {
-  if (!validateUser(user)) {
-    throw new ApiError(400, BAD_REQUEST_BODY_MESSAGE)
+  let response = validateUser(user)
+  if (!response.success) {
+    throw new ApiError(400, BAD_REQUEST_BODY_PREFIX + response.message)
   }
 }
