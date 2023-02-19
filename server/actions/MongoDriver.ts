@@ -90,7 +90,8 @@ export async function findEntities<
   Schema extends Document,
   T extends ServerModel
 >(dbSchema: Model<Schema>, filterDocument: Partial<T> | T) {
-  // if a blank filter is applied, it returns all entities in the database
+  // if a blank filter is applied, it returns all entities in the database.
+  // We don't want this, so return an empty array
   if (Object.keys(filterDocument).length < 1) return []
 
   await mongoDb()
