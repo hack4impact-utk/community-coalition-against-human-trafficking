@@ -23,13 +23,12 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
       {/* Staff member, Date, and Item input fields */}
       {kioskMode && (
         <Autocomplete
-          options={users.map((user) => user.name)}
+          options={users}
           renderInput={(params) => (
             <TextField {...params} label="Staff Member" />
           )}
-          onChange={(_e, name) =>
-            setSelectedStaff(users.find((user) => name === user.name))
-          }
+          getOptionLabel={(user) => user.name}
+          onChange={(_e, user) => setSelectedStaff(user)}
         />
       )}
       <Box sx={{ marginTop: 4 }}>
@@ -41,16 +40,13 @@ function CheckInOutForm({ kioskMode, users, itemDefinitions }: Props) {
         />
       </Box>
       <Autocomplete
-        options={itemDefinitions.map((itemDefinition) => itemDefinition.name)}
+        options={itemDefinitions}
         sx={{ marginTop: 4 }}
         renderInput={(params) => <TextField {...params} label="Item" />}
-        onChange={(_e, name) =>
-          setSelectedItemDefinition(
-            itemDefinitions.find(
-              (itemDefinition) => name === itemDefinition.name
-            )
-          )
+        onChange={(_e, itemDefinition) =>
+          setSelectedItemDefinition(itemDefinition)
         }
+        getOptionLabel={(itemDefinition) => itemDefinition.name}
       />
       <QuantityForm quantity={quantity} setQuantity={setQuantity} />
     </FormControl>
