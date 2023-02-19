@@ -116,7 +116,7 @@ function validateProperties(
     if (!modelProperties[i].types.includes(typeof obj[objKey])) {
       result.message = `Type mismatch in property '${objKey}'. Expected type '${
         modelProperties[i].types
-      }' but got type '${typeof obj[objKey]}' `
+      }' but got type '${typeof obj[objKey]}'`
       return result
     }
   }
