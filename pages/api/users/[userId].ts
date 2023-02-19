@@ -43,8 +43,8 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        apiUserValidation(JSON.parse(req.body)) //TODO is the JSON.parse necessary?
-        const updatedUser = JSON.parse(req.body) as User
+        apiUserValidation(req.body)
+        const updatedUser = req.body as User
         await MongoDriver.updateEntity(UserSchema, userId, updatedUser)
 
         return res.status(200).json({

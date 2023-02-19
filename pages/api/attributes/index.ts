@@ -28,11 +28,14 @@ export default async function hanlder(
         apiAttributeValidation(req.body)
         const attribute: Attribute = req.body
 
-        await MongoDriver.createEntity(AttributeSchema, attribute)
+        let attributeId = await MongoDriver.createEntity(
+          AttributeSchema,
+          attribute
+        )
 
         return res.status(201).json({
           success: true,
-          payload: {},
+          payload: attributeId,
         })
       }
       default: {

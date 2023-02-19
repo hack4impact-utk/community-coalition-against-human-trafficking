@@ -27,11 +27,14 @@ export default async function handler(
       case 'POST': {
         apiCategoryValidation(req.body)
         const category = req.body as Category
-        await MongoDriver.createEntity(CategorySchema, category)
+        let categoryId = await MongoDriver.createEntity(
+          CategorySchema,
+          category
+        )
 
         return res.status(200).json({
           success: true,
-          payload: {},
+          payload: categoryId,
         })
       }
       default: {

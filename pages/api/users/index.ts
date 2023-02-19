@@ -14,11 +14,11 @@ export default async function handler(
     if (req.method === 'POST') {
       apiUserValidation(req.body)
       const user = req.body as User
-      await MongoDriver.createEntity(UserSchema, user)
+      const userId = await MongoDriver.createEntity(UserSchema, user)
 
       return res.status(200).json({
         success: true,
-        payload: {},
+        payload: userId,
       })
     } else if (req.method === 'GET') {
       await serverAuth(req, res)

@@ -28,11 +28,14 @@ export default async function handler(
       case 'POST': {
         apiItemDefinitionValidation(req.body)
         const itemDefinition = req.body as ItemDefinition
-        await MongoDriver.createEntity(ItemDefinitionSchema, itemDefinition)
+        let itemDefinitionId = await MongoDriver.createEntity(
+          ItemDefinitionSchema,
+          itemDefinition
+        )
 
         return res.status(200).json({
           success: true,
-          payload: {},
+          payload: itemDefinitionId,
         })
       }
       default: {
