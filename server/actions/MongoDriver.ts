@@ -97,9 +97,8 @@ export async function findEntities<
   await mongoDb()
   let query: FilterQuery<ItemDefinition> = {}
   for (const key in filterDocument) {
-    console.log('here')
     query[key] = filterDocument[key]
   }
-  console.log(query)
+
   return await dbSchema.find(query)
 }
