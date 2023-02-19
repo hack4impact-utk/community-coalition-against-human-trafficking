@@ -9,12 +9,6 @@ import {
 
 const BAD_REQUEST_BODY_PREFIX = 'Bad Request Body: '
 
-export function apiRequestValidation(req: any) {
-  if (!req || !req.query) {
-    throw new ApiError(400, 'Bad Request')
-  }
-}
-
 export function apiObjectIdValidation(id: any) {
   if (!validateObjectId(id)) {
     throw new ApiError(400, 'Invalid ObjectId Format')

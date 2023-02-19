@@ -4,7 +4,6 @@ import { serverAuth } from '../../../utils/auth'
 import {
   apiCategoryValidation,
   apiObjectIdValidation,
-  apiRequestValidation,
 } from '../../../utils/apiValidators'
 import * as MongoDriver from '../../../server/actions/MongoDriver'
 import CategorySchema from '../../../server/models/Category'
@@ -20,9 +19,7 @@ export default async function handler(
     // ensure user is logged in
     await serverAuth(req, res)
 
-    apiRequestValidation(req)
-
-    apiObjectIdValidation(req.query.categoryId)
+    apiObjectIdValidation(req?.query?.categoryId)
     const categoryId = req.query.categoryId as string
 
     switch (req.method) {

@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import {
   apiObjectIdValidation,
-  apiRequestValidation,
   apiUserValidation,
 } from '../../../utils/apiValidators'
 import { userEndpointServerAuth } from '../../../utils/auth'
@@ -17,9 +16,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    apiRequestValidation(req)
-
-    apiObjectIdValidation(req.query.userId)
+    apiObjectIdValidation(req?.query?.userId)
 
     // get user to verify identity
     const userId = req.query.userId as string

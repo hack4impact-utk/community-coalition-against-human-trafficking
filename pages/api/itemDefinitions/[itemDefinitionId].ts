@@ -5,7 +5,6 @@ import { serverAuth } from '../../../utils/auth'
 import {
   apiItemDefinitionValidation,
   apiObjectIdValidation,
-  apiRequestValidation,
 } from '../../../utils/apiValidators'
 import * as MongoDriver from '../../../server/actions/MongoDriver'
 import ItemDefinitionSchema from '../../../server/models/Category'
@@ -21,9 +20,7 @@ export default async function handler(
     // ensure user is logged in
     await serverAuth(req, res)
 
-    apiRequestValidation(req)
-
-    apiObjectIdValidation(req.query.itemDefinitionId)
+    apiObjectIdValidation(req?.query?.itemDefinitionId)
     const itemDefinitionId = req.query.itemDefinitionId as string
     switch (req.method) {
       case 'GET': {

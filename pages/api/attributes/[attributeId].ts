@@ -4,7 +4,6 @@ import { serverAuth } from '../../../utils/auth'
 import {
   apiAttributeValidation,
   apiObjectIdValidation,
-  apiRequestValidation,
 } from '../../../utils/apiValidators'
 import * as MongoDriver from '../../../server/actions/MongoDriver'
 import AttributeSchema from '../../../server/models/Attribute'
@@ -20,9 +19,7 @@ export default async function handler(
     // ensure user is logged in
     await serverAuth(req, res)
 
-    apiRequestValidation(req)
-
-    apiObjectIdValidation(req.query.attributeId)
+    apiObjectIdValidation(req?.query?.attributeId)
     const attributeId = req.query.attributeId as string
 
     switch (req.method) {
