@@ -1,15 +1,22 @@
 import { NextRouter } from 'next/router'
-
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 /**
- * How to keep track of path in code:
- * The router.query property is not updated right away when router.replace() or router.push() is called.
- * Thus, it is necesarry to use a state variable and update it in your component whenever router is changed to
- * access the path:
- *
- * const router = useRouter()
- * const [path, setPath] = useState("")
- * useEffect(() => setPath(router.asPath), [router])
+ * This hook is needed to both access the query parameter utility functions and refer to the current path
+ * @returns An object that contains the router object (of type NextRouter) and path string
+
+ * - Usage Example:
+ * - start at localhost:3000/test
+ * - const {router, path} = useRouterQuery()
+ * - addURLQueryParam(router, "hi", "test")
+ * - The value of path is now "/test?hi=test"
  */
+export function useRouterQuery() {
+  const router = useRouter()
+  const [path, setPath] = useState('')
+  useEffect(() => setPath(router.asPath), [router])
+  return { router, path }
+}
 
 /**
  * If the input parameter is not already present, this function adds a query parameter to the current URL
