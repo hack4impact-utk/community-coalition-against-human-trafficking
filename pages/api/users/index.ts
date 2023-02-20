@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { createUser } from '../../../server/actions/User'
+import { createUser, getUsers } from '../../../server/actions/User'
 import { ApiError, User } from '../../../utils/types'
+import { serverAuth } from '../../../utils/auth'
 
 // @route   POST /api/users - Create a user from request body. - Public
 export default async function handler(
@@ -15,6 +16,14 @@ export default async function handler(
       return res.status(200).json({
         success: true,
         payload: {},
+      })
+    } else if (req.method === 'GET') {
+      await serverAuth(req, res)
+      const users = await getUsers()
+
+      return res.status(200).json({
+        success: true,
+        payload: { users },
       })
     }
   } catch (e) {

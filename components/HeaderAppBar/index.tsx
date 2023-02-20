@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography'
 import Menu from '@mui/material/Menu'
 import MenuIcon from '@mui/icons-material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import { signOut } from 'next-auth/react'
 import { useSession } from 'next-auth/react'
 import { Avatar } from '@mui/material'
 
@@ -28,6 +29,11 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null)
+  }
+
+  const onSignOut = () => {
+    signOut()
+    handleCloseUserMenu()
   }
 
   return (
@@ -72,7 +78,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
             onClose={handleCloseUserMenu}
           >
             {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              <MenuItem key={setting} onClick={onSignOut}>
                 <Typography textAlign="center">{setting}</Typography>
               </MenuItem>
             ))}
