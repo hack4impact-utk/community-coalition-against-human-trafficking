@@ -17,7 +17,7 @@ export async function getEntity<Schema extends Document>(
 ) {
   await mongoDb()
 
-  let response = await dbSchema.findById(id)
+  const response = await dbSchema.findById(id)
   if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
   return response
 }
@@ -32,7 +32,7 @@ export async function getEntities<Schema extends Document>(
 ) {
   await mongoDb()
 
-  let response = await dbSchema.find()
+  const response = await dbSchema.find()
   return response
 }
 
@@ -48,7 +48,7 @@ export async function createEntity<
 >(dbSchema: Model<Schema>, document: T) {
   await mongoDb()
 
-  let response = await dbSchema.create(document)
+  const response = await dbSchema.create(document)
   return response
 }
 
@@ -64,7 +64,7 @@ export async function updateEntity<
 >(dbSchema: Model<Schema>, id: string, document: T) {
   await mongoDb()
 
-  let response = await dbSchema.findByIdAndUpdate(id, document)
+  const response = await dbSchema.findByIdAndUpdate(id, document)
   if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
 }
 
@@ -79,23 +79,29 @@ export async function deleteEntity<Schema extends Document>(
 ) {
   await mongoDb()
 
-  await dbSchema.findByIdAndDelete(id, (response: any) => {
+  await dbSchema.findByIdAndDelete(id, (response: unknown) => {
     if (!response) {
       throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
     }
   })
 }
 
+/**
+ * Gets all Entity objects from the database that match the given filter document
+ * @param dbSchema - The schema of the entity objects to get
+ * @param filterDocument - An enttiy object that defines the fields to filter by
+ * @returns All entity objects that match the filter
+ */
 export async function findEntities<
-  Schema extends Document,
-  T extends ServerModel
+  T extends ServerModel,
+  Schema extends Omit<T, '_id'> & Document
 >(dbSchema: Model<Schema>, filterDocument: Partial<T> | T) {
   // if a blank filter is applied, it returns all entities in the database.
   // We don't want this, so return an empty array
   if (Object.keys(filterDocument).length < 1) return []
 
   await mongoDb()
-  let query: FilterQuery<ItemDefinition> = {}
+  const query: FilterQuery<ItemDefinition> = {}
   for (const key in filterDocument) {
     query[key] = filterDocument[key]
   }

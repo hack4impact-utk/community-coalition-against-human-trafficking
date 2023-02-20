@@ -8,7 +8,12 @@ interface Property {
 
 export interface ValidationResult {
   success: boolean
-  message?: string
+  message: string
+}
+
+interface ValidationErrorList {
+  errorName: string
+  errors: string[]
 }
 
 /**
@@ -16,7 +21,7 @@ export interface ValidationResult {
  * @param attribute The Attribute object to test
  * @returns A ValidationResult object
  */
-export function validateAttribute(attribute: any) {
+export function validateAttribute(attribute: Record<string, unknown>) {
   return validateProperties(attributeModelProperties, attribute)
 }
 
@@ -25,7 +30,7 @@ export function validateAttribute(attribute: any) {
  * @param category The Category object to test
  * @returns A ValidationResult object
  */
-export function validateCategory(category: any) {
+export function validateCategory(category: Record<string, unknown>) {
   return validateProperties(categoryModelProperties, category)
 }
 
@@ -34,7 +39,9 @@ export function validateCategory(category: any) {
  * @param itemDefinition The ItemDefinition object to test
  * @returns A ValidationResult object
  */
-export function validateItemDefinition(itemDefinition: any) {
+export function validateItemDefinition(
+  itemDefinition: Record<string, unknown>
+) {
   return validateProperties(itemDefinitionModelProperties, itemDefinition)
 }
 
@@ -43,7 +50,7 @@ export function validateItemDefinition(itemDefinition: any) {
  * @param inventoryItem The InventoryItem object to test
  * @returns A ValidationResult object
  */
-export function validateInventoryItem(inventoryItem: any) {
+export function validateInventoryItem(inventoryItem: Record<string, unknown>) {
   return validateProperties(inventoryItemModelProperties, inventoryItem)
 }
 
@@ -52,7 +59,7 @@ export function validateInventoryItem(inventoryItem: any) {
  * @param user The User object to test
  * @returns A ValidationResult object
  */
-export function validateUser(user: any) {
+export function validateUser(user: Record<string, unknown>) {
   return validateProperties(userModelProperties, user)
 }
 
@@ -77,14 +84,25 @@ export function validateObjectId(id: string) {
  */
 function validateProperties(
   modelProperties: Property[],
-  obj: any
+  obj: Record<string, unknown>
 ): ValidationResult {
-  let result: ValidationResult = {
-    success: false,
+  const result: ValidationResult = {
+    success: true,
+    message: '',
   }
 
+  const missingProperties: string[] = []
+  const invalidProperties: string[] = []
+  const typeMismatches: string[] = []
+  const validationErrors: ValidationErrorList[] = [
+    { errorName: 'Missing Required Properties:', errors: missingProperties },
+    { errorName: 'Invalid Properties:', errors: invalidProperties },
+    { errorName: 'Type Mismatches:', errors: typeMismatches },
+  ]
+
   if (typeof obj !== 'object') {
-    result.message = 'Validation target is not an instance of an object'
+    result.message = 'Validation target is not an instance of an object.'
+    result.success = false
     return result
   }
 
@@ -96,8 +114,7 @@ function validateProperties(
       modelProp.required &&
       !obj.hasOwnProperty(modelProp.key)
     ) {
-      result.message = `Missing required property '${modelProp.key}'`
-      return result
+      missingProperties.push(modelProp.key)
     }
   }
 
@@ -107,21 +124,35 @@ function validateProperties(
 
     // property is not part of server model
     if (i < 0) {
-      console.error()
-      result.message = `Property '${objKey}' is not a valid property`
-      return result
+      invalidProperties.push(objKey)
+      continue
     }
 
     // type mismatch
     if (!modelProperties[i].types.includes(typeof obj[objKey])) {
-      result.message = `Type mismatch in property '${objKey}'. Expected type '${
-        modelProperties[i].types
-      }' but got type '${typeof obj[objKey]}'`
-      return result
+      typeMismatches.push(
+        `'${objKey}': Expected type '${
+          modelProperties[i].types
+        }' but got type '${typeof obj[objKey]}'`
+      )
     }
   }
-
-  result.success = true
+  for (const errorList of validationErrors) {
+    if (errorList.errors.length) {
+      result.success = false
+      result.message += errorList.errorName
+      let firstError = true
+      for (const error of errorList.errors) {
+        if (!firstError) {
+          result.message += ','
+        }
+        result.message += ` ${error}`
+        firstError = false
+      }
+      result.message += '\n'
+    }
+  }
+  console.log(result)
   return result
 }
 

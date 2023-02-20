@@ -13,7 +13,7 @@ export default async function hanlder(
 ) {
   try {
     // ensure user is logged in
-    await serverAuth(req, res)
+    // await serverAuth(req, res)
 
     switch (req.method) {
       case 'GET': {
@@ -27,7 +27,6 @@ export default async function hanlder(
       case 'POST': {
         apiAttributeValidation(req.body)
         const attribute: Attribute = req.body
-
         let response = await MongoDriver.createEntity(
           AttributeSchema,
           attribute
