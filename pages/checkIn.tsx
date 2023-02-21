@@ -1,36 +1,39 @@
 import CheckInOutForm from '../components/CheckInOutForm'
-import { Box, Button, Card, CardContent, CardActions, Grid, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+} from '@mui/material'
 
 export default function CheckInPage() {
   return (
-    <Grid container direction='row' justifySelf='center' sx={{width: '80%'}}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexFlow: 'row wrap',
+        justifyContent: 'center',
+        gap: '10px',
+      }}
+    >
+      <Card sx={{ width: '40%' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+          <CardContent>
+            <Typography variant="h5">Check in items</Typography>
+            <CheckInOutForm kioskMode={true} users={[]} itemDefinitions={[]} />
+          </CardContent>
 
-      {/* Card and Grid for form and submit button. */}
-      <Grid item alignSelf='center'>
-        <Card>
-          <Grid container direction='column'>
+          <CardActions sx={{ alignSelf: 'flex-end' }}>
+            <Button variant="contained">Check In</Button>
+          </CardActions>
+        </Box>
+      </Card>
 
-            <Grid item>
-              <CardContent>
-                <Typography variant='h6'>Check In Items</Typography>
-                <CheckInOutForm kioskMode={true} users={[]} itemDefinitions={[]}/>
-              </CardContent>
-            </Grid>
-
-            <Grid item alignSelf='flex-end'>
-              <CardActions>
-                <Button variant='contained'>Check In</Button>
-              </CardActions>
-            </Grid>
-
-          </Grid>
-        </Card>
-      </Grid>
-
-      <Grid item alignSelf='flex-start'>
-        <Button variant='outlined'>Create New Item</Button> {/* How to align this properly */}
-      </Grid>
-
-    </Grid>
+      <Button variant="outlined" sx={{ alignSelf: 'flex-start' }}>
+        Create New Item
+      </Button>
+    </Box>
   )
 }
