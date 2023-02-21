@@ -15,23 +15,23 @@ export default function CheckInPage() {
         display: 'flex',
         flexFlow: 'row wrap',
         justifyContent: 'center',
-        gap: '10px',
+        gap: '30px'
       }}
     >
-      <Card sx={{ width: '40%' }}>
+      <Card sx={{ width: '50%', marginTop: '50px'}}>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <CardContent>
-            <Typography variant="h5">Check in items</Typography>
+            <Typography variant="h5" sx={{marginBottom: '30px'}}>Check in items</Typography>
             <CheckInOutForm kioskMode={true} users={[]} itemDefinitions={[]} />
           </CardContent>
 
           <CardActions sx={{ alignSelf: 'flex-end' }}>
-            <Button variant="contained">Check In</Button>
+            <Button variant="contained" sx={{marginBottom: '10px', marginRight: '10px'}}>Check In</Button>
           </CardActions>
         </Box>
       </Card>
-
-      <Button variant="outlined" sx={{ alignSelf: 'flex-start' }}>
+      
+      <Button variant="outlined" sx={{ alignSelf: 'flex-start', marginTop: '30px' }}>
         Create New Item
       </Button>
     </Box>
