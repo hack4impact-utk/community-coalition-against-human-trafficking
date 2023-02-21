@@ -1,7 +1,8 @@
 import mongoDb from '../index'
-import { Document, FilterQuery, Model } from 'mongoose'
+import { Document, FilterQuery, Model, PipelineStage, Types } from 'mongoose'
 import '../../utils/types'
 import { ApiError, ItemDefinition, ServerModel } from '../../utils/types'
+import Category from '../models/Category'
 
 const ENTITY_NOT_FOUND_MESSAGE = 'Entity does not exist'
 
@@ -13,9 +14,19 @@ const ENTITY_NOT_FOUND_MESSAGE = 'Entity does not exist'
  */
 export async function getEntity<Schema extends Document>(
   dbSchema: Model<Schema>,
-  id: string
+  id: string,
+  aggregate?: PipelineStage[]
 ) {
   await mongoDb()
+
+  // if populate is defined, use that instead of simple find
+  if (!!aggregate) {
+    const objectId = new Types.ObjectId(id)
+    aggregate.push({ $match: { _id: objectId } })
+    const response = await dbSchema.aggregate(aggregate)
+    if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
+    return response
+  }
 
   const response = await dbSchema.findById(id)
   if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
@@ -28,9 +39,16 @@ export async function getEntity<Schema extends Document>(
  * @returns A list of all entities in the collection
  */
 export async function getEntities<Schema extends Document>(
-  dbSchema: Model<Schema>
+  dbSchema: Model<Schema>,
+  aggregate?: PipelineStage[]
 ) {
   await mongoDb()
+
+  // if populate is defined, use that instead of simple find
+  if (!!aggregate) {
+    const response = await dbSchema.aggregate(aggregate)
+    return response
+  }
 
   const response = await dbSchema.find()
   return response
