@@ -1,9 +1,10 @@
 import createTheme from '@mui/material/styles/createTheme'
+import colors from './colors'
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#639691',
+      main: colors.mainBlue,
     },
   },
 })
