@@ -10,11 +10,11 @@ import {
 
 export default function CheckOutPage() {
   return (
-    <Box mt={4} mx={'auto'} maxWidth={"min(600px, 80%)"}>
+    <Box mt="2rem" mx="auto" maxWidth="min(600px, 80%)">
       <Card variant="outlined">
-        <Box p={4} display={'flex'} flexDirection={'column'}>
+        <Box p="2rem" display="flex" flexDirection="column">
           <CardContent>
-            <Typography variant="h4" fontSize={'1.5rem'} mb={2}>
+            <Typography variant="h4" fontSize="1.5rem" mb="1rem">
               Check out items
             </Typography>
             <CheckInOutForm kioskMode={true} users={[]} itemDefinitions={[]} />
