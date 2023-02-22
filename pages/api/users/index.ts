@@ -1,7 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { createUser, getUsers } from '../../../server/actions/User'
-import { ApiError, User } from '../../../utils/types'
-import { serverAuth } from '../../../utils/auth'
+import { ApiError, User } from 'utils/types'
+import { serverAuth } from 'utils/auth'
+import { apiUserValidation } from 'utils/apiValidators'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import UserSchema from 'server/models/User'
 
 // @route   POST /api/users - Create a user from request body. - Public
 export default async function handler(
@@ -10,20 +12,21 @@ export default async function handler(
 ) {
   try {
     if (req.method === 'POST') {
+      apiUserValidation(req.body)
       const user = req.body as User
-      await createUser(user)
+      const response = await MongoDriver.createEntity(UserSchema, user)
 
-      return res.status(200).json({
+      return res.status(201).json({
         success: true,
-        payload: {},
+        payload: response.id,
       })
     } else if (req.method === 'GET') {
       await serverAuth(req, res)
-      const users = await getUsers()
-
-      return res.status(200).json({
+      const users = await MongoDriver.getEntities(UserSchema)
+      const resStatus = users.length ? 200 : 204
+      return res.status(resStatus).json({
         success: true,
-        payload: { users },
+        payload: users,
       })
     }
   } catch (e) {
