@@ -1,34 +1,30 @@
 import CheckInOutForm from '../components/CheckInOutForm'
-import { Box, Button } from '@mui/material'
-import { Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardActions,
+  Typography,
+} from '@mui/material'
 
 export default function CheckOutPage() {
   return (
-    <Box
-      sx={{
-        boxShadow: 1,
-        maxWidth: 'min(600px, 90%)',
-        marginInline: 'auto',
-        marginTop: '2rem',
-        padding: '2rem',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
-      <Typography variant="h4" fontSize={24} sx={{ marginBottom: '1rem' }}>
-        Check out items
-      </Typography>
+    <Box mt={4} mx={'auto'} maxWidth={"min(600px, 80%)"}>
+      <Card variant="outlined">
+        <Box p={4} display={'flex'} flexDirection={'column'}>
+          <CardContent>
+            <Typography variant="h4" fontSize={'1.5rem'} mb={2}>
+              Check out items
+            </Typography>
+            <CheckInOutForm kioskMode={true} users={[]} itemDefinitions={[]} />
+          </CardContent>
 
-      {/* TODO: Add props to CheckInOutForm */}
-      <CheckInOutForm
-        kioskMode={true}
-        users={[]}
-        itemDefinitions={[]}
-      ></CheckInOutForm>
-
-      <Button variant="contained" sx={{ alignSelf: 'end', marginTop: '1rem' }}>
-        Check out
-      </Button>
+          <CardActions sx={{ alignSelf: 'end' }}>
+            <Button variant="contained">Check out</Button>
+          </CardActions>
+        </Box>
+      </Card>
     </Box>
   )
 }
