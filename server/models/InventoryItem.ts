@@ -1,5 +1,5 @@
 import { model, Schema, Document, models, Model } from 'mongoose'
-import { InventoryItem } from '../../utils/types'
+import { InventoryItem } from 'utils/types'
 
 const attributeValueSchema = new Schema({
   attribute: {

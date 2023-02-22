@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, Category } from '../../../utils/types'
-import { serverAuth } from '../../../utils/auth'
+import { ApiError, Category } from 'utils/types'
+import { serverAuth } from 'utils/auth'
 import {
   apiCategoryValidation,
   apiObjectIdValidation,
-} from '../../../utils/apiValidators'
-import * as MongoDriver from '../../../server/actions/MongoDriver'
-import CategorySchema from '../../../server/models/Category'
+} from 'utils/apiValidators'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import CategorySchema from 'server/models/Category'
 
 // @route GET api/categories/[categoryId] - Returns a single Category object given a categoryId - Private
 // @route PUT api/users/[categoryId] - Updates an existing Category object (identified by categoryId) with a new Category object - Private

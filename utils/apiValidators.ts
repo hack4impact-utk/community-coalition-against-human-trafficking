@@ -1,4 +1,4 @@
-import { ApiError } from './types'
+import { ApiError } from 'utils/types'
 import {
   validateAttribute,
   validateCategory,
@@ -6,7 +6,7 @@ import {
   validateObjectId,
   validateUser,
   ValidationResult,
-} from './validators'
+} from 'utils/validators'
 
 const BAD_REQUEST_BODY_PREFIX = 'Bad Request Body:\n'
 
