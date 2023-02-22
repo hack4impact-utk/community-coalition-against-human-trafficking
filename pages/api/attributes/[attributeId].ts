@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, Attribute } from '../../../utils/types'
-import { serverAuth } from '../../../utils/auth'
+import { ApiError, Attribute } from 'utils/types'
+import { serverAuth } from 'utils/auth'
 import {
   apiAttributeValidation,
   apiObjectIdValidation,
-} from '../../../utils/apiValidators'
-import * as MongoDriver from '../../../server/actions/MongoDriver'
-import AttributeSchema from '../../../server/models/Attribute'
+} from 'utils/apiValidators'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import AttributeSchema from 'server/models/Attribute'
 
 // @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId - Private
 // @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by attributeId) with a new Attribute object - Private

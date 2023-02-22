@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { unstable_getServerSession } from 'next-auth'
-import { authOptions } from '../pages/api/auth/[...nextauth]'
-import { ApiError } from './types'
+import { authOptions } from '@api/auth/[...nextauth]'
+import { ApiError } from 'utils/types'
 
 /**
  * This function ensures that the person making the server call is logged in AND that the email passed in as

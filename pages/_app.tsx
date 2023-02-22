@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app'
 import { SessionProvider } from 'next-auth/react'
 import React from 'react'
-import DefaultLayout from '../components/DefaultLayout'
+import DefaultLayout from 'components/DefaultLayout'
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 

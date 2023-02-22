@@ -2,8 +2,8 @@ import { Autocomplete, Box, FormControl, TextField } from '@mui/material'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
-import { ItemDefinition, User } from '../../utils/types'
-import QuantityForm from './QuantityForm'
+import { ItemDefinition, User } from 'utils/types'
+import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 
 interface Props {
   kioskMode: boolean

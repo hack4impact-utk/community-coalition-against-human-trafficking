@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, User } from '../../../utils/types'
-import { serverAuth } from '../../../utils/auth'
-import { apiUserValidation } from '../../../utils/apiValidators'
-import * as MongoDriver from '../../../server/actions/MongoDriver'
-import UserSchema from '../../../server/models/User'
+import { ApiError, User } from 'utils/types'
+import { serverAuth } from 'utils/auth'
+import { apiUserValidation } from 'utils/apiValidators'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import UserSchema from 'server/models/User'
 
 // @route   POST /api/users - Create a user from request body. - Public
 export default async function handler(

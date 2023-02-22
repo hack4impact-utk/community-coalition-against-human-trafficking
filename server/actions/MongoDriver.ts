@@ -1,7 +1,7 @@
-import mongoDb from '../index'
+import mongoDb from 'server/index'
 import { Document, FilterQuery, Model } from 'mongoose'
-import '../../utils/types'
-import { ApiError, ItemDefinition, ServerModel } from '../../utils/types'
+import 'utils/types'
+import { ApiError, ItemDefinition, ServerModel } from 'utils/types'
 
 const ENTITY_NOT_FOUND_MESSAGE = 'Entity does not exist'
 
