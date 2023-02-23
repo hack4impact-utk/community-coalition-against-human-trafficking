@@ -17,7 +17,7 @@ import UnarchiveOutlinedIcon from '@mui/icons-material/UnarchiveOutlined'
 import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlined'
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
 // List component
-import NavigationDrawerListItem from './NavigationDrawerListItem'
+import NavigationDrawerListItem from 'components/NavigationDrawer/NavigationDrawerListItem'
 // List components from MUI
 import List from '@mui/material/List'
 import ListItemText from '@mui/material/ListItemText'
@@ -39,7 +39,7 @@ export default function NavigationDrawer({
   // Logo definition
   const logo = (
     <Image
-      src="/../public/images/CCAHT-Logo.png"
+      src="/images/CCAHT-Logo.png"
       alt="CCAHT-logo"
       height="70"
       width="239"
