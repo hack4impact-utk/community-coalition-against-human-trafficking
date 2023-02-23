@@ -1,4 +1,4 @@
-import CheckInOutForm from '../components/CheckInOutForm'
+import CheckInOutForm from 'components/CheckInOutForm'
 import {
   Box,
   Button,
