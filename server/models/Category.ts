@@ -1,5 +1,5 @@
 import { model, Schema, Document, models, Model } from 'mongoose'
-import { Category } from '../../utils/types'
+import { Category } from 'utils/types'
 
 const CategorySchema = new Schema({
   name: {

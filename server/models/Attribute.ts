@@ -1,5 +1,5 @@
 import { model, Schema, Document, models, Model } from 'mongoose'
-import { Attribute } from '../../utils/types'
+import { Attribute } from 'utils/types'
 
 const AttributeSchema = new Schema({
   name: {

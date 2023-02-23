@@ -1,11 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import {
-  deleteUser,
-  getUser,
-  updateUser,
-} from '../../../../server/actions/User'
-import { userEndpointServerAuth } from '../../../../utils/auth'
-import { ApiError, User } from '../../../../utils/types'
+  apiObjectIdValidation,
+  apiUserValidation,
+} from 'utils/apiValidators'
+import { userEndpointServerAuth } from 'utils/auth'
+import { ApiError, User } from 'utils/types'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import UserSchema from 'server/models/User'
 
 // @route   GET api/users/[userId] - Returns a single User object for user with userId - Private
 // @route   DELETE api/users/[userId] - Deletes a single User object for user with userId - Private
@@ -15,26 +16,23 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    // ensure that userId is passed
-    if (!req || !req.query || !req.query.userId) {
-      throw new ApiError(400, 'Bad Request')
-    }
+    apiObjectIdValidation(req?.query?.userId)
 
     // get user to verify identity
-    const user = await getUser(req.query.userId as string)
+    const userId = req.query.userId as string
+    const user = await MongoDriver.getEntity(UserSchema, userId)
+
+    await userEndpointServerAuth(req, res, user.email)
 
     switch (req.method) {
       case 'GET': {
-        await userEndpointServerAuth(req, res, user?.email)
-
         return res.status(200).json({
           success: true,
           payload: user,
         })
       }
       case 'DELETE': {
-        await userEndpointServerAuth(req, res, user?.email)
-        await deleteUser(req.query.userId as string)
+        await MongoDriver.deleteEntity(UserSchema, userId)
 
         return res.status(200).json({
           success: true,
@@ -42,9 +40,9 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        await userEndpointServerAuth(req, res, user?.email)
-        const updatedUser = JSON.parse(req.body) as User
-        await updateUser(req.query.userId as string, updatedUser)
+        apiUserValidation(req.body)
+        const updatedUser = req.body as User
+        await MongoDriver.updateEntity(UserSchema, userId, updatedUser)
 
         return res.status(200).json({
           success: true,
