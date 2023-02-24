@@ -12,10 +12,7 @@ interface Props {
 function QuantityForm({ quantity, setQuantity }: Props) {
   return (
     <Box sx={{ display: 'flex', alignSelf: 'center', marginTop: 3 }}>
-      <Typography
-        variant="h4"
-        sx={{ marginRight: 2, alignSelf: 'center', fontSize: 28 }}
-      >
+      <Typography variant="h5" sx={{ marginRight: 2, alignSelf: 'center' }}>
         Quantity
       </Typography>
       <TextField
