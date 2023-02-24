@@ -18,7 +18,7 @@ export default function CheckInPage() {
       flexDirection="column"
       maxWidth="min(600px, 80%)"
     >
-      <Button variant="outlined" sx={{ flexGrow: 0 }}>
+      <Button variant="outlined" sx={{ alignSelf: {xs: 'center', sm: 'end'} }}>
         Create new item
       </Button>
       <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
