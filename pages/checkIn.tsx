@@ -3,42 +3,58 @@ import {
   Box,
   Button,
   Card,
-  CardContent,
   CardActions,
+  CardContent,
   Typography,
+  Unstable_Grid2 as Grid2,
   useMediaQuery,
+  useTheme,
 } from '@mui/material'
 
 export default function CheckInPage() {
-  const isMobileView = useMediaQuery('(max-width: 600px)')
+  const theme = useTheme()
+  const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   return (
-    <Box
-      mx="auto"
-      display="flex"
-      flexDirection="column"
-      maxWidth="min(600px, 80%)"
-    >
-      <Button variant="outlined" sx={{ alignSelf: {xs: 'center', sm: 'end'} }}>
-        Create new item
-      </Button>
-      <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
-        <Box px="1.5rem" py="2rem" display="flex" flexDirection="column">
-          <CardContent>
-            <Typography variant="h4" fontSize="1.5rem" mb="1rem">
-              Check in items
-            </Typography>
-            <CheckInOutForm kioskMode={true} users={[]} itemDefinitions={[]} />
-          </CardContent>
+    <Grid2 container sx={{ flexGrow: 1 }}>
+      <Grid2
+        xs={12}
+        sm={8}
+        lg={6}
+        display="flex"
+        justifyContent="flex-end"
+        smOffset={2}
+        lgOffset={3}
+      >
+        <Button
+          variant="outlined"
+          fullWidth={isMobileView}
+          size="large"
+          sx={{ my: 2 }}
+        >
+          Create new item
+        </Button>
+      </Grid2>
 
-          <CardActions
-            sx={{ alignSelf: { xs: 'center', sm: 'end' }, pr: '16px' }}
-          >
-            <Button variant="contained" sx={{ mt: '-8px' }}>
-              Check in
-            </Button>
-          </CardActions>
-        </Box>
-      </Card>
-    </Box>
+      <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
+        <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
+          <Box display="flex" flexDirection="column">
+            <CardContent sx={{ p: isMobileView ? 0 : 2 }}>
+              <Typography variant="h5" sx={{ mb: 2 }}>
+                Check in items
+              </Typography>
+              <CheckInOutForm
+                kioskMode={true}
+                users={[]}
+                itemDefinitions={[]}
+              />
+            </CardContent>
+
+            <CardActions sx={{ alignSelf: { xs: 'end' } }}>
+              <Button variant="contained">Check in</Button>
+            </CardActions>
+          </Box>
+        </Card>
+      </Grid2>
+    </Grid2>
   )
 }
