@@ -4,6 +4,7 @@ import { serverAuth } from 'utils/auth'
 import { apiItemDefinitionValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import ItemDefinitionSchema from 'server/models/ItemDefinition'
+import InventoryItemSchema from 'server/models/InventoryItem'
 import { getItemDefinitions } from 'server/actions/ItemDefinition'
 import { checkInInventoryItem } from 'server/actions/InventoryItems'
 
@@ -25,16 +26,15 @@ export default async function handler(
         //         success: true,
         //        payload: items,
         //     })
-        const item: InventoryItem = {
+        const item: Partial<InventoryItem> = {
           itemDefinition: '63edadfb566dfd57bfdb5456',
-          quantity: 0,
-          assignee: '63ef9f69d4ea82e5258cb175',
         }
 
-        await checkInInventoryItem(item, 1)
+        // const result = await MongoDriver.getEntities(InventoryItemSchema)
+        const result = checkInInventoryItem(item, 2)
         return res.status(200).json({
           success: true,
-          payload: {},
+          payload: result,
         })
       }
       case 'POST': {
