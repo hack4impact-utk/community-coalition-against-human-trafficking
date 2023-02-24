@@ -3,38 +3,39 @@ import {
   Box,
   Button,
   Card,
-  CardContent,
   CardActions,
+  CardContent,
   Typography,
+  Unstable_Grid2 as Grid2,
   useMediaQuery,
+  useTheme,
 } from '@mui/material'
 
-import { useEffect } from 'react'
-export default function CheckOutPage() {
-  const isMobileView = useMediaQuery('(max-width: 600px)')
+export default function CheckInPage() {
+  const theme = useTheme()
+  const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   return (
-    <Box mt="2rem" mx="auto" maxWidth="min(600px, 80%)">
-      <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
-        <Box px="1.5rem" py="2rem" display="flex" flexDirection="column">
-          <CardContent>
-            <Typography variant="h4" fontSize="1.5rem" mb="1rem">
-              Check out items
-            </Typography>
-            <CheckInOutForm kioskMode={true} users={[]} itemDefinitions={[]} />
-          </CardContent>
+    <Grid2 container my={2} sx={{ flexGrow: 1 }}>
+      <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
+        <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
+          <Box display="flex" flexDirection="column">
+            <CardContent sx={{ p: isMobileView ? 0 : 2 }}>
+              <Typography variant="h5" sx={{ mb: 2 }}>
+                Check in items
+              </Typography>
+              <CheckInOutForm
+                kioskMode={true}
+                users={[]}
+                itemDefinitions={[]}
+              />
+            </CardContent>
 
-          <CardActions
-            sx={{
-              alignSelf: { xs: 'center', sm: 'end' },
-              pr: { xs: 0, sm: '16px' },
-            }}
-          >
-            <Button variant="contained" sx={{ mt: '-8px' }}>
-              Check out
-            </Button>
-          </CardActions>
-        </Box>
-      </Card>
-    </Box>
+            <CardActions sx={{ alignSelf: { xs: 'end' } }}>
+              <Button variant="contained">Check in</Button>
+            </CardActions>
+          </Box>
+        </Card>
+      </Grid2>
+    </Grid2>
   )
 }
