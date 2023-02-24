@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getItemDefinition } from '../../../server/actions/ItemDefinition'
-import { ApiError, ItemDefinition } from '../../../utils/types'
-import { serverAuth } from '../../../utils/auth'
+import { getItemDefinition } from 'server/actions/ItemDefinition'
+import { ApiError, ItemDefinition } from 'utils/types'
+import { serverAuth } from 'utils/auth'
 import {
   apiItemDefinitionValidation,
   apiObjectIdValidation,
-} from '../../../utils/apiValidators'
-import * as MongoDriver from '../../../server/actions/MongoDriver'
-import ItemDefinitionSchema from '../../../server/models/Category'
+} from 'utils/apiValidators'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import ItemDefinitionSchema from 'server/models/Category'
 
 // @route GET api/itemDefintions/[itemDefinitionId] - Returns a single ItemDefinition object given a itemDefinitionId - Private
 // @route PUT api/users/[itemDefinitionId] - Updates an existing ItemDefinition object (identified by itemDefinitionId) with a new ItemDefinition object - Private

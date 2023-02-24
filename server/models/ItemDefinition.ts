@@ -1,5 +1,5 @@
 import { model, Schema, Document, models, Model } from 'mongoose'
-import { ItemDefinition } from '../../utils/types'
+import { ItemDefinition } from 'utils/types'
 
 const ItemDefinitionSchema = new Schema({
   name: {

@@ -1,6 +1,6 @@
-import mongoDb from '../index'
-import ItemDefinitionSchema from '../models/ItemDefinition'
-import { getEntities, getEntity } from './MongoDriver'
+import mongoDb from 'server/index'
+import ItemDefinitionSchema from 'server/models/ItemDefinition'
+import { getEntities, getEntity } from 'server/actions/MongoDriver'
 
 /**
  * Finds an itemDefinition by its id

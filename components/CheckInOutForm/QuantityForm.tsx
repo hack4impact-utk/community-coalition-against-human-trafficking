@@ -1,6 +1,6 @@
 import { Box, Typography, TextField, IconButton } from '@mui/material'
 import React from 'react'
-import colors from '../../utils/colors'
+import colors from 'utils/colors'
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined'
 

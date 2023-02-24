@@ -1,6 +1,6 @@
 import React from 'react'
-import NavigationDrawer from '../NavigationDrawer'
-import HeaderAppBar from '../HeaderAppBar'
+import NavigationDrawer from 'components/NavigationDrawer'
+import HeaderAppBar from 'components/HeaderAppBar'
 import Box from '@mui/material/Box'
 interface DefaultLayoutProps {
   children: React.ReactNode

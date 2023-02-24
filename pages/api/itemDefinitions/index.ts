@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, ItemDefinition } from '../../../utils/types'
-import { serverAuth } from '../../../utils/auth'
-import { apiItemDefinitionValidation } from '../../../utils/apiValidators'
-import * as MongoDriver from '../../../server/actions/MongoDriver'
-import ItemDefinitionSchema from '../../../server/models/ItemDefinition'
-import { getItemDefinitions } from '../../../server/actions/ItemDefinition'
+import { ApiError, ItemDefinition } from 'utils/types'
+import { serverAuth } from 'utils/auth'
+import { apiItemDefinitionValidation } from 'utils/apiValidators'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import ItemDefinitionSchema from 'server/models/ItemDefinition'
+import { getItemDefinitions } from 'server/actions/ItemDefinition'
 
 // @route GET api/itemDefintions - Returns a list of all itemDefintions in the database - Private
 // @route POST /api/itemDefintions - Create a itemDefinition from request body - Private

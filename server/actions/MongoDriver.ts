@@ -1,8 +1,7 @@
-import mongoDb from '../index'
+import mongoDb from 'server/index'
 import { Document, FilterQuery, Model, PipelineStage, Types } from 'mongoose'
-import '../../utils/types'
-import { ApiError, ItemDefinition, ServerModel } from '../../utils/types'
-import Category from '../models/Category'
+import 'utils/types'
+import { ApiError, ItemDefinition, ServerModel } from 'utils/types'
 
 const ENTITY_NOT_FOUND_MESSAGE = 'Entity does not exist'
 
@@ -19,7 +18,7 @@ export async function getEntity<Schema extends Document>(
 ) {
   await mongoDb()
 
-  // if populate is defined, use that instead of simple find
+  // if aggregate is defined, use that instead of simple find
   if (!!aggregate) {
     const objectId = new Types.ObjectId(id)
     aggregate.push({ $match: { _id: objectId } })
@@ -44,7 +43,7 @@ export async function getEntities<Schema extends Document>(
 ) {
   await mongoDb()
 
-  // if populate is defined, use that instead of simple find
+  // if aggregate is defined, use that instead of simple find
   if (!!aggregate) {
     const response = await dbSchema.aggregate(aggregate)
     return response

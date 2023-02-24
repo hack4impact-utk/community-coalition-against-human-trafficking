@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, Attribute } from '../../../utils/types'
-import { serverAuth } from '../../../utils/auth'
-import { apiAttributeValidation } from '../../../utils/apiValidators'
-import * as MongoDriver from '../../../server/actions/MongoDriver'
-import AttributeSchema from '../../../server/models/Attribute'
+import { ApiError, Attribute } from 'utils/types'
+import { serverAuth } from 'utils/auth'
+import { apiAttributeValidation } from 'utils/apiValidators'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import AttributeSchema from 'server/models/Attribute'
 
 // @route GET api/attributes - Returns a list of all Attributes in the database - Private
 // @route POST api/attributes - Create an Attribute from request body - Private
