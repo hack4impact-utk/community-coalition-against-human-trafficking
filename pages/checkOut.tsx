@@ -30,7 +30,9 @@ export default function CheckOutPage() {
               />
             </CardContent>
 
-            <CardActions sx={{ alignSelf: { xs: 'end' } }}>
+            <CardActions
+              sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'end' } }}
+            >
               <Button variant="contained">Check out</Button>
             </CardActions>
           </Box>
