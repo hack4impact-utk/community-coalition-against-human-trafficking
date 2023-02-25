@@ -11,7 +11,7 @@ import {
   useTheme,
 } from '@mui/material'
 
-export default function CheckInPage() {
+export default function CheckOutPage() {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   return (
@@ -21,7 +21,7 @@ export default function CheckInPage() {
           <Box display="flex" flexDirection="column">
             <CardContent sx={{ p: isMobileView ? 0 : 2 }}>
               <Typography variant="h5" sx={{ mb: 2 }}>
-                Check in items
+                Check out items
               </Typography>
               <CheckInOutForm
                 kioskMode={true}
@@ -31,7 +31,7 @@ export default function CheckInPage() {
             </CardContent>
 
             <CardActions sx={{ alignSelf: { xs: 'end' } }}>
-              <Button variant="contained">Check in</Button>
+              <Button variant="contained">Check out</Button>
             </CardActions>
           </Box>
         </Card>
