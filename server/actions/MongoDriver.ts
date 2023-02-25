@@ -1,5 +1,13 @@
 import mongoDb from 'server/index'
-import { Document, FilterQuery, Model, PipelineStage, Types } from 'mongoose'
+import {
+  Document,
+  FilterQuery,
+  HydratedDocument,
+  Model,
+  ObjectId,
+  PipelineStage,
+  Types,
+} from 'mongoose'
 import 'utils/types'
 import { ApiError, ItemDefinition, ServerModel } from 'utils/types'
 
@@ -15,7 +23,7 @@ export async function getEntity<Schema extends Document>(
   dbSchema: Model<Schema>,
   id: string,
   aggregate?: PipelineStage[]
-) {
+): Promise<Schema & { _id: ObjectId }> {
   await mongoDb()
 
   // if aggregate is defined, use that instead of simple find
@@ -24,7 +32,6 @@ export async function getEntity<Schema extends Document>(
     aggregate.push({ $match: { _id: objectId } })
     const response = await dbSchema.aggregate(aggregate)
     if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
-    return response
   }
 
   const response = await dbSchema.findById(id)
@@ -40,7 +47,7 @@ export async function getEntity<Schema extends Document>(
 export async function getEntities<Schema extends Document>(
   dbSchema: Model<Schema>,
   aggregate?: PipelineStage[]
-) {
+): Promise<HydratedDocument<Schema>[]> {
   await mongoDb()
 
   // if aggregate is defined, use that instead of simple find
@@ -62,7 +69,7 @@ export async function getEntities<Schema extends Document>(
 export async function createEntity<
   Schema extends Document,
   T extends ServerModel
->(dbSchema: Model<Schema>, document: T) {
+>(dbSchema: Model<Schema>, document: T): Promise<HydratedDocument<Schema>> {
   await mongoDb()
 
   const response = await dbSchema.create(document)
@@ -78,7 +85,7 @@ export async function createEntity<
 export async function updateEntity<
   Schema extends Document,
   T extends ServerModel
->(dbSchema: Model<Schema>, id: string, document: T) {
+>(dbSchema: Model<Schema>, id: string, document: T): Promise<void> {
   await mongoDb()
 
   const response = await dbSchema.findByIdAndUpdate(id, document)
@@ -93,7 +100,7 @@ export async function updateEntity<
 export async function deleteEntity<Schema extends Document>(
   dbSchema: Model<Schema>,
   id: string
-) {
+): Promise<void> {
   await mongoDb()
 
   await dbSchema.findByIdAndDelete(id, (response: unknown) => {
@@ -112,7 +119,10 @@ export async function deleteEntity<Schema extends Document>(
 export async function findEntities<
   T extends ServerModel,
   Schema extends Omit<T, '_id'> & Document
->(dbSchema: Model<Schema>, filterDocument: Partial<T> | T) {
+>(
+  dbSchema: Model<Schema>,
+  filterDocument: Partial<T> | T
+): Promise<HydratedDocument<Schema>[]> {
   // if a blank filter is applied, it returns all entities in the database.
   // We don't want this, so return an empty array
   if (Object.keys(filterDocument).length < 1) return []

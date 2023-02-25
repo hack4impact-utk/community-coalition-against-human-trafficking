@@ -1,8 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import {
-  apiObjectIdValidation,
-  apiUserValidation,
-} from 'utils/apiValidators'
+import { apiObjectIdValidation, apiUserValidation } from 'utils/apiValidators'
 import { userEndpointServerAuth } from 'utils/auth'
 import { ApiError, User } from 'utils/types'
 import * as MongoDriver from 'server/actions/MongoDriver'
@@ -16,7 +13,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    apiObjectIdValidation(req?.query?.userId)
+    apiObjectIdValidation(req?.query?.userId as string)
 
     // get user to verify identity
     const userId = req.query.userId as string
