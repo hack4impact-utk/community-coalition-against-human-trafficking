@@ -49,7 +49,9 @@ export default function CheckInPage() {
               />
             </CardContent>
 
-            <CardActions sx={{ alignSelf: { xs: 'end' }, mt: { xs: 1, sm: 0 }}}>
+            <CardActions
+              sx={{ alignSelf: { xs: 'end' }, mt: { xs: 1, sm: 0 } }}
+            >
               <Button variant="contained">Check in</Button>
             </CardActions>
           </Box>
