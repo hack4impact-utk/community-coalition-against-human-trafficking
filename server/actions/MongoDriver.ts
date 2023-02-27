@@ -32,6 +32,7 @@ export async function getEntity<Schema extends Document>(
     aggregate.push({ $match: { _id: objectId } })
     const response = await dbSchema.aggregate(aggregate)
     if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
+    return response[0]
   }
 
   const response = await dbSchema.findById(id)
