@@ -26,16 +26,16 @@ export async function getEntity<Schema extends Document>(
 ): Promise<Schema & { _id: ObjectId }> {
   await mongoDb()
 
+  let response
+
   // if aggregate is defined, use that instead of simple find
   if (!!aggregate) {
     const objectId = new Types.ObjectId(id)
     aggregate.push({ $match: { _id: objectId } })
-    const response = await dbSchema.aggregate(aggregate)
-    if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
-    return response[0]
+    response = (await dbSchema.aggregate(aggregate))[0]
+  } else {
+    response = await dbSchema.findById(id)
   }
-
-  const response = await dbSchema.findById(id)
   if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
   return response
 }
@@ -50,14 +50,15 @@ export async function getEntities<Schema extends Document>(
   aggregate?: PipelineStage[]
 ): Promise<HydratedDocument<Schema>[]> {
   await mongoDb()
+  let response
 
   // if aggregate is defined, use that instead of simple find
   if (!!aggregate) {
-    const response = await dbSchema.aggregate(aggregate)
-    return response
+    response = await dbSchema.aggregate(aggregate)
+  } else {
+    response = await dbSchema.find()
   }
 
-  const response = await dbSchema.find()
   return response
 }
 
