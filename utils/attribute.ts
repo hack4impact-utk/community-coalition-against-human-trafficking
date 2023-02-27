@@ -10,6 +10,11 @@ export interface SeparatedAttributes {
   number: NumberAttribute[]
 }
 
+/**
+ * Separates an array of Attributes based on the values they can hold.
+ * @param attributes The array of Attributes to separate.
+ * @returns A `SeparatedAttributes` object containing the different kinds of attributes.
+ */
 export function separateAttributes(
   attributes?: Attribute[]
 ): SeparatedAttributes {
