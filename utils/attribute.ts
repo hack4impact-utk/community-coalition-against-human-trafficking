@@ -4,15 +4,6 @@ import {
   OptionsAttribute,
   TextAttribute,
 } from 'utils/types/models'
-
-export function getOptionAttributes(
-  attributes: Attribute[]
-): OptionsAttribute[] {
-  return attributes.filter(
-    (attribute) => attribute.possibleValues instanceof Array
-  ) as OptionsAttribute[]
-}
-
 export interface SeparatedAttributes {
   options: OptionsAttribute[]
   text: TextAttribute[]
