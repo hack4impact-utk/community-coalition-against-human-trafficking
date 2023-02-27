@@ -69,9 +69,6 @@ export default function AttributeAutocomplete({
           />
         ))
       }
-      // getOptionDisabled={(option) =>
-      //   selectedAttributes.findIndex((a) => a.label === option.label) !== -1
-      // }
       renderInput={(params) => <TextField {...params} label="Attributes" />}
       onChange={(e, attributes) => {
         if (!attributes.length) {
