@@ -76,10 +76,15 @@ export default function AttributeAutocomplete({
           return
         }
 
+        // get and remove most recent attribute (the one that triggered this event)
         const newAttr = attributes.pop() as AutocompleteAttributeOption
+
+        // check if there exists another attribute with the same label
         const idx = attributes.findIndex(
           (a) => a.label == newAttr.label && a.value != newAttr.value
         )
+
+        // if so, replace that attribute with the new one. otherwise re-append it to the attributes array
         if (idx != -1) attributes[idx] = newAttr
         else attributes.push(newAttr)
 
