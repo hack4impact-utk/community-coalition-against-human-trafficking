@@ -1,12 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, ItemDefinition, InventoryItem } from 'utils/types'
+import { ApiError, InventoryItem, ItemDefinition } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { apiItemDefinitionValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import ItemDefinitionSchema from 'server/models/ItemDefinition'
-import InventoryItemSchema from 'server/models/InventoryItem'
 import { getItemDefinitions } from 'server/actions/ItemDefinition'
-import { checkInInventoryItem } from 'server/actions/InventoryItems'
+import {
+  checkInInventoryItem,
+  checkOutInventoryItem,
+} from 'server/actions/InventoryItems'
 
 // @route GET api/itemDefintions - Returns a list of all itemDefintions in the database - Private
 // @route POST /api/itemDefintions - Create a itemDefinition from request body - Private
@@ -22,12 +24,14 @@ export default async function handler(
       case 'GET': {
         // const items = await getItemDefinitions()
         // const resStatus = items.length ? 200 : 204
-        //        return res.status(resStatus).json({
-        //         success: true,
-        //        payload: items,
-        //     })
-        const item: Partial<InventoryItem> = {
-          itemDefinition: '63edadfb566dfd57bfdb5456',
+        // return res.status(resStatus).json({
+        //   success: true,
+        //   payload: items,
+        // })
+        const item: InventoryItem = {
+          itemDefinition: '63edadfb566dfd57bfdb5456999',
+          quantity: 2,
+          assignee: 'Collins',
         }
 
         // const result = await MongoDriver.getEntities(InventoryItemSchema)

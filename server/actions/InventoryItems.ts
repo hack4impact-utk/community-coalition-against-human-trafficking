@@ -1,6 +1,7 @@
 import InventoryItemSchema from 'server/models/InventoryItem'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import { InventoryItem } from 'utils/types'
+import { ApiError } from 'utils/types'
 
 /**
  * Checks to see if an item is in the inventory and will add to the quantity or
@@ -22,6 +23,7 @@ export async function checkInInventoryItem(
       itemMatches[0]
     )
   } else {
+    MongoDriver.createEntity(InventoryItemSchema, item)
   }
 }
 
@@ -30,13 +32,21 @@ export async function checkInInventoryItem(
  * 400 error if it does not exist.
  * @param item
  * @param quantity of item to remove
- * @returns checksIn Items to the inventory
+ * @returns checksOut Items to the inventory
  */
-// export async function checkOutInventoryItem(item: InventoryItem, quantityRemoved: number) {
-//     if (MongoDriver.getEntities(item) = ) {// see what this returns when it finds something vs not
-//             // add quantity
-//     }
-//     else {
-//             // create new item
-//     }
-// }
+export async function checkOutInventoryItem(
+  item: InventoryItem,
+  quantityRemoved: number
+) {
+  const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
+  if (itemMatches.length) {
+    itemMatches[0].quantity -= quantityRemoved
+    MongoDriver.updateEntity(
+      InventoryItemSchema,
+      itemMatches[0].id,
+      itemMatches[0]
+    )
+  } else {
+    throw new ApiError(404, 'Entity does not exist')
+  }
+}
