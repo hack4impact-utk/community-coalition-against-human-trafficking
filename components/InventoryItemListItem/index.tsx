@@ -1,4 +1,4 @@
-import { TableRow, TableCell } from '@mui/material'
+import { TableRow, TableCell, Chip } from '@mui/material'
 import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
 
@@ -45,20 +45,57 @@ export default function InventoryItemListItem({
     }
   }
 
+  const renderAttributeChips = (inventoryItem: InventoryItem) => {
+    if (!inventoryItem.attributes || inventoryItem.attributes.length === 0) {
+      return ' '
+    }
+
+    return inventoryItem.attributes.map((itemAttribute) => {
+      // attributes that are strings or numbers show the attribute name
+      // attributes that are list types do not
+      if (
+        typeof itemAttribute.attribute === 'string' ||
+        typeof itemAttribute.attribute.possibleValues === 'string' ||
+        typeof itemAttribute.attribute.possibleValues === 'number'
+      ) {
+        return (
+          <Chip
+            size="small"
+            label={`${itemAttribute.attribute}: ${itemAttribute.value}`}
+          />
+        )
+      } else {
+        return <Chip size="small" label={itemAttribute.value} />
+      }
+    })
+  }
+
   return (
-    <TableRow>
-      <TableCell>
+    <TableRow sx={{ display: 'flex' }}>
+      <TableCell sx={{ display: 'flex', alignItems: 'center', width: '10%' }}>
         {typeof inventoryItem.itemDefinition === 'string'
           ? inventoryItem.itemDefinition
           : inventoryItem.itemDefinition.name}
       </TableCell>
-      <TableCell></TableCell>
-      <TableCell>{getCategory(inventoryItem)}</TableCell>
-      <TableCell sx={{ display: 'flex' }}>
+      <TableCell
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: "0.25rem",
+          width: '50%',
+        }}
+      >
+        {renderAttributeChips(inventoryItem)}
+      </TableCell>
+      <TableCell sx={{ display: 'flex', alignItems: 'center', width: '20%' }}>
+        {getCategory(inventoryItem)}
+      </TableCell>
+      <TableCell sx={{ display: 'flex', alignItems: 'center', width: '10%' }}>
         {inventoryItem.quantity}
         {renderWarningIcon(inventoryItem)}
       </TableCell>
-      <TableCell>
+      <TableCell sx={{ display: 'flex', alignItems: 'center', width: '10%' }}>
         {typeof inventoryItem.assignee === 'string'
           ? inventoryItem.assignee
           : inventoryItem.assignee.name}
