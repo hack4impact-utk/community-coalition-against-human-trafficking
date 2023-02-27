@@ -3,23 +3,30 @@ import { InventoryItem } from 'utils/types'
 
 const InventoryItemSchema = new Schema({
   itemDefinition: {
-    type: {
-      type: Schema.Types.ObjectId,
-      ref: 'ItemDefinition',
-      required: true,
+    type: Schema.Types.ObjectId,
+    ref: 'ItemDefinition',
+    required: true,
+  },
+  attributes: [
+    {
+      attribute: {
+        _id: false,
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Attribute',
+      },
+      // value is either string or number
+      value: { type: Schema.Types.Mixed, required: true },
+      _id: false,
     },
-  },
-  attributes: {
-    type: [{ type: Schema.Types.ObjectId, ref: 'Attribute' }],
-    required: false,
-    default: [],
-  },
+  ],
   quantity: {
     type: Number,
     required: true,
   },
   assignee: {
-    type: { type: Schema.Types.ObjectId, ref: 'User' },
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: false,
   },
 })
