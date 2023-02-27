@@ -31,11 +31,29 @@ export interface Category {
   name: string
 }
 
+export type AttributePossibleValues = 'text' | 'number' | string[]
+
 export interface Attribute {
   _id?: string
   name: string
-  possibleValues: 'text' | 'number' | string[]
+  possibleValues: AttributePossibleValues
   color: string
+}
+
+export interface OptionsAttribute extends Attribute {
+  possibleValues: string[]
+}
+
+export interface TextAttribute extends Attribute {
+  possibleValues: 'text'
+}
+
+export interface NumberAttribute extends Attribute {
+  possibleValues: 'number'
+}
+
+export interface AttributeRequest {
+  [_id: string]: string | number
 }
 
 export type ServerModel =
