@@ -49,11 +49,7 @@ export default function InventoryItemListItem({
   }
 
   const renderAttributeChips = (inventoryItem: InventoryItem) => {
-    if (!inventoryItem.attributes || inventoryItem.attributes.length === 0) {
-      return ' '
-    }
-
-    return inventoryItem.attributes.map((itemAttribute, i) => {
+    return inventoryItem.attributes?.map((itemAttribute, i) => {
       // attributes that are strings or numbers show the attribute name
       // attributes that are list types do not
 
