@@ -1,6 +1,7 @@
 import { TableRow, TableCell, Chip } from '@mui/material'
 import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
+import colors from 'utils/colors'
 
 interface InventoryItemListItemProps {
   inventoryItem: InventoryItem
@@ -35,13 +36,13 @@ export default function InventoryItemListItem({
       inventoryItem.quantity <
       inventoryItem.itemDefinition.criticalStockThreshold
     ) {
-      return <WarningIcon fontSize="small" sx={{ color: '#FF0F0F' }} /> // red from Figma
+      return <WarningIcon fontSize="small" sx={{ color: colors.warning.red }} />
     }
 
     if (
       inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
     ) {
-      return <WarningIcon fontSize="small" sx={{ color: '#FFDB58' }} /> // mustard yellow placeholder
+      return <WarningIcon fontSize="small" sx={{ color: colors.warning.yellow }} />
     }
   }
 
