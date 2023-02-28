@@ -6,9 +6,8 @@ import { ApiError } from 'utils/types'
 /**
  * Checks to see if an item is in the inventory and will add to the quantity or
  * create the item if needed.
- * @param item
+ * @param item the item that will be added (checkedIn) to db
  * @param quantity of item to add
- * @returns checksIn Items to the inventory
  */
 export async function checkInInventoryItem(
   item: InventoryItem,
@@ -36,9 +35,10 @@ export async function checkInInventoryItem(
 /**
  * Checks to see if an item is in the inventory and will remove an amount or
  * 400 error if it does not exist.
- * @param item
+ * @param item the item that will be removed (checkOut) from db
  * @param quantity of item to remove
- * @returns checksOut Items to the inventory
+ * @throws ApiError: 400 when checking out an item would result a negative quantity in the db
+ * @throws ApiError: 404 when attempting to check out an item that is not in the db
  */
 export async function checkOutInventoryItem(
   item: InventoryItem,
