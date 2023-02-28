@@ -17,13 +17,19 @@ export async function checkInInventoryItem(
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
   if (itemMatches.length) {
     itemMatches[0].quantity += quantityItem
+    itemMatches[0].attributes?.sort()
     MongoDriver.updateEntity(
       InventoryItemSchema,
       itemMatches[0].id,
       itemMatches[0]
     )
   } else {
-    MongoDriver.createEntity(InventoryItemSchema, item)
+    const createdItem = await MongoDriver.createEntity(
+      InventoryItemSchema,
+      item
+    )
+    createdItem.attributes?.sort()
+    MongoDriver.updateEntity(InventoryItemSchema, createdItem.id, createdItem)
   }
 }
 
@@ -39,18 +45,22 @@ export async function checkOutInventoryItem(
   quantityRemoved: number
 ) {
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
-  if (!itemMatches.length) {
-    throw new ApiError(404, 'Entity does not exist')
-  }
-  const modifiedItemQuantity = (itemMatches[0].quantity -= quantityRemoved)
-  if (modifiedItemQuantity < 0) {
-    itemMatches[0].quantity += quantityRemoved
-    throw new ApiError(400, 'Deduction would result in negative quantity.')
+  if (itemMatches.length) {
+    const modifiedItemQuantity = (itemMatches[0].quantity -= quantityRemoved)
+    if (modifiedItemQuantity < 0) {
+      itemMatches[0].quantity += quantityRemoved
+      throw new ApiError(
+        400,
+        'Operation failed: Check out would result in negative quantity.'
+      )
+    } else {
+      MongoDriver.updateEntity(
+        InventoryItemSchema,
+        itemMatches[0].id,
+        itemMatches[0]
+      )
+    }
   } else {
-    MongoDriver.updateEntity(
-      InventoryItemSchema,
-      itemMatches[0].id,
-      itemMatches[0]
-    )
+    throw new ApiError(404, 'Entity does not exist')
   }
 }

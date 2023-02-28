@@ -30,16 +30,16 @@ export default async function handler(
         // })
         const item: InventoryItem = {
           itemDefinition: '63edadfb566dfd57bfdb5456',
-          quantity: 0,
+          quantity: 2,
           assignee: '63fa71d1d7f7d06fb99723a1',
           attributes: [
-            { attribute: '63f1be76e4c470019adec84c', value: 3 },
+            { attribute: '69f1be76e4c470019adec84c', value: 3 },
             { attribute: '63fc0555a3ca65132654a655', value: 3 },
           ],
         }
 
         // const result = await MongoDriver.getEntities(InventoryItemSchema)
-        const result = checkInInventoryItem(item, 2)
+        const result = checkInInventoryItem(item, 1)
         return res.status(200).json({
           success: true,
           payload: result,
