@@ -10,7 +10,7 @@ interface InventoryItemListItemProps {
 export default function InventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
-  const getCategory = (inventoryItem: InventoryItem) => {
+  const narrowCategory = (inventoryItem: InventoryItem) => {
     // needed to deal with the possible union types defined in the database schema
     if (
       typeof inventoryItem.itemDefinition === 'string' ||
@@ -90,7 +90,7 @@ export default function InventoryItemListItem({
         {renderAttributeChips(inventoryItem)}
       </TableCell>
       <TableCell sx={{ display: 'flex', alignItems: 'center', width: '20%' }}>
-        {getCategory(inventoryItem)}
+        {narrowCategory(inventoryItem)}
       </TableCell>
       <TableCell sx={{ display: 'flex', alignItems: 'center', width: '10%' }}>
         {inventoryItem.quantity}
