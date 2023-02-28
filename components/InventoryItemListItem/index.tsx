@@ -42,7 +42,9 @@ export default function InventoryItemListItem({
     if (
       inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
     ) {
-      return <WarningIcon fontSize="small" sx={{ color: colors.warning.yellow }} />
+      return (
+        <WarningIcon fontSize="small" sx={{ color: colors.warning.yellow }} />
+      )
     }
   }
 
@@ -51,22 +53,42 @@ export default function InventoryItemListItem({
       return ' '
     }
 
-    return inventoryItem.attributes.map((itemAttribute) => {
+    return inventoryItem.attributes.map((itemAttribute, i) => {
       // attributes that are strings or numbers show the attribute name
       // attributes that are list types do not
-      if (
-        typeof itemAttribute.attribute === 'string' ||
-        typeof itemAttribute.attribute.possibleValues === 'string' ||
-        typeof itemAttribute.attribute.possibleValues === 'number'
-      ) {
+
+      // TODO: remove this if statement after database types are split between
+      // response and request
+      if (typeof itemAttribute.attribute === 'string') {
         return (
           <Chip
             size="small"
             label={`${itemAttribute.attribute}: ${itemAttribute.value}`}
+            key={i}
+          />
+        )
+      }
+
+      if (typeof itemAttribute.attribute.possibleValues === 'object') {
+        return (
+          <Chip
+            size="small"
+            label={itemAttribute.value}
+            color="primary"
+            sx={{ backgroundColor: itemAttribute.attribute.color }}
+            key={i}
           />
         )
       } else {
-        return <Chip size="small" label={itemAttribute.value} />
+        return (
+          <Chip
+            size="small"
+            label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
+            color="primary"
+            sx={{ backgroundColor: itemAttribute.attribute.color }}
+            key={i}
+          />
+        )
       }
     })
   }
@@ -83,7 +105,7 @@ export default function InventoryItemListItem({
           display: 'flex',
           alignItems: 'center',
           flexWrap: 'wrap',
-          gap: "0.25rem",
+          gap: '0.25rem',
           width: '50%',
         }}
       >
