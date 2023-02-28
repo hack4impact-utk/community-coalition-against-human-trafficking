@@ -48,7 +48,6 @@ export async function checkOutInventoryItem(
   if (itemMatches.length) {
     const modifiedItemQuantity = (itemMatches[0].quantity -= quantityRemoved)
     if (modifiedItemQuantity < 0) {
-      itemMatches[0].quantity += quantityRemoved
       throw new ApiError(
         400,
         'Operation failed: Check out would result in negative quantity.'
