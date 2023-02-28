@@ -107,7 +107,14 @@ export default function InventoryItemListItem({
       >
         {renderAttributeChips(inventoryItem)}
       </TableCell>
-      <TableCell sx={{ display: 'flex', alignItems: 'center', width: '20%' }}>
+      <TableCell
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '20%',
+        }}
+      >
         {narrowCategory(inventoryItem)}
       </TableCell>
       <TableCell sx={{ display: 'flex', alignItems: 'center', width: '10%' }}>
