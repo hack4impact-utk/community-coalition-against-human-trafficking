@@ -11,8 +11,18 @@ interface InventoryItemListItemProps {
 export default function InventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
+  // ensure that attribute chips are readable
+  const getContrastYIQ = (hexcolor: string) => {
+    var colorNoHash = hexcolor.substring(1, hexcolor.length - 1)
+    var r = parseInt(colorNoHash.substring(0, 2), 16)
+    var g = parseInt(colorNoHash.substring(2, 2), 16)
+    var b = parseInt(colorNoHash.substring(4, 2), 16)
+    var yiq = (r * 299 + g * 587 + b * 114) / 1000
+    return yiq >= 128 ? 'black' : 'white'
+  }
+
+  // needed to deal with the possible union types defined in the database schema
   const narrowCategory = (inventoryItem: InventoryItem) => {
-    // needed to deal with the possible union types defined in the database schema
     if (
       typeof inventoryItem.itemDefinition === 'string' ||
       !inventoryItem.itemDefinition.category
@@ -27,8 +37,8 @@ export default function InventoryItemListItem({
     return inventoryItem.itemDefinition.category.name
   }
 
+  // renders the red or yellow warning symbol if necesary
   const renderWarningIcon = (inventoryItem: InventoryItem) => {
-    // renders the red or yellow warning symbol if necesary
     if (typeof inventoryItem.itemDefinition === 'string') {
       return
     }
@@ -74,9 +84,13 @@ export default function InventoryItemListItem({
               ? `${itemAttribute.value}`
               : `${itemAttribute.attribute.name}: ${itemAttribute.value}`
           }
-          color="primary"
           key={i}
-          sx={{ backgroundColor: itemAttribute.attribute.color }}
+          sx={{
+            backgroundColor: itemAttribute.attribute.color,
+            '& .MuiChip-label': {
+              color: getContrastYIQ(itemAttribute.attribute.color),
+            },
+          }}
         />
       )
     })
