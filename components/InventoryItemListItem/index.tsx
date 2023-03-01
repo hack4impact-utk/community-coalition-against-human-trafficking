@@ -1,6 +1,7 @@
 import { TableRow, TableCell, Chip } from '@mui/material'
 import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
+import { MoreVert } from '@mui/icons-material'
 import colors from 'utils/colors'
 
 interface InventoryItemListItemProps {
@@ -121,10 +122,18 @@ export default function InventoryItemListItem({
         {inventoryItem.quantity}
         {renderWarningIcon(inventoryItem)}
       </TableCell>
-      <TableCell sx={{ display: 'flex', alignItems: 'center', width: '10%' }}>
+      <TableCell
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '10%',
+        }}
+      >
         {typeof inventoryItem.assignee === 'string'
           ? inventoryItem.assignee
           : inventoryItem.assignee.name}
+        <MoreVert sx={{ ml: 'auto' }} />
       </TableCell>
     </TableRow>
   )
