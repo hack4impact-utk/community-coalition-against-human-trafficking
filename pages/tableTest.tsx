@@ -35,7 +35,7 @@ export default function Home() {
       { attribute: 'size', value: 'medium' },
       { attribute: 'color', value: 'black' },
     ],
-    quantity: 240000,
+    quantity: 24000,
     assignee: 'Rudra Patel',
   }
 
@@ -68,7 +68,39 @@ export default function Home() {
       },
     ],
     quantity: 7,
-    assignee: 'Andrew',
+    assignee: 'Really Long Name',
+  }
+
+  const testItem4: InventoryItem = {
+    itemDefinition: itemDefinitionTest,
+    attributes: [
+      {
+        attribute: {
+          name: 'testAttribute',
+          possibleValues: ['test1', 'test2'],
+          color: '#FF0000',
+        },
+        value: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+      },
+      {
+        attribute: {
+          name: 'test2',
+          possibleValues: 'number',
+          color: '#00FF00',
+        },
+        value: 'testValue',
+      },
+      {
+        attribute: {
+          name: 'test3',
+          possibleValues: 'text',
+          color: '#0000FF',
+        },
+        value: 'testValue',
+      },
+    ],
+    quantity: 240000000000000000000,
+    assignee: 'Andrewwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww',
   }
 
   return (
@@ -78,6 +110,7 @@ export default function Home() {
           <InventoryItemListItem inventoryItem={testItem} />
           <InventoryItemListItem inventoryItem={testItem2} />
           <InventoryItemListItem inventoryItem={testItem3} />
+          <InventoryItemListItem inventoryItem={testItem4} />
         </TableBody>
       </Table>
     </TableContainer>

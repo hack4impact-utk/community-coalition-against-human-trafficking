@@ -92,7 +92,14 @@ export default function InventoryItemListItem({
 
   return (
     <TableRow sx={{ display: 'flex' }}>
-      <TableCell sx={{ display: 'flex', alignItems: 'center', width: '10%' }}>
+      <TableCell
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '10%',
+          wordBreak: 'break-all',
+        }}
+      >
         {typeof inventoryItem.itemDefinition === 'string'
           ? inventoryItem.itemDefinition
           : inventoryItem.itemDefinition.name}
@@ -104,6 +111,7 @@ export default function InventoryItemListItem({
           flexWrap: 'wrap',
           gap: '0.25rem',
           width: '60%',
+          wordBreak: 'break-word',
         }}
       >
         {renderAttributeChips(inventoryItem)}
@@ -114,11 +122,19 @@ export default function InventoryItemListItem({
           alignItems: 'center',
           justifyContent: 'center',
           width: '10%',
+          wordBreak: 'break-word',
         }}
       >
         {narrowCategory(inventoryItem)}
       </TableCell>
-      <TableCell sx={{ display: 'flex', alignItems: 'center', width: '10%' }}>
+      <TableCell
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          width: '10%',
+          wordBreak: 'break-all',
+        }}
+      >
         {inventoryItem.quantity}
         {renderWarningIcon(inventoryItem)}
       </TableCell>
@@ -128,6 +144,7 @@ export default function InventoryItemListItem({
           alignItems: 'center',
           justifyContent: 'center',
           width: '10%',
+          wordBreak: "break-word"
         }}
       >
         {typeof inventoryItem.assignee === 'string'
