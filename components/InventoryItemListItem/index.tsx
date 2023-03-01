@@ -66,27 +66,19 @@ export default function InventoryItemListItem({
         )
       }
 
-      if (typeof itemAttribute.attribute.possibleValues === 'object') {
-        return (
-          <Chip
-            size="small"
-            label={itemAttribute.value}
-            color="primary"
-            sx={{ backgroundColor: itemAttribute.attribute.color }}
-            key={i}
-          />
-        )
-      } else {
-        return (
-          <Chip
-            size="small"
-            label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
-            color="primary"
-            sx={{ backgroundColor: itemAttribute.attribute.color }}
-            key={i}
-          />
-        )
-      }
+      return (
+        <Chip
+          size="small"
+          label={
+            typeof itemAttribute.attribute.possibleValues === 'object'
+              ? `${itemAttribute.value}`
+              : `${itemAttribute.attribute.name}: ${itemAttribute.value}`
+          }
+          color="primary"
+          key={i}
+          sx={{ backgroundColor: itemAttribute.attribute.color }}
+        />
+      )
     })
   }
 
@@ -144,7 +136,7 @@ export default function InventoryItemListItem({
           alignItems: 'center',
           justifyContent: 'center',
           width: '10%',
-          wordBreak: "break-word"
+          wordBreak: 'break-word',
         }}
       >
         {typeof inventoryItem.assignee === 'string'
