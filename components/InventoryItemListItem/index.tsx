@@ -114,10 +114,10 @@ export default function InventoryItemListItem({
         sx={{
           display: 'flex',
           alignItems: 'center',
+          alignContent: 'center',
           flexWrap: 'wrap',
           gap: '0.25rem',
           width: '60%',
-          wordBreak: 'break-word',
         }}
       >
         {renderAttributeChips(inventoryItem)}
@@ -128,7 +128,6 @@ export default function InventoryItemListItem({
           alignItems: 'center',
           justifyContent: 'center',
           width: '10%',
-          wordBreak: 'break-word',
         }}
       >
         {narrowCategory(inventoryItem)}
