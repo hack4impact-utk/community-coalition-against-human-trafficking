@@ -103,7 +103,7 @@ export default function InventoryItemListItem({
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '0.25rem',
-          width: '50%',
+          width: '60%',
         }}
       >
         {renderAttributeChips(inventoryItem)}
@@ -113,7 +113,7 @@ export default function InventoryItemListItem({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '20%',
+          width: '10%',
         }}
       >
         {narrowCategory(inventoryItem)}
