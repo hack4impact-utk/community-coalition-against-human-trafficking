@@ -35,7 +35,7 @@ export default function Home() {
       { attribute: 'size', value: 'medium' },
       { attribute: 'color', value: 'black' },
     ],
-    quantity: 250000,
+    quantity: 240000,
     assignee: 'Rudra Patel',
   }
 
@@ -52,7 +52,7 @@ export default function Home() {
       },
       {
         attribute: {
-          name: 'testAttribute2',
+          name: 'test2',
           possibleValues: 'number',
           color: '#00FF00',
         },
@@ -60,7 +60,7 @@ export default function Home() {
       },
       {
         attribute: {
-          name: 'testAttribute3',
+          name: 'test3',
           possibleValues: 'text',
           color: '#0000FF',
         },
