@@ -1,0 +1,355 @@
+use test;
+
+const categoryId1 = ObjectId();
+const categoryId2 = ObjectId();
+const categoryId3 = ObjectId();
+const categoryId4 = ObjectId();
+const categoryId5 = ObjectId();
+const categoryId6 = ObjectId();
+const categoryId7 = ObjectId();
+
+db.categories.insertMany(
+    {
+        "_id": categoryId1,
+        "name": "Clothing"
+    },
+    {
+        "_id": categoryId2,
+        "name": "Toiletries"
+    },
+    {
+        "_id": categoryId3,
+        "name": "Furniture"
+    },
+    {
+        "_id": categoryId4,
+        "name": "Large Appliances"
+    },
+    {
+        "_id": categoryId5,
+        "name": "Small Appliances"
+    },
+    {
+        "_id": categoryId6,
+        "name": "Administrative Supplies"
+    },
+    {
+        "_id": categoryId7,
+        "name": "Cleaning Supplies"
+    },
+    {
+        "_id": categoryId7,
+        "name": "Linens"
+    }
+);
+
+
+const attributeId1 = ObjectId();
+const attributeId2 = ObjectId();
+const attributeId3 = ObjectId();
+const attributeId4 = ObjectId();
+const attributeId5 = ObjectId();
+const attributeId6 = ObjectId();
+const attributeId7 = ObjectId();
+const attributeId8 = ObjectId();
+const attributeId9 = ObjectId();
+const attributeId10 = ObjectId();
+const attributeId11 = ObjectId();
+const defaultColor = "#ebebeb";
+
+db.attributes.insertMany(
+    {
+        "_id": attributeId1,
+        "name": "Top Size",
+        "possibleValues": ["Small", "Medium", "Large", "Extra-Large"],
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId2,
+        "name": "Shirt Type",
+        "possibleValues": ["Short-Sleeve", "Long-Sleeve"],
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId3,
+        "name": "Pants Length",
+        "possibleValues": ["Shorts", "Long Pants"],
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId10,
+        "name": "Pants Type",
+        "possibleValues": ["Khakis", "Pajamas", "Jeans"],
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId11,
+        "name": "Pants Size",
+        "possibleValues": "text",
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId4,
+        "name": "Shoe Size",
+        "possibleValues": "number",
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId5,
+        "name": "Shoe Type",
+        "possibleValues": "text",
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId11,
+        "name": "Bra Size",
+        "possibleValues": "text",
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId6,
+        "name": "Weight",
+        "possibleValues": "number",
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId7,
+        "name": "Oven Type",
+        "possibleValues": ["Electric", "Gas"],
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId8,
+        "name": "Brand",
+        "possibleValues": "text",
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId9,
+        "name": "Value",
+        "possibleValues": "number",
+        "color": defaultColor
+    },
+);
+
+
+const itemDefinitionId1 = ObjectId();
+const itemDefinitionId2 = ObjectId();
+const itemDefinitionId3 = ObjectId();
+const itemDefinitionId4 = ObjectId();
+const itemDefinitionId5 = ObjectId();
+const itemDefinitionId6 = ObjectId();
+
+db.itemDefinitions.insertMany(
+    {
+        "_id": itemDefinitionId1,
+        "name": "Shirt",
+        "category": categoryId1,
+        "attributes": [attributeId1, attributeId2],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Pants",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Shoes",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Bra",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Underwear",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Oven",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Mini Fridge",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Refrigerator",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Coffee Maker",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Couch",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Couch",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Laptop",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Keyboard",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Mouse",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Shampoo",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Conditioner",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Soap",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Shaving Cream",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Towel",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Bedsheet",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Blanket",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Pillow",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    }
+);
+
+db.inventoryItems.insertMany(
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": {
+            "attribute": attributeId1,
+            "value": "seven"
+        },
+        "quantity": 10,
+        "asignee": ObjectId()
+    }
+)
