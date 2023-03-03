@@ -1,8 +1,8 @@
-import { TableRow, TableCell, Chip } from '@mui/material'
+import { TableRow, TableCell, Chip, Button } from '@mui/material'
 import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
 import { MoreVert } from '@mui/icons-material'
-import colors from 'utils/colors'
+import theme from 'utils/theme'
 
 interface InventoryItemListItemProps {
   inventoryItem: InventoryItem
@@ -15,7 +15,7 @@ export default function InventoryItemListItem({
   const getContrastYIQ = (hexcolor: string) => {
     var colorNoHash = hexcolor.substring(1, hexcolor.length - 1)
     var r = parseInt(colorNoHash.substring(0, 2), 16)
-    var g = parseInt(colorNoHash.substring(2, 2), 16)
+    var g = parseInt(colorNoHash.substring(2, 4), 16)
     var b = parseInt(colorNoHash.substring(4, 2), 16)
     var yiq = (r * 299 + g * 587 + b * 114) / 1000
     return yiq >= 128 ? 'black' : 'white'
@@ -47,14 +47,22 @@ export default function InventoryItemListItem({
       inventoryItem.quantity <
       inventoryItem.itemDefinition.criticalStockThreshold
     ) {
-      return <WarningIcon fontSize="small" sx={{ color: colors.warning.red }} />
+      return (
+        <WarningIcon
+          fontSize="small"
+          sx={{ color: theme.palette.error.main }}
+        />
+      )
     }
 
     if (
       inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
     ) {
       return (
-        <WarningIcon fontSize="small" sx={{ color: colors.warning.yellow }} />
+        <WarningIcon
+          fontSize="small"
+          sx={{ color: theme.palette.warning.light }}
+        />
       )
     }
   }
@@ -102,8 +110,9 @@ export default function InventoryItemListItem({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          width: '10%',
-          wordBreak: 'break-all',
+          justifyContent: 'center',
+          width: '100px',
+          wordBreak: 'break-word',
         }}
       >
         {typeof inventoryItem.itemDefinition === 'string'
@@ -117,7 +126,7 @@ export default function InventoryItemListItem({
           alignContent: 'center',
           flexWrap: 'wrap',
           gap: '0.25rem',
-          width: '60%',
+          width: '400px',
         }}
       >
         {renderAttributeChips(inventoryItem)}
@@ -127,7 +136,7 @@ export default function InventoryItemListItem({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '10%',
+          width: '100px',
         }}
       >
         {narrowCategory(inventoryItem)}
@@ -136,8 +145,9 @@ export default function InventoryItemListItem({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          width: '10%',
-          wordBreak: 'break-all',
+          justifyContent: 'center',
+          width: '100px',
+          wordBreak: 'break-word',
         }}
       >
         {inventoryItem.quantity}
@@ -147,15 +157,16 @@ export default function InventoryItemListItem({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          width: '10%',
+          width: '200px',
           wordBreak: 'break-word',
         }}
       >
         {typeof inventoryItem.assignee === 'string'
           ? inventoryItem.assignee
           : inventoryItem.assignee.name}
-        <MoreVert sx={{ ml: 'auto' }} />
+        <Button sx={{ ml: 'auto' }}>
+          <MoreVert sx={{ color: theme.palette.grey['500'] }} />
+        </Button>
       </TableCell>
     </TableRow>
   )
