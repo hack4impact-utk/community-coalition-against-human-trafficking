@@ -83,7 +83,7 @@ export default function NavigationDrawer({
         <NavigationDrawerListItem
           icon={<AssignmentLateOutlinedIcon />}
           text="Dashboard"
-          route="/dashboard"
+          route="/"
         />
         <NavigationDrawerListItem
           icon={<ArchiveOutlinedIcon />}
