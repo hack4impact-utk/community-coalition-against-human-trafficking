@@ -13,6 +13,15 @@ export async function checkInInventoryItem(
   item: InventoryItem,
   itemQuantity: number
 ) {
+  item.attributes?.sort((a, b) => {
+    if (typeof a.attribute === 'string' || typeof b.attribute === 'string') {
+      return 0
+    }
+    if (a.attribute._id && b.attribute._id) {
+      return a.attribute._id > b.attribute._id ? 1 : -1
+    }
+    return 0
+  })
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
   if (itemMatches.length) {
     itemMatches[0].quantity += itemQuantity
@@ -23,15 +32,6 @@ export async function checkInInventoryItem(
       itemMatches[0]
     )
   } else {
-    item.attributes?.sort((a, b) => {
-      if (typeof a.attribute === 'string' || typeof b.attribute === 'string') {
-        return 0
-      }
-      if (a.attribute._id && b.attribute._id) {
-        return a.attribute._id > b.attribute._id ? 1 : -1
-      }
-      return 0
-    })
     item.quantity = itemQuantity
     MongoDriver.createEntity(InventoryItemSchema, item)
   }
