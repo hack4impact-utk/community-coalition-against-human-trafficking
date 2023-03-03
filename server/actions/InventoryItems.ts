@@ -11,11 +11,11 @@ import { ApiError } from 'utils/types'
  */
 export async function checkInInventoryItem(
   item: InventoryItem,
-  quantityItem: number
+  itemQuantity: number
 ) {
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
   if (itemMatches.length) {
-    itemMatches[0].quantity += quantityItem
+    itemMatches[0].quantity += itemQuantity
     itemMatches[0].attributes?.sort()
     MongoDriver.updateEntity(
       InventoryItemSchema,
@@ -23,12 +23,17 @@ export async function checkInInventoryItem(
       itemMatches[0]
     )
   } else {
-    const createdItem = await MongoDriver.createEntity(
-      InventoryItemSchema,
-      item
-    )
-    createdItem.attributes?.sort()
-    MongoDriver.updateEntity(InventoryItemSchema, createdItem.id, createdItem)
+    item.attributes?.sort((a, b) => {
+      if (typeof a.attribute === 'string' || typeof b.attribute === 'string') {
+        return 0
+      }
+      if (a.attribute._id && b.attribute._id) {
+        return a.attribute._id > b.attribute._id ? 1 : -1
+      }
+      return 0
+    })
+    item.quantity = itemQuantity
+    MongoDriver.createEntity(InventoryItemSchema, item)
   }
 }
 
