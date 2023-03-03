@@ -1,12 +1,12 @@
 import InventoryItemListItem from 'components/InventoryItemListItem'
 import { InventoryItem, ItemDefinition } from 'utils/types'
-import { Table, TableBody, TableContainer } from '@mui/material'
+import { Table, TableBody, TableContainer, Box, Paper } from '@mui/material'
 
 export default function Home() {
   const itemDefinitionTest: ItemDefinition = {
-    name: 'test item',
+    name: 'test item this is a test item that is very long',
     internal: true,
-    category: 'shirt',
+    category: 'shirtttttttttt',
     lowStockThreshold: 15,
     criticalStockThreshold: 5,
   }
@@ -78,7 +78,7 @@ export default function Home() {
         attribute: {
           name: 'testAttribute',
           possibleValues: ['test1', 'test2'],
-          color: '#FF0000',
+          color: '#777777',
         },
         value: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
       },
@@ -86,7 +86,7 @@ export default function Home() {
         attribute: {
           name: 'test2',
           possibleValues: 'number',
-          color: '#00FF00',
+          color: '#000000',
         },
         value: 'testValue',
       },
@@ -99,13 +99,19 @@ export default function Home() {
         value: 'testValue',
       },
     ],
-    quantity: 240000000000000000000,
-    assignee: 'Andrewwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww',
+    quantity: 24000000000000000000,
+    assignee: 'Andrewwwwwwwwwwwwwwwwwwwwwwwww',
   }
 
   return (
-    <TableContainer sx={{ maxWidth: '80%', marginInline: 'auto' }}>
-      <Table>
+    // MAKE SURE THAT WIDTH IS FIXED, THEN CHANGE IT AS SCREEN GROWS
+    // SAME GOES FOR TABLE CELLS
+    // USING PERCENTAGES CAUSES PROBELMSSSSSSSSSSSSSSSSSSSSSSSSSS
+    <TableContainer
+      component={Paper}
+      sx={{ marginInline: 'auto', width: {xs: "300px", sm: "500px", md: "600px", lg: "900px", xl: "1000px"} }}
+    >
+      <Table sx={{ width: 'max-content' }}>
         <TableBody>
           <InventoryItemListItem inventoryItem={testItem} />
           <InventoryItemListItem inventoryItem={testItem2} />
