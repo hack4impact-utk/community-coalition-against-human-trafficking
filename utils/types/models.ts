@@ -52,8 +52,9 @@ export interface NumberAttribute extends Attribute {
   possibleValues: 'number'
 }
 
-export interface AttributeRequest {
-  [_id: string]: string | number
+export interface InventoryItemAttributeRequest {
+  attribute: string
+  value: string | number
 }
 
 export type ServerModel =
