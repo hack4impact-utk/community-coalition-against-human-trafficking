@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, Category, CategoryRequest, CategoryResponse } from 'utils/types'
+import { ApiError, CategoryRequest, CategoryResponse } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import {
   apiCategoryValidation,
@@ -33,7 +33,7 @@ export default async function handler(
       }
       case 'PUT': {
         apiCategoryValidation(req.body)
-        const updatedCategory = req.body as CategoryRequest
+        const updatedCategory: CategoryRequest = req.body
         await MongoDriver.updateEntity(
           CategorySchema,
           categoryId,

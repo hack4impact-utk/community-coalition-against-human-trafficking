@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { apiObjectIdValidation, apiUserValidation } from 'utils/apiValidators'
 import { userEndpointServerAuth } from 'utils/auth'
-import { ApiError, User, UserRequest, UserResponse } from 'utils/types'
+import { ApiError, UserRequest, UserResponse } from 'utils/types'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import UserSchema from 'server/models/User'
 
@@ -38,7 +38,7 @@ export default async function handler(
       }
       case 'PUT': {
         apiUserValidation(req.body)
-        const updatedUser = req.body as UserRequest
+        const updatedUser: UserRequest = req.body
         await MongoDriver.updateEntity(UserSchema, userId, updatedUser)
 
         return res.status(200).json({

@@ -9,7 +9,7 @@ import {
   Types,
 } from 'mongoose'
 import 'utils/types'
-import { ApiError, ItemDefinition, ServerModel } from 'utils/types'
+import { ApiError, ItemDefinition, ServerModel, ServerRequest } from 'utils/types'
 
 const ENTITY_NOT_FOUND_MESSAGE = 'Entity does not exist'
 
@@ -70,7 +70,7 @@ export async function getEntities<Schema extends Document>(
  */
 export async function createEntity<
   Schema extends Document,
-  T extends ServerModel
+  T extends ServerRequest
 >(dbSchema: Model<Schema>, document: T): Promise<HydratedDocument<Schema>> {
   await mongoDb()
 
@@ -86,7 +86,7 @@ export async function createEntity<
  */
 export async function updateEntity<
   Schema extends Document,
-  T extends ServerModel
+  T extends ServerRequest
 >(dbSchema: Model<Schema>, id: string, document: T): Promise<void> {
   await mongoDb()
 

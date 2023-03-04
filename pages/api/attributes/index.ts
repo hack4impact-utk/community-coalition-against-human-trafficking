@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, Attribute, AttributeRequest, AttributeResponse } from 'utils/types'
+import { ApiError, AttributeRequest, AttributeResponse } from 'utils/types'
 import { apiAttributeValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import AttributeSchema from 'server/models/Attribute'
