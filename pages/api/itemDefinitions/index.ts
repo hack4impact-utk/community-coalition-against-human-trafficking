@@ -1,5 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, ItemDefinition } from 'utils/types'
+import {
+  ApiError,
+  ItemDefinitionRequest,
+  ItemDefinitionResponse,
+} from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { apiItemDefinitionValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
@@ -18,7 +22,7 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        const items = await getItemDefinitions()
+        const items: ItemDefinitionResponse[] = await getItemDefinitions()
         const resStatus = items.length ? 200 : 204
         return res.status(resStatus).json({
           success: true,
@@ -27,7 +31,7 @@ export default async function handler(
       }
       case 'POST': {
         apiItemDefinitionValidation(req.body)
-        const itemDefinition = req.body as ItemDefinition
+        const itemDefinition = req.body as ItemDefinitionRequest
         const response = await MongoDriver.createEntity(
           ItemDefinitionSchema,
           itemDefinition

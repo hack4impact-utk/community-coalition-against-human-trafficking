@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getItemDefinition } from 'server/actions/ItemDefinition'
-import { ApiError, ItemDefinition } from 'utils/types'
+import { ApiError, ItemDefinitionRequest } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import {
   apiItemDefinitionValidation,
@@ -33,7 +33,7 @@ export default async function handler(
       }
       case 'PUT': {
         apiItemDefinitionValidation(req.body)
-        const updatedItemDefinition = req.body as ItemDefinition
+        const updatedItemDefinition = req.body as ItemDefinitionRequest
         await MongoDriver.updateEntity(
           ItemDefinitionSchema,
           itemDefinitionId,

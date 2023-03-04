@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { apiObjectIdValidation, apiUserValidation } from 'utils/apiValidators'
 import { userEndpointServerAuth } from 'utils/auth'
-import { ApiError, User, UserRequest } from 'utils/types'
+import { ApiError, User, UserRequest, UserResponse } from 'utils/types'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import UserSchema from 'server/models/User'
 
@@ -13,11 +13,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    apiObjectIdValidation(req?.query?.userId)
+    apiObjectIdValidation(req?.query?.userId as string)
 
     // get user to verify identity
     const userId = req.query.userId as string
-    const user = await MongoDriver.getEntity(UserSchema, userId)
+    const user: UserResponse = await MongoDriver.getEntity(UserSchema, userId)
 
     await userEndpointServerAuth(req, res, user.email)
 

@@ -2,13 +2,13 @@ import { Autocomplete, Box, FormControl, TextField } from '@mui/material'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
-import { Category, ItemDefinition, UserResponse } from 'utils/types'
+import { Category, ItemDefinitionResponse, UserResponse } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 
 interface Props {
   kioskMode: boolean
   users: UserResponse[]
-  itemDefinitions: ItemDefinition[]
+  itemDefinitions: ItemDefinitionResponse[]
   categories: Category[]
 }
 
@@ -23,7 +23,7 @@ function CheckInOutForm({
   const [selectedStaff, setSelectedStaff] =
     React.useState<UserResponse | null>()
   const [selectedItemDefinition, setSelectedItemDefinition] =
-    React.useState<ItemDefinition | null>()
+    React.useState<ItemDefinitionResponse | null>()
   const [selectedCategory, setSelectedCategory] =
     React.useState<Category | null>()
 
