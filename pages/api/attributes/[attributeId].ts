@@ -62,6 +62,7 @@ export default async function handler(
       }
     }
   } catch (e) {
+    // TODO add else if it is not an instance of ApiError
     if (e instanceof ApiError) {
       return res.status(e.statusCode).json({
         success: false,

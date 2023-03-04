@@ -33,7 +33,7 @@ export default async function handler(
       }
       case 'PUT': {
         apiItemDefinitionValidation(req.body)
-        const updatedItemDefinition: ItemDefinitionRequest = req.body
+        const updatedItemDefinition: ItemDefinitionRequest = req.body //TODO what is the type of this?
         await MongoDriver.updateEntity(
           ItemDefinitionSchema,
           itemDefinitionId,
