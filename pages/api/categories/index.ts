@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, Category } from 'utils/types'
+import { ApiError, Category, CategoryRequest, CategoryResponse } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { apiCategoryValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
@@ -17,7 +17,7 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        const categories = await MongoDriver.getEntities(CategorySchema)
+        const categories: CategoryResponse[] = await MongoDriver.getEntities(CategorySchema)
         const resStatus = categories.length ? 200 : 204
         return res.status(resStatus).json({
           success: true,
@@ -26,12 +26,12 @@ export default async function handler(
       }
       case 'POST': {
         apiCategoryValidation(req.body)
-        const category = req.body as Category
-        let response = await MongoDriver.createEntity(CategorySchema, category)
+        const category = req.body as CategoryRequest
+        let response: CategoryResponse = await MongoDriver.createEntity(CategorySchema, category)
 
         return res.status(201).json({
           success: true,
-          payload: response.id,
+          payload: response._id,
         })
       }
       default: {
