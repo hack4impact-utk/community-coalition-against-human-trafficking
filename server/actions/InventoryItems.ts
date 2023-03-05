@@ -2,6 +2,7 @@ import InventoryItemSchema from 'server/models/InventoryItem'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import { InventoryItem } from 'utils/types'
 import { ApiError } from 'utils/types'
+import { apiInventoryItemValidation } from 'utils/apiValidators'
 
 /**
  * Checks to see if an item is in the inventory and will add to the quantity or
@@ -10,22 +11,17 @@ import { ApiError } from 'utils/types'
  * @param quantity of item to add
  */
 export async function checkInInventoryItem(
-  item: InventoryItem,
+  item: Partial<InventoryItem>,
   itemQuantity: number
 ) {
-  item.attributes?.sort((a, b) => {
-    if (typeof a.attribute === 'string' || typeof b.attribute === 'string') {
-      return 0
-    }
-    if (a.attribute._id && b.attribute._id) {
-      return a.attribute._id > b.attribute._id ? 1 : -1
-    }
-    return 0
-  })
+  if (itemQuantity < 1) {
+    throw new ApiError(400, 'Check in quantity should be greater than 0')
+  }
+  item.attributes?.sort((a, b) => (a.attribute > b.attribute ? 1 : -1))
+
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
   if (itemMatches.length) {
     itemMatches[0].quantity += itemQuantity
-    itemMatches[0].attributes?.sort()
     MongoDriver.updateEntity(
       InventoryItemSchema,
       itemMatches[0].id,
@@ -33,7 +29,8 @@ export async function checkInInventoryItem(
     )
   } else {
     item.quantity = itemQuantity
-    MongoDriver.createEntity(InventoryItemSchema, item)
+    apiInventoryItemValidation(item)
+    MongoDriver.createEntity(InventoryItemSchema, item as InventoryItem)
   }
 }
 
@@ -46,17 +43,18 @@ export async function checkInInventoryItem(
  * @throws ApiError: 404 when attempting to check out an item that is not in the db
  */
 export async function checkOutInventoryItem(
-  item: InventoryItem,
+  item: Partial<InventoryItem>,
   quantityRemoved: number
 ) {
+  item.attributes?.sort((a, b) => (a.attribute > b.attribute ? 1 : -1))
+  if (quantityRemoved < 1) {
+    throw new ApiError(400, 'Check out quantity should be greater than 0')
+  }
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
   if (itemMatches.length) {
     const modifiedItemQuantity = (itemMatches[0].quantity -= quantityRemoved)
     if (modifiedItemQuantity < 0) {
-      throw new ApiError(
-        400,
-        'Operation failed: Check out would result in negative quantity.'
-      )
+      throw new ApiError(400, 'Check out would result in negative quantity.')
     } else {
       MongoDriver.updateEntity(
         InventoryItemSchema,

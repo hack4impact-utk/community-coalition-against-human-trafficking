@@ -107,7 +107,7 @@ function validateProperties(
   }
 
   // ensures all required properties are present
-  let isValidObject = true
+  const isValidObject = true
   for (const modelProp of modelProperties) {
     if (
       isValidObject &&
@@ -120,7 +120,7 @@ function validateProperties(
 
   // checks validity of all object properties.
   for (const objKey in obj) {
-    let i = modelProperties.findIndex((prop) => prop.key === objKey)
+    const i = modelProperties.findIndex((prop) => prop.key === objKey)
 
     // property is not part of server model
     if (i < 0) {
@@ -250,7 +250,7 @@ const inventoryItemModelProperties: Property[] = [
     required: true,
   },
   {
-    key: 'itemDefinition',
+    key: 'attributes',
     types: 'object',
     required: false,
   },
