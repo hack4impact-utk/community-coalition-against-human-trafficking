@@ -60,6 +60,7 @@ function transformAttributeToFormData(attr?: Attribute): AttributeFormData {
 export default function AttributeForm({
   onSubmit,
   attribute,
+  submitBtnText,
 }: AttributeFormProps) {
   const [formData, setFormData] = React.useState<AttributeFormData>(
     transformAttributeToFormData(attribute)
