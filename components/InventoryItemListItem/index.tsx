@@ -1,4 +1,4 @@
-import { TableRow, TableCell, Chip, Button } from '@mui/material'
+import { TableRow, TableCell, Chip, IconButton } from '@mui/material'
 import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
 import { MoreVert } from '@mui/icons-material'
@@ -164,9 +164,9 @@ export default function InventoryItemListItem({
         {typeof inventoryItem.assignee === 'string'
           ? inventoryItem.assignee
           : inventoryItem.assignee.name}
-        <Button sx={{ ml: 'auto' }}>
+        <IconButton sx={{ ml: 'auto' }}>
           <MoreVert sx={{ color: theme.palette.grey['500'] }} />
-        </Button>
+        </IconButton>
       </TableCell>
     </TableRow>
   )
