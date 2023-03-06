@@ -1,5 +1,11 @@
+import AttributeForm from 'components/AttributeForm'
+
 export default function DashboardPage() {
   return (
-    <h1>Dashboard</h1>
+    <AttributeForm
+      onSubmit={(_e, formData) => {
+        console.log(formData)
+      }}
+    />
   )
 }
