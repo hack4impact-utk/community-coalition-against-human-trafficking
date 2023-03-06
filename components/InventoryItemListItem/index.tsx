@@ -146,7 +146,7 @@ export default function InventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.quantity}
+        {inventoryItem.quantity.toLocaleString()}
         {renderWarningIcon(inventoryItem)}
       </TableCell>
       <TableCell
