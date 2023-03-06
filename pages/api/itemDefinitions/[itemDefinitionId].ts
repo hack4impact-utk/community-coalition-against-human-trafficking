@@ -20,7 +20,7 @@ export default async function handler(
     // ensure user is logged in
     await serverAuth(req, res)
 
-    apiObjectIdValidation(req?.query?.itemDefinitionId)
+    apiObjectIdValidation(req?.query?.itemDefinitionId as string)
     const itemDefinitionId = req.query.itemDefinitionId as string
     switch (req.method) {
       case 'GET': {
