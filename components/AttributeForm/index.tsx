@@ -73,7 +73,7 @@ export default function AttributeForm({
           <TextField
             label="Attribute Name"
             fullWidth
-            onBlur={(e) => {
+            onChange={(e) => {
               setFormData({
                 ...formData,
                 name: e.target.value,
@@ -151,7 +151,7 @@ export default function AttributeForm({
                       },
                     }}
                     {...getTagProps({ index })}
-                    key={option}
+                    key={index}
                   />
                 ))
               }
