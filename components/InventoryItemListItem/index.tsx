@@ -1,4 +1,4 @@
-import { TableRow, TableCell, Chip, IconButton } from '@mui/material'
+import { TableRow, TableCell, Chip, IconButton, Tooltip } from '@mui/material'
 import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
 import { InventoryOutlined, MoreVert } from '@mui/icons-material'
@@ -39,16 +39,25 @@ export default function InventoryItemListItem({
       inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
     ) {
       return (
-        <WarningIcon
-          fontSize="small"
-          sx={{
-            color:
-              inventoryItem.quantity <
-              inventoryItem.itemDefinition.criticalStockThreshold
-                ? theme.palette.error.main
-                : theme.palette.warning.light,
-          }}
-        />
+        <Tooltip
+          title={
+            inventoryItem.quantity <
+            inventoryItem.itemDefinition.criticalStockThreshold
+              ? 'This item has critically low stock.'
+              : 'This item has low stock.'
+          }
+        >
+          <WarningIcon
+            fontSize="small"
+            sx={{
+              color:
+                inventoryItem.quantity <
+                inventoryItem.itemDefinition.criticalStockThreshold
+                  ? theme.palette.error.main
+                  : theme.palette.warning.light,
+            }}
+          />
+        </Tooltip>
       )
     }
   }
