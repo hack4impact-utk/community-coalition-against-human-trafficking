@@ -26,7 +26,7 @@ export default async function hanlder(
         })
       }
       case 'POST': {
-        apiAttributeValidation(req.body)
+        apiAttributeValidation(req.body, 'POST')
         const attribute: AttributePostRequest = req.body
         let response: AttributeResponse = await MongoDriver.createEntity(
           AttributeSchema,

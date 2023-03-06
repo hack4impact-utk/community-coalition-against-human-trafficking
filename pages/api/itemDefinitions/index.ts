@@ -30,7 +30,7 @@ export default async function handler(
         })
       }
       case 'POST': {
-        apiItemDefinitionValidation(req.body)
+        apiItemDefinitionValidation(req.body, 'POST')
         const itemDefinition: ItemDefinitionPostRequest = req.body
         const response = await MongoDriver.createEntity(
           ItemDefinitionSchema,

@@ -37,7 +37,7 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        apiUserValidation(req.body)
+        apiUserValidation(req.body, 'PUT')
         const updatedUser: UserPutRequest = req.body
         await MongoDriver.updateEntity(UserSchema, userId, updatedUser)
 

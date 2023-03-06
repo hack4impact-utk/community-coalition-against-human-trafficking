@@ -21,8 +21,20 @@ interface ValidationErrorList {
  * @param attribute The Attribute object to test
  * @returns A ValidationResult object
  */
-export function validateAttribute(attribute: Record<string, unknown>) {
-  return validateProperties(attributeRequestModelProperties, attribute)
+export function validateAttributeRequest(
+  attribute: Record<string, unknown>,
+  requestType?: 'POST' | 'PUT'
+) {
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = attributePostModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = attributePutModelProperties
+  } else {
+    validationModel = attributeRequestModelProperties
+  }
+
+  return validateProperties(validationModel, attribute)
 }
 
 /**
@@ -30,8 +42,20 @@ export function validateAttribute(attribute: Record<string, unknown>) {
  * @param category The Category object to test
  * @returns A ValidationResult object
  */
-export function validateCategory(category: Record<string, unknown>) {
-  return validateProperties(categoryRequestModelProperties, category)
+export function validateCategoryRequest(
+  category: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = categoryPostModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = categoryPutModelProperties
+  } else {
+    validationModel = categoryRequestModelProperties
+  }
+
+  return validateProperties(validationModel, category)
 }
 
 /**
@@ -39,13 +63,20 @@ export function validateCategory(category: Record<string, unknown>) {
  * @param itemDefinition The ItemDefinition object to test
  * @returns A ValidationResult object
  */
-export function validateItemDefinition(
-  itemDefinition: Record<string, unknown>
+export function validateItemDefinitionRequest(
+  itemDefinition: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
 ) {
-  return validateProperties(
-    itemDefinitionRequestModelProperties,
-    itemDefinition
-  )
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = itemDefinitionPostModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = itemDefinitionPutModelProperties
+  } else {
+    validationModel = itemDefinitionRequestModelProperties
+  }
+
+  return validateProperties(validationModel, itemDefinition)
 }
 
 /**
@@ -53,8 +84,20 @@ export function validateItemDefinition(
  * @param inventoryItem The InventoryItem object to test
  * @returns A ValidationResult object
  */
-export function validateInventoryItem(inventoryItem: Record<string, unknown>) {
-  return validateProperties(inventoryItemRequestModelProperties, inventoryItem)
+export function validateInventoryItemRequest(
+  inventoryItem: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = inventoryItemPostModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = inventoryItemPutModelProperties
+  } else {
+    validationModel = inventoryItemRequestModelProperties
+  }
+
+  return validateProperties(validationModel, inventoryItem)
 }
 
 /**
@@ -62,8 +105,20 @@ export function validateInventoryItem(inventoryItem: Record<string, unknown>) {
  * @param user The User object to test
  * @returns A ValidationResult object
  */
-export function validateUser(user: Record<string, unknown>) {
-  return validateProperties(userModelRequestProperties, user)
+export function validateUserRequest(
+  user: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = userPostModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = userPutModelProperties
+  } else {
+    validationModel = userRequestModelProperties
+  }
+
+  return validateProperties(validationModel, user)
 }
 
 /**
@@ -79,6 +134,7 @@ export function validateObjectId(id: string) {
   return false
 }
 
+// TODO improve array validation using 'instanceof Array'
 /**
  * Generic object validator that checks for required fields, extra fields, and type mismatches
  * @param modelProperties An array of Property objects
@@ -159,8 +215,6 @@ function validateProperties(
   return result
 }
 
-// TODO update validators -- both with new request types and use instanceof Array instead of type=obj for arrays
-
 /*
  * Since typescript is compiled into javascript on runtime, all type information
  * is lost. This makes it exceedingly difficult to have a truly generic object
@@ -214,6 +268,15 @@ const categoryRequestModelProperties: Property[] = [
   },
 ]
 
+const categoryPostModelProperties: Property[] = [
+  ...categoryRequestModelProperties,
+]
+
+const categoryPutModelProperties: Property[] = [
+  ...categoryRequestModelProperties,
+]
+categoryPutModelProperties.find((prop) => prop.key === '_id')!.required = true
+
 const itemDefinitionRequestModelProperties: Property[] = [
   {
     key: '_id',
@@ -227,7 +290,7 @@ const itemDefinitionRequestModelProperties: Property[] = [
   },
   {
     key: 'category',
-    types: 'string|object',
+    types: 'string',
     required: false,
   },
   {
@@ -252,6 +315,16 @@ const itemDefinitionRequestModelProperties: Property[] = [
   },
 ]
 
+const itemDefinitionPostModelProperties: Property[] = [
+  ...itemDefinitionRequestModelProperties,
+]
+
+const itemDefinitionPutModelProperties: Property[] = [
+  ...itemDefinitionRequestModelProperties,
+]
+itemDefinitionPutModelProperties.find((prop) => prop.key === '_id')!.required =
+  true
+
 const inventoryItemRequestModelProperties: Property[] = [
   {
     key: '_id',
@@ -260,12 +333,12 @@ const inventoryItemRequestModelProperties: Property[] = [
   },
   {
     key: 'itemDefinition',
-    types: 'string|object',
+    types: 'string',
     required: true,
   },
   {
     key: 'itemDefinition',
-    types: 'object',
+    types: 'string',
     required: false,
   },
   {
@@ -275,12 +348,22 @@ const inventoryItemRequestModelProperties: Property[] = [
   },
   {
     key: 'assignee',
-    types: 'string|object',
+    types: 'string',
     required: true,
   },
 ]
 
-const userModelRequestProperties: Property[] = [
+const inventoryItemPostModelProperties: Property[] = [
+  ...inventoryItemRequestModelProperties,
+]
+
+const inventoryItemPutModelProperties: Property[] = [
+  ...inventoryItemRequestModelProperties,
+]
+inventoryItemPutModelProperties.find((prop) => prop.key === '_id')!.required =
+  true
+
+const userRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -302,3 +385,8 @@ const userModelRequestProperties: Property[] = [
     required: true,
   },
 ]
+
+const userPostModelProperties: Property[] = [...userRequestModelProperties]
+
+const userPutModelProperties: Property[] = [...userRequestModelProperties]
+userPutModelProperties.find((prop) => prop.key === '_id')!.required = true

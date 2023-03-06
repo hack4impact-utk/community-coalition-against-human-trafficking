@@ -38,7 +38,7 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        apiItemDefinitionValidation(req.body)
+        apiItemDefinitionValidation(req.body, 'PUT')
         const updatedItemDefinition: ItemDefinitionPutRequest = req.body
         await MongoDriver.updateEntity(
           ItemDefinitionSchema,

@@ -12,7 +12,7 @@ export default async function handler(
 ) {
   try {
     if (req.method === 'POST') {
-      apiUserValidation(req.body)
+      apiUserValidation(req.body, 'POST')
       const user: UserPostRequest = req.body
       const response: UserResponse = await MongoDriver.createEntity(
         UserSchema,

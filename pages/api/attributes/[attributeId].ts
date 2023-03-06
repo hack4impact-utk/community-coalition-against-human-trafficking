@@ -35,7 +35,7 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        apiAttributeValidation(req.body)
+        apiAttributeValidation(req.body, 'PUT')
         const updatedAttribute: AttributePutRequest = req.body
 
         await MongoDriver.updateEntity(

@@ -1,10 +1,10 @@
 import { ApiError } from 'utils/types'
 import {
-  validateAttribute,
-  validateCategory,
-  validateItemDefinition,
+  validateAttributeRequest,
+  validateCategoryRequest,
+  validateItemDefinitionRequest,
   validateObjectId,
-  validateUser,
+  validateUserRequest,
   ValidationResult,
 } from 'utils/validators'
 
@@ -16,25 +16,35 @@ export function apiObjectIdValidation(id: string) {
   }
 }
 
-export function apiAttributeValidation(attribute: Record<string, unknown>) {
-  const response = validateAttribute(attribute)
+export function apiAttributeValidation(
+  attribute: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  const response = validateAttributeRequest(attribute, requestType)
   badBodyValidationResponse(response)
 }
 
-export function apiCategoryValidation(category: Record<string, unknown>) {
-  const response = validateCategory(category)
+export function apiCategoryValidation(
+  category: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  const response = validateCategoryRequest(category, requestType)
   badBodyValidationResponse(response)
 }
 
 export function apiItemDefinitionValidation(
-  itemDefinition: Record<string, unknown>
+  itemDefinition: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
 ) {
-  const response = validateItemDefinition(itemDefinition)
+  const response = validateItemDefinitionRequest(itemDefinition, requestType)
   badBodyValidationResponse(response)
 }
 
-export function apiUserValidation(user: Record<string, unknown>) {
-  const response = validateUser(user)
+export function apiUserValidation(
+  user: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  const response = validateUserRequest(user, requestType)
   badBodyValidationResponse(response)
 }
 

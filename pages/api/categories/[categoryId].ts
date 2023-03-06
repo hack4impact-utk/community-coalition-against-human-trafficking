@@ -35,7 +35,7 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        apiCategoryValidation(req.body)
+        apiCategoryValidation(req.body, 'PUT')
         const updatedCategory: CategoryPutRequest = req.body
         await MongoDriver.updateEntity(
           CategorySchema,
