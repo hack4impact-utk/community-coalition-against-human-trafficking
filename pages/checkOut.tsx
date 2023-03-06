@@ -28,6 +28,7 @@ export default function CheckOutPage() {
                 users={[]}
                 itemDefinitions={[]}
                 attributes={[]}
+                categories={[]}
               />
             </CardContent>
 

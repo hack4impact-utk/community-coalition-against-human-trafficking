@@ -2,7 +2,13 @@ import { Autocomplete, Box, FormControl, TextField } from '@mui/material'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
-import { Attribute, AttributeRequest, ItemDefinition, User } from 'utils/types'
+import {
+  Attribute,
+  InventoryItemAttributeRequest,
+  ItemDefinition,
+  User,
+  Category,
+} from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete from 'components/AttributeAutocomplete'
 import { separateAttributes } from 'utils/attribute'
@@ -11,7 +17,8 @@ interface Props {
   kioskMode: boolean
   users: User[]
   itemDefinitions: ItemDefinition[]
-  attributes?: Attribute[]
+  attributes: Attribute[]
+  categories: Category[]
 }
 
 function CheckInOutForm({
@@ -19,14 +26,18 @@ function CheckInOutForm({
   users,
   itemDefinitions,
   attributes,
+  categories,
 }: Props) {
   const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
   const [quantity, setQuantity] = React.useState<number>(1)
   const [selectedStaff, setSelectedStaff] = React.useState<User | null>()
   const [selectedItemDefinition, setSelectedItemDefinition] =
     React.useState<ItemDefinition | null>()
-  const [selectedAttributes, setSelectedAttributes] =
-    React.useState<AttributeRequest>({})
+  const [selectedAttributes, setSelectedAttributes] = React.useState<
+    InventoryItemAttributeRequest[]
+  >([])
+  const [selectedCategory, setSelectedCategory] =
+    React.useState<Category | null>()
   const splitAttrs = separateAttributes(attributes)
 
   return (
@@ -50,6 +61,13 @@ function CheckInOutForm({
           renderInput={(params) => <TextField {...params} fullWidth />}
         />
       </Box>
+      <Autocomplete
+        options={categories}
+        sx={{ marginTop: 4 }}
+        renderInput={(params) => <TextField {...params} label="Category" />}
+        onChange={(_e, Category) => setSelectedCategory(Category)}
+        getOptionLabel={(Category) => Category.name}
+      />
       <Autocomplete
         options={itemDefinitions}
         sx={{ marginTop: 4 }}

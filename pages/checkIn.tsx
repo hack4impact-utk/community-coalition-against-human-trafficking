@@ -47,6 +47,7 @@ export default function CheckInPage() {
                 users={[]}
                 itemDefinitions={[]}
                 attributes={[]}
+                categories={[]}
               />
             </CardContent>
 
