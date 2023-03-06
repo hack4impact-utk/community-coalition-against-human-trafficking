@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import {
   ApiError,
-  ItemDefinitionRequest,
+  ItemDefinitionPostRequest,
   ItemDefinitionResponse,
 } from 'utils/types'
 import { serverAuth } from 'utils/auth'
@@ -31,7 +31,7 @@ export default async function handler(
       }
       case 'POST': {
         apiItemDefinitionValidation(req.body)
-        const itemDefinition: ItemDefinitionRequest = req.body
+        const itemDefinition: ItemDefinitionPostRequest = req.body
         const response = await MongoDriver.createEntity(
           ItemDefinitionSchema,
           itemDefinition

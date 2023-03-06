@@ -1,6 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getItemDefinition } from 'server/actions/ItemDefinition'
-import { ApiError, ItemDefinitionRequest, ItemDefinitionResponse } from 'utils/types'
+import {
+  ApiError,
+  ItemDefinitionPutRequest,
+  ItemDefinitionResponse,
+} from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import {
   apiItemDefinitionValidation,
@@ -24,7 +28,9 @@ export default async function handler(
     const itemDefinitionId = req.query.itemDefinitionId as string
     switch (req.method) {
       case 'GET': {
-        const itemDefinition: ItemDefinitionResponse = await getItemDefinition(itemDefinitionId)
+        const itemDefinition: ItemDefinitionResponse = await getItemDefinition(
+          itemDefinitionId
+        )
 
         return res.status(200).json({
           success: true,
@@ -33,7 +39,7 @@ export default async function handler(
       }
       case 'PUT': {
         apiItemDefinitionValidation(req.body)
-        const updatedItemDefinition: ItemDefinitionRequest = req.body //TODO what is the type of this?
+        const updatedItemDefinition: ItemDefinitionPutRequest = req.body
         await MongoDriver.updateEntity(
           ItemDefinitionSchema,
           itemDefinitionId,

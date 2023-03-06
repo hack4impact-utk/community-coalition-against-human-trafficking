@@ -156,6 +156,8 @@ function validateProperties(
   return result
 }
 
+// TODO update validators
+
 /*
  * Since typescript is compiled into javascript on runtime, all type information
  * is lost. This makes it exceedingly difficult to have a truly generic object

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, UserRequest, UserResponse } from 'utils/types'
+import { ApiError, UserPostRequest, UserResponse } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { apiUserValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
@@ -13,7 +13,7 @@ export default async function handler(
   try {
     if (req.method === 'POST') {
       apiUserValidation(req.body)
-      const user: UserRequest = req.body
+      const user: UserPostRequest = req.body
       const response: UserResponse = await MongoDriver.createEntity(
         UserSchema,
         user

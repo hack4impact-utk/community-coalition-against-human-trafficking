@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, AttributeRequest, AttributeResponse } from 'utils/types'
+import { ApiError, AttributePostRequest, AttributeResponse } from 'utils/types'
 import { apiAttributeValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import AttributeSchema from 'server/models/Attribute'
@@ -16,7 +16,9 @@ export default async function hanlder(
 
     switch (req.method) {
       case 'GET': {
-        const attributes: AttributeResponse[] = await MongoDriver.getEntities(AttributeSchema)
+        const attributes: AttributeResponse[] = await MongoDriver.getEntities(
+          AttributeSchema
+        )
         const resStatus = attributes.length ? 200 : 204
         return res.status(resStatus).json({
           succcess: true,
@@ -25,7 +27,7 @@ export default async function hanlder(
       }
       case 'POST': {
         apiAttributeValidation(req.body)
-        const attribute: AttributeRequest = req.body
+        const attribute: AttributePostRequest = req.body
         let response: AttributeResponse = await MongoDriver.createEntity(
           AttributeSchema,
           attribute

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, AttributeRequest, AttributeResponse } from 'utils/types'
+import { ApiError, AttributePutRequest, AttributeResponse } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import {
   apiAttributeValidation,
@@ -36,7 +36,7 @@ export default async function handler(
       }
       case 'PUT': {
         apiAttributeValidation(req.body)
-        const updatedAttribute: AttributeRequest = req.body
+        const updatedAttribute: AttributePutRequest = req.body
 
         await MongoDriver.updateEntity(
           AttributeSchema,
