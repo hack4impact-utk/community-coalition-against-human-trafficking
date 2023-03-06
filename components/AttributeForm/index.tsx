@@ -14,25 +14,55 @@ import {
 import React from 'react'
 import { TwitterPicker } from 'react-color'
 import getContrastYIQ from 'utils/getContrastYIQ'
+import { Attribute } from 'utils/types'
 
 type PossibleValues = 'text' | 'number' | 'list'
 interface AttributeFormData {
   name: string
   color: string
   valueType: PossibleValues
-  listOptions: string[]
+  listOptions?: string[]
 }
 interface AttributeFormProps {
+  attribute?: Attribute
   onSubmit: (e: React.SyntheticEvent, attrFormData: AttributeFormData) => void
 }
 
-export default function AttributeForm({ onSubmit }: AttributeFormProps) {
-  const [formData, setFormData] = React.useState<AttributeFormData>({
-    name: '',
-    color: '#ebebeb',
-    valueType: 'text',
-    listOptions: [],
-  })
+function transformAttributeToFormData(attr?: Attribute): AttributeFormData {
+  if (!attr)
+    return {
+      name: '',
+      color: '#ebebeb',
+      valueType: 'text',
+      listOptions: [],
+    }
+
+  const result = {
+    name: attr.name,
+    color: attr.color,
+  }
+
+  if (attr.possibleValues instanceof Array) {
+    return {
+      ...result,
+      valueType: 'list',
+      listOptions: attr.possibleValues,
+    }
+  }
+
+  return {
+    ...result,
+    valueType: attr.possibleValues,
+  }
+}
+
+export default function AttributeForm({
+  onSubmit,
+  attribute,
+}: AttributeFormProps) {
+  const [formData, setFormData] = React.useState<AttributeFormData>(
+    transformAttributeToFormData(attribute)
+  )
 
   return (
     <form>
@@ -47,6 +77,7 @@ export default function AttributeForm({ onSubmit }: AttributeFormProps) {
                 name: e.target.value,
               } as AttributeFormData)
             }}
+            value={formData.name}
           />
         </Grid2>
         <Grid2 xs={6} sx={{ mt: 2 }}>
@@ -75,6 +106,7 @@ export default function AttributeForm({ onSubmit }: AttributeFormProps) {
                   valueType: value,
                 } as AttributeFormData)
               }}
+              value={formData.valueType}
             >
               <FormControlLabel value="text" control={<Radio />} label="Text" />
               <FormControlLabel
@@ -95,6 +127,7 @@ export default function AttributeForm({ onSubmit }: AttributeFormProps) {
             <Autocomplete
               freeSolo
               multiple
+              value={formData.listOptions}
               renderInput={(params) => (
                 <TextField {...params} label="Attribute Values" />
               )}
