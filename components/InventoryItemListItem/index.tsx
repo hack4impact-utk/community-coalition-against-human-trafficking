@@ -12,6 +12,7 @@ interface InventoryItemListItemProps {
 export default function InventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
+  // TODO: fix when the database schema is split between request and response types
   // needed to deal with the possible union types defined in the database schema
   const narrowCategory = (inventoryItem: InventoryItem) => {
     if (
@@ -100,6 +101,7 @@ export default function InventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
+        {/* TODO: fix when the database schema is split between request and response types */}
         {typeof inventoryItem.itemDefinition === 'string'
           ? inventoryItem.itemDefinition
           : inventoryItem.itemDefinition.name}
