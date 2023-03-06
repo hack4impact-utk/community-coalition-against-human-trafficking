@@ -3,6 +3,7 @@ import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
 import { MoreVert } from '@mui/icons-material'
 import theme from 'utils/theme'
+import getContrastYIQ from 'utils/getContrastYIQ'
 
 interface InventoryItemListItemProps {
   inventoryItem: InventoryItem
@@ -11,16 +12,6 @@ interface InventoryItemListItemProps {
 export default function InventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
-  // ensure that attribute chips are readable
-  const getContrastYIQ = (hexcolor: string) => {
-    var colorNoHash = hexcolor.substring(1, hexcolor.length - 1)
-    var r = parseInt(colorNoHash.substring(0, 2), 16)
-    var g = parseInt(colorNoHash.substring(2, 4), 16)
-    var b = parseInt(colorNoHash.substring(4, 2), 16)
-    var yiq = (r * 299 + g * 587 + b * 114) / 1000
-    return yiq >= 128 ? 'black' : 'white'
-  }
-
   // needed to deal with the possible union types defined in the database schema
   const narrowCategory = (inventoryItem: InventoryItem) => {
     if (
