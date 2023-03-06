@@ -18,7 +18,6 @@ export default async function handler(
   try {
     // ensure user is logged in
     await serverAuth(req, res)
-
     apiObjectIdValidation(req?.query?.attributeId as string)
     const attributeId = req.query.attributeId as string
 
