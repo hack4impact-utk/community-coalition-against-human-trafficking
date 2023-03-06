@@ -22,7 +22,7 @@ interface ValidationErrorList {
  * @returns A ValidationResult object
  */
 export function validateAttribute(attribute: Record<string, unknown>) {
-  return validateProperties(attributeModelProperties, attribute)
+  return validateProperties(attributeRequestModelProperties, attribute)
 }
 
 /**
@@ -31,7 +31,7 @@ export function validateAttribute(attribute: Record<string, unknown>) {
  * @returns A ValidationResult object
  */
 export function validateCategory(category: Record<string, unknown>) {
-  return validateProperties(categoryModelProperties, category)
+  return validateProperties(categoryRequestModelProperties, category)
 }
 
 /**
@@ -42,7 +42,10 @@ export function validateCategory(category: Record<string, unknown>) {
 export function validateItemDefinition(
   itemDefinition: Record<string, unknown>
 ) {
-  return validateProperties(itemDefinitionModelProperties, itemDefinition)
+  return validateProperties(
+    itemDefinitionRequestModelProperties,
+    itemDefinition
+  )
 }
 
 /**
@@ -51,7 +54,7 @@ export function validateItemDefinition(
  * @returns A ValidationResult object
  */
 export function validateInventoryItem(inventoryItem: Record<string, unknown>) {
-  return validateProperties(inventoryItemModelProperties, inventoryItem)
+  return validateProperties(inventoryItemRequestModelProperties, inventoryItem)
 }
 
 /**
@@ -60,7 +63,7 @@ export function validateInventoryItem(inventoryItem: Record<string, unknown>) {
  * @returns A ValidationResult object
  */
 export function validateUser(user: Record<string, unknown>) {
-  return validateProperties(userModelProperties, user)
+  return validateProperties(userModelRequestProperties, user)
 }
 
 /**
@@ -156,7 +159,7 @@ function validateProperties(
   return result
 }
 
-// TODO update validators
+// TODO update validators -- both with new request types and use instanceof Array instead of type=obj for arrays
 
 /*
  * Since typescript is compiled into javascript on runtime, all type information
@@ -166,7 +169,7 @@ function validateProperties(
  * slightly different format.
  */
 
-const attributeModelProperties: Property[] = [
+const attributeRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -189,7 +192,16 @@ const attributeModelProperties: Property[] = [
   },
 ]
 
-const categoryModelProperties: Property[] = [
+const attributePostModelProperties: Property[] = [
+  ...attributeRequestModelProperties,
+]
+
+const attributePutModelProperties: Property[] = [
+  ...attributeRequestModelProperties,
+]
+attributePutModelProperties.find((prop) => prop.key === '_id')!.required = true
+
+const categoryRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -202,7 +214,7 @@ const categoryModelProperties: Property[] = [
   },
 ]
 
-const itemDefinitionModelProperties: Property[] = [
+const itemDefinitionRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -240,7 +252,7 @@ const itemDefinitionModelProperties: Property[] = [
   },
 ]
 
-const inventoryItemModelProperties: Property[] = [
+const inventoryItemRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -268,7 +280,7 @@ const inventoryItemModelProperties: Property[] = [
   },
 ]
 
-const userModelProperties: Property[] = [
+const userModelRequestProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
