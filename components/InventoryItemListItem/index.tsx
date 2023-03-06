@@ -1,7 +1,7 @@
 import { TableRow, TableCell, Chip, IconButton } from '@mui/material'
 import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
-import { MoreVert } from '@mui/icons-material'
+import { InventoryOutlined, MoreVert } from '@mui/icons-material'
 import theme from 'utils/theme'
 import getContrastYIQ from 'utils/getContrastYIQ'
 
@@ -35,24 +35,18 @@ export default function InventoryItemListItem({
     }
 
     if (
-      inventoryItem.quantity <
-      inventoryItem.itemDefinition.criticalStockThreshold
-    ) {
-      return (
-        <WarningIcon
-          fontSize="small"
-          sx={{ color: theme.palette.error.main }}
-        />
-      )
-    }
-
-    if (
       inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
     ) {
       return (
         <WarningIcon
           fontSize="small"
-          sx={{ color: theme.palette.warning.light }}
+          sx={{
+            color:
+              inventoryItem.quantity <
+              inventoryItem.itemDefinition.criticalStockThreshold
+                ? theme.palette.error.main
+                : theme.palette.warning.light,
+          }}
         />
       )
     }
