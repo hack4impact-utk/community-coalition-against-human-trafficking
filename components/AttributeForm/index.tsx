@@ -26,6 +26,7 @@ interface AttributeFormData {
 interface AttributeFormProps {
   attribute?: Attribute
   onSubmit: (e: React.SyntheticEvent, attrFormData: AttributeFormData) => void
+  submitBtnText: string
 }
 
 function transformAttributeToFormData(attr?: Attribute): AttributeFormData {
@@ -162,7 +163,7 @@ export default function AttributeForm({
             size="large"
             onClick={(e) => onSubmit(e, formData)}
           >
-            Add Attribute
+            {submitBtnText}
           </Button>
         </Grid2>
       </Grid2>
