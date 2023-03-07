@@ -3,7 +3,7 @@ import AttributeSchema from 'server/models/Attribute'
 import { AttributeResponse } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
 import handler from 'pages/api/attributes/[attributeId]'
-import * as serverAuth from 'utils/auth'
+import { serverAuth } from 'utils/auth'
 
 describe('GET by attribute id tests', () => {
   test('valid call', async () => {
@@ -13,14 +13,29 @@ describe('GET by attribute id tests', () => {
       .fn()
       .mockImplementation(async () => validAttributeResponse))
 
-    jest
-      .spyOn(serverAuth, 'serverAuth')
-      .mockImplementation(() => Promise.resolve())
-
     const request = createRequest({
       method: 'GET',
       url: '/api/attributes/3',
     })
+
+    // jest.mock('utils/auth', () => {
+    //   return {
+    //     serverAuth: jest.fn(),
+    //   }
+    // })
+
+    // let mockedAuth: jest.Mock
+    // mockedAuth = serverAuth as jest.Mock
+    // mockedAuth.mockImplementation(() => Promise.resolve())
+
+    jest.mock('utils/auth', () => {
+      const module = jest.createMockFromModule<any>('utils/auth').default
+      module.serverAuth = jest.fn(() => Promise.resolve())
+      return module
+    })
+
+    // const mocked = jest.mocked(serverAuth)
+    // mocked.mockImplementation(() => Promise.resolve())
 
     const response = createResponse()
 
