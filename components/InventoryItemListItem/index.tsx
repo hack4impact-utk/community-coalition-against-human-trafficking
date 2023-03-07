@@ -1,17 +1,43 @@
-import { TableRow, TableCell, Chip, IconButton, Tooltip } from '@mui/material'
+import {
+  TableRow,
+  TableCell,
+  Chip,
+  IconButton,
+  Tooltip,
+  Typography,
+  Menu,
+  MenuItem,
+  Box,
+} from '@mui/material'
 import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
 import { InventoryOutlined, MoreVert } from '@mui/icons-material'
 import theme from 'utils/theme'
 import getContrastYIQ from 'utils/getContrastYIQ'
+import * as React from 'react'
 
 interface InventoryItemListItemProps {
   inventoryItem: InventoryItem
 }
 
+const settings = ['Check in', 'Check out', 'Delete']
+
 export default function InventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
+  // kebab menu functionality
+  const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
+    null
+  )
+
+  const handleOpenKebabMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElKebab(event.currentTarget)
+  }
+
+  const handleCloseKebabMenu = () => {
+    setAnchorElKebab(null)
+  }
+
   // TODO: fix when the database schema is split between request and response types
   // needed to deal with the possible union types defined in the database schema
   const narrowCategory = (inventoryItem: InventoryItem) => {
@@ -160,9 +186,33 @@ export default function InventoryItemListItem({
         {typeof inventoryItem.assignee === 'string'
           ? inventoryItem.assignee
           : inventoryItem.assignee.name}
-        <IconButton sx={{ ml: 'auto' }}>
-          <MoreVert sx={{ color: theme.palette.grey['500'] }} />
-        </IconButton>
+        <Box sx={{ flexGrow: 0, ml: 'auto' }}>
+          <IconButton onClick={handleOpenKebabMenu}>
+            <MoreVert sx={{ color: theme.palette.grey['500'] }} />
+          </IconButton>
+          <Menu
+            sx={{ mt: '45px' }}
+            id="kebab-menu"
+            anchorEl={anchorElKebab}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            open={Boolean(anchorElKebab)}
+            onClose={handleCloseKebabMenu}
+          >
+            {settings.map((setting) => (
+              <MenuItem key={setting} onClick={() => handleCloseKebabMenu()}>
+                <Typography textAlign="center">{setting}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Box>
       </TableCell>
     </TableRow>
   )
