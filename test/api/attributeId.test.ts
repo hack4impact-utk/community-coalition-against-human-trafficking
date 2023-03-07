@@ -1,18 +1,33 @@
 import { ObjectId } from 'mongodb'
 import AttributeSchema from 'server/models/Attribute'
 import { AttributeResponse } from 'utils/types'
-import { createMocks } from 'node-mocks-http'
+import { createRequest, createResponse } from 'node-mocks-http'
+import handler from 'pages/api/attributes/[attributeId]'
+import * as serverAuth from 'utils/auth'
 
 describe('GET by attribute id tests', () => {
   test('valid call', async () => {
     const mockObjectId: string = '3'
 
-    AttributeSchema.findById = jest
+    const mockDbCall = (AttributeSchema.findById = jest
       .fn()
-      .mockImplementation(async (id: string) => validAttributeResponse)
+      .mockImplementation(async () => validAttributeResponse))
 
-    expect(AttributeSchema.findById).lastCalledWith(mockObjectId)
-    expect(AttributeSchema.findById).toHaveBeenCalledTimes(1)
+    jest
+      .spyOn(serverAuth, 'serverAuth')
+      .mockImplementation(() => Promise.resolve())
+
+    const request = createRequest({
+      method: 'GET',
+      url: '/api/attributes/3',
+    })
+
+    const response = createResponse()
+
+    handler(request, response)
+
+    expect(mockDbCall).lastCalledWith(mockObjectId)
+    expect(mockDbCall).toHaveBeenCalledTimes(1)
   })
 })
 
