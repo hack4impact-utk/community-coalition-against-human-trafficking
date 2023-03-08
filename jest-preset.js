@@ -4,5 +4,4 @@ const mongoPreset = require('@shelf/jest-mongodb/jest-preset')
 
 module.exports = {
   ...tsPreset,
-  ...mongoPreset,
 }
