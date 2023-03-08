@@ -191,7 +191,7 @@ export default function InventoryItemListItem({
             <MoreVert sx={{ color: theme.palette.grey['500'] }} />
           </IconButton>
           <Menu
-            sx={{ mt: '45px' }}
+            sx={{ mt: 5 }}
             id="kebab-menu"
             anchorEl={anchorElKebab}
             anchorOrigin={{
