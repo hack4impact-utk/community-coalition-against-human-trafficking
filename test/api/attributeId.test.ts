@@ -1,13 +1,15 @@
+/// <reference types="jest" />
+
 import { ObjectId } from 'mongodb'
 import AttributeSchema from 'server/models/Attribute'
 import { AttributeResponse } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
 import handler from 'pages/api/attributes/[attributeId]'
-import { serverAuth } from 'utils/auth'
+import * as auth from 'utils/auth'
 
 describe('GET by attribute id tests', () => {
   test('valid call', async () => {
-    const mockObjectId: string = '3'
+    const mockObjectId = '3'
 
     const mockDbCall = (AttributeSchema.findById = jest
       .fn()
@@ -28,22 +30,22 @@ describe('GET by attribute id tests', () => {
     // mockedAuth = serverAuth as jest.Mock
     // mockedAuth.mockImplementation(() => Promise.resolve())
 
-    jest.mock('utils/auth', () => {
-      const module = jest.createMockFromModule<any>('utils/auth').default
-      module.serverAuth = jest.fn(() => Promise.resolve())
-      return module
-    })
+    jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
 
     // const mocked = jest.mocked(serverAuth)
     // mocked.mockImplementation(() => Promise.resolve())
 
     const response = createResponse()
 
-    handler(request, response)
-
+    const data = await handler(request, response)
+    console.log(data)
     expect(mockDbCall).lastCalledWith(mockObjectId)
     expect(mockDbCall).toHaveBeenCalledTimes(1)
   })
+})
+
+afterAll(async () => {
+  await mongoose.conn.close()
 })
 
 const validAttributeResponse: AttributeResponse = {
