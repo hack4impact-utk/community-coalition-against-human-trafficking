@@ -1,3 +1,7 @@
 import dotenv from 'dotenv'
 
-dotenv.config({ path: '.env.test' })
+// Load .env.test
+dotenv.config({ path: '.env.local' })
+
+// mock mongoDb call
+// jest.mock('server/index', () => Promise.resolve())
