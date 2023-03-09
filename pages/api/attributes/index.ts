@@ -3,16 +3,17 @@ import { ApiError, AttributePostRequest, AttributeResponse } from 'utils/types'
 import { apiAttributeValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import AttributeSchema from 'server/models/Attribute'
+import { serverAuth } from 'utils/auth'
 
 // @route GET api/attributes - Returns a list of all Attributes in the database - Private
 // @route POST api/attributes - Create an Attribute from request body - Private
-export default async function hanlder(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
     // ensure user is logged in
-    // await serverAuth(req, res)
+    await serverAuth(req, res)
 
     switch (req.method) {
       case 'GET': {
@@ -28,7 +29,7 @@ export default async function hanlder(
       case 'POST': {
         apiAttributeValidation(req.body, 'POST')
         const attribute: AttributePostRequest = req.body
-        let response: AttributeResponse = await MongoDriver.createEntity(
+        const response: AttributeResponse = await MongoDriver.createEntity(
           AttributeSchema,
           attribute
         )
