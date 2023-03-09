@@ -1,6 +1,15 @@
 import CategorySchema from 'server/models/Category'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import { ApiError } from 'utils/types'
+import mongoose from 'mongoose'
+import { clientPromise } from '@api/auth/[...nextauth]'
+
+// restore mocked implementations and close db connections
+afterAll(() => {
+  jest.restoreAllMocks()
+  mongoose.connection.close()
+  clientPromise.then((client) => client.close())
+})
 
 describe('MongoDriver', () => {
   describe('getEntity', () => {

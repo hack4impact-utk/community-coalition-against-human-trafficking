@@ -6,23 +6,29 @@ import handler from 'pages/api/attributes/[attributeId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
-import { NextApiRequest, NextApiResponse } from 'next'
+import mongoose from 'mongoose'
+import { clientPromise } from '@api/auth/[...nextauth]'
 
 beforeAll(() => {
-  jest
-    .spyOn(auth, 'serverAuth')
-    .mockImplementation((_req, _res) => Promise.resolve())
+  jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
+
+  jest.spyOn(apiValidator, 'apiObjectIdValidation').mockImplementation()
+})
+
+// restore mocked implementations and close db connections
+afterAll(() => {
+  jest.restoreAllMocks()
+  mongoose.connection.close()
+  clientPromise.then((client) => client.close())
 })
 
 describe('api/attributes/[attributeId]', () => {
   test('unauthenticated request returns 401', async () => {
     const mockObjectId = '6408a7156668c5655c25b105'
 
-    jest
-      .spyOn(auth, 'serverAuth')
-      .mockImplementationOnce(async (_req, _res) => {
-        throw new ApiError(401, 'Unauthorized')
-      })
+    jest.spyOn(auth, 'serverAuth').mockImplementationOnce(async () => {
+      throw new ApiError(401, 'Unauthorized')
+    })
 
     const request = createRequest({
       method: 'GET',
@@ -73,6 +79,13 @@ describe('api/attributes/[attributeId]', () => {
 
     test('invalid object id returns 400', async () => {
       const invalidObjectId = '3'
+
+      // mock apiObjectIdValidation to throw an error
+      jest
+        .spyOn(apiValidator, 'apiObjectIdValidation')
+        .mockImplementationOnce(() => {
+          throw new ApiError(400, 'Invalid ObjectId Format')
+        })
 
       const request = createRequest({
         method: 'GET',
