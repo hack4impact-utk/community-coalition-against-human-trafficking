@@ -39,7 +39,7 @@ export default async function handler(
 
         return res.status(201).json({
           success: true,
-          payload: response.id,
+          payload: response._id,
         })
       }
       default: {

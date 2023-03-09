@@ -11,7 +11,7 @@ import {
   apiObjectIdValidation,
 } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
-import ItemDefinitionSchema from 'server/models/Category'
+import ItemDefinitionSchema from 'server/models/ItemDefinition'
 
 // @route GET api/itemDefintions/[itemDefinitionId] - Returns a single ItemDefinition object given a itemDefinitionId - Private
 // @route PUT api/users/[itemDefinitionId] - Updates an existing ItemDefinition object (identified by itemDefinitionId) with a new ItemDefinition object - Private
