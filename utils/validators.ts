@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import deepCopy from './deepCopy'
 
 interface Property {
   key: string
@@ -47,10 +48,13 @@ export function validateCategoryRequest(
   requestType?: 'PUT' | 'POST'
 ) {
   let validationModel: Property[]
+  console.log(categoryRequestModelProperties)
+  console.log(categoryPostModelProperties)
+  console.log(categoryPutModelProperties)
   if (requestType === 'PUT') {
-    validationModel = categoryPostModelProperties
-  } else if (requestType === 'POST') {
     validationModel = categoryPutModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = categoryPostModelProperties
   } else {
     validationModel = categoryRequestModelProperties
   }
@@ -130,6 +134,7 @@ export function validateObjectId(id: string) {
   if (!id) return false
   if (ObjectId.isValid(id)) {
     if (String(new ObjectId(id)) === id) return true
+    return true
   }
   return false
 }
@@ -166,7 +171,7 @@ function validateProperties(
   }
 
   // ensures all required properties are present
-  let isValidObject = true
+  const isValidObject = true
   for (const modelProp of modelProperties) {
     if (
       isValidObject &&
@@ -179,7 +184,7 @@ function validateProperties(
 
   // checks validity of all object properties.
   for (const objKey in obj) {
-    let i = modelProperties.findIndex((prop) => prop.key === objKey)
+    const i = modelProperties.findIndex((prop) => prop.key === objKey)
 
     // property is not part of server model
     if (i < 0) {
@@ -246,13 +251,13 @@ const attributeRequestModelProperties: Property[] = [
   },
 ]
 
-const attributePostModelProperties: Property[] = [
-  ...attributeRequestModelProperties,
-]
+const attributePostModelProperties: Property[] = deepCopy(
+  attributeRequestModelProperties
+)
 
-const attributePutModelProperties: Property[] = [
-  ...attributeRequestModelProperties,
-]
+const attributePutModelProperties: Property[] = deepCopy(
+  attributeRequestModelProperties
+)
 attributePutModelProperties.find((prop) => prop.key === '_id')!.required = true
 
 const categoryRequestModelProperties: Property[] = [
@@ -268,13 +273,14 @@ const categoryRequestModelProperties: Property[] = [
   },
 ]
 
-const categoryPostModelProperties: Property[] = [
-  ...categoryRequestModelProperties,
-]
+const categoryPostModelProperties: Property[] = deepCopy(
+  categoryRequestModelProperties
+)
 
-const categoryPutModelProperties: Property[] = [
-  ...categoryRequestModelProperties,
-]
+const categoryPutModelProperties: Property[] = deepCopy(
+  categoryPostModelProperties
+)
+
 categoryPutModelProperties.find((prop) => prop.key === '_id')!.required = true
 
 const itemDefinitionRequestModelProperties: Property[] = [
@@ -315,13 +321,13 @@ const itemDefinitionRequestModelProperties: Property[] = [
   },
 ]
 
-const itemDefinitionPostModelProperties: Property[] = [
-  ...itemDefinitionRequestModelProperties,
-]
+const itemDefinitionPostModelProperties: Property[] = deepCopy(
+  itemDefinitionRequestModelProperties
+)
 
-const itemDefinitionPutModelProperties: Property[] = [
-  ...itemDefinitionRequestModelProperties,
-]
+const itemDefinitionPutModelProperties: Property[] = deepCopy(
+  itemDefinitionRequestModelProperties
+)
 itemDefinitionPutModelProperties.find((prop) => prop.key === '_id')!.required =
   true
 
@@ -353,13 +359,13 @@ const inventoryItemRequestModelProperties: Property[] = [
   },
 ]
 
-const inventoryItemPostModelProperties: Property[] = [
-  ...inventoryItemRequestModelProperties,
-]
+const inventoryItemPostModelProperties: Property[] = deepCopy(
+  inventoryItemRequestModelProperties
+)
 
-const inventoryItemPutModelProperties: Property[] = [
-  ...inventoryItemRequestModelProperties,
-]
+const inventoryItemPutModelProperties: Property[] = deepCopy(
+  inventoryItemRequestModelProperties
+)
 inventoryItemPutModelProperties.find((prop) => prop.key === '_id')!.required =
   true
 
