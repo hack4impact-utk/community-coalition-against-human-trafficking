@@ -1,6 +1,6 @@
 import { Attribute, Category, InventoryItem, ItemDefinition, User } from '.'
 
-export interface UserResponse extends User {}
+export type UserResponse = User
 
 export interface ItemDefinitionResponse extends ItemDefinition {
   category?: Category
@@ -15,9 +15,9 @@ export interface InventoryItemResponse extends InventoryItem {
   }[]
 }
 
-export interface CategoryResponse extends Category {}
+export type CategoryResponse = Category
 
-export interface AttributeResponse extends Attribute {}
+export type AttributeResponse = Attribute
 
 export type ServerResponse =
   | UserResponse
