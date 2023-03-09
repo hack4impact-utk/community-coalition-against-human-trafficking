@@ -65,7 +65,7 @@ describe('validators', () => {
       })
     })
 
-    test('object without optional field returns successful ValidationResult', () => {
+    test('object without optional field set returns successful ValidationResult', () => {
       const validObject = {
         name: 'test',
         id: 3,
