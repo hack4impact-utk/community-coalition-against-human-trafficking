@@ -30,6 +30,25 @@ describe('MongoDriver', () => {
       expect(category).toEqual(categoryFixture)
     })
 
+    test('aggregate only returns one object', async () => {
+      const findByIdSpy = jest.spyOn(CategorySchema, 'findById')
+      const mockAggregate = (CategorySchema.aggregate = jest
+        .fn()
+        .mockImplementation(async () => [
+          categoryFixture,
+          { ...categoryFixture, _id: '123' },
+        ]))
+
+      const category = await MongoDriver.getEntity(
+        CategorySchema,
+        mockObjectId,
+        [{ $match: { _id: mockObjectId } }, { $limit: 1 }]
+      )
+
+      expect(findByIdSpy).toHaveBeenCalledTimes(0)
+      expect(mockAggregate).toHaveBeenCalledTimes(1)
+      expect(category).toEqual(categoryFixture)
+    })
     test('valid call returns correct data', async () => {
       const mockFindById = (CategorySchema.findById = jest
         .fn()
