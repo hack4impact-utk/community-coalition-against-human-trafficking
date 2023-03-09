@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb'
 import deepCopy from './deepCopy'
 
-interface Property {
+export interface Property {
   key: string
   types: string
   required: boolean
@@ -133,7 +133,7 @@ export function validateUserRequest(
 export function validateObjectId(id: string) {
   if (!id) return false
   if (ObjectId.isValid(id)) {
-    if (String(new ObjectId(id)) === id) return true
+    if (String(new ObjectId(id)) !== id) return false
     return true
   }
   return false
@@ -146,7 +146,7 @@ export function validateObjectId(id: string) {
  * @param obj The object to validate
  * @returns A ValidationResult object
  */
-function validateProperties(
+export function validateProperties(
   modelProperties: Property[],
   obj: Record<string, unknown>
 ): ValidationResult {
@@ -228,7 +228,7 @@ function validateProperties(
  * slightly different format.
  */
 
-const attributeRequestModelProperties: Property[] = [
+export const attributeRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -251,16 +251,16 @@ const attributeRequestModelProperties: Property[] = [
   },
 ]
 
-const attributePostModelProperties: Property[] = deepCopy(
+export const attributePostModelProperties: Property[] = deepCopy(
   attributeRequestModelProperties
 )
 
-const attributePutModelProperties: Property[] = deepCopy(
+export const attributePutModelProperties: Property[] = deepCopy(
   attributeRequestModelProperties
 )
 attributePutModelProperties.find((prop) => prop.key === '_id')!.required = true
 
-const categoryRequestModelProperties: Property[] = [
+export const categoryRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -273,17 +273,17 @@ const categoryRequestModelProperties: Property[] = [
   },
 ]
 
-const categoryPostModelProperties: Property[] = deepCopy(
+export const categoryPostModelProperties: Property[] = deepCopy(
   categoryRequestModelProperties
 )
 
-const categoryPutModelProperties: Property[] = deepCopy(
+export const categoryPutModelProperties: Property[] = deepCopy(
   categoryPostModelProperties
 )
 
 categoryPutModelProperties.find((prop) => prop.key === '_id')!.required = true
 
-const itemDefinitionRequestModelProperties: Property[] = [
+export const itemDefinitionRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -321,17 +321,17 @@ const itemDefinitionRequestModelProperties: Property[] = [
   },
 ]
 
-const itemDefinitionPostModelProperties: Property[] = deepCopy(
+export const itemDefinitionPostModelProperties: Property[] = deepCopy(
   itemDefinitionRequestModelProperties
 )
 
-const itemDefinitionPutModelProperties: Property[] = deepCopy(
+export const itemDefinitionPutModelProperties: Property[] = deepCopy(
   itemDefinitionRequestModelProperties
 )
 itemDefinitionPutModelProperties.find((prop) => prop.key === '_id')!.required =
   true
 
-const inventoryItemRequestModelProperties: Property[] = [
+export const inventoryItemRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -359,17 +359,17 @@ const inventoryItemRequestModelProperties: Property[] = [
   },
 ]
 
-const inventoryItemPostModelProperties: Property[] = deepCopy(
+export const inventoryItemPostModelProperties: Property[] = deepCopy(
   inventoryItemRequestModelProperties
 )
 
-const inventoryItemPutModelProperties: Property[] = deepCopy(
+export const inventoryItemPutModelProperties: Property[] = deepCopy(
   inventoryItemRequestModelProperties
 )
 inventoryItemPutModelProperties.find((prop) => prop.key === '_id')!.required =
   true
 
-const userRequestModelProperties: Property[] = [
+export const userRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -392,7 +392,11 @@ const userRequestModelProperties: Property[] = [
   },
 ]
 
-const userPostModelProperties: Property[] = [...userRequestModelProperties]
+export const userPostModelProperties: Property[] = [
+  ...userRequestModelProperties,
+]
 
-const userPutModelProperties: Property[] = [...userRequestModelProperties]
+export const userPutModelProperties: Property[] = [
+  ...userRequestModelProperties,
+]
 userPutModelProperties.find((prop) => prop.key === '_id')!.required = true
