@@ -23,7 +23,7 @@ afterAll(() => {
 })
 
 describe('api/attributes/[attributeId]', () => {
-  test('unauthenticated request returns 401', async () => {
+  test('thrown error is caught, response is unsuccessful and shows correct error message', async () => {
     const mockObjectId = '6408a7156668c5655c25b105'
 
     jest.spyOn(auth, 'serverAuth').mockImplementationOnce(async () => {
@@ -45,6 +45,27 @@ describe('api/attributes/[attributeId]', () => {
 
     expect(response.statusCode).toBe(401)
     expect(data.message).toBe('Unauthorized')
+    expect(data.success).toBe(false)
+  })
+
+  test('unsupported method returns 405', async () => {
+    const mockObjectId = '6408a7156668c5655c25b105'
+
+    const request = createRequest({
+      method: 'POST',
+      url: `/api/attributes/${mockObjectId}`,
+      query: {
+        attributeId: mockObjectId,
+      },
+    })
+    const response = createResponse()
+
+    await handler(request, response)
+
+    const data = response._getJSONData()
+
+    expect(response.statusCode).toBe(405)
+    expect(data.message).toBe('Method Not Allowed')
     expect(data.success).toBe(false)
   })
   describe('GET', () => {
@@ -76,36 +97,10 @@ describe('api/attributes/[attributeId]', () => {
       expect(response.statusCode).toBe(200)
       expect(data).toEqual(validAttributeResponse)
     })
-
-    test('invalid object id returns 400', async () => {
-      const invalidObjectId = '3'
-
-      // mock apiObjectIdValidation to throw an error
-      jest
-        .spyOn(apiValidator, 'apiObjectIdValidation')
-        .mockImplementationOnce(() => {
-          throw new ApiError(400, 'Invalid ObjectId Format')
-        })
-
-      const request = createRequest({
-        method: 'GET',
-        url: `/api/attributes/${invalidObjectId}`,
-        query: {
-          attributeId: invalidObjectId,
-        },
-      })
-      const response = createResponse()
-
-      await handler(request, response)
-      const data = response._getJSONData()
-
-      expect(response.statusCode).toBe(400)
-      expect(data.message).toBe('Invalid ObjectId Format')
-      expect(data.success).toBe(false)
-    })
   })
 
   describe('PUT', () => {
+    jest.spyOn(apiValidator, 'apiAttributeValidation').mockImplementation()
     test('valid call returns correct data', async () => {
       const mockObjectId = '6408a7156668c5655c25b105'
 
@@ -113,6 +108,9 @@ describe('api/attributes/[attributeId]', () => {
         .spyOn(MongoDriver, 'updateEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {})
+      const mockApiAttributeValidation = jest
+        .spyOn(apiValidator, 'apiAttributeValidation')
+        .mockImplementation()
 
       const request = createRequest({
         method: 'PUT',
@@ -128,6 +126,7 @@ describe('api/attributes/[attributeId]', () => {
       await handler(request, response)
       const data = response._getJSONData().payload
 
+      expect(mockApiAttributeValidation).toHaveBeenCalledTimes(1)
       expect(mockUpdateEntity).toHaveBeenCalledTimes(1)
       expect(mockUpdateEntity).lastCalledWith(
         AttributeSchema,
@@ -136,6 +135,31 @@ describe('api/attributes/[attributeId]', () => {
       )
       expect(response.statusCode).toBe(200)
       expect(data).toEqual({})
+    })
+  })
+
+  describe('DELETE', () => {
+    test('valid id returns correct data', async () => {
+      const mockObjectId = '6408a7156668c5655c25b105'
+      const mockDeleteEntity = jest
+        .spyOn(MongoDriver, 'deleteEntity')
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        .mockImplementation(async () => {})
+      const request = createRequest({
+        method: 'DELETE',
+        url: `/api/attributes/${mockObjectId}`,
+        query: {
+          attributeId: mockObjectId,
+        },
+      })
+      const response = createResponse()
+
+      await handler(request, response)
+
+      expect(mockDeleteEntity).toHaveBeenCalledTimes(1)
+      expect(mockDeleteEntity).lastCalledWith(AttributeSchema, mockObjectId)
+      expect(response.statusCode).toBe(200)
+      expect(response._getJSONData().payload).toEqual({})
     })
   })
 })
