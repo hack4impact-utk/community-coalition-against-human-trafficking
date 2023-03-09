@@ -11,26 +11,29 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    if (req.method === 'POST') {
-      apiUserValidation(req.body, 'POST')
-      const user: UserPostRequest = req.body
-      const response: UserResponse = await MongoDriver.createEntity(
-        UserSchema,
-        user
-      )
+    switch (req.method) {
+      case 'POST':
+        apiUserValidation(req.body, 'POST')
+        const user: UserPostRequest = req.body
+        const response: UserResponse = await MongoDriver.createEntity(
+          UserSchema,
+          user
+        )
 
-      return res.status(201).json({
-        success: true,
-        payload: response._id,
-      })
-    } else if (req.method === 'GET') {
-      await serverAuth(req, res)
-      const users: UserResponse[] = await MongoDriver.getEntities(UserSchema)
-      const resStatus = users.length ? 200 : 204
-      return res.status(resStatus).json({
-        success: true,
-        payload: users,
-      })
+        return res.status(201).json({
+          success: true,
+          payload: response._id,
+        })
+      case 'GET':
+        await serverAuth(req, res)
+        const users: UserResponse[] = await MongoDriver.getEntities(UserSchema)
+        const resStatus = users.length ? 200 : 204
+        return res.status(resStatus).json({
+          success: true,
+          payload: users,
+        })
+      default:
+        throw new ApiError(405, 'Method Not Allowed')
     }
   } catch (e) {
     if (e instanceof ApiError) {
