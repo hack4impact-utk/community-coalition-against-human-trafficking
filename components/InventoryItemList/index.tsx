@@ -143,18 +143,12 @@ function InventoryItemListHeader(props: EnhancedTableProps) {
                 onClick={createSortHandler(headCell.id)}
               >
                 {headCell.label}
-                {orderBy === headCell.id ? (
-                  <Box component="span" sx={visuallyHidden}>
-                    {order === 'desc'
-                      ? 'sorted descending'
-                      : 'sorted ascending'}
-                  </Box>
-                ) : null}
+                <Box component="span" sx={visuallyHidden}>
+                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                </Box>
               </TableSortLabel>
             ) : (
-              <TableCell sx={{ borderBottom: 'none', fontWeight: 'bold' }}>
-                {headCell.label}
-              </TableCell>
+              headCell.label
             )}
           </TableCell>
         ))}
@@ -183,7 +177,6 @@ export default function InventoryItemList(props: Props) {
     setOrder(isAsc ? 'desc' : 'asc')
     setOrderBy(property)
   }
-
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
