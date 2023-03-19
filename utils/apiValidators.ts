@@ -3,12 +3,11 @@ import {
   validateAttributeRequest,
   validateCategoryRequest,
   validateItemDefinitionRequest,
-  validateObjectId,
   validateUserRequest,
-  ValidationResult,
 } from 'utils/validators'
+import { validateObjectId, ValidationResult } from 'utils/validation'
 
-const BAD_REQUEST_BODY_PREFIX = 'Bad Request Body:\n'
+export const BAD_REQUEST_BODY_PREFIX = 'Bad Request Body:\n'
 
 export function apiObjectIdValidation(id: string) {
   if (!validateObjectId(id)) {
