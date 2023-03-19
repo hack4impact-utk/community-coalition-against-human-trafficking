@@ -153,6 +153,7 @@ describe('api/categories', () => {
 })
 const validCategoryResponse: CategoryResponse[] = [
   {
+    _id: '1',
     name: 'test',
   },
 ]

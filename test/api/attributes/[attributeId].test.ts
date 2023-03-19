@@ -164,6 +164,7 @@ describe('api/attributes/[attributeId]', () => {
   })
 })
 const validAttributeResponse: AttributeResponse = {
+  _id: '1',
   name: 'test',
   possibleValues: 'text',
   color: '#000000',

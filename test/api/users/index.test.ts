@@ -149,6 +149,7 @@ describe('api/users', () => {
 })
 const validUserResponse: UserResponse[] = [
   {
+    _id: '1',
     email: 'test@user.com',
     name: 'Test User',
     image: 'https://test.com/image.png',

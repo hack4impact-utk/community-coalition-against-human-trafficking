@@ -156,6 +156,7 @@ describe('api/categories/[categoryId]', () => {
   })
 })
 const validCategoryResponse: CategoryResponse = {
+  _id: '1',
   name: 'test',
 }
 const fakeObjectId = '6408a7156668c5655c25b105'

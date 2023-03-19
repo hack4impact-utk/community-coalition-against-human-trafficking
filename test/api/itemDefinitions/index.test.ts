@@ -153,6 +153,7 @@ describe('api/itemDefinitions', () => {
 })
 const validItemDefinitionResponse: ItemDefinitionResponse[] = [
   {
+    _id: '1',
     name: 'Test Item',
     internal: false,
     lowStockThreshold: 10,

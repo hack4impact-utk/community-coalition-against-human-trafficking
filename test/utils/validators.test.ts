@@ -1,186 +1,129 @@
-import { ObjectId } from 'mongodb'
-import {
-  Property,
-  validateObjectId,
-  validateProperties,
-} from 'utils/validators'
+import * as validation from 'utils/validation'
+import * as validators from 'utils/validators'
 
 describe('validators', () => {
-  describe('validateObjectId', () => {
-    test('valid id returns true', () => {
-      const validObjectId = new ObjectId()
-      const objectIdStr = validObjectId.toString()
+  const mockValidator = jest
+    .spyOn(validation, 'validateProperties')
+    .mockImplementation()
+  const testObj = {}
 
-      expect(validateObjectId(objectIdStr)).toBe(true)
+  describe('validateAttributeRequest', () => {
+    test('PUT should use attributePutModelProperties', () => {
+      validators.validateAttributeRequest(testObj, 'PUT')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.attributePutModelProperties,
+        testObj
+      )
     })
-
-    test('empty string returns false', () => {
-      expect(validateObjectId('')).toBe(false)
+    test('POST should use attributePutModelProperties', () => {
+      validators.validateAttributeRequest(testObj, 'POST')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.attributePostModelProperties,
+        testObj
+      )
     })
-
-    test('object id that gets transformed returns false', () => {
-      const invalidObjectId = 'aaaabbbbcccc'
-
-      // ensure the object id does get transformed and that it is not valid
-      expect(new ObjectId(invalidObjectId).toString()).not.toBe(invalidObjectId)
-      expect(validateObjectId(invalidObjectId)).toBe(false)
-    })
-
-    test('invalid object id returns false', () => {
-      const invalidObjectId = '3'
-
-      expect(validateObjectId(invalidObjectId)).toBe(false)
+    test('no requestType should use testObjModelProperties', () => {
+      validators.validateAttributeRequest(testObj)
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.attributeRequestModelProperties,
+        testObj
+      )
     })
   })
 
-  describe('validateProperties', () => {
-    const validationModel: Property[] = [
-      {
-        key: 'name',
-        types: 'string',
-        required: true,
-      },
-      {
-        key: 'id',
-        types: 'string|number',
-        required: true,
-      },
-      {
-        key: 'optional',
-        types: 'string',
-        required: false,
-      },
-    ]
-
-    test('valid object returns successful ValidationResult', () => {
-      const validObject = {
-        name: 'test',
-        id: 3,
-        optional: 'optional',
-      }
-
-      expect(validateProperties(validationModel, validObject)).toEqual({
-        success: true,
-        message: '',
-      })
+  describe('validateCategoryRequest', () => {
+    test('PUT should use categoryPutModelProperties', () => {
+      validators.validateCategoryRequest(testObj, 'PUT')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.categoryPutModelProperties,
+        testObj
+      )
     })
-
-    test('object without optional field set returns successful ValidationResult', () => {
-      const validObject = {
-        name: 'test',
-        id: 3,
-      }
-
-      expect(validateProperties(validationModel, validObject)).toEqual({
-        success: true,
-        message: '',
-      })
+    test('POST should use categoryPutModelProperties', () => {
+      validators.validateCategoryRequest(testObj, 'POST')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.categoryPostModelProperties,
+        testObj
+      )
     })
-
-    test('property with multiple types returns successful ValidationResult for all supported types', () => {
-      const validObject = {
-        name: 'test',
-        id: '3',
-      }
-      const validObject2 = {
-        name: 'test',
-        id: 3,
-      }
-
-      expect(validateProperties(validationModel, validObject)).toEqual({
-        success: true,
-        message: '',
-      })
-      expect(validateProperties(validationModel, validObject2)).toEqual({
-        success: true,
-        message: '',
-      })
+    test('no requestType should use categoryRequestModelProperties', () => {
+      validators.validateCategoryRequest(testObj)
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.categoryRequestModelProperties,
+        testObj
+      )
     })
+  })
 
-    test('missing required field returns unsuccessful ValidationResult', () => {
-      const invalidObject = {
-        id: 3,
-      }
-
-      expect(validateProperties(validationModel, invalidObject)).toEqual({
-        success: false,
-        message: 'Missing Required Properties: name\n',
-      })
+  describe('validateItemDefinitionRequest', () => {
+    test('PUT should use itemDefinitionPutModelProperties', () => {
+      validators.validateItemDefinitionRequest(testObj, 'PUT')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.itemDefinitionPutModelProperties,
+        testObj
+      )
     })
-
-    test('missing multiple required fields returns unsuccessful ValidationResult with all missing listed', () => {
-      expect(validateProperties(validationModel, {})).toEqual({
-        success: false,
-        message: 'Missing Required Properties: name, id\n',
-      })
+    test('POST should use itemDefinitionPutModelProperties', () => {
+      validators.validateItemDefinitionRequest(testObj, 'POST')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.itemDefinitionPostModelProperties,
+        testObj
+      )
     })
-
-    test('extra field returns unsuccessful ValidationResult', () => {
-      const invalidObject = {
-        name: 'test',
-        id: 3,
-        extraField: 'extra',
-      }
-
-      expect(validateProperties(validationModel, invalidObject)).toEqual({
-        success: false,
-        message: 'Invalid Properties: extraField\n',
-      })
+    test('no requestType should use itemDefinitionRequestModelProperties', () => {
+      validators.validateItemDefinitionRequest(testObj)
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.itemDefinitionRequestModelProperties,
+        testObj
+      )
     })
+  })
 
-    test('multiple extra fields returns unsuccessful ValidationResult with all extra listed', () => {
-      const invalidObject = {
-        name: 'test',
-        id: 3,
-        extraField: 'extra',
-        extraField2: 'extra2',
-      }
-
-      expect(validateProperties(validationModel, invalidObject)).toEqual({
-        success: false,
-        message: 'Invalid Properties: extraField, extraField2\n',
-      })
+  describe('validateInventoryItemRequest', () => {
+    test('PUT should use inventoryItemPutModelProperties', () => {
+      validators.validateInventoryItemRequest(testObj, 'PUT')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.inventoryItemPutModelProperties,
+        testObj
+      )
     })
-
-    test('type mismatch returns unsuccessful ValidationResult', () => {
-      const invalidObject = {
-        name: 4,
-        id: 3,
-      }
-
-      expect(validateProperties(validationModel, invalidObject)).toEqual({
-        success: false,
-        message:
-          "Type Mismatches: 'name': Expected type 'string' but got type 'number'\n",
-      })
+    test('POST should use inventoryItemPutModelProperties', () => {
+      validators.validateInventoryItemRequest(testObj, 'POST')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.inventoryItemPostModelProperties,
+        testObj
+      )
     })
-
-    test('multiple type mismatches returns unsuccessful ValidationResult with all mismatches listed', () => {
-      const invalidObject = {
-        name: 4,
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        id: () => {},
-      }
-
-      expect(validateProperties(validationModel, invalidObject)).toEqual({
-        success: false,
-        message: `Type Mismatches: 'name': Expected type 'string' but got type 'number', 'id': Expected type 'string|number' but got type 'function'\n`,
-      })
+    test('no requestType should use inventoryItemRequestModelProperties', () => {
+      validators.validateInventoryItemRequest(testObj)
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.inventoryItemRequestModelProperties,
+        testObj
+      )
     })
+  })
 
-    test('multiple errors returns unsuccessful ValidationResult', () => {
-      const invalidObject = {
-        name: 4,
-        extraField: 'extra',
-      }
-
-      expect(validateProperties(validationModel, invalidObject)).toEqual({
-        success: false,
-        message:
-          "Missing Required Properties: id\nInvalid Properties: extraField\nType Mismatches: 'name': Expected type 'string' but got type 'number'\n",
-      })
+  describe('validateUserRequest', () => {
+    test('PUT should use userPutModelProperties', () => {
+      validators.validateUserRequest(testObj, 'PUT')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.userPutModelProperties,
+        testObj
+      )
+    })
+    test('POST should use userPutModelProperties', () => {
+      validators.validateUserRequest(testObj, 'POST')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.userPostModelProperties,
+        testObj
+      )
+    })
+    test('no requestType should use userRequestModelProperties', () => {
+      validators.validateUserRequest(testObj)
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.userRequestModelProperties,
+        testObj
+      )
     })
   })
 })
-
-// TODO: tests for specific validators, should only test that the `validateProperties` function is called with the correct arguments
