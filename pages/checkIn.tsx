@@ -1,5 +1,9 @@
+import { Box } from '@mui/material'
+
 export default function CheckInPage() {
   return (
-    <h1>Check In</h1>
+    <Box>
+      <h1>Check In</h1>
+    </Box>
   )
 }
