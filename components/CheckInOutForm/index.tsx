@@ -82,6 +82,7 @@ function CheckInOutForm({
         onChange={(_e, Category) => setSelectedCategory(Category)}
         getOptionLabel={(Category) => Category.name}
         inputValue={selectedCategory ? selectedCategory.name : ''}
+        disabled={!!selectedItemDefinition}
       />
       <Autocomplete
         options={itemDefinitions}
