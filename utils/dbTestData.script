@@ -7,6 +7,7 @@ const categoryId4 = ObjectId();
 const categoryId5 = ObjectId();
 const categoryId6 = ObjectId();
 const categoryId7 = ObjectId();
+const categoryId8 = ObjectId();
 
 db.categories.insertMany(
     {
@@ -35,12 +36,12 @@ db.categories.insertMany(
     },
     {
         "_id": categoryId7,
-        "name": "Cleaning Supplies"
-    },
-    {
-        "_id": categoryId7,
         "name": "Linens"
     }
+    {
+        "_id": categoryId8,
+        "name": "Cleaning Supplies"
+    },
 );
 
 
@@ -154,6 +155,31 @@ const itemDefinitionId3 = ObjectId();
 const itemDefinitionId4 = ObjectId();
 const itemDefinitionId5 = ObjectId();
 const itemDefinitionId6 = ObjectId();
+const itemDefinitionId7 = ObjectId();
+const itemDefinitionId8 = ObjectId();
+const itemDefinitionId9 = ObjectId();
+const itemDefinitionId10 = ObjectId();
+const itemDefinitionId12 = ObjectId();
+const itemDefinitionId13 = ObjectId();
+const itemDefinitionId14 = ObjectId();
+const itemDefinitionId15 = ObjectId();
+const itemDefinitionId16 = ObjectId();
+const itemDefinitionId17 = ObjectId();
+const itemDefinitionId18 = ObjectId();
+const itemDefinitionId19 = ObjectId();
+const itemDefinitionId20 = ObjectId();
+const itemDefinitionId21 = ObjectId();
+const itemDefinitionId22 = ObjectId();
+const itemDefinitionId23 = ObjectId();
+const itemDefinitionId24 = ObjectId();
+const itemDefinitionId25 = ObjectId();
+const itemDefinitionId26 = ObjectId();
+const itemDefinitionId27 = ObjectId();
+const itemDefinitionId28 = ObjectId();
+const itemDefinitionId29 = ObjectId();
+const itemDefinitionId30 = ObjectId();
+const itemDefinitionId31 = ObjectId();
+const itemDefinitionId32 = ObjectId();
 
 db.itemDefinitions.insertMany(
     {
