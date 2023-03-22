@@ -21,12 +21,14 @@ export interface InventoryItemPutRequest extends InventoryItemRequest {
   _id: string
 }
 
+export interface InventoryItemAttributeRequest {
+  attribute: string
+  value: string | number
+}
+
 export interface InventoryItemRequest extends InventoryItem {
   itemDefinition: string
-  attributes?: {
-    attribute: string
-    value: string | number
-  }[]
+  attributes?: InventoryItemAttributeRequest[]
 }
 
 export type CategoryPostRequest = Omit<Category, '_id'>

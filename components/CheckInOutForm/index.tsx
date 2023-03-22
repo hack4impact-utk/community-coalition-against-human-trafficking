@@ -2,13 +2,22 @@ import { Autocomplete, Box, FormControl, TextField } from '@mui/material'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
-import { Category, ItemDefinitionResponse, UserResponse } from 'utils/types'
+import {
+  Category,
+  ItemDefinitionResponse,
+  UserResponse,
+  InventoryItemAttributeRequest,
+  AttributeResponse,
+} from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
+import AttributeAutocomplete from 'components/AttributeAutocomplete'
+import { separateAttributes } from 'utils/attribute'
 
 interface Props {
   kioskMode: boolean
   users: UserResponse[]
   itemDefinitions: ItemDefinitionResponse[]
+  attributes: AttributeResponse[]
   categories: Category[]
 }
 
@@ -16,6 +25,7 @@ function CheckInOutForm({
   kioskMode,
   users,
   itemDefinitions,
+  attributes,
   categories,
 }: Props) {
   const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
@@ -24,8 +34,12 @@ function CheckInOutForm({
     React.useState<UserResponse | null>()
   const [selectedItemDefinition, setSelectedItemDefinition] =
     React.useState<ItemDefinitionResponse | null>()
+  const [selectedAttributes, setSelectedAttributes] = React.useState<
+    InventoryItemAttributeRequest[]
+  >([])
   const [selectedCategory, setSelectedCategory] =
     React.useState<Category | null>()
+  const splitAttrs = separateAttributes(attributes)
 
   return (
     <FormControl fullWidth>
@@ -63,6 +77,13 @@ function CheckInOutForm({
           setSelectedItemDefinition(itemDefinition)
         }
         getOptionLabel={(itemDefinition) => itemDefinition.name}
+      />
+      <AttributeAutocomplete
+        attributes={splitAttrs.options}
+        sx={{ mt: 4 }}
+        onChange={(_e, attributes) => {
+          setSelectedAttributes(attributes)
+        }}
       />
       <QuantityForm quantity={quantity} setQuantity={setQuantity} />
     </FormControl>

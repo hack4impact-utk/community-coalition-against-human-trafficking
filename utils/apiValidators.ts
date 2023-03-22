@@ -2,6 +2,7 @@ import { ApiError } from 'utils/types'
 import {
   validateAttributeRequest,
   validateCategoryRequest,
+  validateInventoryItemRequest,
   validateItemDefinitionRequest,
   validateUserRequest,
 } from 'utils/validators'
@@ -44,6 +45,13 @@ export function apiUserValidation(
   requestType?: 'PUT' | 'POST'
 ) {
   const response = validateUserRequest(user, requestType)
+  badBodyValidationResponse(response)
+}
+
+export function apiInventoryItemValidation(
+  inventoryItem: Record<string, unknown>
+) {
+  const response = validateInventoryItemRequest(inventoryItem)
   badBodyValidationResponse(response)
 }
 

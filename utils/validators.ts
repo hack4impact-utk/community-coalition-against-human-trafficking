@@ -229,8 +229,8 @@ export const inventoryItemRequestModelProperties: Property[] = [
     required: true,
   },
   {
-    key: 'itemDefinition',
-    types: 'string',
+    key: 'attributes',
+    types: 'object',
     required: false,
   },
   {
