@@ -169,291 +169,320 @@ db.itemDefinitions.insertMany(
         "_id": itemDefinitionId2,
         "name": "Pants",
         "category": categoryId1,
-        "attributes": [attributeId1],
+        "attributes": [attributeId3, attributeId4],
         "internal": false,
-        "lowStockThreshold": 20,
+        "lowStockThreshold": 15,
         "criticalStockThreshold": 10
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId3,
         "name": "Shoes",
         "category": categoryId1,
-        "attributes": [attributeId1],
+        "attributes": [attributeId5, attributeId6],
         "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
+        "lowStockThreshold": 5,
+        "criticalStockThreshold": 2
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId4,
         "name": "Bra",
         "category": categoryId1,
-        "attributes": [attributeId1],
+        "attributes": [attributeId7],
         "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
+        "lowStockThreshold": 5,
+        "criticalStockThreshold": 0
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId5,
         "name": "Underwear",
         "category": categoryId1,
-        "attributes": [attributeId1],
+        "attributes": [],
         "internal": false,
-        "lowStockThreshold": 20,
+        "lowStockThreshold": 15,
         "criticalStockThreshold": 10
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId6,
         "name": "Socks",
         "category": categoryId1,
-        "attributes": [attributeId1],
+        "attributes": [],
         "internal": false,
-        "lowStockThreshold": 20,
+        "lowStockThreshold": 30,
         "criticalStockThreshold": 10
     },
+
+
+
+
     {
-        "_id": itemDefinitionId2,
-        "name": "Oven",
-        "category": categoryId1,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Mini Fridge",
-        "category": categoryId1,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Refrigerator",
-        "category": categoryId1,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Dishwasher",
-        "category": categoryId1,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Coffee Maker",
-        "category": categoryId1,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Toaster",
-        "category": categoryId1,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Blender",
-        "category": categoryId1,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Couch",
-        "category": categoryId1,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Couch",
-        "category": categoryId4,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Table",
-        "category": categoryId4,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Chair",
-        "category": categoryId4,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Laptop",
-        "category": categoryId4,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Keyboard",
-        "category": categoryId4,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Mouse",
-        "category": categoryId4,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Monitor",
-        "category": categoryId4,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Jumper Cables",
-        "category": categoryId4,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
-        "name": "Vacuum Cleaner",
-        "category": categoryId4,
-        "attributes": [attributeId1],
-        "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
-    },
-    {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId7,
         "name": "Shampoo",
-        "category": categoryId4,
-        "attributes": [attributeId1],
+        "category": categoryId2,
+        "attributes": [attributeId8],
         "internal": false,
-        "lowStockThreshold": 20,
+        "lowStockThreshold": 30,
         "criticalStockThreshold": 10
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId8,
         "name": "Conditioner",
-        "category": categoryId4,
-        "attributes": [attributeId1],
+        "category": categoryId2,
+        "attributes": [attributeId8],
         "internal": false,
-        "lowStockThreshold": 20,
+        "lowStockThreshold": 30,
         "criticalStockThreshold": 10
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId9,
         "name": "Soap",
-        "category": categoryId4,
-        "attributes": [attributeId1],
+        "category": categoryId2,
+        "attributes": [],
         "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
+        "lowStockThreshold": 50,
+        "criticalStockThreshold": 20
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId10,
         "name": "Body Wash",
-        "category": categoryId4,
-        "attributes": [attributeId1],
+        "category": categoryId2,
+        "attributes": [attributeId8],
         "internal": false,
-        "lowStockThreshold": 20,
+        "lowStockThreshold": 30,
         "criticalStockThreshold": 10
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId11,
         "name": "Shaving Cream",
-        "category": categoryId4,
-        "attributes": [attributeId1],
+        "category": categoryId2,
+        "attributes": [attributeId8],
         "internal": false,
-        "lowStockThreshold": 20,
+        "lowStockThreshold": 30,
         "criticalStockThreshold": 10
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId12,
         "name": "Razor",
-        "category": categoryId4,
-        "attributes": [attributeId1],
+        "category": categoryId2,
+        "attributes": [],
         "internal": false,
-        "lowStockThreshold": 20,
+        "lowStockThreshold": 30,
         "criticalStockThreshold": 10
     },
+
+
+
+
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId13,
+        "name": "Couch",
+        "category": categoryId3,
+        "attributes": [attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId14,
+        "name": "Table",
+        "category": categoryId3,
+        "attributes": [attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId15,
+        "name": "Chair",
+        "category": categoryId3,
+        "attributes": [attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+
+
+
+
+    {
+        "_id": itemDefinitionId16,
+        "name": "Oven",
+        "category": categoryId4,
+        "attributes": [attributeId9, attributeId11, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId17,
+        "name": "Refrigerator",
+        "category": categoryId4,
+        "attributes": [attributeId9, attributeId11, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId18,
+        "name": "Dishwasher",
+        "category": categoryId4,
+        "attributes": [attributeId9, attributeId11, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+
+
+
+
+
+
+    {
+        "_id": itemDefinitionId19,
+        "name": "Mini Fridge",
+        "category": categoryId5,
+        "attributes": [attributeId9, attributeId11, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId20,
+        "name": "Coffee Maker",
+        "category": categoryId5,
+        "attributes": [attributeId9, attributeId11, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId21,
+        "name": "Toaster",
+        "category": categoryId5,
+        "attributes": [attributeId9, attributeId11, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId22,
+        "name": "Blender",
+        "category": categoryId5,
+        "attributes": [attributeId9, attributeId11, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+
+
+
+
+
+
+    {
+        "_id": itemDefinitionId23,
+        "name": "Laptop",
+        "category": categoryId6,
+        "attributes": [attributeId9, attributeId12],
+        "internal": true,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId24,
+        "name": "Keyboard",
+        "category": categoryId6,
+        "attributes": [attributeId9, attributeId12],
+        "internal": true,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId25,
+        "name": "Mouse",
+        "category": categoryId6,
+        "attributes": [attributeId9, attributeId12],
+        "internal": true,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId26,
+        "name": "Monitor",
+        "category": categoryId6,
+        "attributes": [attributeId9, attributeId12],
+        "internal": true,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+
+
+
+
+
+
+
+    {
+        "_id": itemDefinitionId27,
+        "name": "Jumper Cables",
+        "attributes": [],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId28,
+        "name": "Vacuum Cleaner",
+        "attributes": [attributeId9],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    
+
+
+
+    {
+        "_id": itemDefinitionId29,
         "name": "Towel",
-        "category": categoryId4,
-        "attributes": [attributeId1],
+        "category": categoryId7,
+        "attributes": [],
         "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
+        "lowStockThreshold": 5,
+        "criticalStockThreshold": 0
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId30,
         "name": "Bedsheet",
-        "category": categoryId4,
-        "attributes": [attributeId1],
+        "category": categoryId7,
+        "attributes": [attributeId13],
         "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId31,
         "name": "Blanket",
-        "category": categoryId4,
-        "attributes": [attributeId1],
+        "category": categoryId7,
+        "attributes": [],
         "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
+        "lowStockThreshold": 10,
+        "criticalStockThreshold": 5
     },
     {
-        "_id": itemDefinitionId2,
+        "_id": itemDefinitionId32,
         "name": "Pillow",
-        "category": categoryId4,
-        "attributes": [attributeId1],
+        "category": categoryId7,
+        "attributes": [],
         "internal": false,
-        "lowStockThreshold": 20,
-        "criticalStockThreshold": 10
+        "lowStockThreshold": 10,
+        "criticalStockThreshold": 5
     }
 );
+
+
+
+
+
 
 db.inventoryItems.insertMany(
     {
