@@ -55,6 +55,9 @@ const attributeId8 = ObjectId();
 const attributeId9 = ObjectId();
 const attributeId10 = ObjectId();
 const attributeId11 = ObjectId();
+const attributeId12 = ObjectId();
+const attributeId13 = ObjectId();
+const attributeId14 = ObjectId();
 const defaultColor = "#ebebeb";
 
 db.attributes.insertMany(
@@ -77,57 +80,69 @@ db.attributes.insertMany(
         "color": defaultColor
     },
     {
-        "_id": attributeId10,
-        "name": "Pants Type",
-        "possibleValues": ["Khakis", "Pajamas", "Jeans"],
-        "color": defaultColor
-    },
-    {
-        "_id": attributeId11,
+        "_id": attributeId4,
         "name": "Pants Size",
         "possibleValues": "text",
         "color": defaultColor
     },
     {
-        "_id": attributeId4,
+        "_id": attributeId5,
         "name": "Shoe Size",
         "possibleValues": "number",
         "color": defaultColor
     },
     {
-        "_id": attributeId5,
+        "_id": attributeId6,
         "name": "Shoe Type",
         "possibleValues": "text",
         "color": defaultColor
     },
     {
-        "_id": attributeId11,
+        "_id": attributeId7,
         "name": "Bra Size",
         "possibleValues": "text",
         "color": defaultColor
     },
     {
-        "_id": attributeId6,
-        "name": "Weight",
+        "_id": attributeId8,
+        "name": "Toiletry Size",
         "possibleValues": "number",
         "color": defaultColor
     },
     {
-        "_id": attributeId7,
-        "name": "Oven Type",
-        "possibleValues": ["Electric", "Gas"],
-        "color": defaultColor
-    },
-    {
-        "_id": attributeId8,
+        "_id": attributeId9,
         "name": "Brand",
         "possibleValues": "text",
         "color": defaultColor
     },
     {
-        "_id": attributeId9,
+        "_id": attributeId10,
+        "name": "Type",
+        "possibleValues": "text",
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId11,
+        "name": "Oven Type",
+        "possibleValues": ["Electric", "Gas"],
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId12,
         "name": "Value",
         "possibleValues": "number",
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId13,
+        "name": "Sheet Size",
+        "possibleValues": ["Twin", "Twin XL", "Full", "Queen", "King"],
+        "color": defaultColor
+    },
+    {
+        "_id": attributeId14,
+        "name": "Condition",
+        "possibleValues": ["New", "Used"],
         "color": defaultColor
     },
 );
@@ -188,6 +203,15 @@ db.itemDefinitions.insertMany(
     },
     {
         "_id": itemDefinitionId2,
+        "name": "Socks",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
         "name": "Oven",
         "category": categoryId1,
         "attributes": [attributeId1],
@@ -215,6 +239,15 @@ db.itemDefinitions.insertMany(
     },
     {
         "_id": itemDefinitionId2,
+        "name": "Dishwasher",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
         "name": "Coffee Maker",
         "category": categoryId1,
         "attributes": [attributeId1],
@@ -224,6 +257,24 @@ db.itemDefinitions.insertMany(
     },
     {
         "_id": itemDefinitionId2,
+        "name": "Toaster",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Blender",
+        "category": categoryId1,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
         "name": "Couch",
         "category": categoryId1,
         "attributes": [attributeId1],
@@ -234,6 +285,24 @@ db.itemDefinitions.insertMany(
     {
         "_id": itemDefinitionId2,
         "name": "Couch",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Table",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Chair",
         "category": categoryId4,
         "attributes": [attributeId1],
         "internal": false,
@@ -269,6 +338,33 @@ db.itemDefinitions.insertMany(
     },
     {
         "_id": itemDefinitionId2,
+        "name": "Monitor",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Jumper Cables",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Vacuum Cleaner",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
         "name": "Shampoo",
         "category": categoryId4,
         "attributes": [attributeId1],
@@ -296,7 +392,25 @@ db.itemDefinitions.insertMany(
     },
     {
         "_id": itemDefinitionId2,
+        "name": "Body Wash",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
         "name": "Shaving Cream",
+        "category": categoryId4,
+        "attributes": [attributeId1],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Razor",
         "category": categoryId4,
         "attributes": [attributeId1],
         "internal": false,
