@@ -2,13 +2,22 @@ import { Autocomplete, Box, FormControl, TextField } from '@mui/material'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
-import { Category, ItemDefinition, User } from 'utils/types'
+import {
+  Attribute,
+  InventoryItemAttributeRequest,
+  ItemDefinition,
+  User,
+  Category,
+} from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
+import AttributeAutocomplete from 'components/AttributeAutocomplete'
+import { separateAttributes } from 'utils/attribute'
 
 interface Props {
   kioskMode: boolean
   users: User[]
   itemDefinitions: ItemDefinition[]
+  attributes: Attribute[]
   categories: Category[]
 }
 
@@ -16,6 +25,7 @@ function CheckInOutForm({
   kioskMode,
   users,
   itemDefinitions,
+  attributes,
   categories,
 }: Props) {
   const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
@@ -23,8 +33,12 @@ function CheckInOutForm({
   const [selectedStaff, setSelectedStaff] = React.useState<User | null>()
   const [selectedItemDefinition, setSelectedItemDefinition] =
     React.useState<ItemDefinition | null>()
+  const [selectedAttributes, setSelectedAttributes] = React.useState<
+    InventoryItemAttributeRequest[]
+  >([])
   const [selectedCategory, setSelectedCategory] =
     React.useState<Category | null>()
+  const splitAttrs = separateAttributes(attributes)
 
   return (
     <FormControl fullWidth>
@@ -51,8 +65,8 @@ function CheckInOutForm({
         options={categories}
         sx={{ marginTop: 4 }}
         renderInput={(params) => <TextField {...params} label="Category" />}
-        onChange={(_e, categories) => setSelectedCategory(categories)}
-        getOptionLabel={(itemDefinition) => itemDefinition.name}
+        onChange={(_e, Category) => setSelectedCategory(Category)}
+        getOptionLabel={(Category) => Category.name}
       />
       <Autocomplete
         options={itemDefinitions}
@@ -62,6 +76,13 @@ function CheckInOutForm({
           setSelectedItemDefinition(itemDefinition)
         }
         getOptionLabel={(itemDefinition) => itemDefinition.name}
+      />
+      <AttributeAutocomplete
+        attributes={splitAttrs.options}
+        sx={{ mt: 4 }}
+        onChange={(_e, attributes) => {
+          setSelectedAttributes(attributes)
+        }}
       />
       <QuantityForm quantity={quantity} setQuantity={setQuantity} />
     </FormControl>

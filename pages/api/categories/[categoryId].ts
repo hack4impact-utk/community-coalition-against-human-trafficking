@@ -19,7 +19,7 @@ export default async function handler(
     // ensure user is logged in
     await serverAuth(req, res)
 
-    apiObjectIdValidation(req?.query?.categoryId)
+    apiObjectIdValidation(req?.query?.categoryId as string)
     const categoryId = req.query.categoryId as string
 
     switch (req.method) {
