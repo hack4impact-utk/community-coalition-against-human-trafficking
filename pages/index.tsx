@@ -75,6 +75,24 @@ const inventoryItems = [
         },
         value: 1,
       },
+      {
+        attribute: {
+          _id: '3a',
+          name: 'Attribute 3',
+          possibleValues: ['Value 3', 'Value 4'],
+          color: '#0000FF',
+        },
+        value: 'Value 3',
+      },
+      {
+        attribute: {
+          _id: '4a',
+          name: 'Attribute 4',
+          possibleValues: 'text' as AttributePossibleValues,
+          color: '#000000',
+        },
+        value: 'Value 4',
+      },
     ],
     quantity: 10,
     assignee: {

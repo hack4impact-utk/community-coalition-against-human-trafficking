@@ -4,9 +4,11 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Typography,
+  Box,
 } from '@mui/material'
 import { Attribute, InventoryItem, ItemDefinition, User } from 'utils/types'
 import React from 'react'
+import { KebabDining, MoreVert, Warning } from '@mui/icons-material'
 
 interface MobileInventoryItemListItemProps {
   inventoryItem: ExpandedInventoryItem
@@ -30,12 +32,17 @@ export default function MobileInventoryItemListItem({
       <ListItemText
         primary={
           <Typography
-            sx={{ fontWeight: 'bold', display: 'block' }}
+            sx={{
+              fontWeight: 'bold',
+              display: 'flex',
+              justifyContent: 'space-between',
+            }}
             component="span"
             variant="body1"
             color="text.primary"
           >
             {inventoryItem.itemDefinition.name}
+            <Warning />
           </Typography>
         }
         secondary={
@@ -46,6 +53,7 @@ export default function MobileInventoryItemListItem({
             sx={{ display: 'block' }}
           >
             {inventoryItem.itemDefinition.category.name}
+
             <br />
             {inventoryItem.attributes.map((attribute) => (
               <Chip
@@ -63,14 +71,7 @@ export default function MobileInventoryItemListItem({
         }
       />
       <ListItemSecondaryAction>
-        <Typography
-          sx={{ fontWeight: 'bold', display: 'block' }}
-          component="span"
-          variant="subtitle1"
-          color="text.primary"
-        >
-          {inventoryItem.quantity}
-        </Typography>
+        <MoreVert />
       </ListItemSecondaryAction>
     </ListItem>
   )
