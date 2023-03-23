@@ -19,7 +19,6 @@ interface Props {
   kioskMode: boolean
   users: User[]
   itemDefinitions: ItemDefinition[]
-  attributes: Attribute[]
   categories: Category[]
 }
 
@@ -29,7 +28,6 @@ function CheckInOutForm({
   kioskMode,
   users,
   itemDefinitions,
-  attributes,
   categories,
 }: Props) {
   const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
