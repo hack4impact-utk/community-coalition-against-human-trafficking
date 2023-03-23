@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import { InventoryItem } from 'utils/types'
+import InventoryItemListItem from 'components/InventoryItemListItem'
 
 interface Data {
   name: string
@@ -206,7 +207,11 @@ export default function InventoryItemList(props: Props) {
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
           />
-          <TableBody>{/* todo: add list item component here */}</TableBody>
+          <TableBody>
+            {props.inventoryItems.map((item) => (
+              <InventoryItemListItem inventoryItem={item} key={item._id} />
+            ))}
+          </TableBody>
         </Table>
       </TableContainer>
       <TablePagination

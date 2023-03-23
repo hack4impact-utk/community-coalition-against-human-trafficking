@@ -1,124 +1,97 @@
 import InventoryItemListItem from 'components/InventoryItemListItem'
 import { InventoryItem, ItemDefinition } from 'utils/types'
 import { Table, TableBody, TableContainer, Box, Paper } from '@mui/material'
+import InventoryItemList from 'components/InventoryItemList'
 
 export default function Home() {
-  const itemDefinitionTest: ItemDefinition = {
-    name: 'test item this is a test item that is very long',
-    internal: true,
-    category: 'shirtttttttttt',
-    lowStockThreshold: 15,
-    criticalStockThreshold: 5,
-  }
-
-  const testItem: InventoryItem = {
-    itemDefinition: itemDefinitionTest,
-    attributes: [
-      { attribute: 'sleeve', value: 'long-sleeve' },
-      { attribute: 'size', value: 'medium' },
-      { attribute: 'color', value: 'black' },
-      { attribute: 'sleeve', value: 'long-sleeve' },
-      { attribute: 'size', value: 'medium' },
-      { attribute: 'color', value: 'black' },
-    ],
-    quantity: 4,
-    assignee: 'Rudra Patel',
-  }
-
-  const testItem2: InventoryItem = {
-    itemDefinition: itemDefinitionTest,
-    attributes: [
-      { attribute: 'sleeve', value: 'long-sleeve' },
-      { attribute: 'size', value: 'medium' },
-      { attribute: 'color', value: 'black' },
-      { attribute: 'sleeve', value: 'long-sleeve' },
-      { attribute: 'size', value: 'medium' },
-      { attribute: 'color', value: 'black' },
-    ],
-    quantity: 24000,
-    assignee: 'Rudra Patel',
-  }
-
-  const testItem3: InventoryItem = {
-    itemDefinition: itemDefinitionTest,
-    attributes: [
-      {
-        attribute: {
-          name: 'testAttribute',
-          possibleValues: ['test1', 'test2'],
-          color: '#FF0000',
-        },
-        value: 'testValue',
-      },
-      {
-        attribute: {
-          name: 'test2',
-          possibleValues: 'number',
-          color: '#00FF00',
-        },
-        value: 'testValue',
-      },
-      {
-        attribute: {
-          name: 'test3',
-          possibleValues: 'text',
-          color: '#0000FF',
-        },
-        value: 'testValue',
-      },
-    ],
-    quantity: 7,
-    assignee: 'Really Long Name',
-  }
-
-  const testItem4: InventoryItem = {
-    itemDefinition: itemDefinitionTest,
-    attributes: [
-      {
-        attribute: {
-          name: 'testAttribute',
-          possibleValues: ['test1', 'test2'],
-          color: '#777777',
-        },
-        value: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-      },
-      {
-        attribute: {
-          name: 'test2',
-          possibleValues: 'number',
-          color: '#000000',
-        },
-        value: 'testValue',
-      },
-      {
-        attribute: {
-          name: 'test3',
-          possibleValues: 'text',
-          color: '#0000FF',
-        },
-        value: 'testValue',
-      },
-    ],
-    quantity: 24000000000000000000,
-    assignee: 'Andrewwwwwwwwwwwwwwwwwwwwwwwww',
-  }
-
   return (
-    // MAKE SURE THAT WIDTH IS FIXED, THEN CHANGE IT AS SCREEN GROWS
-    // SAME GOES FOR TABLE CELLS
-    // USING PERCENTAGES CAUSES PROBELMSSSSSSSSSSSSSSSSSSSSSSSSSS
-    <TableContainer
-      component={Paper}
-      sx={{ marginInline: 'auto', width: {xs: "300px", sm: "500px", md: "600px", lg: "900px", xl: "1000px"} }}
-    >
-      <Table sx={{ width: 'max-content' }}>
-        <TableBody>
-          <InventoryItemListItem inventoryItem={testItem} />
-          <InventoryItemListItem inventoryItem={testItem2} />
-          <InventoryItemListItem inventoryItem={testItem3} />
-          <InventoryItemListItem inventoryItem={testItem4} />
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <InventoryItemList
+      inventoryItems={testInventoryItems}
+      search={''}
+      category={''}
+    />
   )
 }
+
+export const testInventoryItems: InventoryItem[] = [
+  {
+    _id: '1',
+    itemDefinition: {
+      _id: '1',
+      name: 'test item',
+      category: {
+        _id: '1',
+        name: 'test category',
+      },
+      attributes: [
+        {
+          _id: '1',
+          name: 'color',
+          possibleValues: ['red', 'blue', 'green'],
+          color: '#000000',
+        },
+        {
+          _id: '2',
+          name: 'size',
+          possibleValues: ['small', 'medium', 'large'],
+          color: '#0000FF',
+        },
+      ],
+      internal: false,
+      lowStockThreshold: 10,
+      criticalStockThreshold: 5,
+    },
+    attributes: [
+      {
+        attribute: '1',
+        value: 'red',
+      },
+      {
+        attribute: '2',
+        value: 'small',
+      },
+    ],
+    quantity: 10,
+    assignee: '1',
+  },
+  {
+    _id: '2',
+    itemDefinition: {
+      _id: '2',
+      name: 'test item 2',
+      category: {
+        _id: '1',
+        name: 'test category',
+      },
+      attributes: [
+        {
+          _id: '1',
+          name: 'color',
+          possibleValues: ['red', 'blue', 'green'],
+          color: '#000000',
+        },
+        {
+          _id: '2',
+          name: 'size',
+          possibleValues: ['small', 'medium', 'large'],
+          color: '#0000FF',
+        },
+      ],
+      internal: false,
+      lowStockThreshold: 10,
+      criticalStockThreshold: 5,
+    },
+    attributes: [
+      {
+        attribute: '1',
+        value: 'blue',
+      },
+      {
+        attribute: '2',
+        value: 'medium',
+      },
+    ],
+    quantity: 20,
+    assignee: '1',
+  },
+]
