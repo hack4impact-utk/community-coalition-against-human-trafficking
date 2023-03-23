@@ -10,8 +10,10 @@ import {
   Category,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
-import AttributeAutocomplete from 'components/AttributeAutocomplete'
-import { separateAttributes } from 'utils/attribute'
+import AttributeAutocomplete, {
+  AutocompleteAttributeOption,
+} from 'components/AttributeAutocomplete'
+import { separateAttributes, SeparatedAttributes } from 'utils/attribute'
 
 interface Props {
   kioskMode: boolean
@@ -20,6 +22,8 @@ interface Props {
   attributes: Attribute[]
   categories: Category[]
 }
+
+const defaultSplitAttrs = separateAttributes()
 
 function CheckInOutForm({
   kioskMode,
@@ -38,7 +42,48 @@ function CheckInOutForm({
   >([])
   const [selectedCategory, setSelectedCategory] =
     React.useState<Category | null>()
-  const splitAttrs = separateAttributes(attributes)
+  const [filteredItemDefinitions, setFilteredItemDefinitions] =
+    React.useState<ItemDefinition[]>(itemDefinitions)
+  const [splitAttrs, setSplitAttrs] =
+    React.useState<SeparatedAttributes>(defaultSplitAttrs)
+  const [aaSelected, setAaSelected] = React.useState<
+    AttributeAutocompleteOption[]
+  >([])
+
+  // Update filtered item defs when category changes
+  React.useEffect(() => {
+    if (selectedCategory) {
+      setFilteredItemDefinitions(
+        itemDefinitions.filter((itemDefinition) => {
+          if (
+            itemDefinition.category &&
+            itemDefinition.category.hasOwnProperty('_id')
+          ) {
+            return itemDefinition.category._id === selectedCategory._id
+          }
+        })
+      )
+    } else {
+      setFilteredItemDefinitions(itemDefinitions)
+    }
+  }, [selectedCategory, itemDefinitions])
+
+  // Update split attributes when item definition changes
+  React.useEffect(() => {
+    if (selectedItemDefinition) {
+      setSplitAttrs(
+        separateAttributes(selectedItemDefinition.attributes as Attribute[])
+      )
+    } else {
+      setSplitAttrs(defaultSplitAttrs)
+      setSelectedAttributes([])
+      setAaSelected([])
+    }
+  }, [selectedItemDefinition])
+
+  React.useEffect(() => {
+    console.log(selectedAttributes)
+  }, [selectedAttributes])
 
   return (
     <FormControl fullWidth>
@@ -69,7 +114,7 @@ function CheckInOutForm({
         getOptionLabel={(Category) => Category.name}
       />
       <Autocomplete
-        options={itemDefinitions}
+        options={filteredItemDefinitions}
         sx={{ marginTop: 4 }}
         renderInput={(params) => <TextField {...params} label="Item" />}
         onChange={(_e, itemDefinition) =>
@@ -83,6 +128,8 @@ function CheckInOutForm({
         onChange={(_e, attributes) => {
           setSelectedAttributes(attributes)
         }}
+        value={aaSelected}
+        setValue={setAaSelected}
       />
       <QuantityForm quantity={quantity} setQuantity={setQuantity} />
     </FormControl>
