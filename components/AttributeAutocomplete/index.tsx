@@ -80,6 +80,7 @@ export default function AttributeAutocomplete({
       value={value}
       renderInput={(params) => <TextField {...params} label="Attributes" />}
       onChange={(e, attributes) => {
+        if (!!setValue) setValue(attributes)
         if (!attributes.length) {
           if (!!onChange) onChange(e, [] as InventoryItemAttributeRequest[])
           return
@@ -98,7 +99,6 @@ export default function AttributeAutocomplete({
         else attributes.push(newAttr)
 
         if (!!onChange) onChange(e, buildAttributeRequest(attributes))
-        if (!!setValue) setValue(attributes)
       }}
       sx={sx}
     />
