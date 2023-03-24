@@ -1,4 +1,11 @@
-import { Attribute, Category, InventoryItem, ItemDefinition, User } from '.'
+import {
+  Attribute,
+  Category,
+  InventoryItem,
+  InventoryItemAttribute,
+  ItemDefinition,
+  User,
+} from '.'
 
 export interface UserResponse extends User {
   _id: string
@@ -6,17 +13,19 @@ export interface UserResponse extends User {
 
 export interface ItemDefinitionResponse extends ItemDefinition {
   _id: string
-  category?: Category
-  attributes?: Attribute[]
+  category?: CategoryResponse
+  attributes?: AttributeResponse[]
+}
+
+export interface InventoryItemAttributeResponse extends InventoryItemAttribute {
+  attribute: AttributeResponse
 }
 
 export interface InventoryItemResponse extends InventoryItem {
   _id: string
-  itemDefinition: string
-  attributes?: {
-    attribute: Attribute
-    value: string | number
-  }[]
+  assignee?: UserResponse
+  itemDefinition: ItemDefinitionResponse
+  attributes?: InventoryItemAttributeResponse[]
 }
 
 export interface CategoryResponse extends Category {

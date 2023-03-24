@@ -15,13 +15,15 @@ export interface ItemDefinition {
   criticalStockThreshold: number
 }
 
+export interface InventoryItemAttribute {
+  attribute: string | Attribute
+  value: string | number
+}
+
 export interface InventoryItem {
   _id?: string
   itemDefinition: string | ItemDefinition
-  attributes?: {
-    attribute: string | Attribute
-    value: string | number
-  }[]
+  attributes?: InventoryItemAttribute[]
   quantity: number
   assignee?: string | User
 }

@@ -16,6 +16,7 @@ interface Props {
     e: React.SyntheticEvent,
     attributes: InventoryItemAttributeRequest[]
   ) => void
+  value?: OptionsAttribute[]
   sx?: SxProps
 }
 
@@ -45,10 +46,14 @@ function buildAttributeRequest(
 
 export default function AttributeAutocomplete({
   attributes,
+  value,
   sx,
   onChange,
 }: Props) {
   const options = buildAutocompleteOptions(attributes)
+  const [selected, setSelected] = React.useState<AutocompleteAttributeOption[]>(
+    buildAutocompleteOptions(value)
+  )
 
   return (
     <Autocomplete
@@ -70,9 +75,11 @@ export default function AttributeAutocomplete({
         ))
       }
       renderInput={(params) => <TextField {...params} label="Attributes" />}
+      value={selected}
       onChange={(e, attributes) => {
         if (!attributes.length) {
           if (!!onChange) onChange(e, [] as InventoryItemAttributeRequest[])
+          setSelected([])
           return
         }
 
@@ -89,6 +96,7 @@ export default function AttributeAutocomplete({
         else attributes.push(newAttr)
 
         if (!!onChange) onChange(e, buildAttributeRequest(attributes))
+        setSelected(attributes)
       }}
       sx={sx}
     />
