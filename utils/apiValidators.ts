@@ -1,15 +1,14 @@
 import { ApiError } from 'utils/types'
 import {
-  validateAttribute,
-  validateCategory,
-  validateInventoryItem,
-  validateItemDefinition,
-  validateObjectId,
-  validateUser,
-  ValidationResult,
+  validateAttributeRequest,
+  validateCategoryRequest,
+  validateInventoryItemRequest,
+  validateItemDefinitionRequest,
+  validateUserRequest,
 } from 'utils/validators'
+import { validateObjectId, ValidationResult } from 'utils/validation'
 
-const BAD_REQUEST_BODY_PREFIX = 'Bad Request Body:\n'
+export const BAD_REQUEST_BODY_PREFIX = 'Bad Request Body:\n'
 
 export function apiObjectIdValidation(id: string) {
   if (!validateObjectId(id)) {
@@ -17,32 +16,42 @@ export function apiObjectIdValidation(id: string) {
   }
 }
 
-export function apiAttributeValidation(attribute: Record<string, unknown>) {
-  const response = validateAttribute(attribute)
+export function apiAttributeValidation(
+  attribute: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  const response = validateAttributeRequest(attribute, requestType)
   badBodyValidationResponse(response)
 }
 
-export function apiCategoryValidation(category: Record<string, unknown>) {
-  const response = validateCategory(category)
+export function apiCategoryValidation(
+  category: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  const response = validateCategoryRequest(category, requestType)
   badBodyValidationResponse(response)
 }
 
 export function apiItemDefinitionValidation(
-  itemDefinition: Record<string, unknown>
+  itemDefinition: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
 ) {
-  const response = validateItemDefinition(itemDefinition)
+  const response = validateItemDefinitionRequest(itemDefinition, requestType)
   badBodyValidationResponse(response)
 }
 
-export function apiUserValidation(user: Record<string, unknown>) {
-  const response = validateUser(user)
+export function apiUserValidation(
+  user: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  const response = validateUserRequest(user, requestType)
   badBodyValidationResponse(response)
 }
 
 export function apiInventoryItemValidation(
   inventoryItem: Record<string, unknown>
 ) {
-  const response = validateInventoryItem(inventoryItem)
+  const response = validateInventoryItemRequest(inventoryItem)
   badBodyValidationResponse(response)
 }
 

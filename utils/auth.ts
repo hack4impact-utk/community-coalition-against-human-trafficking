@@ -22,8 +22,6 @@ export async function userEndpointServerAuth(
   ) {
     throw new ApiError(401, 'Unauthorized')
   }
-
-  return session
 }
 
 export async function serverAuth(req: NextApiRequest, res: NextApiResponse) {

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, Category } from 'utils/types'
+import { ApiError, CategoryPutRequest, CategoryResponse } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import {
   apiCategoryValidation,
@@ -24,7 +24,10 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        const category = await MongoDriver.getEntity(CategorySchema, categoryId)
+        const category: CategoryResponse = await MongoDriver.getEntity(
+          CategorySchema,
+          categoryId
+        )
 
         return res.status(200).json({
           success: true,
@@ -32,8 +35,8 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        apiCategoryValidation(req.body)
-        const updatedCategory = req.body as Category
+        apiCategoryValidation(req.body, 'PUT')
+        const updatedCategory: CategoryPutRequest = req.body
         await MongoDriver.updateEntity(
           CategorySchema,
           categoryId,
