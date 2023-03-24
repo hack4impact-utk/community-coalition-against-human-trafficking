@@ -2,6 +2,7 @@ import { ApiError } from 'utils/types'
 import {
   validateAttribute,
   validateCategory,
+  validateInventoryItem,
   validateItemDefinition,
   validateObjectId,
   validateUser,
@@ -35,6 +36,13 @@ export function apiItemDefinitionValidation(
 
 export function apiUserValidation(user: Record<string, unknown>) {
   const response = validateUser(user)
+  badBodyValidationResponse(response)
+}
+
+export function apiInventoryItemValidation(
+  inventoryItem: Record<string, unknown>
+) {
+  const response = validateInventoryItem(inventoryItem)
   badBodyValidationResponse(response)
 }
 

@@ -1,33 +1,32 @@
 import { model, Schema, Document, models, Model } from 'mongoose'
 import { InventoryItem } from 'utils/types'
 
-const attributeValueSchema = new Schema({
-  attribute: {
-    type: { type: Schema.Types.ObjectId, ref: 'Attribute' },
-    required: true,
-  },
-  value: {
-    type: Schema.Types.Mixed,
-    required: true,
-  },
-})
-
 const InventoryItemSchema = new Schema({
   itemDefinition: {
-    type: { type: Schema.Types.ObjectId, ref: 'ItemDefinition' },
+    type: Schema.Types.ObjectId,
+    ref: 'ItemDefinition',
     required: true,
   },
-  attributes: {
-    type: [attributeValueSchema],
-    required: false,
-    default: [],
-  },
+  attributes: [
+    {
+      attribute: {
+        _id: false,
+        type: Schema.Types.ObjectId,
+        required: true,
+        ref: 'Attribute',
+      },
+      // value is either string or number
+      value: { type: Schema.Types.Mixed, required: true },
+      _id: false,
+    },
+  ],
   quantity: {
     type: Number,
     required: true,
   },
   assignee: {
-    type: { type: Schema.Types.ObjectId, ref: 'User' },
+    type: Schema.Types.ObjectId,
+    ref: 'User',
     required: false,
   },
 })
@@ -37,4 +36,8 @@ export interface InventoryItemDocument
     Document {}
 
 export default (models.InventoryItem as Model<InventoryItemDocument>) ||
-  model<InventoryItemDocument>('InventoryItem', InventoryItemSchema)
+  model<InventoryItemDocument>(
+    'InventoryItem',
+    InventoryItemSchema,
+    'inventoryItems'
+  )

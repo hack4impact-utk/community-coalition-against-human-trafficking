@@ -23,7 +23,7 @@ export interface InventoryItem {
     value: string | number
   }[]
   quantity: number
-  assignee: string | User
+  assignee?: string | User
 }
 
 export interface Category {
