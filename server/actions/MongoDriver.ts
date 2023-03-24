@@ -4,12 +4,12 @@ import {
   FilterQuery,
   HydratedDocument,
   Model,
-  ObjectId,
   PipelineStage,
   Types,
 } from 'mongoose'
 import 'utils/types'
-import { ApiError, ItemDefinition, ServerModel } from 'utils/types'
+import { ApiError, ItemDefinition, ServerModel, ServerRequest } from 'utils/types'
+import { ObjectId } from 'mongodb'
 
 const ENTITY_NOT_FOUND_MESSAGE = 'Entity does not exist'
 
@@ -70,7 +70,7 @@ export async function getEntities<Schema extends Document>(
  */
 export async function createEntity<
   Schema extends Document,
-  T extends ServerModel
+  T extends ServerRequest
 >(dbSchema: Model<Schema>, document: T): Promise<HydratedDocument<Schema>> {
   await mongoDb()
 
@@ -86,7 +86,7 @@ export async function createEntity<
  */
 export async function updateEntity<
   Schema extends Document,
-  T extends ServerModel
+  T extends ServerRequest
 >(dbSchema: Model<Schema>, id: string, document: T): Promise<void> {
   await mongoDb()
 
@@ -105,11 +105,10 @@ export async function deleteEntity<Schema extends Document>(
 ): Promise<void> {
   await mongoDb()
 
-  await dbSchema.findByIdAndDelete(id, (response: unknown) => {
-    if (!response) {
-      throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
-    }
-  })
+  const response = await dbSchema.findByIdAndDelete(id)
+  if (!response) {
+    throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
+  }
 }
 
 /**

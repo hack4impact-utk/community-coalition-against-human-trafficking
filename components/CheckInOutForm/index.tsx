@@ -3,11 +3,11 @@ import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 import {
-  Attribute,
-  InventoryItemAttributeRequest,
-  ItemDefinition,
-  User,
   Category,
+  ItemDefinitionResponse,
+  UserResponse,
+  InventoryItemAttributeRequest,
+  AttributeResponse,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete from 'components/AttributeAutocomplete'
@@ -15,9 +15,9 @@ import { separateAttributes } from 'utils/attribute'
 
 interface Props {
   kioskMode: boolean
-  users: User[]
-  itemDefinitions: ItemDefinition[]
-  attributes: Attribute[]
+  users: UserResponse[]
+  itemDefinitions: ItemDefinitionResponse[]
+  attributes: AttributeResponse[]
   categories: Category[]
 }
 
@@ -30,9 +30,10 @@ function CheckInOutForm({
 }: Props) {
   const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
   const [quantity, setQuantity] = React.useState<number>(1)
-  const [selectedStaff, setSelectedStaff] = React.useState<User | null>()
+  const [selectedStaff, setSelectedStaff] =
+    React.useState<UserResponse | null>()
   const [selectedItemDefinition, setSelectedItemDefinition] =
-    React.useState<ItemDefinition | null>()
+    React.useState<ItemDefinitionResponse | null>()
   const [selectedAttributes, setSelectedAttributes] = React.useState<
     InventoryItemAttributeRequest[]
   >([])
