@@ -4,11 +4,13 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Typography,
-  Box,
+  Avatar,
 } from '@mui/material'
 import { Attribute, InventoryItem, ItemDefinition, User } from 'utils/types'
 import React from 'react'
-import { KebabDining, MoreVert, Warning } from '@mui/icons-material'
+import theme from 'utils/theme'
+import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
+import { Warning } from '@mui/icons-material'
 
 interface MobileInventoryItemListItemProps {
   inventoryItem: ExpandedInventoryItem
@@ -21,7 +23,19 @@ interface ExpandedInventoryItem extends InventoryItem {
     attribute: Attribute
     value: string | number
   }[]
-  assignee: User
+  assignee?: User
+}
+
+function textColor(inventoryItem: InventoryItem) {
+  const itemDef = inventoryItem.itemDefinition as ItemDefinition
+  console.log(itemDef, inventoryItem.quantity)
+  if (inventoryItem.quantity < itemDef.lowStockThreshold) {
+    if (inventoryItem.quantity < itemDef.criticalStockThreshold) {
+      return theme.palette.error.main
+    }
+    return theme.palette.warning.main
+  }
+  return 'text.secondary'
 }
 
 export default function MobileInventoryItemListItem({
@@ -34,15 +48,12 @@ export default function MobileInventoryItemListItem({
           <Typography
             sx={{
               fontWeight: 'bold',
-              display: 'flex',
-              justifyContent: 'space-between',
             }}
             component="span"
             variant="body1"
             color="text.primary"
           >
             {inventoryItem.itemDefinition.name}
-            <Warning />
           </Typography>
         }
         secondary={
@@ -52,7 +63,19 @@ export default function MobileInventoryItemListItem({
             color="text.secondary"
             sx={{ display: 'block' }}
           >
-            {inventoryItem.itemDefinition.category.name}
+            {inventoryItem.quantity}
+            {inventoryItem.quantity <
+              inventoryItem.itemDefinition.lowStockThreshold && (
+              <Warning
+                fontSize="small"
+                sx={{
+                  ml: 1,
+                  top: 4,
+                  position: 'relative',
+                  color: textColor(inventoryItem),
+                }}
+              />
+            )}
 
             <br />
             {inventoryItem.attributes.map((attribute) => (
@@ -70,8 +93,11 @@ export default function MobileInventoryItemListItem({
           </Typography>
         }
       />
-      <ListItemSecondaryAction>
-        <MoreVert />
+      <ListItemSecondaryAction sx={{ display: 'flex', alignItems: 'center' }}>
+        {!!inventoryItem.assignee && (
+          <Avatar src={inventoryItem.assignee.image} sx={{ mr: 2 }} />
+        )}
+        <InventoryItemListItemKebab inventoryItem={inventoryItem} />
       </ListItemSecondaryAction>
     </ListItem>
   )

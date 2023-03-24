@@ -9,7 +9,7 @@ interface ExpandedInventoryItem extends InventoryItem {
     attribute: Attribute
     value: string | number
   }[]
-  assignee: User
+  assignee?: User
 }
 
 interface MobileInventoryItemListProps {

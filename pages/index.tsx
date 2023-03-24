@@ -12,7 +12,7 @@ const inventoryItems = [
         name: 'Category 1',
       },
       internal: false,
-      lowStockThreshold: 0,
+      lowStockThreshold: 20,
       criticalStockThreshold: 0,
     },
     attributes: [
@@ -95,12 +95,6 @@ const inventoryItems = [
       },
     ],
     quantity: 10,
-    assignee: {
-      _id: '1u',
-      name: 'User 1',
-      email: 'user@test.com',
-      image: 'https://i.imgur.com/0s3pdnc.png',
-    },
   },
   {
     _id: '3ii',
