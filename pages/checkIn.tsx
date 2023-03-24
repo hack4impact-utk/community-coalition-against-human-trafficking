@@ -10,10 +10,26 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { Category } from 'utils/types'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import CategorySchema from 'server/models/Category'
 
-export default function CheckInPage() {
+export async function getServerSideProps() {
+  const categories = JSON.parse(
+    JSON.stringify(await MongoDriver.getEntities(CategorySchema))
+  )
+  return {
+    props: { categories },
+  }
+}
+interface Props {
+  categories: Category[]
+}
+
+export default function CheckInPage({ categories }: Props) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
+
   return (
     <Grid2 container sx={{ flexGrow: 1 }}>
       <Grid2
@@ -47,7 +63,7 @@ export default function CheckInPage() {
                 users={[]}
                 itemDefinitions={[]}
                 attributes={[]}
-                categories={[]}
+                categories={categories}
               />
             </CardContent>
 
