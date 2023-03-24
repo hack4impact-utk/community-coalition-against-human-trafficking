@@ -3,7 +3,7 @@ import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
 import { InventoryItemAttributeRequest, OptionsAttribute } from 'utils/types'
 
-interface AutocompleteAttributeOption {
+export interface AutocompleteAttributeOption {
   id: string
   label: string
   value: string
@@ -16,13 +16,18 @@ interface Props {
     e: React.SyntheticEvent,
     attributes: InventoryItemAttributeRequest[]
   ) => void
-  value?: OptionsAttribute[]
+  value?: AutocompleteAttributeOption[]
+  setValue?: React.Dispatch<AutocompleteAttributeOption[]>
   sx?: SxProps
 }
 
 function buildAutocompleteOptions(
   attributes: OptionsAttribute[]
 ): AutocompleteAttributeOption[] {
+  if (!attributes) {
+    return [] as AutocompleteAttributeOption[]
+  }
+
   return attributes.reduce((acc, attribute) => {
     const options = attribute.possibleValues.map((value) => ({
       id: attribute._id!, // todo: remove when request and reponse objects are separated
@@ -46,14 +51,12 @@ function buildAttributeRequest(
 
 export default function AttributeAutocomplete({
   attributes,
-  value,
   sx,
   onChange,
+  value,
+  setValue,
 }: Props) {
   const options = buildAutocompleteOptions(attributes)
-  const [selected, setSelected] = React.useState<AutocompleteAttributeOption[]>(
-    buildAutocompleteOptions(value)
-  )
 
   return (
     <Autocomplete
@@ -74,9 +77,10 @@ export default function AttributeAutocomplete({
           />
         ))
       }
+      value={value}
       renderInput={(params) => <TextField {...params} label="Attributes" />}
-      value={selected}
       onChange={(e, attributes) => {
+        if (!!setValue) setValue(attributes)
         if (!attributes.length) {
           if (!!onChange) onChange(e, [] as InventoryItemAttributeRequest[])
           setSelected([])

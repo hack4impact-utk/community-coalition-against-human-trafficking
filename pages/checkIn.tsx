@@ -46,7 +46,6 @@ export default function CheckInPage() {
                 kioskMode={true}
                 users={[]}
                 itemDefinitions={[]}
-                attributes={[]}
                 categories={[]}
               />
             </CardContent>
