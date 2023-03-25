@@ -348,7 +348,7 @@ db.itemDefinitions.insertMany(
         "_id": itemDefinitionId17,
         "name": "Refrigerator",
         "category": categoryId4,
-        "attributes": [attributeId9, attributeId11, attributeId14],
+        "attributes": [attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -357,7 +357,7 @@ db.itemDefinitions.insertMany(
         "_id": itemDefinitionId18,
         "name": "Dishwasher",
         "category": categoryId4,
-        "attributes": [attributeId9, attributeId11, attributeId14],
+        "attributes": [attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -1497,6 +1497,126 @@ db.inventoryItems.insertMany(
             }
         ],
         "quantity": 1
+    },
+
+    // Oven
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId16,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Samsung"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Electric"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId16,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "LG"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Gas"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 3
+    },
+
+    // Refrigerator
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId17,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Whirlpool"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "French Door"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId17,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "GE"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Side-by-Side"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 1
+    },
+
+    // Dishwasher
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId18,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Bosch"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Built-in"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 4
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId18,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "KitchenAid"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Portable"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 2
     },
 
 )
