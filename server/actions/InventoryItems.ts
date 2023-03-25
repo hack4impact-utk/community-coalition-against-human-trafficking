@@ -5,6 +5,69 @@ import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
 
 /**
+ * Finds all inventoryItems
+ * @returns All inventoryItems
+ */
+export async function getInventoryItems() {
+  // aggregate pipeline does the following:
+  // looks up itemDefinition _id in inventoryItem
+  // looks up categroy _id in itemDefinition
+  // looks up attribute _ids in itemDefinition
+  // looks up attribte _ids in inventoryItem
+  // looks up user _ids in inventoryItem
+  return await MongoDriver.getEntities(InventoryItemSchema, [
+    {
+      $lookup: {
+        from: 'itemDefinitions',
+        let: { itemDefinitions: '$itemDefinitions' },
+        pipeline: [
+          {
+            $lookup: {
+              from: 'categories',
+              localField: 'category',
+              foreignField: '_id',
+              as: 'category',
+            },
+          },
+          {
+            $lookup: {
+              from: 'attributes',
+              localField: 'attributes',
+              foreignField: '_id',
+              as: 'attributes',
+            },
+          },
+          {
+            $set: {
+              category: { $arrayElemAt: ['$category', 0] },
+            },
+          },
+        ],
+        localField: 'itemDefinition',
+        foreignField: '_id',
+        as: 'itemDefinition',
+      },
+    },
+    {
+      $lookup: {
+        from: 'attributes',
+        localField: 'attributes.attribute',
+        foreignField: '_id',
+        as: 'attributes',
+      },
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'assignee',
+        foreignField: '_id',
+        as: 'assignee',
+      },
+    },
+  ])
+}
+
+/**
  * Checks to see if an item is in the inventory and will add to the quantity or
  * create the item if needed.
  * @param item the item that will be added (checkedIn) to db
