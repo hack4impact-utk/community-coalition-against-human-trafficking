@@ -1401,4 +1401,38 @@ db.inventoryItems.insertMany(
     "attributes": [],
     "quantity": 50
     }, 
+
+    // FURNITURE
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId13,
+        "attributes": [
+            {
+            "attributeId": attributeId10,
+            "value": "Sectional"
+            },
+            {
+            "attributeId": attributeId14,
+            "value": "Used"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId13,
+        "attributes": [
+            {
+            "attributeId": attributeId10,
+            "value": "Recliner"
+            },
+            {
+            "attributeId": attributeId14,
+            "value": "New"
+            }
+        ],
+        "quantity": 2
+    },
+
+
 )
