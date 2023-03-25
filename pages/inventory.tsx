@@ -1,25 +1,33 @@
-import { Box } from '@mui/material'
 import InventoryItemList from 'components/InventoryItemList'
-import * as MongoDriver from 'server/actions/MongoDriver'
-import InventoryItemSchema from 'server/models/InventoryItem'
-
-export async function getServerSideProps() {
-  const response = await fetch('http://localhost:3000/api/inventoryItems', {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  console.log(response)
-  return {
-    props: {},
-  }
-}
+import { useEffect, useState } from 'react'
+import { InventoryItem } from 'utils/types'
 
 export default function InventoryPage() {
+  const [inventoryItems, setInventoryItems] = useState<InventoryItem[] | null>(
+    null
+  )
+
+  useEffect(() => {
+    // TODO in the future, get a better way of constructing this URL. Perhaps a utils/urls.ts
+    fetch(`http://localhost:3000/api/inventoryItems`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => res.json())
+      .then((res) => setInventoryItems(res.payload as InventoryItem[]))
+  }, [])
+
   return (
-    <Box>
-      <InventoryItemList inventoryItems={[]} search={''} category={''} />
-    </Box>
+    <>
+      {inventoryItems != null && (
+        <InventoryItemList
+          inventoryItems={inventoryItems}
+          search={''}
+          category={''}
+        />
+      )}
+    </>
   )
 }
