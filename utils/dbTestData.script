@@ -372,7 +372,7 @@ db.itemDefinitions.insertMany(
         "_id": itemDefinitionId19,
         "name": "Mini Fridge",
         "category": categoryId5,
-        "attributes": [attributeId9, attributeId11, attributeId14],
+        "attributes": [attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -381,7 +381,7 @@ db.itemDefinitions.insertMany(
         "_id": itemDefinitionId20,
         "name": "Coffee Maker",
         "category": categoryId5,
-        "attributes": [attributeId9, attributeId11, attributeId14],
+        "attributes": [attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -390,7 +390,7 @@ db.itemDefinitions.insertMany(
         "_id": itemDefinitionId21,
         "name": "Toaster",
         "category": categoryId5,
-        "attributes": [attributeId9, attributeId11, attributeId14],
+        "attributes": [attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -399,7 +399,7 @@ db.itemDefinitions.insertMany(
         "_id": itemDefinitionId22,
         "name": "Blender",
         "category": categoryId5,
-        "attributes": [attributeId9, attributeId11, attributeId14],
+        "attributes": [attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -1618,5 +1618,125 @@ db.inventoryItems.insertMany(
         ],
         "quantity": 2
     },
+
+    // Mini Fridge
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId19,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "LG"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Compact"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 10
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId19,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Samsung"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Mini"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId19,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Whirlpool"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Small"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 2
+    },
+
+    // Coffee Maker
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId20,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Keurig"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Single Ser
+            ve"},
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 8
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId20,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Cuisinart"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Drip"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 4
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId20,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Hamilton Bea
+            ch"},
+            {
+                "attributeId": attributeId11,
+                "value": "Percolator"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 1
+    },
+
+
 
 )
