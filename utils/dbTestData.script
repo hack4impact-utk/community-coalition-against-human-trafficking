@@ -1140,5 +1140,79 @@ db.inventoryItems.insertMany(
         "itemDefinition": itemDefinitionId5,
         "attributes": [],
         "quantity": 20
-    }
+    },
+
+    // socks
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId6,
+        "attributes": [],
+        "quantity": 50
+    },
+
+
+
+
+
+
+
+
+    // Toiletries
+    // Shampoo
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId7,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": "16 oz"
+            }
+        ],
+        "quantity": 20
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId7,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": "32 oz"
+            }
+        ],
+        "quantity": 12
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId7,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": "8 oz"
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId7,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": "12 oz"
+            }
+        ],
+        "quantity": 8
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId7,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": "24 oz"
+            }
+        ],
+        "quantity": 10
+    },
+    
 )
