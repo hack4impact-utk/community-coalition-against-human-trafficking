@@ -1,13 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ApiError, InventoryItem } from 'utils/types'
 import { serverAuth } from 'utils/auth'
-import { apiInventoryItemValidation } from 'utils/apiValidators'
+import { getInventoryItems } from 'server/actions/InventoryItems'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import InventoryItemSchema from 'server/models/InventoryItem'
-import { getInventoryItems } from 'server/actions/InventoryItems'
+import { apiInventoryItemValidation } from 'utils/apiValidators'
 
 // @route GET api/inventoryItems - Returns a list of all inventoryItems in the database - Private
-// @route POST /api/itemDefintions - Create a itemDefinition from request body - Private
+// @route POST /api/inventoryItems - Create a inventoryItems from request body - Private
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -23,6 +23,19 @@ export default async function handler(
         return res.status(resStatus).json({
           success: true,
           payload: items,
+        })
+      }
+      case 'POST': {
+        apiInventoryItemValidation(req.body)
+        const inventoryItem: InventoryItem = req.body
+        const response = await MongoDriver.createEntity(
+          InventoryItemSchema,
+          inventoryItem
+        )
+
+        return res.status(201).json({
+          success: true,
+          payload: response.id,
         })
       }
       default: {
