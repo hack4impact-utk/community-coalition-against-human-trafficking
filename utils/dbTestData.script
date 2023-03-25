@@ -1391,5 +1391,14 @@ db.inventoryItems.insertMany(
             }
         ],
         "quantity": 8
-    }
+    },
+
+
+    // Razor
+    {
+    "_id": ObjectId(),
+    "itemDefinition": itemDefinitionId12,
+    "attributes": [],
+    "quantity": 50
+    }, 
 )
