@@ -48,12 +48,50 @@ export async function getInventoryItems() {
         as: 'itemDefinition',
       },
     },
+    // creates a temporary array of attribute documents called 'attributeDocs' containing all relevant attribute documents
     {
       $lookup: {
         from: 'attributes',
         localField: 'attributes.attribute',
         foreignField: '_id',
-        as: 'attributes',
+        as: 'attributeDocs',
+      },
+    },
+    // the above lookup only gets the attribute docs from the 'attributes' collection.
+    // It does not generate the inventoryItem attribute/value pairs.
+    {
+      $addFields: {
+        // builds out the inventoryItem.attributes array from scratch
+        attributes: {
+          // for every attribute in inventoryItem.attributes object, create an attribute/value pair
+          $map: {
+            input: '$attributes',
+            as: 'attr', // attribute from the inventoryItem.attributes array
+            in: {
+              attribute: {
+                // find the corresponding document from the attributes collection with the same _id
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: '$attributeDocs',
+                      as: 'doc', // document from the attributes collection
+                      cond: { $eq: ['$$doc._id', '$$attr.attribute'] },
+                    },
+                  },
+                  0,
+                ],
+              },
+              // set the inventoryItem.attributes[i].value to its original value
+              value: '$$attr.value',
+            },
+          },
+        },
+      },
+    },
+    // delete the temporary array of attribute documents
+    {
+      $project: {
+        attributeDocs: 0,
       },
     },
     {
