@@ -1334,5 +1334,62 @@ db.inventoryItems.insertMany(
             }
         ],
         "quantity": 10
+    },
+
+    // shaving cream
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId11,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": "8 oz"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId11,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": "16 oz"
+            }
+        ],
+        "quantity": 40
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId11,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": "24 oz"
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId11,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": "12 oz"
+            }
+        ],
+        "quantity": 15
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId11,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": "32 oz"
+            }
+        ],
+        "quantity": 8
     }
 )
