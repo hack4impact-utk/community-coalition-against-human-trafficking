@@ -1,5 +1,6 @@
 use test;
 
+// CATEGORIES
 const categoryId1 = ObjectId();
 const categoryId2 = ObjectId();
 const categoryId3 = ObjectId();
@@ -45,6 +46,7 @@ db.categories.insertMany(
 );
 
 
+// ATTRIBUTES
 const attributeId1 = ObjectId();
 const attributeId2 = ObjectId();
 const attributeId3 = ObjectId();
@@ -149,6 +151,8 @@ db.attributes.insertMany(
 );
 
 
+
+// ITEM DEFINITIONS
 const itemDefinitionId1 = ObjectId();
 const itemDefinitionId2 = ObjectId();
 const itemDefinitionId3 = ObjectId();
@@ -182,6 +186,7 @@ const itemDefinitionId31 = ObjectId();
 const itemDefinitionId32 = ObjectId();
 
 db.itemDefinitions.insertMany(
+    // clothing
     {
         "_id": itemDefinitionId1,
         "name": "Shirt",
@@ -239,7 +244,7 @@ db.itemDefinitions.insertMany(
 
 
 
-
+    // toiletries
     {
         "_id": itemDefinitionId7,
         "name": "Shampoo",
@@ -298,6 +303,7 @@ db.itemDefinitions.insertMany(
 
 
 
+    // furniture
     {
         "_id": itemDefinitionId13,
         "name": "Couch",
@@ -328,7 +334,7 @@ db.itemDefinitions.insertMany(
 
 
 
-
+    // large appliances
     {
         "_id": itemDefinitionId16,
         "name": "Oven",
@@ -361,7 +367,7 @@ db.itemDefinitions.insertMany(
 
 
 
-
+    // small appliances
     {
         "_id": itemDefinitionId19,
         "name": "Mini Fridge",
@@ -403,7 +409,7 @@ db.itemDefinitions.insertMany(
 
 
 
-
+    // administrative supplies
     {
         "_id": itemDefinitionId23,
         "name": "Laptop",
@@ -446,7 +452,7 @@ db.itemDefinitions.insertMany(
 
 
 
-
+    // no category
     {
         "_id": itemDefinitionId27,
         "name": "Jumper Cables",
@@ -466,7 +472,7 @@ db.itemDefinitions.insertMany(
     
 
 
-
+    // linens
     {
         "_id": itemDefinitionId29,
         "name": "Towel",
@@ -510,15 +516,621 @@ db.itemDefinitions.insertMany(
 
 
 
+
+// INVENTORY ITEMS
 db.inventoryItems.insertMany(
+    // shirt
     {
         "_id": ObjectId(),
         "itemDefinition": itemDefinitionId1,
-        "attributes": {
-            "attribute": attributeId1,
-            "value": "seven"
-        },
-        "quantity": 10,
-        "asignee": ObjectId()
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Small"
+            }, 
+            {
+                "attribute": attributeId2,
+                "value": "Short-Sleeve"
+            }
+        ],
+        "quantity": 24,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Small"
+            }, 
+            {
+                "attribute": attributeId2,
+                "value": "Long-Sleeve"
+            }
+        ],
+        "quantity": 26,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Medium"
+            }, 
+            {
+                "attribute": attributeId2,
+                "value": "Long-Sleeve"
+            }
+        ],
+        "quantity": 6,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Large"
+            },
+            {
+                "attribute": attributeId2,
+                "value": "Long-Sleeve"
+            }
+            
+        ],
+        "quantity": 15,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Large"
+            },
+            {
+                "attribute": attributeId2,
+                "value": "Short-Sleeve"
+            }
+            
+        ],
+        "quantity": 22,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Extra-Large"
+            }, 
+            {
+                "attribute": attributeId2,
+                "value": "Long-Sleeve"
+            }
+        ],
+        "quantity": 0,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Extra-Large"
+            }, 
+        ],
+        "quantity": 0,
+    },
+
+
+
+    // pants
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId2,
+        "attributes": [
+            {
+                "attribute": attributeId3,
+                "value": "Shorts"
+            }, 
+            {
+                "attribute": attributeId4,
+                "value": "28x30"
+            }
+        ],
+        "quantity": 16,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId2,
+        "attributes": [
+            {
+                "attribute": attributeId3,
+                "value": "Shorts"
+            }, 
+            {
+                "attribute": attributeId4,
+                "value": "28x32"
+            }
+        ],
+        "quantity": 21,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId2,
+        "attributes": [
+            {
+                "attribute": attributeId3,
+                "value": "Long Pants"
+            }, 
+            {
+                "attribute": attributeId4,
+                "value": "Medium"
+            }
+        ],
+        "quantity": 3,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId2,
+        "attributes": [
+            {
+                "attribute": attributeId3,
+                "value": "Long Pants"
+            }, 
+            {
+                "attribute": attributeId4,
+                "value": "28x30"
+            }
+        ],
+        "quantity": 3,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId2,
+        "attributes": [
+            {
+                "attribute": attributeId3,
+                "value": "Long Pants"
+            }, 
+            {
+                "attribute": attributeId4,
+                "value": "Large"
+            }
+        ],
+        "quantity": 12,
+    },
+
+
+
+    // shoes
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "12"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 6,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "4"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 2,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "7"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 3,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "8"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 7,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "11"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 0,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "12.5"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 2,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "11.5"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 0,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "12"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 6,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "4"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 2,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "7"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 3,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "8"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 7,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "11"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 0,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "12.5"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 2,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "11.5"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 0,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "12"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 6,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "4"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 2,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "7"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 3,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "8"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 7,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "11"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 0,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "12.5"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 2,
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": "11.5"
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 0,
+    },
+
+    // bra
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "30A"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "32B"
+            }
+        ],
+        "quantity": 10
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "34C"
+            }
+        ],
+        "quantity": 7
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "36D"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "38DD"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "40C"
+            }
+        ],
+        "quantity": 6
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "42B"
+            }
+        ],
+        "quantity": 4
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "44A"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "46D"
+            }
+        ],
+        "quantity": 8
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "48DD"
+            }
+        ],
+        "quantity": 1
     }
 )
