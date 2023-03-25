@@ -2058,8 +2058,86 @@ db.inventoryItems.insertMany(
             }
         ],
         "quantity": 3
+    },
+
+    // Towel
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId29,
+        "attributes": [],
+        "quantity": 1
+    },
+
+    // Bedsheet
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId30,
+        "attributes": [
+            {
+                "attribute": attributeId13,
+                "value": "Twin"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId30,
+        "attributes": [
+            {
+                "attribute": attributeId13,
+                "value": "Twin XL"
+            }
+        ],
+        "quantity": 7
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId30,
+        "attributes": [
+            {
+                "attribute": attributeId13,
+                "value": "Full"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId30,
+        "attributes": [
+            {
+            "attribute": attributeId13,
+            "value": "Queen"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId30,
+        "attributes": [
+            {
+                "attribute": attributeId13,
+                "value": "King"
+            }
+        ],
+        "quantity": 1
+    },
+
+    // Blanket
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId31,
+        "attributes": [],
+        "quantity": 15
+    },
+
+    // Pillow
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId32,
+        "attributes": [],
+        "quantity": 2
     }
-
-
-
 )
