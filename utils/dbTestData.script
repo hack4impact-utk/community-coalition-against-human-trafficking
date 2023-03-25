@@ -1891,7 +1891,7 @@ db.inventoryItems.insertMany([
             }
         ],
         "quantity": 1,
-        "assignee": "63fcb70862199670ed36177a"
+        "assignee": ObjectId("63fcb70862199670ed36177a")
     },
     {
         "_id": ObjectId(),
@@ -1902,7 +1902,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "EFGH5678"}
         ],
         "quantity": 1,
-        "assignee": "63fa5c9265ada1f23e68b638"
+        "assignee": ObjectId("63fa5c9265ada1f23e68b638")
     },
     {
         "_id": ObjectId(),
@@ -1913,7 +1913,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "IJKL9012"}
         ],
         "quantity": 1,
-        "assignee": "63f95a8a55d930aa6176f06b"
+        "assignee": ObjectId("63f95a8a55d930aa6176f06b")
     },
 
     //Keyboard
@@ -1926,7 +1926,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "MNOP3456"}
         ],
         "quantity": 1,
-        "assignee": "63fcb70862199670ed36177a"
+        "assignee": ObjectId("63fcb70862199670ed36177a")
     },
     {
         "_id": ObjectId(),
@@ -1937,7 +1937,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "QRST7890"}
         ],
         "quantity": 1,
-        "assignee": "63fa5c9265ada1f23e68b638"
+        "assignee": ObjectId("63fa5c9265ada1f23e68b638")
     },
     {
         "_id": ObjectId(),
@@ -1948,7 +1948,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "UVWX1234"}
         ],
         "quantity": 1,
-        "assignee": "63f95a8a55d930aa6176f06b"
+        "assignee": ObjectId("63f95a8a55d930aa6176f06b")
     },
 
     // Mouse
@@ -1961,7 +1961,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "ABCD1234"}
         ],
         "quantity": 1,
-        "assignee": "63fcb70862199670ed36177a"
+        "assignee": ObjectId("63fcb70862199670ed36177a")
     },
     {
         "_id": ObjectId(),
@@ -1972,7 +1972,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "EFGH5678"}
         ],
         "quantity": 1,
-        "assignee": "63fa5c9265ada1f23e68b638"
+        "assignee": ObjectId("63fa5c9265ada1f23e68b638")
     },
     {
         "_id": ObjectId(),
@@ -1983,7 +1983,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "IJKL9012"}
         ],
         "quantity": 1,
-        "assignee": "63f95a8a55d930aa6176f06b"
+        "assignee": ObjectId("63f95a8a55d930aa6176f06b")
     },
 
     // Monitor
@@ -1996,7 +1996,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "MNOP3456"}
         ],
         "quantity": 1,
-        "assignee": "63fcb70862199670ed36177a"
+        "assignee": ObjectId("63fcb70862199670ed36177a")
     },
     {
         "_id": ObjectId(),
@@ -2007,7 +2007,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "QRST7890"}
         ],
         "quantity": 1,
-        "assignee": "63fa5c9265ada1f23e68b638"
+        "assignee": ObjectId("63fa5c9265ada1f23e68b638")
     },
     {
         "_id": ObjectId(),
@@ -2018,7 +2018,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "UVWX1234"}
         ],
         "quantity": 1,
-        "assignee": "63f95a8a55d930aa6176f06b"
+        "assignee": ObjectId("63f95a8a55d930aa6176f06b")
     },
 
 
