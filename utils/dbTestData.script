@@ -1403,17 +1403,18 @@ db.inventoryItems.insertMany(
     }, 
 
     // FURNITURE
+    // couch
     {
         "_id": ObjectId(),
         "itemDefinition": itemDefinitionId13,
         "attributes": [
             {
-            "attributeId": attributeId10,
-            "value": "Sectional"
+                "attributeId": attributeId10,
+                "value": "Sectional"
             },
             {
-            "attributeId": attributeId14,
-            "value": "Used"
+                "attributeId": attributeId14,
+                "value": "Used"
             }
         ],
         "quantity": 3
@@ -1423,16 +1424,79 @@ db.inventoryItems.insertMany(
         "itemDefinition": itemDefinitionId13,
         "attributes": [
             {
-            "attributeId": attributeId10,
-            "value": "Recliner"
+                "attributeId": attributeId10,
+                "value": "Recliner"
             },
             {
-            "attributeId": attributeId14,
-            "value": "New"
+                "attributeId": attributeId14,
+                "value": "New"
             }
         ],
         "quantity": 2
     },
 
+    // Table
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId14,
+        "attributes": [
+            {
+                "attributeId": attributeId10,
+                "value": "Coffee Table"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId14,
+        "attributes": [
+            {
+                "attributeId": attributeId10,
+                "value": "End Table"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 2
+    },
+
+    // Chair
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId15,
+        "attributes": [
+            {
+                "attributeId": attributeId10,
+                "value": "Dining Chair"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 4
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId15,
+        "attributes": [
+            {
+                "attributeId": attributeId10,
+                "value": "Armchair"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 1
+    },
 
 )
