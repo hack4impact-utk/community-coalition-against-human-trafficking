@@ -1270,5 +1270,13 @@ db.inventoryItems.insertMany(
             }
         ],
         "quantity": 10
+    },
+
+    // Soap
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId9,
+        "attributes": [],
+        "quantity": 75
     }
 )
