@@ -262,7 +262,7 @@ const inventoryItemModelProperties: Property[] = [
   {
     key: 'assignee',
     types: 'string|object',
-    required: true,
+    required: false,
   },
 ]
 

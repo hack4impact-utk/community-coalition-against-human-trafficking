@@ -1,6 +1,30 @@
-import mongoDb from 'server/index'
 import ItemDefinitionSchema from 'server/models/ItemDefinition'
 import { getEntities, getEntity } from 'server/actions/MongoDriver'
+import { PipelineStage } from 'mongoose'
+
+const requestPipeline: PipelineStage[] = [
+  {
+    $lookup: {
+      from: 'categories',
+      localField: 'category',
+      foreignField: '_id',
+      as: 'category',
+    },
+  },
+  {
+    $lookup: {
+      from: 'attributes',
+      localField: 'attributes',
+      foreignField: '_id',
+      as: 'attributes',
+    },
+  },
+  {
+    $set: {
+      category: { $arrayElemAt: ['$category', 0] },
+    },
+  },
+]
 
 /**
  * Finds an itemDefinition by its id
@@ -8,29 +32,7 @@ import { getEntities, getEntity } from 'server/actions/MongoDriver'
  * @returns The ItemDefinition given by the itemDefinition parameter
  */
 export async function getItemDefinition(id: string) {
-  return await getEntity(ItemDefinitionSchema, id, [
-    {
-      $lookup: {
-        from: 'categories',
-        localField: 'category',
-        foreignField: '_id',
-        as: 'category',
-      },
-    },
-    {
-      $lookup: {
-        from: 'attributes',
-        localField: 'attributes',
-        foreignField: '_id',
-        as: 'attributes',
-      },
-    },
-    {
-      $set: {
-        category: { $arrayElemAt: ['$category', 0] },
-      },
-    },
-  ])
+  return await getEntity(ItemDefinitionSchema, id, requestPipeline)
 }
 
 /**
@@ -38,27 +40,5 @@ export async function getItemDefinition(id: string) {
  * @returns All itemDefinitions
  */
 export async function getItemDefinitions() {
-  return await getEntities(ItemDefinitionSchema, [
-    {
-      $lookup: {
-        from: 'categories',
-        localField: 'category',
-        foreignField: '_id',
-        as: 'category',
-      },
-    },
-    {
-      $lookup: {
-        from: 'attributes',
-        localField: 'attributes',
-        foreignField: '_id',
-        as: 'attributes',
-      },
-    },
-    {
-      $set: {
-        category: { $arrayElemAt: ['$category', 0] },
-      },
-    },
-  ])
+  return await getEntities(ItemDefinitionSchema, requestPipeline)
 }
