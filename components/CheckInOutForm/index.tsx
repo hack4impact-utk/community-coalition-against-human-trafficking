@@ -117,14 +117,16 @@ function CheckInOutForm({
   React.useEffect(() => {
     // TODO: Update this when types are updated
     if (
-      !selectedItemDefinition ||
-      !selectedItemDefinition.category ||
-      typeof selectedItemDefinition.category === 'string'
+      !formData.itemDefinition ||
+      !formData.itemDefinition.category ||
+      typeof formData.itemDefinition.category === 'string'
     ) {
       return
     }
-    setSelectedCategory(selectedItemDefinition.category)
-  }, [selectedItemDefinition, selectedCategory])
+    setFormData((formData) =>
+      updateFormData(formData, { category: formData.itemDefinition.category })
+    )
+  }, [setFormData, formData.itemDefinition])
 
   React.useEffect(() => {
     onChange(formData)
@@ -150,14 +152,14 @@ function CheckInOutForm({
 
   // Update split attributes when item definition changes
   React.useEffect(() => {
-    if (selectedItemDefinition) {
-      setSplitAttrs(separateAttributes(selectedItemDefinition.attributes))
+    if (formData.itemDefinition) {
+      setSplitAttrs(separateAttributes(formData.itemDefinition.attributes))
     } else {
       setSplitAttrs(defaultSplitAttrs)
       setSelectedAttributes([])
       setAaSelected([])
     }
-  }, [selectedItemDefinition])
+  }, [formData.itemDefinition])
 
   React.useEffect(() => {
     console.log(selectedAttributes)
@@ -201,12 +203,12 @@ function CheckInOutForm({
         renderInput={(params) => <TextField {...params} label="Category" />}
         onChange={(_e, category) => {
           const updatedFormData = updateFormData(formData, {
-            category: category || ({} as CategoryResponse),
+            category: category || undefined,
           })
           setFormData(updatedFormData)
         }}
         getOptionLabel={(category) => category.name}
-        inputValue={formData.category ? formData.category.name : ''}
+        value={formData.category || null}
         disabled={!!formData.itemDefinition}
       />
       <Autocomplete
@@ -220,6 +222,7 @@ function CheckInOutForm({
           setFormData(updatedFormData)
         }}
         getOptionLabel={(itemDefinition) => itemDefinition.name}
+        value={formData.itemDefinition || null}
       />
       <AttributeAutocomplete
         attributes={splitAttrs.options}

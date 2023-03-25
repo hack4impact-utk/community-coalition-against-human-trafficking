@@ -77,7 +77,7 @@ export default function AttributeAutocomplete({
           />
         ))
       }
-      value={value}
+      // value={value || []}
       renderInput={(params) => <TextField {...params} label="Attributes" />}
       onChange={(e, attributes) => {
         if (!!setValue) setValue(attributes)
@@ -98,7 +98,6 @@ export default function AttributeAutocomplete({
         else attributes.push(newAttr)
 
         if (!!onChange) onChange(e, buildAttributeRequest(attributes))
-        setSelected(attributes)
       }}
       sx={sx}
     />
