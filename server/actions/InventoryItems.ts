@@ -64,6 +64,11 @@ export async function getInventoryItems() {
         as: 'assignee',
       },
     },
+    {
+      $set: {
+        assignee: { $arrayElemAt: ['$assignee', 0] },
+      },
+    },
   ])
 }
 
