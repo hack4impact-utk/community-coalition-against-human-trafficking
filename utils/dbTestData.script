@@ -1737,6 +1737,124 @@ db.inventoryItems.insertMany(
         "quantity": 1
     },
 
+    // Toaster
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId21,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Cuisinart"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "2 Slice"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 10
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId21,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "KitchenAid"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "4 Slice"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId21,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Black & Decker"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Toaster Oven"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 2
+    },
 
+    // Blender
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId22,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Ninja"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Countertop"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 8
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId22,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Vitamix"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Personal"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 4
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId22,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Oster"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Handheld"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 1
+    },
+
+    
 
 )
