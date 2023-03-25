@@ -6,17 +6,18 @@ export interface UserResponse extends User {
 
 export interface ItemDefinitionResponse extends ItemDefinition {
   _id: string
-  category?: Category
-  attributes?: Attribute[]
+  category?: CategoryResponse
+  attributes?: AttributeResponse[]
 }
 
 export interface InventoryItemResponse extends InventoryItem {
   _id: string
-  itemDefinition: string
+  itemDefinition: ItemDefinitionResponse
   attributes?: {
-    attribute: Attribute
+    attribute: AttributeResponse
     value: string | number
   }[]
+  assignee?: User
 }
 
 export interface CategoryResponse extends Category {

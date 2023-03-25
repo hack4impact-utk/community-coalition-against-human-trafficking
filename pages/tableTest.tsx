@@ -1,106 +1,283 @@
 import InventoryItemListItem from 'components/InventoryItemListItem'
-import { InventoryItem, ItemDefinition } from 'utils/types'
-import { Table, TableBody, TableContainer, Box, Paper } from '@mui/material'
+import { InventoryItemResponse, ItemDefinitionResponse } from 'utils/types'
+import { Table, TableBody, TableContainer, Paper } from '@mui/material'
 
 export default function Home() {
-  const itemDefinitionTest: ItemDefinition = {
+  const itemDefinitionTest: ItemDefinitionResponse = {
+    _id: 'testId',
     name: 'test item this is a test item that is very long',
     internal: true,
-    category: 'shirtttttttttt',
+    category: { _id: 'testId', name: 'shirtttttttttt' },
     lowStockThreshold: 15,
     criticalStockThreshold: 5,
   }
 
-  const testItem: InventoryItem = {
+  const testItem: InventoryItemResponse = {
+    _id: 'testId',
     itemDefinition: itemDefinitionTest,
     attributes: [
-      { attribute: 'sleeve', value: 'long-sleeve' },
-      { attribute: 'size', value: 'medium' },
-      { attribute: 'color', value: 'black' },
-      { attribute: 'sleeve', value: 'long-sleeve' },
-      { attribute: 'size', value: 'medium' },
-      { attribute: 'color', value: 'black' },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'sleeve',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'long-sleeve',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'size',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'medium',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'color',
+          possibleValues: 'text',
+          color: '# 3D3D3D',
+        },
+        value: 'black',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'sleeve',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'long-sleeve',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'size',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'medium',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'color',
+          possibleValues: 'text',
+          color: '# 3D3D3D',
+        },
+        value: 'black',
+      },
     ],
     quantity: 4,
-    assignee: 'Rudra Patel',
+    assignee: {
+      name: 'testName',
+      email: 'testEmail@testemail.com',
+      image: 'testImageURL',
+    },
   }
 
-  const testItem2: InventoryItem = {
+  const testItem2: InventoryItemResponse = {
+    _id: 'testId',
     itemDefinition: itemDefinitionTest,
     attributes: [
-      { attribute: 'sleeve', value: 'long-sleeve' },
-      { attribute: 'size', value: 'medium' },
-      { attribute: 'color', value: 'black' },
-      { attribute: 'sleeve', value: 'long-sleeve' },
-      { attribute: 'size', value: 'medium' },
-      { attribute: 'color', value: 'black' },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'sleeve',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'long-sleeve',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'size',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'medium',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'color',
+          possibleValues: 'text',
+          color: '# 3D3D3D',
+        },
+        value: 'black',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'sleeve',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'long-sleeve',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'size',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'medium',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'color',
+          possibleValues: 'text',
+          color: '# 3D3D3D',
+        },
+        value: 'black',
+      },
     ],
     quantity: 24000,
-    assignee: 'Rudra Patel',
+    assignee: {
+      name: 'testName',
+      email: 'testEmail@testemail.com',
+      image: 'testImageURL',
+    },
   }
 
-  const testItem3: InventoryItem = {
+  const testItem3: InventoryItemResponse = {
+    _id: 'testId',
     itemDefinition: itemDefinitionTest,
     attributes: [
       {
         attribute: {
-          name: 'testAttribute',
-          possibleValues: ['test1', 'test2'],
-          color: '#FF0000',
-        },
-        value: 'testValue',
-      },
-      {
-        attribute: {
-          name: 'test2',
-          possibleValues: 'number',
-          color: '#00FF00',
-        },
-        value: 'testValue',
-      },
-      {
-        attribute: {
-          name: 'test3',
+          _id: 'testId',
+          name: 'sleeve',
           possibleValues: 'text',
-          color: '#0000FF',
+          color: '#3D3D3D',
         },
-        value: 'testValue',
+        value: 'long-sleeve',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'size',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'medium',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'color',
+          possibleValues: 'text',
+          color: '# 3D3D3D',
+        },
+        value: 'black',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'sleeve',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'long-sleeve',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'size',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'medium',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'color',
+          possibleValues: 'text',
+          color: '# 3D3D3D',
+        },
+        value: 'black',
       },
     ],
     quantity: 7,
-    assignee: 'Really Long Name',
+    assignee: {
+      name: 'testName',
+      email: 'testEmail@testemail.com',
+      image: 'testImageURL',
+    },
   }
 
-  const testItem4: InventoryItem = {
+  const testItem4: InventoryItemResponse = {
+    _id: 'testId',
     itemDefinition: itemDefinitionTest,
     attributes: [
       {
         attribute: {
-          name: 'testAttribute',
-          possibleValues: ['test1', 'test2'],
-          color: '#777777',
+          _id: 'testId',
+          name: 'sleeve',
+          possibleValues: ['long-sleeve', 'short-sleeve'],
+          color: '#3D3D3D',
         },
-        value: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+        value: 'long-sleeve',
       },
       {
         attribute: {
-          name: 'test2',
-          possibleValues: 'number',
-          color: '#000000',
-        },
-        value: 'testValue',
-      },
-      {
-        attribute: {
-          name: 'test3',
+          _id: 'testId',
+          name: 'size',
           possibleValues: 'text',
-          color: '#0000FF',
+          color: '#3D3D3D',
         },
-        value: 'testValue',
+        value: 'medium',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'color',
+          possibleValues: 'text',
+          color: '# 3D3D3D',
+        },
+        value: 'black',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'sleeve',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'long-sleeve',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'size',
+          possibleValues: 'text',
+          color: '#3D3D3D',
+        },
+        value: 'medium',
+      },
+      {
+        attribute: {
+          _id: 'testId',
+          name: 'color',
+          possibleValues: 'text',
+          color: '# 3D3D3D',
+        },
+        value: 'black',
       },
     ],
     quantity: 24000000000000000000,
-    assignee: 'Andrewwwwwwwwwwwwwwwwwwwwwwwww',
+    assignee: {
+      name: 'testName',
+      email: 'testEmail@testemail.com',
+      image: 'testImageURL',
+    },
   }
 
   return (
@@ -109,7 +286,16 @@ export default function Home() {
     // USING PERCENTAGES CAUSES PROBELMSSSSSSSSSSSSSSSSSSSSSSSSSS
     <TableContainer
       component={Paper}
-      sx={{ marginInline: 'auto', width: {xs: "300px", sm: "500px", md: "600px", lg: "900px", xl: "1000px"} }}
+      sx={{
+        marginInline: 'auto',
+        width: {
+          xs: '300px',
+          sm: '500px',
+          md: '600px',
+          lg: '900px',
+          xl: '1000px',
+        },
+      }}
     >
       <Table sx={{ width: 'max-content' }}>
         <TableBody>

@@ -3,11 +3,11 @@ import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 import {
-  Category,
   ItemDefinitionResponse,
   UserResponse,
   InventoryItemAttributeRequest,
   AttributeResponse,
+  CategoryResponse,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete from 'components/AttributeAutocomplete'
@@ -18,7 +18,7 @@ interface Props {
   users: UserResponse[]
   itemDefinitions: ItemDefinitionResponse[]
   attributes: AttributeResponse[]
-  categories: Category[]
+  categories: CategoryResponse[]
 }
 
 function CheckInOutForm({
@@ -38,7 +38,7 @@ function CheckInOutForm({
     InventoryItemAttributeRequest[]
   >([])
   const [selectedCategory, setSelectedCategory] =
-    React.useState<Category | null>()
+    React.useState<CategoryResponse | null>()
   const splitAttrs = separateAttributes(attributes)
 
   return (

@@ -49,9 +49,10 @@ export function apiUserValidation(
 }
 
 export function apiInventoryItemValidation(
-  inventoryItem: Record<string, unknown>
+  inventoryItem: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
 ) {
-  const response = validateInventoryItemRequest(inventoryItem)
+  const response = validateInventoryItemRequest(inventoryItem, requestType)
   badBodyValidationResponse(response)
 }
 

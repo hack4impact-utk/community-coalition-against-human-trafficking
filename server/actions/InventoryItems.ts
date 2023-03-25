@@ -1,6 +1,10 @@
 import InventoryItemSchema from 'server/models/InventoryItem'
 import * as MongoDriver from 'server/actions/MongoDriver'
-import { InventoryItem } from 'utils/types'
+import {
+  InventoryItem,
+  InventoryItemPostRequest,
+  InventoryItemPutRequest,
+} from 'utils/types'
 import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
 
@@ -22,15 +26,19 @@ export async function checkInInventoryItem(
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
   if (itemMatches.length) {
     itemMatches[0].quantity += itemQuantity
+    apiInventoryItemValidation(item, 'PUT')
     MongoDriver.updateEntity(
       InventoryItemSchema,
       itemMatches[0].id,
-      itemMatches[0]
+      itemMatches[0] as InventoryItemPutRequest
     )
   } else {
     item.quantity = itemQuantity
-    apiInventoryItemValidation(item)
-    MongoDriver.createEntity(InventoryItemSchema, item as InventoryItem)
+    apiInventoryItemValidation(item, 'POST')
+    MongoDriver.createEntity(
+      InventoryItemSchema,
+      item as InventoryItemPostRequest
+    )
   }
 }
 
@@ -56,10 +64,11 @@ export async function checkOutInventoryItem(
     if (modifiedItemQuantity < 0) {
       throw new ApiError(400, 'Check out would result in negative quantity.')
     } else {
+      apiInventoryItemValidation(item, 'PUT')
       MongoDriver.updateEntity(
         InventoryItemSchema,
         itemMatches[0].id,
-        itemMatches[0]
+        itemMatches[0] as InventoryItemPutRequest
       )
     }
   } else {
