@@ -96,9 +96,9 @@ export function validateUserRequest(
 ) {
   let validationModel: Property[]
   if (requestType === 'PUT') {
-    validationModel = userPostModelProperties
-  } else if (requestType === 'POST') {
     validationModel = userPutModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = userPostModelProperties
   } else {
     validationModel = userRequestModelProperties
   }

@@ -159,10 +159,12 @@ const validItemDefinitionResponse: ItemDefinitionResponse[] = [
     lowStockThreshold: 10,
     criticalStockThreshold: 5,
     category: {
+      _id: '2',
       name: 'Test Category',
     },
     attributes: [
       {
+        _id: '3',
         name: 'Test Attribute',
         possibleValues: 'text',
         color: '#000000',
