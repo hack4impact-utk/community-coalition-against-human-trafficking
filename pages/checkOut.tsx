@@ -10,8 +10,23 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { Category } from 'utils/types'
+import CategorySchema from 'server/models/Category'
+import * as MongoDriver from 'server/actions/MongoDriver'
 
-export default function CheckOutPage() {
+export async function getServerSideProps() {
+  const categories = JSON.parse(
+    JSON.stringify(await MongoDriver.getEntities(CategorySchema))
+  )
+  return {
+    props: { categories },
+  }
+}
+interface Props {
+  categories: Category[]
+}
+
+export default function CheckOutPage({ categories }: Props) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   return (
@@ -28,7 +43,7 @@ export default function CheckOutPage() {
                 users={[]}
                 itemDefinitions={[]}
                 attributes={[]}
-                categories={[]}
+                categories={categories}
               />
             </CardContent>
 
