@@ -1,5 +1,6 @@
 import {
   Attribute,
+  InventoryItemAttribute,
   NumberAttribute,
   OptionsAttribute,
   TextAttribute,

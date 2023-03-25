@@ -9,6 +9,7 @@ import {
   AttributeResponse,
   CategoryResponse,
   InventoryItemResponse,
+  InventoryItemAttributeResponse,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete, {
@@ -21,7 +22,7 @@ interface CheckInOutFormData {
   date: Dayjs
   category: CategoryResponse
   itemDefinition: ItemDefinitionResponse
-  attributes: InventoryItemAttributeRequest[]
+  attributes: InventoryItemAttributeResponse[]
   quantityDelta: number
 }
 
@@ -55,6 +56,24 @@ function updateFormData(
   }
 }
 
+function thing(
+  attrs: InventoryItemAttributeResponse[]
+): AutocompleteAttributeOption[] {
+  if (!attrs) {
+    return []
+  }
+  return attrs
+    .filter(({ attribute }) => attribute.possibleValues instanceof Array)
+    .map(({ attribute, value }) => {
+      return {
+        id: attribute._id,
+        label: attribute.name,
+        value: String(value),
+        color: attribute.color,
+      }
+    })
+}
+
 const defaultSplitAttrs = separateAttributes()
 
 function CheckInOutForm({
@@ -80,14 +99,13 @@ function CheckInOutForm({
     React.useState<ItemDefinitionResponse[]>(itemDefinitions)
   const [splitAttrs, setSplitAttrs] =
     React.useState<SeparatedAttributes>(defaultSplitAttrs)
-  const [aaSelected, setAaSelected] = React.useState<
-    AttributeAutocompleteOption[]
-  >([])
+  const [aaSelected, setAaSelected] =
+    React.useState<AutocompleteAttributeOption[]>()
   const initialFormData: Partial<CheckInOutFormData> = {
     assignee: inventoryItem?.assignee,
     category: inventoryItem?.itemDefinition?.category,
     itemDefinition: inventoryItem?.itemDefinition,
-    // todo: attributes
+    attributes: inventoryItem?.attributes,
   }
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>({
@@ -114,28 +132,26 @@ function CheckInOutForm({
 
   // Update filtered item defs when category changes
   React.useEffect(() => {
-    if (selectedCategory) {
+    if (formData.category) {
       setFilteredItemDefinitions(
         itemDefinitions.filter((itemDefinition) => {
           if (
             itemDefinition.category &&
             itemDefinition.category.hasOwnProperty('_id')
           ) {
-            return itemDefinition.category._id === selectedCategory._id
+            return itemDefinition.category._id === formData.category._id
           }
         })
       )
     } else {
       setFilteredItemDefinitions(itemDefinitions)
     }
-  }, [selectedCategory, itemDefinitions])
+  }, [formData.category, itemDefinitions])
 
   // Update split attributes when item definition changes
   React.useEffect(() => {
     if (selectedItemDefinition) {
-      setSplitAttrs(
-        separateAttributes(selectedItemDefinition.attributes as Attribute[])
-      )
+      setSplitAttrs(separateAttributes(selectedItemDefinition.attributes))
     } else {
       setSplitAttrs(defaultSplitAttrs)
       setSelectedAttributes([])
@@ -199,7 +215,7 @@ function CheckInOutForm({
         renderInput={(params) => <TextField {...params} label="Item" />}
         onChange={(_e, itemDefinition) => {
           const updatedFormData = updateFormData(formData, {
-            itemDefinition: itemDefinition || ({} as ItemDefinitionResponse),
+            itemDefinition: itemDefinition || undefined,
           })
           setFormData(updatedFormData)
         }}
@@ -209,11 +225,13 @@ function CheckInOutForm({
         attributes={splitAttrs.options}
         sx={{ mt: 4 }}
         onChange={(_e, attributes) => {
-          const updatedFormData = updateFormData(formData, {
-            attributes: attributes || [],
-          })
-          setFormData(updatedFormData)
+          // const updatedFormData = updateFormData(formData, {
+          //   attributes: attributes || [],
+          // })
+          // setFormData(updatedFormData)
         }}
+        value={aaSelected}
+        setValue={setAaSelected}
       />
       <QuantityForm
         onChange={(quantity) => {
@@ -223,8 +241,6 @@ function CheckInOutForm({
             })
           )
         }}
-        value={aaSelected}
-        setValue={setAaSelected}
       />
     </FormControl>
   )

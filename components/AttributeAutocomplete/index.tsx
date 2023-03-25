@@ -83,8 +83,6 @@ export default function AttributeAutocomplete({
         if (!!setValue) setValue(attributes)
         if (!attributes.length) {
           if (!!onChange) onChange(e, [] as InventoryItemAttributeRequest[])
-          setSelected([])
-          return
         }
 
         // get and remove most recent attribute (the one that triggered this event)

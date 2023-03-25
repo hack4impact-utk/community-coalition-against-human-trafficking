@@ -47,7 +47,10 @@ function QuantityForm({ onChange }: Props) {
             borderColor: colors.lightGray,
             marginBottom: 1,
           }}
-          onClick={() => setQuantity(quantity + 1)}
+          onClick={() => {
+            setQuantity(quantity + 1)
+            onChange(quantity + 1)
+          }}
         >
           <AddOutlinedIcon sx={{ width: 15, height: 15 }} />
         </IconButton>
@@ -61,7 +64,10 @@ function QuantityForm({ onChange }: Props) {
             borderColor: colors.lightGray,
           }}
           onClick={() => {
-            if (quantity > 1) setQuantity(quantity - 1)
+            if (quantity > 1) {
+              setQuantity(quantity - 1)
+              onChange(quantity - 1)
+            }
           }}
         >
           <RemoveOutlinedIcon sx={{ width: 15, height: 15 }} />

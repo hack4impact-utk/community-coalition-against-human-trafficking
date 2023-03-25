@@ -11,6 +11,64 @@ import {
   useTheme,
 } from '@mui/material'
 
+const testCategories = [
+  {
+    _id: '1',
+    name: 'testCategory',
+  },
+  {
+    _id: '2',
+    name: 'testCategory2',
+  },
+]
+
+const testItemDefinitions = [
+  {
+    _id: '1',
+    name: 'testItemDefinition',
+    category: testCategories[0],
+    internal: true,
+    lowStockThreshold: 10,
+    criticalStockThreshold: 5,
+    attributes: [
+      {
+        _id: '1',
+        name: 'testAttribute',
+        possibleValues: ['test1', 'test2'],
+        color: '#FF0000',
+      },
+      {
+        _id: '2',
+        name: 'test2',
+        possibleValues: 'number',
+        color: '#00FF00',
+      },
+    ],
+  },
+  {
+    _id: '2',
+    name: 'testItemDefinition2',
+    category: testCategories[1],
+    internal: true,
+    lowStockThreshold: 10,
+    criticalStockThreshold: 5,
+    attributes: [
+      {
+        _id: '1',
+        name: 'testAttribute',
+        possibleValues: ['test1', 'test2'],
+        color: '#FF0000',
+      },
+      {
+        _id: '2',
+        name: 'test2',
+        possibleValues: 'number',
+        color: '#00FF00',
+      },
+    ],
+  },
+]
+
 export default function CheckInPage() {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
@@ -45,8 +103,11 @@ export default function CheckInPage() {
               <CheckInOutForm
                 kioskMode={true}
                 users={[]}
-                itemDefinitions={[]}
-                categories={[]}
+                itemDefinitions={testItemDefinitions}
+                categories={testCategories}
+                onChange={(item) => {
+                  console.log(item)
+                }}
               />
             </CardContent>
 
