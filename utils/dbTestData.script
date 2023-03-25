@@ -1,4 +1,12 @@
-use test;
+use("test")
+
+// if specified, clear out all existing collections (except the users collection)
+if (true) {
+   db.attributes.deleteMany({}); 
+   db.categories.deleteMany({}); 
+   db.inventoryItems.deleteMany({}); 
+   db.itemDefinitions.deleteMany({}); 
+}
 
 // CATEGORIES
 const categoryId1 = ObjectId();
@@ -10,7 +18,7 @@ const categoryId6 = ObjectId();
 const categoryId7 = ObjectId();
 const categoryId8 = ObjectId();
 
-db.categories.insertMany(
+db.categories.insertMany([
     {
         "_id": categoryId1,
         "name": "Clothing"
@@ -38,12 +46,12 @@ db.categories.insertMany(
     {
         "_id": categoryId7,
         "name": "Linens"
-    }
+    },
     {
         "_id": categoryId8,
         "name": "Cleaning Supplies"
-    },
-);
+    }
+]);
 
 
 // ATTRIBUTES
@@ -64,7 +72,7 @@ const attributeId14 = ObjectId();
 const attributeId15 = ObjectId();
 const defaultColor = "#ebebeb";
 
-db.attributes.insertMany(
+db.attributes.insertMany([
     {
         "_id": attributeId1,
         "name": "Top Size",
@@ -155,7 +163,7 @@ db.attributes.insertMany(
         "possibleValues": ["New", "Used"],
         "color": defaultColor
     },
-);
+]);
 
 
 
@@ -170,6 +178,7 @@ const itemDefinitionId7 = ObjectId();
 const itemDefinitionId8 = ObjectId();
 const itemDefinitionId9 = ObjectId();
 const itemDefinitionId10 = ObjectId();
+const itemDefinitionId11 = ObjectId();
 const itemDefinitionId12 = ObjectId();
 const itemDefinitionId13 = ObjectId();
 const itemDefinitionId14 = ObjectId();
@@ -192,7 +201,7 @@ const itemDefinitionId30 = ObjectId();
 const itemDefinitionId31 = ObjectId();
 const itemDefinitionId32 = ObjectId();
 
-db.itemDefinitions.insertMany(
+db.itemDefinitions.insertMany([
     // clothing
     {
         "_id": itemDefinitionId1,
@@ -516,7 +525,7 @@ db.itemDefinitions.insertMany(
         "lowStockThreshold": 10,
         "criticalStockThreshold": 5
     }
-);
+]);
 
 
 
@@ -525,7 +534,7 @@ db.itemDefinitions.insertMany(
 
 
 // INVENTORY ITEMS
-db.inventoryItems.insertMany(
+db.inventoryItems.insertMany([
     // shirt
     {
         "_id": ObjectId(),
@@ -540,7 +549,7 @@ db.inventoryItems.insertMany(
                 "value": "Short-Sleeve"
             }
         ],
-        "quantity": 24,
+        "quantity": 24
     },
     {
         "_id": ObjectId(),
@@ -555,7 +564,7 @@ db.inventoryItems.insertMany(
                 "value": "Long-Sleeve"
             }
         ],
-        "quantity": 26,
+        "quantity": 26
     },
     {
         "_id": ObjectId(),
@@ -570,7 +579,7 @@ db.inventoryItems.insertMany(
                 "value": "Long-Sleeve"
             }
         ],
-        "quantity": 6,
+        "quantity": 6
     },
     {
         "_id": ObjectId(),
@@ -586,7 +595,7 @@ db.inventoryItems.insertMany(
             }
             
         ],
-        "quantity": 15,
+        "quantity": 15
     },
     {
         "_id": ObjectId(),
@@ -602,7 +611,7 @@ db.inventoryItems.insertMany(
             }
             
         ],
-        "quantity": 22,
+        "quantity": 22
     },
     {
         "_id": ObjectId(),
@@ -617,7 +626,7 @@ db.inventoryItems.insertMany(
                 "value": "Long-Sleeve"
             }
         ],
-        "quantity": 0,
+        "quantity": 0
     },
     {
         "_id": ObjectId(),
@@ -628,7 +637,7 @@ db.inventoryItems.insertMany(
                 "value": "Extra-Large"
             }, 
         ],
-        "quantity": 0,
+        "quantity": 0
     },
 
 
@@ -647,7 +656,7 @@ db.inventoryItems.insertMany(
                 "value": "28x30"
             }
         ],
-        "quantity": 16,
+        "quantity": 16
     },
     {
         "_id": ObjectId(),
@@ -662,7 +671,7 @@ db.inventoryItems.insertMany(
                 "value": "28x32"
             }
         ],
-        "quantity": 21,
+        "quantity": 21
     },
     {
         "_id": ObjectId(),
@@ -677,7 +686,7 @@ db.inventoryItems.insertMany(
                 "value": "Medium"
             }
         ],
-        "quantity": 3,
+        "quantity": 3
     },
     {
         "_id": ObjectId(),
@@ -692,7 +701,7 @@ db.inventoryItems.insertMany(
                 "value": "28x30"
             }
         ],
-        "quantity": 3,
+        "quantity": 3
     },
     {
         "_id": ObjectId(),
@@ -707,7 +716,7 @@ db.inventoryItems.insertMany(
                 "value": "Large"
             }
         ],
-        "quantity": 12,
+        "quantity": 12
     },
 
 
@@ -726,7 +735,7 @@ db.inventoryItems.insertMany(
                 "value": "Tennis Shoes"
             }
         ],
-        "quantity": 6,
+        "quantity": 6
     },
     {
         "_id": ObjectId(),
@@ -741,7 +750,7 @@ db.inventoryItems.insertMany(
                 "value": "Tennis Shoes"
             }
         ],
-        "quantity": 2,
+        "quantity": 2
     },
     {
         "_id": ObjectId(),
@@ -756,7 +765,7 @@ db.inventoryItems.insertMany(
                 "value": "Tennis Shoes"
             }
         ],
-        "quantity": 3,
+        "quantity": 3
     },
     {
         "_id": ObjectId(),
@@ -771,7 +780,7 @@ db.inventoryItems.insertMany(
                 "value": "Tennis Shoes"
             }
         ],
-        "quantity": 7,
+        "quantity": 7
     },
     {
         "_id": ObjectId(),
@@ -786,7 +795,7 @@ db.inventoryItems.insertMany(
                 "value": "Tennis Shoes"
             }
         ],
-        "quantity": 0,
+        "quantity": 0
     },
     {
         "_id": ObjectId(),
@@ -801,7 +810,7 @@ db.inventoryItems.insertMany(
                 "value": "Tennis Shoes"
             }
         ],
-        "quantity": 2,
+        "quantity": 2
     },
     {
         "_id": ObjectId(),
@@ -816,7 +825,7 @@ db.inventoryItems.insertMany(
                 "value": "Tennis Shoes"
             }
         ],
-        "quantity": 0,
+        "quantity": 0
     },
     {
         "_id": ObjectId(),
@@ -831,7 +840,7 @@ db.inventoryItems.insertMany(
                 "value": "Dress Shoes"
             }
         ],
-        "quantity": 6,
+        "quantity": 6
     },
     {
         "_id": ObjectId(),
@@ -846,7 +855,7 @@ db.inventoryItems.insertMany(
                 "value": "Dress Shoes"
             }
         ],
-        "quantity": 2,
+        "quantity": 2
     },
     {
         "_id": ObjectId(),
@@ -861,7 +870,7 @@ db.inventoryItems.insertMany(
                 "value": "Dress Shoes"
             }
         ],
-        "quantity": 3,
+        "quantity": 3
     },
     {
         "_id": ObjectId(),
@@ -876,7 +885,7 @@ db.inventoryItems.insertMany(
                 "value": "Dress Shoes"
             }
         ],
-        "quantity": 7,
+        "quantity": 7
     },
     {
         "_id": ObjectId(),
@@ -891,7 +900,7 @@ db.inventoryItems.insertMany(
                 "value": "Dress Shoes"
             }
         ],
-        "quantity": 0,
+        "quantity": 0
     },
     {
         "_id": ObjectId(),
@@ -906,7 +915,7 @@ db.inventoryItems.insertMany(
                 "value": "Dress Shoes"
             }
         ],
-        "quantity": 2,
+        "quantity": 2
     },
     {
         "_id": ObjectId(),
@@ -921,7 +930,7 @@ db.inventoryItems.insertMany(
                 "value": "Dress Shoes"
             }
         ],
-        "quantity": 0,
+        "quantity": 0
     },
     {
         "_id": ObjectId(),
@@ -936,7 +945,7 @@ db.inventoryItems.insertMany(
                 "value": "Boots"
             }
         ],
-        "quantity": 6,
+        "quantity": 6
     },
     {
         "_id": ObjectId(),
@@ -951,7 +960,7 @@ db.inventoryItems.insertMany(
                 "value": "Boots"
             }
         ],
-        "quantity": 2,
+        "quantity": 2
     },
     {
         "_id": ObjectId(),
@@ -966,7 +975,7 @@ db.inventoryItems.insertMany(
                 "value": "Boots"
             }
         ],
-        "quantity": 3,
+        "quantity": 3
     },
     {
         "_id": ObjectId(),
@@ -981,7 +990,7 @@ db.inventoryItems.insertMany(
                 "value": "Boots"
             }
         ],
-        "quantity": 7,
+        "quantity": 7
     },
     {
         "_id": ObjectId(),
@@ -996,7 +1005,7 @@ db.inventoryItems.insertMany(
                 "value": "Boots"
             }
         ],
-        "quantity": 0,
+        "quantity": 0
     },
     {
         "_id": ObjectId(),
@@ -1011,7 +1020,7 @@ db.inventoryItems.insertMany(
                 "value": "Boots"
             }
         ],
-        "quantity": 2,
+        "quantity": 2
     },
     {
         "_id": ObjectId(),
@@ -1026,7 +1035,7 @@ db.inventoryItems.insertMany(
                 "value": "Boots"
             }
         ],
-        "quantity": 0,
+        "quantity": 0
     },
 
     // bra
@@ -1403,10 +1412,10 @@ db.inventoryItems.insertMany(
 
     // Razor
     {
-    "_id": ObjectId(),
-    "itemDefinition": itemDefinitionId12,
-    "attributes": [],
-    "quantity": 50
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId12,
+        "attributes": [],
+        "quantity": 50
     }, 
 
     // FURNITURE
@@ -1696,8 +1705,7 @@ db.inventoryItems.insertMany(
             },
             {
                 "attributeId": attributeId11,
-                "value": "Single Ser
-            ve"},
+                "value": "Single Serve"},
             {
                 "attributeId": attributeId14,
                 "value": "New"
@@ -1730,8 +1738,7 @@ db.inventoryItems.insertMany(
         "attributes": [
             {
                 "attributeId": attributeId9,
-                "value": "Hamilton Bea
-            ch"},
+                "value": "Hamilton Beach"},
             {
                 "attributeId": attributeId11,
                 "value": "Percolator"
@@ -1876,7 +1883,7 @@ db.inventoryItems.insertMany(
             },
             {
                 "attribute": attributeId12,
-                "value": 
+                "value": 1300
             },
             {
                 "attribute": attributeId15,
@@ -2023,7 +2030,7 @@ db.inventoryItems.insertMany(
         "itemDefinition": itemDefinitionId27,
         "attributes": [],
         "quantity": 10
-    }
+    },
 
     // Vacuum Cleaner
     {
@@ -2140,4 +2147,4 @@ db.inventoryItems.insertMany(
         "attributes": [],
         "quantity": 2
     }
-)
+])
