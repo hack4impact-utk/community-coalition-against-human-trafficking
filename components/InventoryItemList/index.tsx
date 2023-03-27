@@ -216,11 +216,6 @@ export default function InventoryItemList(props: Props) {
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {/* <TableCell>a</TableCell>
-            <TableCell>a</TableCell>
-            <TableCell>a</TableCell>
-            <TableCell>a</TableCell>
-            <TableCell>a</TableCell> */}
 
             {props.inventoryItems.map((item) => (
               <InventoryItemListItem inventoryItem={item} key={item._id} />

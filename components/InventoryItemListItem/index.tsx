@@ -169,7 +169,7 @@ export default function InventoryItemListItem({
           alignItems: 'center',
           justifyContent: 'center',
           width: '100px',
-          wordBreak: 'break-word',
+          wordBreak: 'break-word',          
         }}
       >
         {inventoryItem.quantity.toLocaleString()}
@@ -185,16 +185,11 @@ export default function InventoryItemListItem({
       >
         {typeof inventoryItem.assignee === 'string'
           ? inventoryItem.assignee
-          : inventoryItem.assignee.name}
+          : inventoryItem.assignee
+          ? inventoryItem.assignee.name
+          : ''}
       </TableCell>
-      <TableCell
-        sx={{
-          // display: 'flex',
-          alignItems: 'center',
-          width: '200px',
-          wordBreak: 'break-word',
-        }}
-      >
+      <TableCell>
         <IconButton onClick={handleOpenKebabMenu}>
           <MoreVert sx={{ color: theme.palette.grey['500'] }} />
         </IconButton>
