@@ -6,7 +6,6 @@ import {
   ItemDefinitionResponse,
   UserResponse,
   InventoryItemAttributeRequest,
-  AttributeResponse,
   CategoryResponse,
   InventoryItemResponse,
   InventoryItemAttributeResponse,
@@ -15,7 +14,10 @@ import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete, {
   AutocompleteAttributeOption,
 } from 'components/AttributeAutocomplete'
-import { separateAttributes, SeparatedAttributes } from 'utils/attribute'
+import {
+  separateAttributeResponses,
+  SeparatedAttributes,
+} from 'utils/attribute'
 
 interface CheckInOutFormData {
   assignee: UserResponse
@@ -56,25 +58,7 @@ function updateFormData(
   }
 }
 
-function thing(
-  attrs: InventoryItemAttributeResponse[]
-): AutocompleteAttributeOption[] {
-  if (!attrs) {
-    return []
-  }
-  return attrs
-    .filter(({ attribute }) => attribute.possibleValues instanceof Array)
-    .map(({ attribute, value }) => {
-      return {
-        id: attribute._id,
-        label: attribute.name,
-        value: String(value),
-        color: attribute.color,
-      }
-    })
-}
-
-const defaultSplitAttrs = separateAttributes()
+const defaultSplitAttrs = separateAttributeResponses()
 
 function CheckInOutForm({
   kioskMode,
@@ -98,9 +82,10 @@ function CheckInOutForm({
   const [filteredItemDefinitions, setFilteredItemDefinitions] =
     React.useState<ItemDefinitionResponse[]>(itemDefinitions)
   const [splitAttrs, setSplitAttrs] =
-    React.useState<SeparatedAttributes>(defaultSplitAttrs)
-  const [aaSelected, setAaSelected] =
-    React.useState<AutocompleteAttributeOption[]>()
+    React.useState<SeparatedAttributeResponses>(defaultSplitAttrs)
+  const [aaSelected, setAaSelected] = React.useState<
+    AutocompleteAttributeOption[]
+  >([])
   const initialFormData: Partial<CheckInOutFormData> = {
     assignee: inventoryItem?.assignee,
     category: inventoryItem?.itemDefinition?.category,
@@ -126,7 +111,7 @@ function CheckInOutForm({
     setFormData((formData) =>
       updateFormData(formData, { category: formData.itemDefinition.category })
     )
-  }, [setFormData, formData.itemDefinition])
+  }, [formData.itemDefinition])
 
   React.useEffect(() => {
     onChange(formData)
@@ -150,20 +135,21 @@ function CheckInOutForm({
     }
   }, [formData.category, itemDefinitions])
 
-  // Update split attributes when item definition changes
+  // Update split attributes and attr form data when item definition changes
   React.useEffect(() => {
     if (formData.itemDefinition) {
-      setSplitAttrs(separateAttributes(formData.itemDefinition.attributes))
+      setSplitAttrs(
+        separateAttributeResponses(formData.itemDefinition.attributes)
+      )
     } else {
       setSplitAttrs(defaultSplitAttrs)
       setSelectedAttributes([])
       setAaSelected([])
+      setFormData((formData) =>
+        updateFormData(formData, { attributes: undefined })
+      )
     }
   }, [formData.itemDefinition])
-
-  React.useEffect(() => {
-    console.log(selectedAttributes)
-  }, [selectedAttributes])
 
   return (
     <FormControl fullWidth>
@@ -228,10 +214,10 @@ function CheckInOutForm({
         attributes={splitAttrs.options}
         sx={{ mt: 4 }}
         onChange={(_e, attributes) => {
-          // const updatedFormData = updateFormData(formData, {
-          //   attributes: attributes || [],
-          // })
-          // setFormData(updatedFormData)
+          const updatedFormData = updateFormData(formData, {
+            attributes: attributes || [],
+          })
+          setFormData(updatedFormData)
         }}
         value={aaSelected}
         setValue={setAaSelected}

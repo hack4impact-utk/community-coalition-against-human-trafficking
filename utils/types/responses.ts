@@ -36,6 +36,18 @@ export interface AttributeResponse extends Attribute {
   _id: string
 }
 
+export interface OptionsAttributeResponse extends AttributeResponse {
+  possibleValues: string[]
+}
+
+export interface TextAttributeResponse extends AttributeResponse {
+  possibleValues: 'text'
+}
+
+export interface NumberAttributeResponse extends AttributeResponse {
+  possibleValues: 'number'
+}
+
 export type ServerResponse =
   | UserResponse
   | ItemDefinitionResponse
