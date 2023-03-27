@@ -10,6 +10,16 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { AttributePossibleValues, ItemDefinitionResponse } from 'utils/types'
+
+const testUsers = [
+  {
+    _id: '1',
+    name: 'testUser',
+    email: 'user@test.com',
+    image: 'https://i.pravatar.cc/300',
+  },
+]
 
 const testCategories = [
   {
@@ -22,7 +32,7 @@ const testCategories = [
   },
 ]
 
-const testItemDefinitions = [
+const testItemDefinitions: ItemDefinitionResponse[] = [
   {
     _id: '1',
     name: 'testItemDefinition',
@@ -40,7 +50,7 @@ const testItemDefinitions = [
       {
         _id: '2',
         name: 'test2',
-        possibleValues: 'number',
+        possibleValues: 'number' as AttributePossibleValues,
         color: '#00FF00',
       },
     ],
@@ -68,6 +78,22 @@ const testItemDefinitions = [
     ],
   },
 ]
+
+const testInventoryItem = {
+  _id: '1',
+  itemDefinition: testItemDefinitions[0],
+  attributes: [
+    {
+      attribute: testItemDefinitions[0].attributes![0],
+      value: 'test1',
+    },
+    {
+      attribute: testItemDefinitions[0].attributes![1],
+      value: 20,
+    },
+  ],
+  quantity: 10,
+}
 
 export default function CheckInPage() {
   const theme = useTheme()
@@ -102,12 +128,13 @@ export default function CheckInPage() {
               </Typography>
               <CheckInOutForm
                 kioskMode={true}
-                users={[]}
+                users={testUsers}
                 itemDefinitions={testItemDefinitions}
                 categories={testCategories}
                 onChange={(item) => {
                   console.log(item)
                 }}
+                inventoryItem={testInventoryItem}
               />
             </CardContent>
 
