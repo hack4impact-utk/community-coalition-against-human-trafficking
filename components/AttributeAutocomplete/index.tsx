@@ -1,11 +1,16 @@
 import { SxProps } from '@mui/material'
 import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
-import { AttributeResponse, OptionsAttributeResponse } from 'utils/types'
+import {
+  InventoryItemAttributeRequest,
+  OptionsAttributeResponse,
+} from 'utils/types'
 
 export interface AutocompleteAttributeOption {
+  id: string
+  label: string
   value: string
-  attribute: AttributeResponse
+  color: string
 }
 
 interface Props {
@@ -28,22 +33,15 @@ function buildAutocompleteOptions(
 
   return attributes.reduce((acc, attribute) => {
     const options = attribute.possibleValues.map((value) => ({
+      id: attribute._id,
+      label: attribute.name,
       value,
-      attribute: attribute,
+      color: attribute.color,
     }))
 
     return [...acc, ...options]
   }, [] as AutocompleteAttributeOption[])
 }
-
-// function buildAttributeRequest(
-//   attributes: AutocompleteAttributeOption[]
-// ): InventoryItemAttributeRequest[] {
-//   return attributes.map((attribute) => ({
-//     attribute: attribute.id,
-//     value: attribute.value,
-//   }))
-// }
 
 export default function AttributeAutocomplete({
   attributes,
@@ -52,36 +50,35 @@ export default function AttributeAutocomplete({
   value,
   setValue,
 }: Props) {
-  console.log(attributes)
+  console.log(value)
   const options = buildAutocompleteOptions(attributes)
-  console.log(options)
 
   return (
     <Autocomplete
       multiple
       options={options}
-      groupBy={(option) => option.attribute.name}
+      groupBy={(option) => option.label}
       getOptionLabel={(option) => option.value}
       isOptionEqualToValue={(option, value) =>
-        option.value === value.value &&
-        option.attribute.name === value.attribute.name
+        option.value === value.value && option.label === value.label
       }
       renderTags={(tagValue, getTagProps) =>
         tagValue.map((option, index) => (
           <Chip
             label={option.value}
-            style={{ backgroundColor: option.attribute.color }}
+            style={{ backgroundColor: option.color }}
             {...getTagProps({ index })}
-            key={option.attribute._id}
+            key={option.id}
           />
         ))
       }
-      value={value || []}
+      value={value}
       renderInput={(params) => <TextField {...params} label="Attributes" />}
       onChange={(e, attributes) => {
         if (!!setValue) setValue(attributes)
         if (!attributes.length) {
           if (!!onChange) onChange(e, [] as AutocompleteAttributeOption[])
+          return
         }
 
         // get and remove most recent attribute (the one that triggered this event)
@@ -89,9 +86,7 @@ export default function AttributeAutocomplete({
 
         // check if there exists another attribute with the same label
         const idx = attributes.findIndex(
-          (a) =>
-            a.attribute.name == newAttr.attribute.name &&
-            a.value != newAttr.value
+          (a) => a.label == newAttr.label && a.value != newAttr.value
         )
 
         // if so, replace that attribute with the new one. otherwise re-append it to the attributes array

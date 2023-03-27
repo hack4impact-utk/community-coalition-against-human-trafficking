@@ -16,6 +16,7 @@ import AttributeAutocomplete, {
 } from 'components/AttributeAutocomplete'
 import {
   separateAttributeResponses,
+  SeparatedAttributeResponses,
   SeparatedAttributes,
 } from 'utils/attribute'
 
@@ -24,7 +25,7 @@ interface CheckInOutFormData {
   date: Dayjs
   category: CategoryResponse
   itemDefinition: ItemDefinitionResponse
-  attributes: InventoryItemAttributeResponse[]
+  attributes: AutocompleteAttributeOption[]
   quantityDelta: number
 }
 
@@ -82,16 +83,25 @@ function CheckInOutForm({
   const [filteredItemDefinitions, setFilteredItemDefinitions] =
     React.useState<ItemDefinitionResponse[]>(itemDefinitions)
   const [splitAttrs, setSplitAttrs] =
-    React.useState<SeparatedAttributeResponses>(defaultSplitAttrs)
-  const [aaSelected, setAaSelected] = React.useState<
-    AutocompleteAttributeOption[]
-  >([])
+    React.useState<SeparatedAttributeResponses>(
+      separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
+    )
   const initialFormData: Partial<CheckInOutFormData> = {
     assignee: inventoryItem?.assignee,
     category: inventoryItem?.itemDefinition?.category,
     itemDefinition: inventoryItem?.itemDefinition,
-    attributes: inventoryItem?.attributes,
+    attributes: inventoryItem?.attributes
+      ?.filter((attr) => attr.attribute.possibleValues instanceof Array)
+      .map((attr) => ({
+        id: attr.attribute._id,
+        label: attr.attribute.name,
+        value: String(attr.value),
+        color: attr.attribute.color,
+      })),
   }
+  const [aaSelected, setAaSelected] = React.useState<
+    AutocompleteAttributeOption[]
+  >(initialFormData.attributes || [])
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>({
     ...blankFormData(),
@@ -119,7 +129,7 @@ function CheckInOutForm({
 
   // Update filtered item defs when category changes
   React.useEffect(() => {
-    if (formData.category) {
+    if (formData.category && !formData.itemDefinition) {
       setFilteredItemDefinitions(
         itemDefinitions.filter((itemDefinition) => {
           if (
@@ -133,7 +143,7 @@ function CheckInOutForm({
     } else {
       setFilteredItemDefinitions(itemDefinitions)
     }
-  }, [formData.category, itemDefinitions])
+  }, [formData.category, formData.itemDefinition, itemDefinitions])
 
   // Update split attributes and attr form data when item definition changes
   React.useEffect(() => {
@@ -215,7 +225,7 @@ function CheckInOutForm({
         sx={{ mt: 4 }}
         onChange={(_e, attributes) => {
           const updatedFormData = updateFormData(formData, {
-            attributes: attributes || [],
+            attributes: attributes || undefined,
           })
           setFormData(updatedFormData)
         }}
