@@ -18,6 +18,7 @@ interface Data {
   category: string
   quantity: number
   assignee: string
+  kebab: string
 }
 
 const rows = []
@@ -107,6 +108,13 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Assignee',
     sortable: true,
+  },
+  {
+    id: 'kebab',
+    numeric: false,
+    disablePadding: false,
+    label: '',
+    sortable: false,
   },
 ]
 

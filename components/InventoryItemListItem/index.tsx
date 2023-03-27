@@ -126,10 +126,10 @@ export default function InventoryItemListItem({
   }
 
   return (
-    <TableRow sx={{display: 'flex'}}>
+    <TableRow>
       <TableCell
         sx={{
-          display: 'flex',
+          // display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           width: '100px',
@@ -143,7 +143,7 @@ export default function InventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
+          // display: 'flex',
           alignItems: 'center',
           alignContent: 'center',
           flexWrap: 'wrap',
@@ -155,7 +155,7 @@ export default function InventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
+          // display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           width: '100px',
@@ -165,7 +165,7 @@ export default function InventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
+          // display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           width: '100px',
@@ -177,43 +177,49 @@ export default function InventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
+          // display: 'flex',
           alignItems: 'center',
-          width: '100%',
+          width: '200px',
           wordBreak: 'break-word',
         }}
       >
         {typeof inventoryItem.assignee === 'string'
           ? inventoryItem.assignee
           : inventoryItem.assignee.name}
-        <Box sx={{ flexGrow: 0, ml: 'auto' }}>
-          <IconButton onClick={handleOpenKebabMenu}>
-            <MoreVert sx={{ color: theme.palette.grey['500']}} />
-          </IconButton>
-          <Menu
-            sx={{ mt: 5 }}
-            id="kebab-menu"
-            anchorEl={anchorElKebab}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElKebab)}
-            onClose={handleCloseKebabMenu}
-          >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={() => handleCloseKebabMenu()}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
+      </TableCell>
+      <TableCell
+        sx={{
+          // display: 'flex',
+          alignItems: 'center',
+          width: '200px',
+          wordBreak: 'break-word',
+        }}
+      >
+        <IconButton onClick={handleOpenKebabMenu}>
+          <MoreVert sx={{ color: theme.palette.grey['500'] }} />
+        </IconButton>
+        <Menu
+          sx={{ mt: 5 }}
+          id="kebab-menu"
+          anchorEl={anchorElKebab}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          open={Boolean(anchorElKebab)}
+          onClose={handleCloseKebabMenu}
+        >
+          {settings.map((setting) => (
+            <MenuItem key={setting} onClick={() => handleCloseKebabMenu()}>
+              <Typography textAlign="center">{setting}</Typography>
+            </MenuItem>
+          ))}
+        </Menu>
       </TableCell>
     </TableRow>
   )
