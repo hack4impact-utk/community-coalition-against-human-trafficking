@@ -40,6 +40,17 @@ function CheckInOutForm({
     React.useState<Category | null>()
   const splitAttrs = separateAttributes(attributes)
 
+  let textfieldAttributes: InventoryItemAttributeRequest[] = []
+  const updateTextFieldAttributes = (_e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, attributeName: string) => {
+    const attributeValue: string | number = _e.target.value;
+    const updatedAttribute: InventoryItemAttributeRequest = {
+      attribute: attributeName,
+      value: attributeValue,
+    }
+    textfieldAttributes.push(updatedAttribute);
+    setSelectedAttributes(textfieldAttributes);
+  }
+
   // if you select an item definition without selecting a category, infer the category
   React.useEffect(() => {
     // TODO: Update this when types are updated
@@ -100,6 +111,17 @@ function CheckInOutForm({
           setSelectedAttributes(attributes)
         }}
       />
+
+      {/* Text Fields */}
+      {splitAttrs.text.map(textAttr => (
+        <TextField key={textAttr._id} label={textAttr.name} onChange={_e => updateTextFieldAttributes(_e, textAttr.name)} sx={{ marginTop: 4 }} />
+      ))}
+
+      {/* Number Fields */}
+      {splitAttrs.number.map(numAttr => (
+        <TextField key={numAttr._id} label={numAttr.name} type="number" onChange={_e => updateTextFieldAttributes(_e, numAttr.name)} sx={{ marginTop: 4 }} />
+      ))}
+
       <QuantityForm quantity={quantity} setQuantity={setQuantity} />
     </FormControl>
   )
