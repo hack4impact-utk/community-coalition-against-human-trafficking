@@ -10,7 +10,8 @@ import { Attribute, InventoryItem, ItemDefinition, User } from 'utils/types'
 import React from 'react'
 import theme from 'utils/theme'
 import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
-import { Warning } from '@mui/icons-material'
+import WarningIcon from '@mui/icons-material/Warning'
+import getContrastYIQ from 'utils/getContrastYIQ'
 
 interface MobileInventoryItemListItemProps {
   inventoryItem: ExpandedInventoryItem
@@ -26,18 +27,6 @@ interface ExpandedInventoryItem extends InventoryItem {
   assignee?: User
 }
 
-function textColor(inventoryItem: InventoryItem) {
-  const itemDef = inventoryItem.itemDefinition as ItemDefinition
-  console.log(itemDef, inventoryItem.quantity)
-  if (inventoryItem.quantity < itemDef.lowStockThreshold) {
-    if (inventoryItem.quantity < itemDef.criticalStockThreshold) {
-      return theme.palette.error.main
-    }
-    return theme.palette.warning.main
-  }
-  return 'text.secondary'
-}
-
 export default function MobileInventoryItemListItem({
   inventoryItem,
 }: MobileInventoryItemListItemProps) {
@@ -51,7 +40,6 @@ export default function MobileInventoryItemListItem({
             }}
             component="span"
             variant="body1"
-            color="text.primary"
           >
             {inventoryItem.itemDefinition.name}
           </Typography>
@@ -66,13 +54,17 @@ export default function MobileInventoryItemListItem({
             {inventoryItem.quantity}
             {inventoryItem.quantity <
               inventoryItem.itemDefinition.lowStockThreshold && (
-              <Warning
+              <WarningIcon
                 fontSize="small"
                 sx={{
                   ml: 1,
                   top: 4,
                   position: 'relative',
-                  color: textColor(inventoryItem),
+                  color:
+                    inventoryItem.quantity <
+                    inventoryItem.itemDefinition.criticalStockThreshold
+                      ? theme.palette.error.main
+                      : theme.palette.warning.light,
                 }}
               />
             )}
@@ -80,9 +72,16 @@ export default function MobileInventoryItemListItem({
             <br />
             {inventoryItem.attributes.map((attribute) => (
               <Chip
-                label={`${attribute.attribute.name}: ${attribute.value}`}
+                label={
+                  typeof attribute.attribute.possibleValues === 'object'
+                    ? `${attribute.value}`
+                    : `${attribute.attribute.name}: ${attribute.value}`
+                }
                 sx={{
                   backgroundColor: attribute.attribute.color,
+                  '& .MuiChip-label': {
+                    color: getContrastYIQ(attribute.attribute.color),
+                  },
                   mr: 1,
                   mt: 1,
                 }}
