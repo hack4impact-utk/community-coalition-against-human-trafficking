@@ -8,7 +8,6 @@ import {
   InventoryItemAttributeRequest,
   CategoryResponse,
   InventoryItemResponse,
-  InventoryItemAttributeResponse,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete, {
@@ -17,7 +16,6 @@ import AttributeAutocomplete, {
 import {
   separateAttributeResponses,
   SeparatedAttributeResponses,
-  SeparatedAttributes,
 } from 'utils/attribute'
 
 interface CheckInOutFormData {
@@ -69,6 +67,7 @@ function CheckInOutForm({
   inventoryItem,
   onChange,
 }: Props) {
+  // TODO: remove after merge conflicts are fixed
   const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
   const [quantity, setQuantity] = React.useState<number>(1)
   const [selectedStaff, setSelectedStaff] =

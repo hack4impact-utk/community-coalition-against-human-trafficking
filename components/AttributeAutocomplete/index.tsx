@@ -50,7 +50,6 @@ export default function AttributeAutocomplete({
   value,
   setValue,
 }: Props) {
-  console.log(value)
   const options = buildAutocompleteOptions(attributes)
 
   return (
