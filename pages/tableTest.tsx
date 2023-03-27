@@ -18,11 +18,11 @@ export const testInventoryItems: InventoryItem[] = [
     _id: '1',
     itemDefinition: {
       _id: '1',
-      name: 'test item',
+      name: 'test item 3',
       category: {
         _id: '1',
         name: 'test category',
-      },
+      } ,
       attributes: [
         {
           _id: '1',

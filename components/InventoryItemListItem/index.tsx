@@ -126,10 +126,10 @@ export default function InventoryItemListItem({
   }
 
   return (
-    <TableRow>
+    <TableRow sx={{display: 'flex'}}>
       <TableCell
         sx={{
-          // display: 'flex',
+          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           width: '100px',
@@ -143,7 +143,7 @@ export default function InventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          // display: 'flex',
+          display: 'flex',
           alignItems: 'center',
           alignContent: 'center',
           flexWrap: 'wrap',
@@ -155,7 +155,7 @@ export default function InventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          // display: 'flex',
+          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           width: '100px',
@@ -165,7 +165,7 @@ export default function InventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          // display: 'flex',
+          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           width: '100px',
@@ -180,14 +180,14 @@ export default function InventoryItemListItem({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          width: '200px',
+          width: '100%',
           wordBreak: 'break-word',
         }}
       >
         {typeof inventoryItem.assignee === 'string'
           ? inventoryItem.assignee
           : inventoryItem.assignee.name}
-        <Box>
+        <Box sx={{ flexGrow: 0, ml: 'auto' }}>
           <IconButton onClick={handleOpenKebabMenu}>
             <MoreVert sx={{ color: theme.palette.grey['500']}} />
           </IconButton>
