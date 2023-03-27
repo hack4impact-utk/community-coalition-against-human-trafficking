@@ -240,7 +240,7 @@ export const inventoryItemRequestModelProperties: Property[] = [
   {
     key: 'assignee',
     types: 'string',
-    required: true,
+    required: false,
   },
 ]
 
