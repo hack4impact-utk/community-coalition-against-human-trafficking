@@ -1,6 +1,5 @@
 import {
   Autocomplete,
-  Box,
   Button,
   Chip,
   FormControl,
@@ -14,7 +13,7 @@ import {
 import React from 'react'
 import { TwitterPicker } from 'react-color'
 import getContrastYIQ from 'utils/getContrastYIQ'
-import { Attribute } from 'utils/types'
+import { Attribute, AttributeRequest } from 'utils/types'
 
 type PossibleValues = 'text' | 'number' | 'list'
 interface AttributeFormData {
@@ -24,7 +23,7 @@ interface AttributeFormData {
   listOptions?: string[]
 }
 interface AttributeFormProps {
-  attribute?: Attribute
+  attribute?: AttributeRequest
   onSubmit: (e: React.SyntheticEvent, attrFormData: AttributeFormData) => void
   submitBtnText: string
 }

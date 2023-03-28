@@ -3,11 +3,11 @@ import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 import {
-  Attribute,
+  ItemDefinitionResponse,
+  UserResponse,
   InventoryItemAttributeRequest,
-  ItemDefinition,
-  User,
-  Category,
+  AttributeResponse,
+  CategoryResponse,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete from 'components/AttributeAutocomplete'
@@ -15,10 +15,10 @@ import { separateAttributes } from 'utils/attribute'
 
 interface Props {
   kioskMode: boolean
-  users: User[]
-  itemDefinitions: ItemDefinition[]
-  attributes: Attribute[]
-  categories: Category[]
+  users: UserResponse[]
+  itemDefinitions: ItemDefinitionResponse[]
+  attributes: AttributeResponse[]
+  categories: CategoryResponse[]
 }
 
 function CheckInOutForm({
@@ -30,14 +30,15 @@ function CheckInOutForm({
 }: Props) {
   const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
   const [quantity, setQuantity] = React.useState<number>(1)
-  const [selectedStaff, setSelectedStaff] = React.useState<User | null>()
+  const [selectedStaff, setSelectedStaff] =
+    React.useState<UserResponse | null>()
   const [selectedItemDefinition, setSelectedItemDefinition] =
-    React.useState<ItemDefinition | null>()
+    React.useState<ItemDefinitionResponse | null>()
   const [selectedAttributes, setSelectedAttributes] = React.useState<
     InventoryItemAttributeRequest[]
   >([])
   const [selectedCategory, setSelectedCategory] =
-    React.useState<Category | null>()
+    React.useState<CategoryResponse | null>()
   const splitAttrs = separateAttributes(attributes)
 
   // if you select an item definition without selecting a category, infer the category
