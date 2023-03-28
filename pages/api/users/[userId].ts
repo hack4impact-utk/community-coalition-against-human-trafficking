@@ -4,6 +4,7 @@ import { userEndpointServerAuth } from 'utils/auth'
 import { ApiError, UserPutRequest, UserResponse } from 'utils/types'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import UserSchema from 'server/models/User'
+import constants from 'utils/constants'
 
 // @route   GET api/users/[userId] - Returns a single User object for user with userId - Private
 // @route   DELETE api/users/[userId] - Deletes a single User object for user with userId - Private
@@ -47,7 +48,7 @@ export default async function handler(
         })
       }
       default: {
-        throw new ApiError(405, 'Method Not Allowed')
+        throw new ApiError(405, constants.errors.invalidReqMethod)
       }
     }
   } catch (e) {

@@ -8,6 +8,7 @@ import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
+import constants from 'utils/constants'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -27,7 +28,7 @@ beforeEach(() => {
 describe('api/attributes', () => {
   test('thrown error is caught, response is unsuccessful and shows correct error message', async () => {
     jest.spyOn(auth, 'serverAuth').mockImplementationOnce(async () => {
-      throw new ApiError(401, 'Unauthorized')
+      throw new ApiError(401, constants.errors.unauthorized)
     })
 
     const request = createRequest({
@@ -41,7 +42,7 @@ describe('api/attributes', () => {
     const data = response._getJSONData()
 
     expect(response.statusCode).toBe(401)
-    expect(data.message).toBe('Unauthorized')
+    expect(data.message).toBe(constants.errors.unauthorized)
     expect(data.success).toBe(false)
   })
 
@@ -57,7 +58,7 @@ describe('api/attributes', () => {
     const data = response._getJSONData()
 
     expect(response.statusCode).toBe(405)
-    expect(data.message).toBe('Method Not Allowed')
+    expect(data.message).toBe(constants.errors.invalidReqMethod)
     expect(data.success).toBe(false)
   })
   describe('GET', () => {

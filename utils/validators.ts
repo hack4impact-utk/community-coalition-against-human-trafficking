@@ -96,9 +96,9 @@ export function validateUserRequest(
 ) {
   let validationModel: Property[]
   if (requestType === 'PUT') {
-    validationModel = userPostModelProperties
-  } else if (requestType === 'POST') {
     validationModel = userPutModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = userPostModelProperties
   } else {
     validationModel = userRequestModelProperties
   }
@@ -166,7 +166,6 @@ export const categoryPostModelProperties: Property[] = deepCopy(
 export const categoryPutModelProperties: Property[] = deepCopy(
   categoryPostModelProperties
 )
-
 categoryPutModelProperties.find((prop) => prop.key === '_id')!.required = true
 
 export const itemDefinitionRequestModelProperties: Property[] = [
@@ -278,11 +277,11 @@ export const userRequestModelProperties: Property[] = [
   },
 ]
 
-export const userPostModelProperties: Property[] = [
-  ...userRequestModelProperties,
-]
+export const userPostModelProperties: Property[] = deepCopy(
+  userRequestModelProperties
+)
 
-export const userPutModelProperties: Property[] = [
-  ...userRequestModelProperties,
-]
+export const userPutModelProperties: Property[] = deepCopy(
+  userRequestModelProperties
+)
 userPutModelProperties.find((prop) => prop.key === '_id')!.required = true

@@ -8,10 +8,14 @@ import {
   Types,
 } from 'mongoose'
 import 'utils/types'
-import { ApiError, ItemDefinition, ServerModel, ServerRequest } from 'utils/types'
+import {
+  ApiError,
+  ServerModel,
+  ServerPostRequest,
+  ServerPutRequest,
+} from 'utils/types'
 import { ObjectId } from 'mongodb'
-
-const ENTITY_NOT_FOUND_MESSAGE = 'Entity does not exist'
+import constants from 'utils/constants'
 
 /**
  * Gets a single Entity object from the database with the given id
@@ -36,7 +40,7 @@ export async function getEntity<Schema extends Document>(
   } else {
     response = await dbSchema.findById(id)
   }
-  if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
+  if (!response) throw new ApiError(404, constants.errors.notFound)
   return response
 }
 
@@ -70,7 +74,7 @@ export async function getEntities<Schema extends Document>(
  */
 export async function createEntity<
   Schema extends Document,
-  T extends ServerRequest
+  T extends ServerPostRequest
 >(dbSchema: Model<Schema>, document: T): Promise<HydratedDocument<Schema>> {
   await mongoDb()
 
@@ -86,12 +90,12 @@ export async function createEntity<
  */
 export async function updateEntity<
   Schema extends Document,
-  T extends ServerRequest
+  T extends ServerPutRequest
 >(dbSchema: Model<Schema>, id: string, document: T): Promise<void> {
   await mongoDb()
 
   const response = await dbSchema.findByIdAndUpdate(id, document)
-  if (!response) throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
+  if (!response) throw new ApiError(404, constants.errors.notFound)
 }
 
 /**
@@ -107,7 +111,7 @@ export async function deleteEntity<Schema extends Document>(
 
   const response = await dbSchema.findByIdAndDelete(id)
   if (!response) {
-    throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
+    throw new ApiError(404, constants.errors.notFound)
   }
 }
 
@@ -129,7 +133,7 @@ export async function findEntities<
   if (Object.keys(filterDocument).length < 1) return []
 
   await mongoDb()
-  const query: FilterQuery<ItemDefinition> = {}
+  const query: FilterQuery<T> = {}
   for (const key in filterDocument) {
     query[key] = filterDocument[key]
   }

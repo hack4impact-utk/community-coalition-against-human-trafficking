@@ -7,8 +7,8 @@ import {
   User,
 } from '.'
 
-export type UserPostRequest = User
-export interface UserPutRequest extends User {
+export type UserPostRequest = UserRequest
+export interface UserPutRequest extends UserRequest {
   _id: string
 }
 export type UserRequest = User
@@ -43,8 +43,8 @@ export interface CategoryPutRequest extends Category {
 }
 export type CategoryRequest = Category
 
-export type AttributePostRequest = Attribute
-export interface AttributePutRequest extends Attribute {
+export type AttributePostRequest = AttributeRequest
+export interface AttributePutRequest extends AttributeRequest {
   _id: string
 }
 export type AttributeRequest = Attribute
