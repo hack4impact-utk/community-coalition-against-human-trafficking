@@ -4,6 +4,7 @@ import { serverAuth } from 'utils/auth'
 import { apiUserValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import UserSchema from 'server/models/User'
+import constants from 'utils/constants'
 
 // @route   POST /api/users - Create a user from request body. - Public
 export default async function handler(
@@ -33,7 +34,7 @@ export default async function handler(
           payload: users,
         })
       default:
-        throw new ApiError(405, 'Method Not Allowed')
+        throw new ApiError(405, constants.errors.invalidReqMethod)
     }
   } catch (e) {
     if (e instanceof ApiError) {

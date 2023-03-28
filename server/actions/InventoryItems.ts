@@ -7,6 +7,7 @@ import {
 } from 'utils/types'
 import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
+import constants from 'utils/constants'
 
 /**
  * Checks to see if an item is in the inventory and will add to the quantity or
@@ -72,6 +73,6 @@ export async function checkOutInventoryItem(
       )
     }
   } else {
-    throw new ApiError(404, 'Entity does not exist')
+    throw new ApiError(404, constants.errors.notFound)
   }
 }
