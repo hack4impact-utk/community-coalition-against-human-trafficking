@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import constants from 'utils/constants'
 
 export interface Property {
   key: string
@@ -50,9 +51,18 @@ export function validateProperties(
   const invalidProperties: string[] = []
   const typeMismatches: string[] = []
   const validationErrors: ValidationErrorList[] = [
-    { errorName: 'Missing Required Properties:', errors: missingProperties },
-    { errorName: 'Invalid Properties:', errors: invalidProperties },
-    { errorName: 'Type Mismatches:', errors: typeMismatches },
+    {
+      errorName: constants.errors.prefixes.missingRequiredProperties,
+      errors: missingProperties,
+    },
+    {
+      errorName: constants.errors.prefixes.invalidProperties,
+      errors: invalidProperties,
+    },
+    {
+      errorName: constants.errors.prefixes.typeMismatches,
+      errors: typeMismatches,
+    },
   ]
 
   if (typeof obj !== 'object') {
