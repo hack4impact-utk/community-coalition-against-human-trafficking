@@ -1,32 +1,34 @@
 import InventoryItemList from 'components/InventoryItemList'
 import { InventoryItemResponse } from 'utils/types'
-import { useState, useEffect } from 'react'
+import { createRequest, createResponse, Headers } from 'node-mocks-http'
+import handler from 'pages/api/inventoryItems'
+import { Typography } from '@mui/material'
+import {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from 'next'
 
-export default function InventoryPage() {
-  const [inventoryItems, setInventoryItems] = useState<InventoryItemResponse[]>(
-    []
-  )
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const res = createResponse()
+  await handler(context.req as NextApiRequest, res)
+  const responseData: InventoryItemResponse[] = res._getJSONData().payload
+  return {
+    props: { inventoryItems: responseData },
+  }
+}
+interface Props {
+  inventoryItems: InventoryItemResponse[]
+}
 
-  useEffect(() => {
-    // TODO in the future, get a better way of constructing this URL. Perhaps a utils/urls.ts
-    fetch(`http://localhost:3000/api/inventoryItems`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => res.json())
-      .then((res) => setInventoryItems(res.payload as InventoryItemResponse[]))
-  }, [])
+export default function InventoryPage({ inventoryItems }: Props) {
   return (
     <>
-      {inventoryItems != null && (
-        <InventoryItemList
-          inventoryItems={inventoryItems}
-          search={''}
-          category={''}
-        />
-      )}
+      <InventoryItemList
+        inventoryItems={inventoryItems}
+        search={''}
+        category={''}
+      />
     </>
   )
 }
