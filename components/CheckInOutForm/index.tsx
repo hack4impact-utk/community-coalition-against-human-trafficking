@@ -41,6 +41,20 @@ function CheckInOutForm({
     React.useState<CategoryResponse | null>()
   const splitAttrs = separateAttributes(attributes)
 
+  // if you select an item definition without selecting a category, infer the category
+  React.useEffect(() => {
+    // TODO: Update this when types are updated
+    if (
+      selectedCategory ||
+      !selectedItemDefinition ||
+      !selectedItemDefinition.category ||
+      typeof selectedItemDefinition.category === 'string'
+    ) {
+      return
+    }
+    setSelectedCategory(selectedItemDefinition.category)
+  }, [selectedItemDefinition, selectedCategory])
+
   return (
     <FormControl fullWidth>
       {/* Staff member, Date, and Item input fields */}
@@ -68,6 +82,8 @@ function CheckInOutForm({
         renderInput={(params) => <TextField {...params} label="Category" />}
         onChange={(_e, Category) => setSelectedCategory(Category)}
         getOptionLabel={(Category) => Category.name}
+        inputValue={selectedCategory ? selectedCategory.name : ''}
+        disabled={!!selectedItemDefinition}
       />
       <Autocomplete
         options={itemDefinitions}

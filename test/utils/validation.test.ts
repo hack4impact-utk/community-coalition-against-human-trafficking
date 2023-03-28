@@ -4,6 +4,7 @@ import {
   validateObjectId,
   validateProperties,
 } from 'utils/validation'
+import constants from 'utils/constants'
 
 describe('validation', () => {
   describe('validateObjectId', () => {
@@ -28,6 +29,12 @@ describe('validation', () => {
 
     test('invalid object id returns false', () => {
       const invalidObjectId = '3'
+
+      expect(validateObjectId(invalidObjectId)).toBe(false)
+    })
+
+    test('invalid 24-character object id returns false', () => {
+      const invalidObjectId = '64222a68edd72b68ab2ae21z'
 
       expect(validateObjectId(invalidObjectId)).toBe(false)
     })
@@ -104,14 +111,14 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message: 'Missing Required Properties: name\n',
+        message: `${constants.errors.prefixes.missingRequiredProperties} name\n`,
       })
     })
 
     test('missing multiple required fields returns unsuccessful ValidationResult with all missing listed', () => {
       expect(validateProperties(validationModel, {})).toEqual({
         success: false,
-        message: 'Missing Required Properties: name, id\n',
+        message: `${constants.errors.prefixes.missingRequiredProperties} name, id\n`,
       })
     })
 
@@ -124,7 +131,7 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message: 'Invalid Properties: extraField\n',
+        message: `${constants.errors.prefixes.invalidProperties} extraField\n`,
       })
     })
 
@@ -138,7 +145,7 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message: 'Invalid Properties: extraField, extraField2\n',
+        message: `${constants.errors.prefixes.invalidProperties} extraField, extraField2\n`,
       })
     })
 
@@ -150,8 +157,7 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message:
-          "Type Mismatches: 'name': Expected type 'string' but got type 'number'\n",
+        message: `${constants.errors.prefixes.typeMismatches} 'name': Expected type 'string' but got type 'number'\n`,
       })
     })
 
@@ -164,7 +170,7 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message: `Type Mismatches: 'name': Expected type 'string' but got type 'number', 'id': Expected type 'string|number' but got type 'function'\n`,
+        message: `${constants.errors.prefixes.typeMismatches} 'name': Expected type 'string' but got type 'number', 'id': Expected type 'string|number' but got type 'function'\n`,
       })
     })
 
@@ -176,8 +182,7 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message:
-          "Missing Required Properties: id\nInvalid Properties: extraField\nType Mismatches: 'name': Expected type 'string' but got type 'number'\n",
+        message: `${constants.errors.prefixes.missingRequiredProperties} id\n${constants.errors.prefixes.invalidProperties} extraField\n${constants.errors.prefixes.typeMismatches} 'name': Expected type 'string' but got type 'number'\n`,
       })
     })
   })

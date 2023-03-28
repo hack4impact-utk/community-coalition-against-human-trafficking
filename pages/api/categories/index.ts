@@ -4,6 +4,7 @@ import { serverAuth } from 'utils/auth'
 import { apiCategoryValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import CategorySchema from 'server/models/Category'
+import constants from 'utils/constants'
 
 // @route GET api/categories - Returns a list of all Categories in the database - Private
 // @route POST /api/categories - Create a category from request body - Private
@@ -40,7 +41,7 @@ export default async function handler(
         })
       }
       default: {
-        throw new ApiError(405, 'Method Not Allowed')
+        throw new ApiError(405, constants.errors.invalidReqMethod)
       }
     }
   } catch (e) {

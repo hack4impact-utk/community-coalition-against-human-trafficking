@@ -8,6 +8,7 @@ import {
 import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
 import { PipelineStage } from 'mongoose'
+import constants from 'utils/constants'
 
 // aggregate pipeline does the following:
 // looks up itemDefinition _id in inventoryItem
@@ -190,6 +191,6 @@ export async function checkOutInventoryItem(
       )
     }
   } else {
-    throw new ApiError(404, 'Entity does not exist')
+    throw new ApiError(404, constants.errors.notFound)
   }
 }

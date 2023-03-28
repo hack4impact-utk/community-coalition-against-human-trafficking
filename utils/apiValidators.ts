@@ -7,12 +7,11 @@ import {
   validateUserRequest,
 } from 'utils/validators'
 import { validateObjectId, ValidationResult } from 'utils/validation'
-
-export const BAD_REQUEST_BODY_PREFIX = 'Bad Request Body:\n'
+import constants from 'utils/constants'
 
 export function apiObjectIdValidation(id: string) {
   if (!validateObjectId(id)) {
-    throw new ApiError(400, 'Invalid ObjectId Format')
+    throw new ApiError(400, constants.errors.invalidObjectIdFormat)
   }
 }
 
@@ -58,7 +57,10 @@ export function apiInventoryItemValidation(
 
 function badBodyValidationResponse(response: ValidationResult) {
   if (!response.success) {
-    console.log(BAD_REQUEST_BODY_PREFIX + response.message)
-    throw new ApiError(400, BAD_REQUEST_BODY_PREFIX + response.message)
+    console.error(constants.errors.prefixes.badBody + response.message)
+    throw new ApiError(
+      400,
+      constants.errors.prefixes.badBody + response.message
+    )
   }
 }
