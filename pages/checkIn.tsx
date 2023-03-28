@@ -10,20 +10,21 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { Category } from 'utils/types'
-import * as MongoDriver from 'server/actions/MongoDriver'
-import CategorySchema from 'server/models/Category'
+import { CategoryResponse } from 'utils/types'
+import { createResponse } from 'node-mocks-http'
+import handler from '@api/categories'
+import { GetServerSidePropsContext, NextApiRequest } from 'next'
 
-export async function getServerSideProps() {
-  const categories = JSON.parse(
-    JSON.stringify(await MongoDriver.getEntities(CategorySchema))
-  )
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const res = createResponse()
+  await handler(context.req as NextApiRequest, res)
+  const responseData: CategoryResponse[] = res._getJSONData().payload
   return {
-    props: { categories },
+    props: { categories: responseData },
   }
 }
 interface Props {
-  categories: Category[]
+  categories: CategoryResponse[]
 }
 
 export default function CheckInPage({ categories }: Props) {
