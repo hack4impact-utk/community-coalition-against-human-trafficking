@@ -2,13 +2,13 @@ import * as validation from 'utils/validation'
 import {
   apiObjectIdValidation,
   apiAttributeValidation,
-  BAD_REQUEST_BODY_PREFIX,
   apiCategoryValidation,
   apiItemDefinitionValidation,
   apiUserValidation,
 } from 'utils/apiValidators'
 import * as validators from 'utils/validators'
 import { ApiError } from 'utils/types'
+import constants from 'utils/constants'
 
 describe('apiValidators', () => {
   const validationFailedReturn = {
@@ -29,6 +29,7 @@ describe('apiValidators', () => {
       } catch (err) {
         expect(err).toBeInstanceOf(ApiError)
         expect(err.statusCode).toBe(400)
+        expect(err.message).toBe(constants.errors.invalidObjectIdFormat)
       }
     })
   })
@@ -54,7 +55,9 @@ describe('apiValidators', () => {
       } catch (err) {
         expect(err).toBeInstanceOf(ApiError)
         expect(err.statusCode).toBe(400)
-        expect(err.message).toBe(BAD_REQUEST_BODY_PREFIX + 'Validation Failed')
+        expect(err.message).toBe(
+          constants.errors.prefixes.badBody + validationFailedReturn.message
+        )
       }
     })
   })
@@ -80,7 +83,9 @@ describe('apiValidators', () => {
       } catch (err) {
         expect(err).toBeInstanceOf(ApiError)
         expect(err.statusCode).toBe(400)
-        expect(err.message).toBe(BAD_REQUEST_BODY_PREFIX + 'Validation Failed')
+        expect(err.message).toBe(
+          constants.errors.prefixes.badBody + validationFailedReturn.message
+        )
       }
     })
   })
@@ -106,7 +111,9 @@ describe('apiValidators', () => {
       } catch (err) {
         expect(err).toBeInstanceOf(ApiError)
         expect(err.statusCode).toBe(400)
-        expect(err.message).toBe(BAD_REQUEST_BODY_PREFIX + 'Validation Failed')
+        expect(err.message).toBe(
+          constants.errors.prefixes.badBody + validationFailedReturn.message
+        )
       }
     })
   })
@@ -132,7 +139,9 @@ describe('apiValidators', () => {
       } catch (err) {
         expect(err).toBeInstanceOf(ApiError)
         expect(err.statusCode).toBe(400)
-        expect(err.message).toBe(BAD_REQUEST_BODY_PREFIX + 'Validation Failed')
+        expect(err.message).toBe(
+          constants.errors.prefixes.badBody + validationFailedReturn.message
+        )
       }
     })
   })

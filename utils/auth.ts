@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { unstable_getServerSession } from 'next-auth'
 import { authOptions } from '@api/auth/[...nextauth]'
 import { ApiError } from 'utils/types'
+import constants from 'utils/constants'
 
 /**
  * This function ensures that the person making the server call is logged in AND that the email passed in as
@@ -20,13 +21,13 @@ export async function userEndpointServerAuth(
     !session ||
     (!!userEmail && (!session.user || session.user.email !== userEmail))
   ) {
-    throw new ApiError(401, 'Unauthorized')
+    throw new ApiError(401, constants.errors.unauthorized)
   }
 }
 
 export async function serverAuth(req: NextApiRequest, res: NextApiResponse) {
   const session = await unstable_getServerSession(req, res, authOptions)
   if (!session) {
-    throw new ApiError(401, 'You must be authenticated to make this request.')
+    throw new ApiError(401, constants.errors.unauthorized)
   }
 }
