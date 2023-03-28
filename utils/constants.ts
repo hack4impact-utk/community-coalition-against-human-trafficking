@@ -6,9 +6,9 @@ export default {
       missingRequiredProperties: 'Missing Required Properties:',
       typeMismatches: 'Type Mismatches:',
     },
-    unauthorized: 'Unauthorized',
-    notFound: 'Entity does not exist',
-    invalidReqMethod: 'Method Not Allowed',
     invalidObjectIdFormat: 'Invalid ObjectId Format',
+    invalidReqMethod: 'Method Not Allowed',
+    notFound: 'Entity does not exist',
+    unauthorized: 'Unauthorized',
   },
 }
