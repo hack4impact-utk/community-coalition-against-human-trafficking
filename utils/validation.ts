@@ -117,6 +117,5 @@ export function validateProperties(
       result.message += '\n'
     }
   }
-  console.log(result)
   return result
 }

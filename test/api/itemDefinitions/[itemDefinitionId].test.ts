@@ -103,6 +103,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
     test('valid call returns correct data', async () => {
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {})
       const mockApiItemDefinitionValidation = jest
         .spyOn(apiValidator, 'apiItemDefinitionValidation')
@@ -138,6 +139,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
     test('valid id returns correct data', async () => {
       const mockDeleteEntity = jest
         .spyOn(MongoDriver, 'deleteEntity')
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',

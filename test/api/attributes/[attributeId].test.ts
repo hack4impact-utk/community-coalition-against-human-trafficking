@@ -106,6 +106,7 @@ describe('api/attributes/[attributeId]', () => {
 
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {})
       const mockApiAttributeValidation = jest
         .spyOn(apiValidator, 'apiAttributeValidation')
@@ -142,6 +143,7 @@ describe('api/attributes/[attributeId]', () => {
       const mockObjectId = '6408a7156668c5655c25b105'
       const mockDeleteEntity = jest
         .spyOn(MongoDriver, 'deleteEntity')
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',

@@ -57,7 +57,7 @@ export function apiInventoryItemValidation(
 
 function badBodyValidationResponse(response: ValidationResult) {
   if (!response.success) {
-    console.log(constants.errors.prefixes.badBody + response.message)
+    console.error(constants.errors.prefixes.badBody + response.message)
     throw new ApiError(
       400,
       constants.errors.prefixes.badBody + response.message

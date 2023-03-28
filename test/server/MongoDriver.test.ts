@@ -139,6 +139,7 @@ describe('MongoDriver', () => {
     test('invalid id returns 404', async () => {
       const mockUpdate = (CategorySchema.findByIdAndUpdate = jest
         .fn()
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {}))
 
       try {
@@ -169,6 +170,7 @@ describe('MongoDriver', () => {
     test('invalid id returns 404', async () => {
       const mockDelete = (CategorySchema.findByIdAndDelete = jest
         .fn()
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {}))
 
       try {

@@ -26,10 +26,10 @@ describe('apiValidators', () => {
       jest.spyOn(validation, 'validateObjectId').mockReturnValue(false)
       try {
         apiObjectIdValidation('3')
-      } catch (err) {
-        expect(err).toBeInstanceOf(ApiError)
-        expect(err.statusCode).toBe(400)
-        expect(err.message).toBe(constants.errors.invalidObjectIdFormat)
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError)
+        expect(error.statusCode).toBe(400)
+        expect(error.message).toBe(constants.errors.invalidObjectIdFormat)
       }
     })
   })
@@ -52,10 +52,10 @@ describe('apiValidators', () => {
         .mockReturnValue(validationFailedReturn)
       try {
         apiAttributeValidation({}, 'POST')
-      } catch (err) {
-        expect(err).toBeInstanceOf(ApiError)
-        expect(err.statusCode).toBe(400)
-        expect(err.message).toBe(
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError)
+        expect(error.statusCode).toBe(400)
+        expect(error.message).toBe(
           constants.errors.prefixes.badBody + validationFailedReturn.message
         )
       }
@@ -80,10 +80,10 @@ describe('apiValidators', () => {
         .mockReturnValue(validationFailedReturn)
       try {
         apiCategoryValidation({}, 'POST')
-      } catch (err) {
-        expect(err).toBeInstanceOf(ApiError)
-        expect(err.statusCode).toBe(400)
-        expect(err.message).toBe(
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError)
+        expect(error.statusCode).toBe(400)
+        expect(error.message).toBe(
           constants.errors.prefixes.badBody + validationFailedReturn.message
         )
       }
@@ -108,10 +108,10 @@ describe('apiValidators', () => {
         .mockReturnValue(validationFailedReturn)
       try {
         apiItemDefinitionValidation({}, 'POST')
-      } catch (err) {
-        expect(err).toBeInstanceOf(ApiError)
-        expect(err.statusCode).toBe(400)
-        expect(err.message).toBe(
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError)
+        expect(error.statusCode).toBe(400)
+        expect(error.message).toBe(
           constants.errors.prefixes.badBody + validationFailedReturn.message
         )
       }
@@ -136,10 +136,10 @@ describe('apiValidators', () => {
         .mockReturnValue(validationFailedReturn)
       try {
         apiUserValidation({}, 'POST')
-      } catch (err) {
-        expect(err).toBeInstanceOf(ApiError)
-        expect(err.statusCode).toBe(400)
-        expect(err.message).toBe(
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError)
+        expect(error.statusCode).toBe(400)
+        expect(error.message).toBe(
           constants.errors.prefixes.badBody + validationFailedReturn.message
         )
       }
