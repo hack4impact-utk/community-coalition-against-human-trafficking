@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import ItemDefinitionSchema, {
   ItemDefinitionDocument,
 } from 'server/models/ItemDefinition'
-import { ApiError, ItemDefinitionResponse } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
 import handler from 'pages/api/itemDefinitions'
 import * as auth from 'utils/auth'
@@ -10,6 +10,7 @@ import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
+import { validItemDefinitionResponse, mockObjectId } from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -114,14 +115,13 @@ describe('api/itemDefinitions', () => {
 
   describe('POST', () => {
     test('valid call returns correct data', async () => {
-      const fakeObjectId = '5f9f1c7b9c9b9b0b0c0c0c0c'
       const mockCreateEntity = jest
         .spyOn(MongoDriver, 'createEntity')
         .mockImplementation(
           async () =>
             ({
               ...validItemDefinitionResponse[0],
-              _id: fakeObjectId,
+              _id: mockObjectId,
             } as ItemDefinitionDocument & {
               _id: ObjectId
             })
@@ -133,7 +133,7 @@ describe('api/itemDefinitions', () => {
       const request = createRequest({
         method: 'POST',
         url: `/api/itemDefinitions`,
-        body: validItemDefinitionResponse[0],
+        body: validItemDefinitionResponse,
       })
 
       const response = createResponse()
@@ -145,31 +145,10 @@ describe('api/itemDefinitions', () => {
       expect(mockCreateEntity).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).lastCalledWith(
         ItemDefinitionSchema,
-        validItemDefinitionResponse[0]
+        validItemDefinitionResponse
       )
       expect(response.statusCode).toBe(201)
-      expect(data).toEqual(fakeObjectId)
+      expect(data).toEqual(mockObjectId)
     })
   })
 })
-const validItemDefinitionResponse: ItemDefinitionResponse[] = [
-  {
-    _id: '1',
-    name: 'Test Item',
-    internal: false,
-    lowStockThreshold: 10,
-    criticalStockThreshold: 5,
-    category: {
-      _id: '2',
-      name: 'Test Category',
-    },
-    attributes: [
-      {
-        _id: '3',
-        name: 'Test Attribute',
-        possibleValues: 'text',
-        color: '#000000',
-      },
-    ],
-  },
-]

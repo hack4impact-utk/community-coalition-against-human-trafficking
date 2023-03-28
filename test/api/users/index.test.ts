@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import UserSchema, { UserDocument } from 'server/models/User'
-import { ApiError, UserResponse } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
 import handler from 'pages/api/users'
 import * as auth from 'utils/auth'
@@ -9,6 +9,7 @@ import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
+import { validUserResponse, mockObjectId } from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -113,14 +114,13 @@ describe('api/users', () => {
 
   describe('POST', () => {
     test('valid call returns correct data', async () => {
-      const fakeObjectId = '5f9f1c7b9c9b9b0b0c0c0c0c'
       const mockCreateEntity = jest
         .spyOn(MongoDriver, 'createEntity')
         .mockImplementation(
           async () =>
             ({
               ...validUserResponse[0],
-              _id: fakeObjectId,
+              _id: mockObjectId,
             } as UserDocument & {
               _id: ObjectId
             })
@@ -144,15 +144,7 @@ describe('api/users', () => {
       expect(mockCreateEntity).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).lastCalledWith(UserSchema, validUserResponse[0])
       expect(response.statusCode).toBe(201)
-      expect(data).toEqual(fakeObjectId)
+      expect(data).toEqual(mockObjectId)
     })
   })
 })
-const validUserResponse: UserResponse[] = [
-  {
-    _id: '1',
-    email: 'test@user.com',
-    name: 'Test User',
-    image: 'https://test.com/image.png',
-  },
-]

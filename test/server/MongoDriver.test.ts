@@ -4,6 +4,7 @@ import { ApiError } from 'utils/types'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
+import { validCategoryResponse, mockObjectId } from 'test/testData'
 
 // restore mocked implementations and close db connections
 afterAll(() => {
@@ -18,7 +19,7 @@ describe('MongoDriver', () => {
       const findByIdSpy = jest.spyOn(CategorySchema, 'findById')
       const mockAggregate = (CategorySchema.aggregate = jest
         .fn()
-        .mockImplementation(async () => [categoryFixture]))
+        .mockImplementation(async () => [validCategoryResponse]))
 
       const category = await MongoDriver.getEntity(
         CategorySchema,
@@ -28,7 +29,7 @@ describe('MongoDriver', () => {
 
       expect(findByIdSpy).toHaveBeenCalledTimes(0)
       expect(mockAggregate).toHaveBeenCalledTimes(1)
-      expect(category).toEqual(categoryFixture)
+      expect(category).toEqual(validCategoryResponse)
     })
 
     test('aggregate only returns one object', async () => {
@@ -36,8 +37,8 @@ describe('MongoDriver', () => {
       const mockAggregate = (CategorySchema.aggregate = jest
         .fn()
         .mockImplementation(async () => [
-          categoryFixture,
-          { ...categoryFixture, _id: '123' },
+          validCategoryResponse,
+          { ...validCategoryResponse, _id: '123' },
         ]))
 
       const category = await MongoDriver.getEntity(
@@ -48,18 +49,18 @@ describe('MongoDriver', () => {
 
       expect(findByIdSpy).toHaveBeenCalledTimes(0)
       expect(mockAggregate).toHaveBeenCalledTimes(1)
-      expect(category).toEqual(categoryFixture)
+      expect(category).toEqual(validCategoryResponse)
     })
     test('valid call returns correct data', async () => {
       const mockFindById = (CategorySchema.findById = jest
         .fn()
-        .mockImplementation(async () => categoryFixture))
+        .mockImplementation(async () => validCategoryResponse))
 
       const category = await MongoDriver.getEntity(CategorySchema, mockObjectId)
 
       expect(mockFindById).toHaveBeenCalledTimes(1)
       expect(mockFindById).lastCalledWith(mockObjectId)
-      expect(category).toEqual(categoryFixture)
+      expect(category).toEqual(validCategoryResponse)
     })
 
     test('entity not found returns 404', async () => {
@@ -83,7 +84,7 @@ describe('MongoDriver', () => {
       const findByIdSpy = jest.spyOn(CategorySchema, 'find')
       const mockAggregate = (CategorySchema.aggregate = jest
         .fn()
-        .mockImplementation(async () => [categoryFixture]))
+        .mockImplementation(async () => [validCategoryResponse]))
 
       const category = await MongoDriver.getEntities(CategorySchema, [
         { $match: { _id: mockObjectId } },
@@ -92,17 +93,17 @@ describe('MongoDriver', () => {
 
       expect(findByIdSpy).toHaveBeenCalledTimes(0)
       expect(mockAggregate).toHaveBeenCalledTimes(1)
-      expect(category).toEqual([categoryFixture])
+      expect(category).toEqual([validCategoryResponse])
     })
     test('valid call returns correct data', async () => {
       const mockFind = (CategorySchema.find = jest
         .fn()
-        .mockImplementation(async () => [categoryFixture]))
+        .mockImplementation(async () => [validCategoryResponse]))
 
       const categories = await MongoDriver.getEntities(CategorySchema)
 
       expect(mockFind).toHaveBeenCalledTimes(1)
-      expect(categories).toEqual([categoryFixture])
+      expect(categories).toEqual([validCategoryResponse])
     })
   })
 
@@ -110,15 +111,15 @@ describe('MongoDriver', () => {
     test('returns entity', async () => {
       const mockCreate = (CategorySchema.create = jest
         .fn()
-        .mockImplementation(async () => categoryFixture))
+        .mockImplementation(async () => validCategoryResponse))
 
       const category = await MongoDriver.createEntity(CategorySchema, {
-        ...categoryFixture,
+        ...validCategoryResponse[0],
         _id: undefined,
       })
 
       expect(mockCreate).toHaveBeenCalledTimes(1)
-      expect(category).toEqual(categoryFixture)
+      expect(category).toEqual(validCategoryResponse)
     })
   })
 
@@ -126,11 +127,11 @@ describe('MongoDriver', () => {
     test('valid id calls findByIdAndUpdate', async () => {
       const mockUpdate = (CategorySchema.findByIdAndUpdate = jest
         .fn()
-        .mockImplementation(async () => categoryFixture))
+        .mockImplementation(async () => validCategoryResponse))
       await MongoDriver.updateEntity(
         CategorySchema,
         mockObjectId,
-        categoryFixture
+        validCategoryResponse[0]
       )
 
       expect(mockUpdate).toHaveBeenCalledTimes(1)
@@ -146,7 +147,7 @@ describe('MongoDriver', () => {
         await MongoDriver.updateEntity(
           CategorySchema,
           mockObjectId,
-          categoryFixture
+          validCategoryResponse[0]
         )
       } catch (error) {
         expect(mockUpdate).toHaveBeenCalledTimes(1)
@@ -161,7 +162,7 @@ describe('MongoDriver', () => {
     test('valid id calls findByIdAndDelete', async () => {
       const mockDelete = (CategorySchema.findByIdAndDelete = jest
         .fn()
-        .mockImplementation(async () => categoryFixture))
+        .mockImplementation(async () => validCategoryResponse))
       await MongoDriver.deleteEntity(CategorySchema, mockObjectId)
 
       expect(mockDelete).toHaveBeenCalledTimes(1)
@@ -188,21 +189,14 @@ describe('MongoDriver', () => {
     test('valid call returns correct data', async () => {
       const mockFind = (CategorySchema.find = jest
         .fn()
-        .mockImplementation(async () => [categoryFixture]))
+        .mockImplementation(async () => [validCategoryResponse]))
 
       const categories = await MongoDriver.findEntities(CategorySchema, {
         name: 'test',
       })
 
       expect(mockFind).toHaveBeenCalledTimes(1)
-      expect(categories).toEqual([categoryFixture])
+      expect(categories).toEqual([validCategoryResponse])
     })
   })
 })
-
-const mockObjectId = '6408a7156668c5655c25b105'
-
-const categoryFixture = {
-  _id: mockObjectId,
-  name: 'test',
-}

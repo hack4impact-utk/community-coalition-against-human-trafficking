@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import CategorySchema, { CategoryDocument } from 'server/models/Category'
-import { ApiError, CategoryResponse } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
 import handler from 'pages/api/categories'
 import * as auth from 'utils/auth'
@@ -9,6 +9,7 @@ import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
+import { validCategoryResponse, mockObjectId } from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -114,14 +115,13 @@ describe('api/categories', () => {
 
   describe('POST', () => {
     test('valid call returns correct data', async () => {
-      const fakeObjectId = '5f9f1c7b9c9b9b0b0c0c0c0c'
       const mockCreateEntity = jest
         .spyOn(MongoDriver, 'createEntity')
         .mockImplementation(
           async () =>
             ({
               ...validCategoryResponse[0],
-              _id: fakeObjectId,
+              _id: mockObjectId,
             } as CategoryDocument & {
               _id: ObjectId
             })
@@ -148,13 +148,7 @@ describe('api/categories', () => {
         validCategoryResponse[0]
       )
       expect(response.statusCode).toBe(201)
-      expect(data).toEqual(fakeObjectId)
+      expect(data).toEqual(mockObjectId)
     })
   })
 })
-const validCategoryResponse: CategoryResponse[] = [
-  {
-    _id: '1',
-    name: 'test',
-  },
-]

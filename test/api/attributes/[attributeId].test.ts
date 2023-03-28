@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb'
 import AttributeSchema, { AttributeDocument } from 'server/models/Attribute'
-import { ApiError, AttributeResponse } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
 import handler from 'pages/api/attributes/[attributeId]'
 import * as auth from 'utils/auth'
@@ -9,6 +9,7 @@ import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
+import { validAttributeResponse, mockObjectId } from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -25,8 +26,6 @@ afterAll(() => {
 
 describe('api/attributes/[attributeId]', () => {
   test('thrown error is caught, response is unsuccessful and shows correct error message', async () => {
-    const mockObjectId = '6408a7156668c5655c25b105'
-
     jest.spyOn(auth, 'serverAuth').mockImplementationOnce(async () => {
       throw new ApiError(401, constants.errors.unauthorized)
     })
@@ -50,8 +49,6 @@ describe('api/attributes/[attributeId]', () => {
   })
 
   test('unsupported method returns 405', async () => {
-    const mockObjectId = '6408a7156668c5655c25b105'
-
     const request = createRequest({
       method: 'POST',
       url: `/api/attributes/${mockObjectId}`,
@@ -71,13 +68,11 @@ describe('api/attributes/[attributeId]', () => {
   })
   describe('GET', () => {
     test('valid call returns correct data', async () => {
-      const mockObjectId = '6408a7156668c5655c25b105'
-
       const mockGetEntity = jest
         .spyOn(MongoDriver, 'getEntity')
         .mockImplementation(
           async () =>
-            validAttributeResponse as AttributeDocument & { _id: ObjectId }
+            validAttributeResponse[0] as AttributeDocument & { _id: ObjectId }
         )
 
       const request = createRequest({
@@ -96,14 +91,12 @@ describe('api/attributes/[attributeId]', () => {
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
       expect(mockGetEntity).lastCalledWith(AttributeSchema, mockObjectId)
       expect(response.statusCode).toBe(200)
-      expect(data).toEqual(validAttributeResponse)
+      expect(data).toEqual(validAttributeResponse[0])
     })
   })
 
   describe('PUT', () => {
     test('valid call returns correct data', async () => {
-      const mockObjectId = '6408a7156668c5655c25b105'
-
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -140,7 +133,6 @@ describe('api/attributes/[attributeId]', () => {
 
   describe('DELETE', () => {
     test('valid id returns correct data', async () => {
-      const mockObjectId = '6408a7156668c5655c25b105'
       const mockDeleteEntity = jest
         .spyOn(MongoDriver, 'deleteEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -163,9 +155,3 @@ describe('api/attributes/[attributeId]', () => {
     })
   })
 })
-const validAttributeResponse: AttributeResponse = {
-  _id: '1',
-  name: 'test',
-  possibleValues: 'text',
-  color: '#000000',
-}

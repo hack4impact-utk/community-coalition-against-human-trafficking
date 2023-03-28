@@ -1,15 +1,16 @@
 import { ObjectId } from 'mongodb'
-import AttributeSchema, { AttributeDocument } from 'server/models/Attribute'
+import InventoryItemSchema, {
+  InventoryItemDocument,
+} from 'server/models/InventoryItem'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/attributes'
+import handler from 'pages/api/inventoryItems'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
-import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
-import { validAttributeResponse, mockObjectId } from 'test/testData'
+import { validInventoryItemResponse, mockObjectId } from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -18,7 +19,6 @@ beforeAll(() => {
 // restore mocked implementations and close db connections
 afterAll(() => {
   jest.restoreAllMocks()
-  mongoose.connection.close()
   clientPromise.then((client) => client.close())
 })
 
@@ -26,7 +26,7 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
-describe('api/attributes', () => {
+describe('api/inventoryItems', () => {
   test('thrown error is caught, response is unsuccessful and shows correct error message', async () => {
     jest.spyOn(auth, 'serverAuth').mockImplementationOnce(async () => {
       throw new ApiError(401, constants.errors.unauthorized)
@@ -34,7 +34,7 @@ describe('api/attributes', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: '/api/attributes',
+      url: '/api/inventoryItems',
     })
     const response = createResponse()
 
@@ -50,7 +50,7 @@ describe('api/attributes', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'HEAD',
-      url: '/api/attributes',
+      url: '/api/inventoryItems',
     })
     const response = createResponse()
 
@@ -71,12 +71,14 @@ describe('api/attributes', () => {
         .spyOn(MongoDriver, 'getEntities')
         .mockImplementation(
           async () =>
-            validAttributeResponse as [AttributeDocument & { _id: ObjectId }]
+            validInventoryItemResponse as [
+              InventoryItemDocument & { _id: ObjectId }
+            ]
         )
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/attributes`,
+        url: `/api/inventoryItems`,
       })
 
       const response = createResponse()
@@ -86,9 +88,8 @@ describe('api/attributes', () => {
 
       expect(serverAuth).toHaveBeenCalledTimes(1)
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
-      expect(mockGetEntities).lastCalledWith(AttributeSchema)
       expect(response.statusCode).toBe(200)
-      expect(data).toEqual(validAttributeResponse)
+      expect(data).toEqual(validInventoryItemResponse)
     })
 
     test('valid call with no data returns 204', async () => {
@@ -98,7 +99,7 @@ describe('api/attributes', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/attributes`,
+        url: `/api/inventoryItems`,
       })
 
       const response = createResponse()
@@ -107,7 +108,6 @@ describe('api/attributes', () => {
       const data = response._getJSONData().payload
 
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
-      expect(mockGetEntities).lastCalledWith(AttributeSchema)
       expect(response.statusCode).toBe(204)
       expect(data).toEqual([])
     })
@@ -120,32 +120,31 @@ describe('api/attributes', () => {
         .mockImplementation(
           async () =>
             ({
-              ...validAttributeResponse[0],
+              ...validInventoryItemResponse[0],
               _id: mockObjectId,
-            } as AttributeDocument & {
+            } as InventoryItemDocument & {
               _id: ObjectId
             })
         )
-      const mockApiAttributeValidation = jest
-        .spyOn(apiValidator, 'apiAttributeValidation')
+      const mockApiInventoryItemValidation = jest
+        .spyOn(apiValidator, 'apiInventoryItemValidation')
         .mockImplementation()
 
       const request = createRequest({
         method: 'POST',
-        url: `/api/attributes`,
-        body: validAttributeResponse,
+        url: `/api/inventoryItems`,
+        body: validInventoryItemResponse[0],
       })
 
       const response = createResponse()
 
       await handler(request, response)
       const data = response._getJSONData().payload
-
-      expect(mockApiAttributeValidation).toHaveBeenCalledTimes(1)
+      expect(mockApiInventoryItemValidation).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).lastCalledWith(
-        AttributeSchema,
-        validAttributeResponse
+        InventoryItemSchema,
+        validInventoryItemResponse[0]
       )
       expect(response.statusCode).toBe(201)
       expect(data).toEqual(mockObjectId)

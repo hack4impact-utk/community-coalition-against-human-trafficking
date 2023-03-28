@@ -1,4 +1,3 @@
-/* eslint-disable-next-line @typescript-eslint/no-empty-function */
 import { ObjectId } from 'mongodb'
 import ItemDefinitionSchema, {
   ItemDefinitionDocument,
@@ -11,6 +10,7 @@ import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
+import { validItemDefinitionResponse, mockObjectId } from 'test/testData'
 
 // TODO: add assertion for GET 'called with' aggregate stuff
 // this may need to have different functionality
@@ -34,9 +34,9 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: `/api/itemDefinitions/${fakeObjectId}`,
+      url: `/api/itemDefinitions/${mockObjectId}`,
       query: {
-        itemDefinitionId: fakeObjectId,
+        itemDefinitionId: mockObjectId,
       },
     })
     const response = createResponse()
@@ -53,9 +53,9 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: `/api/itemDefinitions/${fakeObjectId}`,
+      url: `/api/itemDefinitions/${mockObjectId}`,
       query: {
-        itemDefinitionId: fakeObjectId,
+        itemDefinitionId: mockObjectId,
       },
     })
     const response = createResponse()
@@ -74,16 +74,16 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
         .spyOn(MongoDriver, 'getEntity')
         .mockImplementation(
           async () =>
-            validItemDefinitionResponse as ItemDefinitionDocument & {
+            validItemDefinitionResponse[0] as ItemDefinitionDocument & {
               _id: ObjectId
             }
         )
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/itemDefinitions/${fakeObjectId}`,
+        url: `/api/itemDefinitions/${mockObjectId}`,
         query: {
-          itemDefinitionId: fakeObjectId,
+          itemDefinitionId: mockObjectId,
         },
       })
 
@@ -94,7 +94,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
 
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
       expect(response.statusCode).toBe(200)
-      expect(data).toEqual(validItemDefinitionResponse)
+      expect(data).toEqual(validItemDefinitionResponse[0])
     })
   })
 
@@ -111,9 +111,9 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
 
       const request = createRequest({
         method: 'PUT',
-        url: `/api/itemDefinitions/${fakeObjectId}`,
+        url: `/api/itemDefinitions/${mockObjectId}`,
         query: {
-          itemDefinitionId: fakeObjectId,
+          itemDefinitionId: mockObjectId,
         },
         body: validItemDefinitionResponse,
       })
@@ -127,7 +127,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
       expect(mockUpdateEntity).toHaveBeenCalledTimes(1)
       expect(mockUpdateEntity).lastCalledWith(
         ItemDefinitionSchema,
-        fakeObjectId,
+        mockObjectId,
         validItemDefinitionResponse
       )
       expect(response.statusCode).toBe(200)
@@ -143,9 +143,9 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: `/api/itemDefinitions/${fakeObjectId}`,
+        url: `/api/itemDefinitions/${mockObjectId}`,
         query: {
-          itemDefinitionId: fakeObjectId,
+          itemDefinitionId: mockObjectId,
         },
       })
       const response = createResponse()
@@ -155,31 +155,10 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
       expect(mockDeleteEntity).toHaveBeenCalledTimes(1)
       expect(mockDeleteEntity).lastCalledWith(
         ItemDefinitionSchema,
-        fakeObjectId
+        mockObjectId
       )
       expect(response.statusCode).toBe(200)
       expect(response._getJSONData().payload).toEqual({})
     })
   })
 })
-const validItemDefinitionResponse: ItemDefinitionResponse = {
-  _id: '1',
-  name: 'Test Item',
-  internal: false,
-  lowStockThreshold: 10,
-  criticalStockThreshold: 5,
-  category: {
-    _id: '2',
-    name: 'Test Category',
-  },
-  attributes: [
-    {
-      _id: '3',
-      name: 'Test Attribute',
-      possibleValues: 'text',
-      color: '#000000',
-    },
-  ],
-}
-
-const fakeObjectId = '6408a7156668c5655c25b105'
