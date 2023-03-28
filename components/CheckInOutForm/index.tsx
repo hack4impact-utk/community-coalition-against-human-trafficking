@@ -3,11 +3,11 @@ import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
 import React from 'react'
 import {
-  Attribute,
+  ItemDefinitionResponse,
+  UserResponse,
   InventoryItemAttributeRequest,
-  ItemDefinition,
-  User,
-  Category,
+  AttributeResponse,
+  CategoryResponse,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete, {
@@ -17,9 +17,10 @@ import { separateAttributes, SeparatedAttributes } from 'utils/attribute'
 
 interface Props {
   kioskMode: boolean
-  users: User[]
-  itemDefinitions: ItemDefinition[]
-  categories: Category[]
+  users: UserResponse[]
+  itemDefinitions: ItemDefinitionResponse[]
+  attributes: AttributeResponse[]
+  categories: CategoryResponse[]
 }
 
 const defaultSplitAttrs = separateAttributes()
@@ -32,20 +33,21 @@ function CheckInOutForm({
 }: Props) {
   const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
   const [quantity, setQuantity] = React.useState<number>(1)
-  const [selectedStaff, setSelectedStaff] = React.useState<User | null>()
+  const [selectedStaff, setSelectedStaff] =
+    React.useState<UserResponse | null>()
   const [selectedItemDefinition, setSelectedItemDefinition] =
-    React.useState<ItemDefinition | null>()
+    React.useState<ItemDefinitionResponse | null>()
   const [selectedAttributes, setSelectedAttributes] = React.useState<
     InventoryItemAttributeRequest[]
   >([])
   const [selectedCategory, setSelectedCategory] =
-    React.useState<Category | null>()
+    React.useState<CategoryResponse | null>()
   const [filteredItemDefinitions, setFilteredItemDefinitions] =
-    React.useState<ItemDefinition[]>(itemDefinitions)
+    React.useState<ItemDefinitionResponse[]>(itemDefinitions)
   const [splitAttrs, setSplitAttrs] =
     React.useState<SeparatedAttributes>(defaultSplitAttrs)
   const [aaSelected, setAaSelected] = React.useState<
-    AttributeAutocompleteOption[]
+    AutocompleteAttributeOption[]
   >([])
 
   // Update filtered item defs when category changes
@@ -70,7 +72,9 @@ function CheckInOutForm({
   React.useEffect(() => {
     if (selectedItemDefinition) {
       setSplitAttrs(
-        separateAttributes(selectedItemDefinition.attributes as Attribute[])
+        separateAttributes(
+          selectedItemDefinition.attributes as AttributeResponse[]
+        )
       )
     } else {
       setSplitAttrs(defaultSplitAttrs)
@@ -82,6 +86,20 @@ function CheckInOutForm({
   React.useEffect(() => {
     console.log(selectedAttributes)
   }, [selectedAttributes])
+
+  // if you select an item definition without selecting a category, infer the category
+  React.useEffect(() => {
+    // TODO: Update this when types are updated
+    if (
+      selectedCategory ||
+      !selectedItemDefinition ||
+      !selectedItemDefinition.category ||
+      typeof selectedItemDefinition.category === 'string'
+    ) {
+      return
+    }
+    setSelectedCategory(selectedItemDefinition.category)
+  }, [selectedItemDefinition, selectedCategory])
 
   return (
     <FormControl fullWidth>
@@ -110,6 +128,8 @@ function CheckInOutForm({
         renderInput={(params) => <TextField {...params} label="Category" />}
         onChange={(_e, Category) => setSelectedCategory(Category)}
         getOptionLabel={(Category) => Category.name}
+        inputValue={selectedCategory ? selectedCategory.name : ''}
+        disabled={!!selectedItemDefinition}
       />
       <Autocomplete
         options={filteredItemDefinitions}
