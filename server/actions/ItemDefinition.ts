@@ -1,6 +1,6 @@
-import mongoDb from 'server/index'
 import ItemDefinitionSchema from 'server/models/ItemDefinition'
 import { getEntities, getEntity } from 'server/actions/MongoDriver'
+import { ItemDefinitionResponse } from 'utils/types'
 
 /**
  * Finds an itemDefinition by its id
@@ -30,7 +30,7 @@ export async function getItemDefinition(id: string) {
         category: { $arrayElemAt: ['$category', 0] },
       },
     },
-  ])
+  ]) as ItemDefinitionResponse
 }
 
 /**
@@ -60,5 +60,5 @@ export async function getItemDefinitions() {
         category: { $arrayElemAt: ['$category', 0] },
       },
     },
-  ])
+  ]) as ItemDefinitionResponse[]
 }

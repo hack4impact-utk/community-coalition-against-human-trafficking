@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, Attribute } from 'utils/types'
+import { ApiError, AttributePutRequest, AttributeResponse } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import {
   apiAttributeValidation,
@@ -7,6 +7,7 @@ import {
 } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import AttributeSchema from 'server/models/Attribute'
+import constants from 'utils/constants'
 
 // @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId - Private
 // @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by attributeId) with a new Attribute object - Private
@@ -18,13 +19,12 @@ export default async function handler(
   try {
     // ensure user is logged in
     await serverAuth(req, res)
-
     apiObjectIdValidation(req?.query?.attributeId as string)
     const attributeId = req.query.attributeId as string
 
     switch (req.method) {
       case 'GET': {
-        const attribute = await MongoDriver.getEntity(
+        const attribute: AttributeResponse = await MongoDriver.getEntity(
           AttributeSchema,
           attributeId
         )
@@ -35,8 +35,8 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        apiAttributeValidation(req.body)
-        const updatedAttribute = req.body as Attribute
+        apiAttributeValidation(req.body, 'PUT')
+        const updatedAttribute: AttributePutRequest = req.body
 
         await MongoDriver.updateEntity(
           AttributeSchema,
@@ -58,10 +58,11 @@ export default async function handler(
         })
       }
       default: {
-        throw new ApiError(405, 'Method Not Allowed')
+        throw new ApiError(405, constants.errors.invalidReqMethod)
       }
     }
   } catch (e) {
+    // TODO add else if it is not an instance of ApiError
     if (e instanceof ApiError) {
       return res.status(e.statusCode).json({
         success: false,
