@@ -110,9 +110,6 @@ export async function deleteEntity<Schema extends Document>(
 ): Promise<void> {
   await mongoDb()
 
-  // mixing async/await and the callback causes the call to succeed, but it generatees an uncaught error.
-  // TODO fix so that 404s can still be thrown, but without using callbacks
-  // https://stackoverflow.com/questions/69346158/mongooseerror-query-was-already-executed-user-countdocuments
   const response = await dbSchema.findByIdAndDelete(id)
   if (!response) {
     throw new ApiError(404, ENTITY_NOT_FOUND_MESSAGE)
