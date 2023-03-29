@@ -10,8 +10,24 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { CategoryResponse } from 'utils/types'
+import { createResponse } from 'node-mocks-http'
+import categoriesHandler from '@api/categories'
+import { GetServerSidePropsContext, NextApiRequest } from 'next'
 
-export default function CheckOutPage() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const res = createResponse()
+  await categoriesHandler(context.req as NextApiRequest, res)
+  const responseData: CategoryResponse[] = res._getJSONData().payload
+  return {
+    props: { categories: responseData },
+  }
+}
+interface Props {
+  categories: CategoryResponse[]
+}
+
+export default function CheckOutPage({ categories }: Props) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   return (
@@ -28,7 +44,7 @@ export default function CheckOutPage() {
                 users={[]}
                 itemDefinitions={[]}
                 attributes={[]}
-                categories={[]}
+                categories={categories}
               />
             </CardContent>
 

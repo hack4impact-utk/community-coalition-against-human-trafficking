@@ -10,10 +10,27 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
+import { CategoryResponse } from 'utils/types'
+import { createResponse } from 'node-mocks-http'
+import categoriesHandler from '@api/categories'
+import { GetServerSidePropsContext, NextApiRequest } from 'next'
 
-export default function CheckInPage() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const res = createResponse()
+  await categoriesHandler(context.req as NextApiRequest, res)
+  const responseData: CategoryResponse[] = res._getJSONData().payload
+  return {
+    props: { categories: responseData },
+  }
+}
+interface Props {
+  categories: CategoryResponse[]
+}
+
+export default function CheckInPage({ categories }: Props) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
+
   return (
     <Grid2 container sx={{ flexGrow: 1 }}>
       <Grid2
@@ -47,7 +64,7 @@ export default function CheckInPage() {
                 users={[]}
                 itemDefinitions={[]}
                 attributes={[]}
-                categories={[]}
+                categories={categories}
               />
             </CardContent>
 
