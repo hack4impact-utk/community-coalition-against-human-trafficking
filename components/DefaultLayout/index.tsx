@@ -14,7 +14,7 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
       <Box
         component="section"
         className="layout"
-        sx={{ display: 'flex', p: 1 }}
+        sx={{ display: 'flex', py: 1, px: 0 }}
       >
         <NavigationDrawer setDrawerOpen={setDrawerOpen} open={drawerOpen} />
         <Box component="main" sx={{ flexGrow: 1 }}>

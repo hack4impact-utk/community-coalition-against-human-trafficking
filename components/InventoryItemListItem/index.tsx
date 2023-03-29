@@ -1,43 +1,19 @@
-import {
-  TableRow,
-  TableCell,
-  Chip,
-  IconButton,
-  Tooltip,
-  Typography,
-  Menu,
-  MenuItem,
-  Box,
-} from '@mui/material'
-import { InventoryItemResponse } from 'utils/types'
+import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
-import { MoreVert } from '@mui/icons-material'
+import { TableRow, TableCell, Chip, Tooltip, Box } from '@mui/material'
+import { InventoryItemResponse } from 'utils/types'
 import theme from 'utils/theme'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import * as React from 'react'
+import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
 
 interface InventoryItemListItemProps {
   inventoryItem: InventoryItemResponse
 }
 
-const settings = ['Check in', 'Check out', 'Delete']
-
 export default function InventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
-  // kebab menu functionality
-  const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
-    null
-  )
-
-  const handleOpenKebabMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElKebab(event.currentTarget)
-  }
-
-  const handleCloseKebabMenu = () => {
-    setAnchorElKebab(null)
-  }
-
   // renders the red or yellow warning symbol if necesary
   const renderWarningIcon = (inventoryItem: InventoryItemResponse) => {
     if (
@@ -153,31 +129,7 @@ export default function InventoryItemListItem({
       >
         {inventoryItem.assignee ? inventoryItem.assignee.name : ''}
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
-          <IconButton onClick={handleOpenKebabMenu}>
-            <MoreVert sx={{ color: theme.palette.grey['500'] }} />
-          </IconButton>
-          <Menu
-            sx={{ mt: 5 }}
-            id="kebab-menu"
-            anchorEl={anchorElKebab}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElKebab)}
-            onClose={handleCloseKebabMenu}
-          >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={() => handleCloseKebabMenu()}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
+          <InventoryItemListItemKebab inventoryItem={inventoryItem} />
         </Box>
       </TableCell>
     </TableRow>
