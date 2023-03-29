@@ -2014,7 +2014,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "QRST7890"}
         ],
         "quantity": 1,
-        "assignee": userid2
+        "assignee": userId2
     },
     {
         "_id": ObjectId(),
