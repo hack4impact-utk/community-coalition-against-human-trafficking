@@ -3,7 +3,7 @@ import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
 import {
   InventoryItemAttributeRequest,
-  OptionsAttributeResponse,
+  ListAttributeResponse,
 } from 'utils/types'
 
 export interface AutocompleteAttributeOption {
@@ -14,7 +14,7 @@ export interface AutocompleteAttributeOption {
 }
 
 interface Props {
-  attributes: OptionsAttributeResponse[]
+  attributes: ListAttributeResponse[]
   onChange?: (
     e: React.SyntheticEvent,
     attributes: AutocompleteAttributeOption[]
@@ -25,7 +25,7 @@ interface Props {
 }
 
 function buildAutocompleteOptions(
-  attributes: OptionsAttributeResponse[]
+  attributes: ListAttributeResponse[]
 ): AutocompleteAttributeOption[] {
   if (!attributes) {
     return [] as AutocompleteAttributeOption[]

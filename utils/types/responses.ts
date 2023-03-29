@@ -36,7 +36,7 @@ export interface AttributeResponse extends Attribute {
   _id: string
 }
 
-export interface OptionsAttributeResponse extends AttributeResponse {
+export interface ListAttributeResponse extends AttributeResponse {
   possibleValues: string[]
 }
 

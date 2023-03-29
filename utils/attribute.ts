@@ -1,23 +1,23 @@
 import {
   Attribute,
   NumberAttribute,
-  OptionsAttribute,
+  ListAttribute,
   TextAttribute,
 } from 'utils/types/models'
 import {
   AttributeResponse,
   NumberAttributeResponse,
-  OptionsAttributeResponse,
+  ListAttributeResponse,
   TextAttributeResponse,
 } from './types'
 export interface SeparatedAttributes {
-  options: OptionsAttribute[]
+  list: ListAttribute[]
   text: TextAttribute[]
   number: NumberAttribute[]
 }
 
 export interface SeparatedAttributeResponses {
-  options: OptionsAttributeResponse[]
+  list: ListAttributeResponse[]
   text: TextAttributeResponse[]
   number: NumberAttributeResponse[]
 }
@@ -31,7 +31,7 @@ export function separateAttributes(
   attributes?: Attribute[]
 ): SeparatedAttributes {
   const defaultSplit: SeparatedAttributes = {
-    options: [],
+    list: [],
     text: [],
     number: [],
   }
@@ -40,7 +40,7 @@ export function separateAttributes(
 
   return attributes.reduce((acc, attribute) => {
     if (attribute.possibleValues instanceof Array) {
-      acc.options = [...acc.options, attribute as OptionsAttribute]
+      acc.list = [...acc.list, attribute as ListAttribute]
     } else if (attribute.possibleValues === 'text') {
       acc.text = [...acc.text, attribute as TextAttribute]
     } else if (attribute.possibleValues === 'number') {
@@ -60,7 +60,7 @@ export function separateAttributeResponses(
   attributes?: AttributeResponse[]
 ): SeparatedAttributeResponses {
   const defaultSplit: SeparatedAttributeResponses = {
-    options: [],
+    list: [],
     text: [],
     number: [],
   }
@@ -69,7 +69,7 @@ export function separateAttributeResponses(
 
   return attributes.reduce((acc, attribute) => {
     if (attribute.possibleValues instanceof Array) {
-      acc.options = [...acc.options, attribute as OptionsAttributeResponse]
+      acc.list = [...acc.list, attribute as ListAttributeResponse]
     } else if (attribute.possibleValues === 'text') {
       acc.text = [...acc.text, attribute as TextAttributeResponse]
     } else if (attribute.possibleValues === 'number') {

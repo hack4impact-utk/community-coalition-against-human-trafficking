@@ -220,7 +220,7 @@ function CheckInOutForm({
         value={formData.itemDefinition || null}
       />
       <AttributeAutocomplete
-        attributes={splitAttrs.options}
+        attributes={splitAttrs.list}
         sx={{ mt: 4 }}
         onChange={(_e, attributes) => {
           const updatedFormData = updateFormData(formData, {
