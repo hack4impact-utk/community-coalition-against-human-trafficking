@@ -133,7 +133,7 @@ describe('api/itemDefinitions', () => {
       const request = createRequest({
         method: 'POST',
         url: `/api/itemDefinitions`,
-        body: validItemDefinitionResponse,
+        body: validItemDefinitionResponse[0],
       })
 
       const response = createResponse()
@@ -145,7 +145,7 @@ describe('api/itemDefinitions', () => {
       expect(mockCreateEntity).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).lastCalledWith(
         ItemDefinitionSchema,
-        validItemDefinitionResponse
+        validItemDefinitionResponse[0]
       )
       expect(response.statusCode).toBe(201)
       expect(data).toEqual(mockObjectId)
