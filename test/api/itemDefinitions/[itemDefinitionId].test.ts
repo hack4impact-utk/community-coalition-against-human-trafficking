@@ -10,7 +10,11 @@ import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
-import { validItemDefinitionResponse, mockObjectId } from 'test/testData'
+import {
+  validItemDefinitionResponse,
+  mockObjectId,
+  validItemDefinitionPutRequest,
+} from 'test/testData'
 
 // TODO: add assertion for GET 'called with' aggregate stuff
 // this may need to have different functionality
@@ -115,7 +119,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
         query: {
           itemDefinitionId: mockObjectId,
         },
-        body: validItemDefinitionResponse,
+        body: validItemDefinitionPutRequest,
       })
 
       const response = createResponse()
@@ -128,7 +132,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
       expect(mockUpdateEntity).lastCalledWith(
         ItemDefinitionSchema,
         mockObjectId,
-        validItemDefinitionResponse
+        validItemDefinitionPutRequest
       )
       expect(response.statusCode).toBe(200)
       expect(data).toEqual({})

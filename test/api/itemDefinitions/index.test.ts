@@ -10,7 +10,11 @@ import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
-import { validItemDefinitionResponse, mockObjectId } from 'test/testData'
+import {
+  validItemDefinitionResponse,
+  mockObjectId,
+  validItemDefinitionPostRequest,
+} from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -119,12 +123,9 @@ describe('api/itemDefinitions', () => {
         .spyOn(MongoDriver, 'createEntity')
         .mockImplementation(
           async () =>
-            ({
-              ...validItemDefinitionResponse[0],
-              _id: mockObjectId,
-            } as ItemDefinitionDocument & {
+            validItemDefinitionResponse[0] as ItemDefinitionDocument & {
               _id: ObjectId
-            })
+            }
         )
       const mockApiItemDefinitionValidation = jest
         .spyOn(apiValidator, 'apiItemDefinitionValidation')
@@ -133,7 +134,7 @@ describe('api/itemDefinitions', () => {
       const request = createRequest({
         method: 'POST',
         url: `/api/itemDefinitions`,
-        body: validItemDefinitionResponse[0],
+        body: validItemDefinitionPostRequest,
       })
 
       const response = createResponse()
@@ -145,7 +146,7 @@ describe('api/itemDefinitions', () => {
       expect(mockCreateEntity).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).lastCalledWith(
         ItemDefinitionSchema,
-        validItemDefinitionResponse[0]
+        validItemDefinitionPostRequest
       )
       expect(response.statusCode).toBe(201)
       expect(data).toEqual(mockObjectId)

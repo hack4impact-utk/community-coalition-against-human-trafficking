@@ -9,7 +9,11 @@ import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
-import { validCategoryResponse, mockObjectId } from 'test/testData'
+import {
+  validCategoryResponse,
+  mockObjectId,
+  validCategoryPutRequest,
+} from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -113,7 +117,7 @@ describe('api/categories/[categoryId]', () => {
         query: {
           categoryId: mockObjectId,
         },
-        body: validCategoryResponse,
+        body: validCategoryPutRequest,
       })
 
       const response = createResponse()
@@ -126,7 +130,7 @@ describe('api/categories/[categoryId]', () => {
       expect(mockUpdateEntity).lastCalledWith(
         CategorySchema,
         mockObjectId,
-        validCategoryResponse
+        validCategoryPutRequest
       )
       expect(response.statusCode).toBe(200)
       expect(data).toEqual({})

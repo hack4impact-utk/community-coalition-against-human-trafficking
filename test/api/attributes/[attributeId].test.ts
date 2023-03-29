@@ -9,7 +9,11 @@ import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
-import { validAttributeResponse, mockObjectId } from 'test/testData'
+import {
+  validAttributeResponse,
+  mockObjectId,
+  validAttributePutRequest,
+} from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -111,7 +115,7 @@ describe('api/attributes/[attributeId]', () => {
         query: {
           attributeId: mockObjectId,
         },
-        body: validAttributeResponse,
+        body: validAttributePutRequest,
       })
 
       const response = createResponse()
@@ -124,7 +128,7 @@ describe('api/attributes/[attributeId]', () => {
       expect(mockUpdateEntity).lastCalledWith(
         AttributeSchema,
         mockObjectId,
-        validAttributeResponse
+        validAttributePutRequest
       )
       expect(response.statusCode).toBe(200)
       expect(data).toEqual({})

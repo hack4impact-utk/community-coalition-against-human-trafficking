@@ -10,7 +10,11 @@ import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
-import { validInventoryItemResponse, mockObjectId } from 'test/testData'
+import {
+  validInventoryItemResponse,
+  mockObjectId,
+  validInventoryItemPostRequest,
+} from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -119,12 +123,9 @@ describe('api/inventoryItems', () => {
         .spyOn(MongoDriver, 'createEntity')
         .mockImplementation(
           async () =>
-            ({
-              ...validInventoryItemResponse[0],
-              _id: mockObjectId,
-            } as InventoryItemDocument & {
+            validInventoryItemResponse[0] as InventoryItemDocument & {
               _id: ObjectId
-            })
+            }
         )
       const mockApiInventoryItemValidation = jest
         .spyOn(apiValidator, 'apiInventoryItemValidation')
@@ -133,7 +134,7 @@ describe('api/inventoryItems', () => {
       const request = createRequest({
         method: 'POST',
         url: `/api/inventoryItems`,
-        body: validInventoryItemResponse[0],
+        body: validInventoryItemPostRequest,
       })
 
       const response = createResponse()
@@ -144,7 +145,7 @@ describe('api/inventoryItems', () => {
       expect(mockCreateEntity).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).lastCalledWith(
         InventoryItemSchema,
-        validInventoryItemResponse[0]
+        validInventoryItemPostRequest
       )
       expect(response.statusCode).toBe(201)
       expect(data).toEqual(mockObjectId)

@@ -9,7 +9,11 @@ import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
-import { validCategoryResponse, mockObjectId } from 'test/testData'
+import {
+  validCategoryResponse,
+  mockObjectId,
+  validCategoryPostRequest,
+} from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -119,12 +123,7 @@ describe('api/categories', () => {
         .spyOn(MongoDriver, 'createEntity')
         .mockImplementation(
           async () =>
-            ({
-              ...validCategoryResponse[0],
-              _id: mockObjectId,
-            } as CategoryDocument & {
-              _id: ObjectId
-            })
+            validCategoryResponse[0] as CategoryDocument & { _id: ObjectId }
         )
       const mockApiCategoryValidation = jest
         .spyOn(apiValidator, 'apiCategoryValidation')
@@ -133,7 +132,7 @@ describe('api/categories', () => {
       const request = createRequest({
         method: 'POST',
         url: `/api/categories`,
-        body: validCategoryResponse[0],
+        body: validCategoryPostRequest,
       })
 
       const response = createResponse()
@@ -145,7 +144,7 @@ describe('api/categories', () => {
       expect(mockCreateEntity).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).lastCalledWith(
         CategorySchema,
-        validCategoryResponse[0]
+        validCategoryPostRequest
       )
       expect(response.statusCode).toBe(201)
       expect(data).toEqual(mockObjectId)

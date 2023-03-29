@@ -119,12 +119,7 @@ describe('api/attributes', () => {
         .spyOn(MongoDriver, 'createEntity')
         .mockImplementation(
           async () =>
-            ({
-              ...validAttributeResponse[0],
-              _id: mockObjectId,
-            } as AttributeDocument & {
-              _id: ObjectId
-            })
+            validAttributeResponse[0] as AttributeDocument & { _id: ObjectId }
         )
       const mockApiAttributeValidation = jest
         .spyOn(apiValidator, 'apiAttributeValidation')

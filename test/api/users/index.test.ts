@@ -9,7 +9,11 @@ import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
-import { validUserResponse, mockObjectId } from 'test/testData'
+import {
+  validUserResponse,
+  mockObjectId,
+  validUserPostRequest,
+} from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -117,13 +121,7 @@ describe('api/users', () => {
       const mockCreateEntity = jest
         .spyOn(MongoDriver, 'createEntity')
         .mockImplementation(
-          async () =>
-            ({
-              ...validUserResponse[0],
-              _id: mockObjectId,
-            } as UserDocument & {
-              _id: ObjectId
-            })
+          async () => validUserResponse[0] as UserDocument & { _id: ObjectId }
         )
       const mockApiUserValidation = jest
         .spyOn(apiValidator, 'apiUserValidation')
@@ -132,7 +130,7 @@ describe('api/users', () => {
       const request = createRequest({
         method: 'POST',
         url: `/api/users`,
-        body: validUserResponse[0],
+        body: validUserPostRequest,
       })
 
       const response = createResponse()
@@ -142,7 +140,7 @@ describe('api/users', () => {
 
       expect(mockApiUserValidation).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).toHaveBeenCalledTimes(1)
-      expect(mockCreateEntity).lastCalledWith(UserSchema, validUserResponse[0])
+      expect(mockCreateEntity).lastCalledWith(UserSchema, validUserPostRequest)
       expect(response.statusCode).toBe(201)
       expect(data).toEqual(mockObjectId)
     })
