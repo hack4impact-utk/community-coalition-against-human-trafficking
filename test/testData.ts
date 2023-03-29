@@ -1,43 +1,58 @@
 import {
-  AttributeRequest,
+  AttributePostRequest,
+  AttributePutRequest,
   AttributeResponse,
-  CategoryRequest,
+  CategoryPostRequest,
+  CategoryPutRequest,
   CategoryResponse,
-  InventoryItemRequest,
-  InventoryItemResponse,
-  ItemDefinitionRequest,
+  ItemDefinitionPostRequest,
+  ItemDefinitionPutRequest,
   ItemDefinitionResponse,
-  UserRequest,
+  UserPostRequest,
+  UserPutRequest,
   UserResponse,
+  InventoryItemPostRequest,
+  InventoryItemPutRequest,
+  InventoryItemResponse,
 } from 'utils/types'
 
 export const mockObjectId = '6408a7156668c5655c25b105'
 
-export const validAttributeRequest: AttributeRequest = {
+export const validAttributePostRequest: AttributePostRequest = {
   name: 'test',
   possibleValues: 'text',
   color: '#000000',
 }
 
+export const validAttributePutRequest: AttributePutRequest = {
+  ...validAttributePostRequest,
+  _id: mockObjectId,
+}
+
 export const validAttributeResponse: AttributeResponse[] = [
   {
-    ...validAttributeRequest,
-    _id: '1',
+    ...validAttributePostRequest,
+    _id: mockObjectId,
   },
 ]
 
-export const validCategoryRequest: CategoryRequest = {
+export const validCategoryPostRequest: CategoryPostRequest = {
   name: 'test',
+}
+
+export const validCategoryPutRequest: CategoryPutRequest = {
+  ...validCategoryPostRequest,
+  _id: mockObjectId,
 }
 
 export const validCategoryResponse: CategoryResponse[] = [
   {
-    ...validCategoryRequest,
-    _id: '1',
+    ...validCategoryPostRequest,
+    _id: mockObjectId,
   },
 ]
 
-export const validItemDefinitionRequest: ItemDefinitionRequest = {
+export const validItemDefinitionPostRequest: ItemDefinitionPostRequest = {
   name: 'Test Item',
   internal: false,
   lowStockThreshold: 10,
@@ -46,30 +61,40 @@ export const validItemDefinitionRequest: ItemDefinitionRequest = {
   attributes: [validAttributeResponse[0]._id],
 }
 
+export const validItemDefinitionPutRequest: ItemDefinitionPutRequest = {
+  ...validItemDefinitionPostRequest,
+  _id: mockObjectId,
+}
+
 export const validItemDefinitionResponse: ItemDefinitionResponse[] = [
   {
-    ...validItemDefinitionRequest,
-    _id: '1',
+    ...validItemDefinitionPostRequest,
+    _id: mockObjectId,
     category: validCategoryResponse[0],
     attributes: validAttributeResponse,
   },
 ]
 
-export const validUserRequest: UserRequest = {
+export const validUserPostRequest: UserPostRequest = {
   name: 'Test User',
   email: 'test@user.com',
   image: 'https://test.com/image.jpg',
 }
 
+export const validUserPutRequest: UserPutRequest = {
+  ...validUserPostRequest,
+  _id: mockObjectId,
+}
+
 export const validUserResponse: UserResponse[] = [
   {
-    ...validUserRequest,
-    _id: '1',
+    ...validUserPostRequest,
+    _id: mockObjectId,
   },
 ]
 
-export const validInventoryItemRequest: InventoryItemRequest = {
-  _id: '1',
+export const validInventoryItemPostRequest: InventoryItemPostRequest = {
+  _id: mockObjectId,
   itemDefinition: validItemDefinitionResponse[0]._id,
   quantity: 10,
   attributes: [
@@ -81,9 +106,14 @@ export const validInventoryItemRequest: InventoryItemRequest = {
   assignee: validUserResponse[0]._id,
 }
 
+export const validInventoryItemPutRequest: InventoryItemPutRequest = {
+  ...validInventoryItemPostRequest,
+  _id: mockObjectId,
+}
+
 export const validInventoryItemResponse: InventoryItemResponse[] = [
   {
-    _id: '1',
+    _id: mockObjectId,
     itemDefinition: validItemDefinitionResponse[0],
     quantity: 10,
     attributes: [
