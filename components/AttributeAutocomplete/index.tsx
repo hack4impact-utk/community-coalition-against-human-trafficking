@@ -1,9 +1,12 @@
 import { SxProps } from '@mui/material'
 import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
-import { InventoryItemAttributeRequest, OptionsAttribute } from 'utils/types'
+import {
+  InventoryItemAttributeRequest,
+  ListAttributeResponse,
+} from 'utils/types'
 
-interface AutocompleteAttributeOption {
+export interface AutocompleteAttributeOption {
   id: string
   label: string
   value: string
@@ -11,20 +14,26 @@ interface AutocompleteAttributeOption {
 }
 
 interface Props {
-  attributes: OptionsAttribute[]
+  attributes: ListAttributeResponse[]
   onChange?: (
     e: React.SyntheticEvent,
-    attributes: InventoryItemAttributeRequest[]
+    attributes: AutocompleteAttributeOption[]
   ) => void
+  value?: AutocompleteAttributeOption[]
+  setValue?: React.Dispatch<AutocompleteAttributeOption[]>
   sx?: SxProps
 }
 
 function buildAutocompleteOptions(
-  attributes: OptionsAttribute[]
+  attributes: ListAttributeResponse[]
 ): AutocompleteAttributeOption[] {
+  if (!attributes) {
+    return [] as AutocompleteAttributeOption[]
+  }
+
   return attributes.reduce((acc, attribute) => {
     const options = attribute.possibleValues.map((value) => ({
-      id: attribute._id!, // todo: remove when request and reponse objects are separated
+      id: attribute._id,
       label: attribute.name,
       value,
       color: attribute.color,
@@ -34,19 +43,12 @@ function buildAutocompleteOptions(
   }, [] as AutocompleteAttributeOption[])
 }
 
-function buildAttributeRequest(
-  attributes: AutocompleteAttributeOption[]
-): InventoryItemAttributeRequest[] {
-  return attributes.map((attribute) => ({
-    attribute: attribute.id,
-    value: attribute.value,
-  }))
-}
-
 export default function AttributeAutocomplete({
   attributes,
   sx,
   onChange,
+  value,
+  setValue,
 }: Props) {
   const options = buildAutocompleteOptions(attributes)
 
@@ -69,10 +71,12 @@ export default function AttributeAutocomplete({
           />
         ))
       }
+      value={value}
       renderInput={(params) => <TextField {...params} label="Attributes" />}
       onChange={(e, attributes) => {
+        if (!!setValue) setValue(attributes)
         if (!attributes.length) {
-          if (!!onChange) onChange(e, [] as InventoryItemAttributeRequest[])
+          if (!!onChange) onChange(e, [] as AutocompleteAttributeOption[])
           return
         }
 
@@ -88,7 +92,7 @@ export default function AttributeAutocomplete({
         if (idx != -1) attributes[idx] = newAttr
         else attributes.push(newAttr)
 
-        if (!!onChange) onChange(e, buildAttributeRequest(attributes))
+        if (!!onChange) onChange(e, attributes)
       }}
       sx={sx}
     />

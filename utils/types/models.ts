@@ -15,13 +15,15 @@ export interface ItemDefinition {
   criticalStockThreshold: number
 }
 
+export interface InventoryItemAttribute {
+  attribute: string | Attribute
+  value: string | number
+}
+
 export interface InventoryItem {
   _id?: string
   itemDefinition: string | ItemDefinition
-  attributes?: {
-    attribute: string | Attribute
-    value: string | number
-  }[]
+  attributes?: InventoryItemAttribute[]
   quantity: number
   assignee?: string | User
 }
@@ -40,7 +42,7 @@ export interface Attribute {
   color: string
 }
 
-export interface OptionsAttribute extends Attribute {
+export interface ListAttribute {
   possibleValues: string[]
 }
 
@@ -50,11 +52,6 @@ export interface TextAttribute extends Attribute {
 
 export interface NumberAttribute extends Attribute {
   possibleValues: 'number'
-}
-
-export interface InventoryItemAttributeRequest {
-  attribute: string
-  value: string | number
 }
 
 export type ServerModel =

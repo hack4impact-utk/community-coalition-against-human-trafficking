@@ -27,7 +27,6 @@ export default function CheckOutPage() {
                 kioskMode={true}
                 users={[]}
                 itemDefinitions={[]}
-                attributes={[]}
                 categories={[]}
               />
             </CardContent>
