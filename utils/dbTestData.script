@@ -70,98 +70,103 @@ const attributeId12 = ObjectId();
 const attributeId13 = ObjectId();
 const attributeId14 = ObjectId();
 const attributeId15 = ObjectId();
-const defaultColor = "#ebebeb";
+const color1 = "#ebebeb";
+const color2 = "#c7dbda";
+const color3 = "#e2f0cb";
+const color4 = "#55cbcd";
+const color5 = "#143f46";
+const color6 = "#ff6961";
 
 db.attributes.insertMany([
     {
         "_id": attributeId1,
         "name": "Top Size",
         "possibleValues": ["Small", "Medium", "Large", "Extra-Large"],
-        "color": defaultColor
+        "color": color1
     },
     {
         "_id": attributeId2,
         "name": "Shirt Type",
         "possibleValues": ["Short-Sleeve", "Long-Sleeve"],
-        "color": defaultColor
+        "color": color2
     },
     {
         "_id": attributeId3,
         "name": "Pants Length",
         "possibleValues": ["Shorts", "Long Pants"],
-        "color": defaultColor
+        "color": color3
     },
     {
         "_id": attributeId4,
         "name": "Pants Size",
         "possibleValues": "text",
-        "color": defaultColor
+        "color": color4
     },
     {
         "_id": attributeId5,
         "name": "Shoe Size",
         "possibleValues": "number",
-        "color": defaultColor
+        "color": color5
     },
     {
         "_id": attributeId6,
         "name": "Shoe Type",
         "possibleValues": "text",
-        "color": defaultColor
+        "color": color6
     },
     {
         "_id": attributeId7,
         "name": "Bra Size",
         "possibleValues": "text",
-        "color": defaultColor
+        "color": color1
     },
     {
         "_id": attributeId8,
         "name": "Toiletry Size",
         "possibleValues": "number",
-        "color": defaultColor
+        "color": color2
     },
     {
         "_id": attributeId9,
         "name": "Brand",
         "possibleValues": "text",
-        "color": defaultColor
+        "color": color3
     },
     {
         "_id": attributeId10,
         "name": "Type",
         "possibleValues": "text",
-        "color": defaultColor
+        "color": color4
     },
     {
         "_id": attributeId11,
         "name": "Oven Type",
         "possibleValues": ["Electric", "Gas"],
-        "color": defaultColor
+        "color": color5
     },
     {
         "_id": attributeId15,
         "name": "Serial Number",
         "possibleValues": "text",
-        "color": defaultColor
+        "color": color6
     },
     {
         "_id": attributeId12,
         "name": "Value",
         "possibleValues": "number",
-        "color": defaultColor
+        "color": color1
     },
     {
         "_id": attributeId13,
         "name": "Sheet Size",
         "possibleValues": ["Twin", "Twin XL", "Full", "Queen", "King"],
-        "color": defaultColor
+        "color": color2
     },
     {
         "_id": attributeId14,
         "name": "Condition",
         "possibleValues": ["New", "Used"],
-        "color": defaultColor
+        "color": color3
     },
 ]);
 
@@ -530,7 +535,9 @@ db.itemDefinitions.insertMany([
 
 
 
-
+const userId1 = ObjectId("63fcb70862199670ed36177a");
+const userId2 = ObjectId("63fa5c9265ada1f23e68b638");
+const userId3 = ObjectId("63f95a8a55d930aa6176f06b");
 
 
 // INVENTORY ITEMS
@@ -728,7 +735,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "12"
+                "value": 12
             }, 
             {
                 "attribute": attributeId6,
@@ -743,7 +750,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "4"
+                "value": 4
             }, 
             {
                 "attribute": attributeId6,
@@ -758,7 +765,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "7"
+                "value": 7
             }, 
             {
                 "attribute": attributeId6,
@@ -773,7 +780,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "8"
+                "value": 8
             }, 
             {
                 "attribute": attributeId6,
@@ -788,7 +795,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "11"
+                "value": 11
             }, 
             {
                 "attribute": attributeId6,
@@ -803,7 +810,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "12.5"
+                "value": 12.5
             }, 
             {
                 "attribute": attributeId6,
@@ -818,7 +825,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "11.5"
+                "value": 11.5
             }, 
             {
                 "attribute": attributeId6,
@@ -833,7 +840,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "12"
+                "value": 12
             }, 
             {
                 "attribute": attributeId6,
@@ -848,7 +855,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "4"
+                "value": 4
             }, 
             {
                 "attribute": attributeId6,
@@ -863,7 +870,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "7"
+                "value": 7
             }, 
             {
                 "attribute": attributeId6,
@@ -878,7 +885,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "8"
+                "value": 8
             }, 
             {
                 "attribute": attributeId6,
@@ -893,7 +900,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "11"
+                "value": 11
             }, 
             {
                 "attribute": attributeId6,
@@ -908,7 +915,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "12.5"
+                "value": 12.5
             }, 
             {
                 "attribute": attributeId6,
@@ -923,7 +930,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "11.5"
+                "value": 11.5
             }, 
             {
                 "attribute": attributeId6,
@@ -938,7 +945,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "12"
+                "value": 12
             }, 
             {
                 "attribute": attributeId6,
@@ -953,7 +960,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "4"
+                "value": 4
             }, 
             {
                 "attribute": attributeId6,
@@ -968,7 +975,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "7"
+                "value": 7
             }, 
             {
                 "attribute": attributeId6,
@@ -983,7 +990,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "8"
+                "value": 8
             }, 
             {
                 "attribute": attributeId6,
@@ -998,7 +1005,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "11"
+                "value": 11
             }, 
             {
                 "attribute": attributeId6,
@@ -1013,7 +1020,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "12.5"
+                "value": 12.5
             }, 
             {
                 "attribute": attributeId6,
@@ -1028,7 +1035,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId5,
-                "value": "11.5"
+                "value": 11.5
             }, 
             {
                 "attribute": attributeId6,
@@ -1181,7 +1188,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "16 oz"
+                "value": 16
             }
         ],
         "quantity": 20
@@ -1192,7 +1199,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "32 oz"
+                "value": 32
             }
         ],
         "quantity": 12
@@ -1203,7 +1210,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "8 oz"
+                "value": 8
             }
         ],
         "quantity": 5
@@ -1214,7 +1221,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "12 oz"
+                "value": 12
             }
         ],
         "quantity": 8
@@ -1225,7 +1232,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "24 oz"
+                "value": 24
             }
         ],
         "quantity": 10
@@ -1238,7 +1245,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "16 oz"
+                "value": 16
             }
         ],
         "quantity": 20
@@ -1249,7 +1256,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "32 oz"
+                "value": 32
             }
         ],
         "quantity": 12
@@ -1260,7 +1267,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "8 oz"
+                "value": 8
             }
         ],
         "quantity": 5
@@ -1271,7 +1278,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "12 oz"
+                "value": 12
             }
         ],
         "quantity": 8
@@ -1282,7 +1289,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "24 oz"
+                "value": 24
             }
         ],
         "quantity": 10
@@ -1302,7 +1309,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "16 oz"
+                "value": 16
             }
         ],
         "quantity": 20
@@ -1313,7 +1320,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "32 oz"
+                "value": 32
             }
         ],
         "quantity": 12
@@ -1324,7 +1331,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "8 oz"
+                "value": 8
             }
         ],
         "quantity": 5
@@ -1335,7 +1342,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "12 oz"
+                "value": 12
             }
         ],
         "quantity": 8
@@ -1346,7 +1353,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "24 oz"
+                "value": 24
             }
         ],
         "quantity": 10
@@ -1359,7 +1366,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "8 oz"
+                "value": 8
             }
         ],
         "quantity": 0
@@ -1370,7 +1377,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "16 oz"
+                "value": 16
             }
         ],
         "quantity": 40
@@ -1381,7 +1388,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "24 oz"
+                "value": 24
             }
         ],
         "quantity": 5
@@ -1392,7 +1399,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "12 oz"
+                "value": 12
             }
         ],
         "quantity": 15
@@ -1403,7 +1410,7 @@ db.inventoryItems.insertMany([
         "attributes": [
             {
                 "attribute": attributeId8,
-                "value": "32 oz"
+                "value": 32
             }
         ],
         "quantity": 8
@@ -1891,7 +1898,7 @@ db.inventoryItems.insertMany([
             }
         ],
         "quantity": 1,
-        "assignee": ObjectId("63fcb70862199670ed36177a")
+        "assignee": userId1
     },
     {
         "_id": ObjectId(),
@@ -1902,7 +1909,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "EFGH5678"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63fa5c9265ada1f23e68b638")
+        "assignee": userId2
     },
     {
         "_id": ObjectId(),
@@ -1913,7 +1920,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "IJKL9012"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63f95a8a55d930aa6176f06b")
+        "assignee": userId3
     },
 
     //Keyboard
@@ -1926,7 +1933,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "MNOP3456"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63fcb70862199670ed36177a")
+        "assignee": userId1
     },
     {
         "_id": ObjectId(),
@@ -1937,7 +1944,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "QRST7890"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63fa5c9265ada1f23e68b638")
+        "assignee": userId2
     },
     {
         "_id": ObjectId(),
@@ -1948,7 +1955,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "UVWX1234"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63f95a8a55d930aa6176f06b")
+        "assignee": userId3
     },
 
     // Mouse
@@ -1961,7 +1968,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "ABCD1234"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63fcb70862199670ed36177a")
+        "assignee": userId1
     },
     {
         "_id": ObjectId(),
@@ -1972,7 +1979,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "EFGH5678"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63fa5c9265ada1f23e68b638")
+        "assignee": userId2
     },
     {
         "_id": ObjectId(),
@@ -1983,7 +1990,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "IJKL9012"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63f95a8a55d930aa6176f06b")
+        "assignee": userId3
     },
 
     // Monitor
@@ -1996,7 +2003,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "MNOP3456"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63fcb70862199670ed36177a")
+        "assignee": userId1
     },
     {
         "_id": ObjectId(),
@@ -2007,7 +2014,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "QRST7890"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63fa5c9265ada1f23e68b638")
+        "assignee": userid2
     },
     {
         "_id": ObjectId(),
@@ -2018,7 +2025,7 @@ db.inventoryItems.insertMany([
             {"attribute": attributeId15, "value": "UVWX1234"}
         ],
         "quantity": 1,
-        "assignee": ObjectId("63f95a8a55d930aa6176f06b")
+        "assignee": userId3
     },
 
 
