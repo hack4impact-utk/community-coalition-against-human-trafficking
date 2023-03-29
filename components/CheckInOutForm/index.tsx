@@ -24,6 +24,7 @@ interface CheckInOutFormData {
   category: CategoryResponse
   itemDefinition: ItemDefinitionResponse
   attributes: AutocompleteAttributeOption[]
+  textFieldAttributes: TextFieldAttributesInternalRepresentation
   quantityDelta: number
 }
 
@@ -43,6 +44,7 @@ function blankFormData(): CheckInOutFormData {
     category: {} as CategoryResponse,
     itemDefinition: {} as ItemDefinitionResponse,
     attributes: [],
+    textFieldAttributes: {} as TextFieldAttributesInternalRepresentation,
     quantityDelta: 0,
   }
 }
@@ -55,6 +57,10 @@ function updateFormData(
     ...formData,
     ...update,
   }
+}
+
+interface TextFieldAttributesInternalRepresentation {
+  [key: string]: string | number
 }
 
 const defaultSplitAttrs = separateAttributeResponses()
@@ -74,9 +80,6 @@ function CheckInOutForm({
     React.useState<UserResponse | null>()
   const [selectedItemDefinition, setSelectedItemDefinition] =
     React.useState<ItemDefinitionResponse | null>()
-  const [selectedAttributes, setSelectedAttributes] = React.useState<
-    InventoryItemAttributeRequest[]
-  >([])
   const [selectedCategory, setSelectedCategory] =
     React.useState<CategoryResponse>({} as CategoryResponse)
   const [filteredItemDefinitions, setFilteredItemDefinitions] =
@@ -97,7 +100,16 @@ function CheckInOutForm({
         value: String(attr.value),
         color: attr.attribute.color,
       })),
+    textFieldAttributes: inventoryItem?.attributes
+      ?.filter((attr) => !(attr.attribute.possibleValues instanceof Array))
+      .reduce((acc, attr) => {
+        return {
+          ...acc,
+          [attr.attribute._id]: attr.value,
+        }
+      }, {} as TextFieldAttributesInternalRepresentation),
   }
+
   const [aaSelected, setAaSelected] = React.useState<
     AutocompleteAttributeOption[]
   >(initialFormData.attributes || [])
@@ -107,18 +119,20 @@ function CheckInOutForm({
     ...initialFormData,
   })
 
-  const textfieldAttributes: InventoryItemAttributeRequest[] = []
   const updateTextFieldAttributes = (
     _e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    attributeName: string
+    attributeId: string
   ) => {
     const attributeValue: string | number = _e.target.value
-    const updatedAttribute: InventoryItemAttributeRequest = {
-      attribute: attributeName,
-      value: attributeValue,
-    }
-    textfieldAttributes.push(updatedAttribute)
-    setSelectedAttributes(textfieldAttributes)
+
+    setFormData((formData) =>
+      updateFormData(formData, {
+        textFieldAttributes: {
+          ...formData.textFieldAttributes,
+          [attributeId]: attributeValue,
+        },
+      })
+    )
   }
 
   // if you select an item definition without selecting a category, infer the category
@@ -166,10 +180,12 @@ function CheckInOutForm({
       )
     } else {
       setSplitAttrs(defaultSplitAttrs)
-      setSelectedAttributes([])
       setAaSelected([])
       setFormData((formData) =>
-        updateFormData(formData, { attributes: undefined })
+        updateFormData(formData, {
+          attributes: undefined,
+          textFieldAttributes: {},
+        })
       )
     }
   }, [formData.itemDefinition])
@@ -180,6 +196,7 @@ function CheckInOutForm({
       {kioskMode && (
         <Autocomplete
           options={users}
+          isOptionEqualToValue={(option, value) => option._id === value._id}
           renderInput={(params) => (
             <TextField {...params} label="Staff Member" />
           )}
@@ -210,6 +227,7 @@ function CheckInOutForm({
         options={categories}
         sx={{ marginTop: 4 }}
         renderInput={(params) => <TextField {...params} label="Category" />}
+        isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, category) => {
           const updatedFormData = updateFormData(formData, {
             category: category || undefined,
@@ -224,6 +242,7 @@ function CheckInOutForm({
         options={filteredItemDefinitions}
         sx={{ marginTop: 4 }}
         renderInput={(params) => <TextField {...params} label="Item" />}
+        isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, itemDefinition) => {
           const updatedFormData = updateFormData(formData, {
             itemDefinition: itemDefinition || undefined,
@@ -250,8 +269,9 @@ function CheckInOutForm({
         <TextField
           key={textAttr._id}
           label={textAttr.name}
-          onChange={(_e) => updateTextFieldAttributes(_e, textAttr.name)}
+          onChange={(_e) => updateTextFieldAttributes(_e, textAttr._id)}
           sx={{ marginTop: 4 }}
+          defaultValue={formData.textFieldAttributes?.[textAttr._id]}
         />
       ))}
 
@@ -261,8 +281,9 @@ function CheckInOutForm({
           key={numAttr._id}
           label={numAttr.name}
           type="number"
-          onChange={(_e) => updateTextFieldAttributes(_e, numAttr.name)}
+          onChange={(_e) => updateTextFieldAttributes(_e, numAttr._id)}
           sx={{ marginTop: 4 }}
+          defaultValue={formData.textFieldAttributes?.[numAttr._id]}
         />
       ))}
       <QuantityForm
