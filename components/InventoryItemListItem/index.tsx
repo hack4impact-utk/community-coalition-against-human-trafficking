@@ -1,41 +1,21 @@
-import { TableRow, TableCell, Chip, Tooltip, Box } from '@mui/material'
 import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
+import { TableRow, TableCell, Chip, Tooltip, Box } from '@mui/material'
+import { InventoryItemResponse } from 'utils/types'
 import theme from 'utils/theme'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import * as React from 'react'
 import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
 
 interface InventoryItemListItemProps {
-  inventoryItem: InventoryItem
+  inventoryItem: InventoryItemResponse
 }
 
 export default function InventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
-  // TODO: fix when the database schema is split between request and response types
-  // needed to deal with the possible union types defined in the database schema
-  const narrowCategory = (inventoryItem: InventoryItem) => {
-    if (
-      typeof inventoryItem.itemDefinition === 'string' ||
-      !inventoryItem.itemDefinition.category
-    ) {
-      return ' '
-    }
-
-    if (typeof inventoryItem.itemDefinition.category === 'string') {
-      return inventoryItem.itemDefinition.category
-    }
-
-    return inventoryItem.itemDefinition.category.name
-  }
-
   // renders the red or yellow warning symbol if necesary
-  const renderWarningIcon = (inventoryItem: InventoryItem) => {
-    if (typeof inventoryItem.itemDefinition === 'string') {
-      return
-    }
-
+  const renderWarningIcon = (inventoryItem: InventoryItemResponse) => {
     if (
       inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
     ) {
@@ -63,19 +43,23 @@ export default function InventoryItemListItem({
     }
   }
 
-  const renderAttributeChips = (inventoryItem: InventoryItem) => {
+  const renderAttributeChips = (inventoryItem: InventoryItemResponse) => {
     return inventoryItem.attributes?.map((itemAttribute, i) => {
       // attributes that are strings or numbers show the attribute name
       // attributes that are list types do not
 
-      // TODO: remove this if statement after database types are split between
-      // response and request
-      if (typeof itemAttribute.attribute === 'string') {
+      if (itemAttribute.attribute.possibleValues instanceof Array) {
         return (
           <Chip
             size="small"
-            label={`${itemAttribute.attribute}: ${itemAttribute.value}`}
+            label={`${itemAttribute.value}`}
             key={i}
+            sx={{
+              backgroundColor: itemAttribute.attribute.color,
+              '& .MuiChip-label': {
+                color: getContrastYIQ(itemAttribute.attribute.color),
+              },
+            }}
           />
         )
       }
@@ -83,18 +67,8 @@ export default function InventoryItemListItem({
       return (
         <Chip
           size="small"
-          label={
-            typeof itemAttribute.attribute.possibleValues === 'object'
-              ? `${itemAttribute.value}`
-              : `${itemAttribute.attribute.name}: ${itemAttribute.value}`
-          }
+          label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
           key={i}
-          sx={{
-            backgroundColor: itemAttribute.attribute.color,
-            '& .MuiChip-label': {
-              color: getContrastYIQ(itemAttribute.attribute.color),
-            },
-          }}
         />
       )
     })
@@ -111,10 +85,7 @@ export default function InventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {/* TODO: fix when the database schema is split between request and response types */}
-        {typeof inventoryItem.itemDefinition === 'string'
-          ? inventoryItem.itemDefinition
-          : inventoryItem.itemDefinition.name}
+        {inventoryItem.itemDefinition.name}
       </TableCell>
       <TableCell
         sx={{
@@ -135,9 +106,7 @@ export default function InventoryItemListItem({
           justifyContent: 'center',
           width: '100px',
         }}
-      >
-        {narrowCategory(inventoryItem)}
-      </TableCell>
+      ></TableCell>
       <TableCell
         sx={{
           display: 'flex',
@@ -158,9 +127,7 @@ export default function InventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {typeof inventoryItem.assignee === 'string'
-          ? inventoryItem.assignee
-          : inventoryItem.assignee.name}
+        {inventoryItem.assignee ? inventoryItem.assignee.name : ''}
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
           <InventoryItemListItemKebab inventoryItem={inventoryItem} />
         </Box>
