@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import UserSchema, { UserDocument } from 'server/models/User'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/users/[userId]'
+import userHandler from 'pages/api/users/[userId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
@@ -55,7 +55,7 @@ describe('api/users/[userId]', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await userHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -74,7 +74,7 @@ describe('api/users/[userId]', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await userHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -101,7 +101,7 @@ describe('api/users/[userId]', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await userHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
@@ -133,7 +133,7 @@ describe('api/users/[userId]', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await userHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockApiUserValidation).toHaveBeenCalledTimes(1)
@@ -163,7 +163,7 @@ describe('api/users/[userId]', () => {
       })
       const response = createResponse()
 
-      await handler(request, response)
+      await userHandler(request, response)
 
       expect(mockDeleteEntity).toHaveBeenCalledTimes(1)
       expect(mockDeleteEntity).lastCalledWith(UserSchema, mockObjectId)

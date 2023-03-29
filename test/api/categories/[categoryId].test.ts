@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import CategorySchema, { CategoryDocument } from 'server/models/Category'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/categories/[categoryId]'
+import categoryHandler from 'pages/api/categories/[categoryId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
@@ -43,7 +43,7 @@ describe('api/categories/[categoryId]', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await categoryHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -62,7 +62,7 @@ describe('api/categories/[categoryId]', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await categoryHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -90,7 +90,7 @@ describe('api/categories/[categoryId]', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await categoryHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
@@ -122,7 +122,7 @@ describe('api/categories/[categoryId]', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await categoryHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockApiCategoryValidation).toHaveBeenCalledTimes(1)
@@ -152,7 +152,7 @@ describe('api/categories/[categoryId]', () => {
       })
       const response = createResponse()
 
-      await handler(request, response)
+      await categoryHandler(request, response)
 
       expect(mockDeleteEntity).toHaveBeenCalledTimes(1)
       expect(mockDeleteEntity).lastCalledWith(CategorySchema, mockObjectId)

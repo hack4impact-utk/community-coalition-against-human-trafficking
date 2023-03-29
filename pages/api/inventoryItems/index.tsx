@@ -8,7 +8,7 @@ import { apiInventoryItemValidation } from 'utils/apiValidators'
 
 // @route GET api/inventoryItems - Returns a list of all inventoryItems in the database - Private
 // @route POST /api/inventoryItems - Create a inventoryItems from request body - Private
-export default async function handler(
+export default async function inventoryItemsHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

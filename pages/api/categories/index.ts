@@ -8,7 +8,7 @@ import constants from 'utils/constants'
 
 // @route GET api/categories - Returns a list of all Categories in the database - Private
 // @route POST /api/categories - Create a category from request body - Private
-export default async function handler(
+export default async function categoriesHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

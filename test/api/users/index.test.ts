@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import UserSchema, { UserDocument } from 'server/models/User'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/users'
+import usersHandler from 'pages/api/users'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
@@ -42,7 +42,7 @@ describe('api/users', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await usersHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -58,7 +58,7 @@ describe('api/users', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await usersHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -84,7 +84,7 @@ describe('api/users', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await usersHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(serverAuth).toHaveBeenCalledTimes(1)
@@ -106,7 +106,7 @@ describe('api/users', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await usersHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
@@ -135,7 +135,7 @@ describe('api/users', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await usersHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockApiUserValidation).toHaveBeenCalledTimes(1)

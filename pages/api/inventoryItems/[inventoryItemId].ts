@@ -12,7 +12,7 @@ import InventoryItemSchema from 'server/models/InventoryItem'
 // @route GET api/itemDefintions/[inventoryItemId] - Returns a single InventoryItem object given a inventoryItemId - Private
 // @route PUT api/users/[inventoryItemId] - Updates an existing InventoryItem object (identified by inventoryItemId) with a new InventoryItem object - Private
 // @route DELETE api/users/[inventoryItemId] - Deletes a single InventoryItem object (identified by inventoryItemId) - Private
-export default async function handler(
+export default async function inventoryItemHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

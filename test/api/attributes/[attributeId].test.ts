@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import AttributeSchema, { AttributeDocument } from 'server/models/Attribute'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/attributes/[attributeId]'
+import attributeHandler from 'pages/api/attributes/[attributeId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
@@ -43,7 +43,7 @@ describe('api/attributes/[attributeId]', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await attributeHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -62,7 +62,7 @@ describe('api/attributes/[attributeId]', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await attributeHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -89,7 +89,7 @@ describe('api/attributes/[attributeId]', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await attributeHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
@@ -120,7 +120,7 @@ describe('api/attributes/[attributeId]', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await attributeHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockApiAttributeValidation).toHaveBeenCalledTimes(1)
@@ -150,7 +150,7 @@ describe('api/attributes/[attributeId]', () => {
       })
       const response = createResponse()
 
-      await handler(request, response)
+      await attributeHandler(request, response)
 
       expect(mockDeleteEntity).toHaveBeenCalledTimes(1)
       expect(mockDeleteEntity).lastCalledWith(AttributeSchema, mockObjectId)

@@ -5,7 +5,7 @@ import InventoryItemSchema, {
 } from 'server/models/InventoryItem'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/inventoryItems/[inventoryItemId]'
+import inventoryItemHandler from 'pages/api/inventoryItems/[inventoryItemId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
@@ -46,7 +46,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await inventoryItemHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -65,7 +65,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await inventoryItemHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -94,7 +94,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await inventoryItemHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
@@ -125,7 +125,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await inventoryItemHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockApiInventoryItemValidation).toHaveBeenCalledTimes(1)
@@ -155,7 +155,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
       })
       const response = createResponse()
 
-      await handler(request, response)
+      await inventoryItemHandler(request, response)
 
       expect(mockDeleteEntity).toHaveBeenCalledTimes(1)
       expect(mockDeleteEntity).lastCalledWith(InventoryItemSchema, mockObjectId)

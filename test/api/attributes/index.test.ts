@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb'
 import AttributeSchema, { AttributeDocument } from 'server/models/Attribute'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/attributes'
+import attributesHandler from 'pages/api/attributes'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
@@ -38,7 +38,7 @@ describe('api/attributes', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await attributesHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -54,7 +54,7 @@ describe('api/attributes', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await attributesHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -81,7 +81,7 @@ describe('api/attributes', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await attributesHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(serverAuth).toHaveBeenCalledTimes(1)
@@ -103,7 +103,7 @@ describe('api/attributes', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await attributesHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
@@ -133,7 +133,7 @@ describe('api/attributes', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await attributesHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockApiAttributeValidation).toHaveBeenCalledTimes(1)

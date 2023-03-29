@@ -4,7 +4,7 @@ import ItemDefinitionSchema, {
 } from 'server/models/ItemDefinition'
 import { ApiError, ItemDefinitionResponse } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/itemDefinitions/[itemDefinitionId]'
+import itemDefinitionHandler from 'pages/api/itemDefinitions/[itemDefinitionId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
@@ -45,7 +45,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await itemDefinitionHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -64,7 +64,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await itemDefinitionHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -93,7 +93,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await itemDefinitionHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
@@ -124,7 +124,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await itemDefinitionHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockApiItemDefinitionValidation).toHaveBeenCalledTimes(1)
@@ -154,7 +154,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
       })
       const response = createResponse()
 
-      await handler(request, response)
+      await itemDefinitionHandler(request, response)
 
       expect(mockDeleteEntity).toHaveBeenCalledTimes(1)
       expect(mockDeleteEntity).lastCalledWith(

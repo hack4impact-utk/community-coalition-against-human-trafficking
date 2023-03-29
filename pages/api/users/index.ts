@@ -7,7 +7,7 @@ import UserSchema from 'server/models/User'
 import constants from 'utils/constants'
 
 // @route   POST /api/users - Create a user from request body. - Public
-export default async function handler(
+export default async function usersHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

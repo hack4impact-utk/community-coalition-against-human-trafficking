@@ -4,7 +4,7 @@ import InventoryItemSchema, {
 } from 'server/models/InventoryItem'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/inventoryItems'
+import inventoryItemsHandler from 'pages/api/inventoryItems'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
@@ -42,7 +42,7 @@ describe('api/inventoryItems', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await inventoryItemsHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -58,7 +58,7 @@ describe('api/inventoryItems', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await inventoryItemsHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -87,7 +87,7 @@ describe('api/inventoryItems', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await inventoryItemsHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(serverAuth).toHaveBeenCalledTimes(1)
@@ -108,7 +108,7 @@ describe('api/inventoryItems', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await inventoryItemsHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
@@ -139,7 +139,7 @@ describe('api/inventoryItems', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await inventoryItemsHandler(request, response)
       const data = response._getJSONData().payload
       expect(mockApiInventoryItemValidation).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).toHaveBeenCalledTimes(1)
