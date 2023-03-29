@@ -12,12 +12,12 @@ import {
 } from '@mui/material'
 import { CategoryResponse } from 'utils/types'
 import { createResponse } from 'node-mocks-http'
-import handler from '@api/categories'
+import categoriesHandler from '@api/categories'
 import { GetServerSidePropsContext, NextApiRequest } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const res = createResponse()
-  await handler(context.req as NextApiRequest, res)
+  await categoriesHandler(context.req as NextApiRequest, res)
   const responseData: CategoryResponse[] = res._getJSONData().payload
   return {
     props: { categories: responseData },
