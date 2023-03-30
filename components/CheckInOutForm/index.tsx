@@ -19,7 +19,6 @@ interface Props {
   kioskMode: boolean
   users: UserResponse[]
   itemDefinitions: ItemDefinitionResponse[]
-  attributes: AttributeResponse[]
   categories: CategoryResponse[]
 }
 
