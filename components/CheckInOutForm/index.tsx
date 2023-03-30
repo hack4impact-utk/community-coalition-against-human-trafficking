@@ -17,6 +17,7 @@ import {
   separateAttributeResponses,
   SeparatedAttributeResponses,
 } from 'utils/attribute'
+import { usePrevious } from 'utils/hooks/usePrevious'
 
 interface CheckInOutFormData {
   assignee: UserResponse
@@ -107,18 +108,12 @@ function CheckInOutForm({
     ...initialFormData,
   })
 
+  const prevFormData = usePrevious(formData)
+
   // if you select an item definition without selecting a category, infer the category
   React.useEffect(() => {
-    // TODO: Update this when types are updated
-    if (
-      !formData.itemDefinition ||
-      !formData.itemDefinition.category ||
-      typeof formData.itemDefinition.category === 'string'
-    ) {
-      return
-    }
     setFormData((formData) =>
-      updateFormData(formData, { category: formData.itemDefinition.category })
+      updateFormData(formData, { category: formData.itemDefinition?.category })
     )
   }, [formData.itemDefinition])
 
@@ -131,10 +126,7 @@ function CheckInOutForm({
     if (formData.category && !formData.itemDefinition) {
       setFilteredItemDefinitions(
         itemDefinitions.filter((itemDefinition) => {
-          if (
-            itemDefinition.category &&
-            itemDefinition.category.hasOwnProperty('_id')
-          ) {
+          if (itemDefinition.category) {
             return itemDefinition.category._id === formData.category._id
           }
         })
@@ -152,13 +144,16 @@ function CheckInOutForm({
       )
     } else {
       setSplitAttrs(defaultSplitAttrs)
+    }
+
+    if (prevFormData?.itemDefinition !== undefined) {
       setSelectedAttributes([])
       setAaSelected([])
       setFormData((formData) =>
         updateFormData(formData, { attributes: undefined })
       )
     }
-  }, [formData.itemDefinition])
+  }, [formData.itemDefinition, prevFormData?.itemDefinition])
 
   return (
     <FormControl fullWidth>
@@ -171,10 +166,11 @@ function CheckInOutForm({
           )}
           getOptionLabel={(user) => user.name}
           onChange={(_e, user) => {
-            const updatedFormData = updateFormData(formData, {
-              assignee: user || ({} as UserResponse),
-            })
-            setFormData(updatedFormData)
+            setFormData(
+              updateFormData(formData, {
+                assignee: user || undefined,
+              })
+            )
           }}
         />
       )}
@@ -197,10 +193,11 @@ function CheckInOutForm({
         sx={{ marginTop: 4 }}
         renderInput={(params) => <TextField {...params} label="Category" />}
         onChange={(_e, category) => {
-          const updatedFormData = updateFormData(formData, {
-            category: category || undefined,
-          })
-          setFormData(updatedFormData)
+          setFormData(
+            updateFormData(formData, {
+              category: category || undefined,
+            })
+          )
         }}
         getOptionLabel={(category) => category.name}
         value={formData.category || null}
@@ -211,10 +208,11 @@ function CheckInOutForm({
         sx={{ marginTop: 4 }}
         renderInput={(params) => <TextField {...params} label="Item" />}
         onChange={(_e, itemDefinition) => {
-          const updatedFormData = updateFormData(formData, {
-            itemDefinition: itemDefinition || undefined,
-          })
-          setFormData(updatedFormData)
+          setFormData(
+            updateFormData(formData, {
+              itemDefinition: itemDefinition || undefined,
+            })
+          )
         }}
         getOptionLabel={(itemDefinition) => itemDefinition.name}
         value={formData.itemDefinition || null}
@@ -223,10 +221,11 @@ function CheckInOutForm({
         attributes={splitAttrs.list}
         sx={{ mt: 4 }}
         onChange={(_e, attributes) => {
-          const updatedFormData = updateFormData(formData, {
-            attributes: attributes || undefined,
-          })
-          setFormData(updatedFormData)
+          setFormData(
+            updateFormData(formData, {
+              attributes: attributes || undefined,
+            })
+          )
         }}
         value={aaSelected}
         setValue={setAaSelected}
