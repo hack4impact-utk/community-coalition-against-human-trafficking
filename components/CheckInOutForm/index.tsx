@@ -10,22 +10,24 @@ import {
   CategoryResponse,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
-import AttributeAutocomplete from 'components/AttributeAutocomplete'
-import { separateAttributes } from 'utils/attribute'
+import AttributeAutocomplete, {
+  AutocompleteAttributeOption,
+} from 'components/AttributeAutocomplete'
+import { separateAttributes, SeparatedAttributes } from 'utils/attribute'
 
 interface Props {
   kioskMode: boolean
   users: UserResponse[]
   itemDefinitions: ItemDefinitionResponse[]
-  attributes: AttributeResponse[]
   categories: CategoryResponse[]
 }
+
+const defaultSplitAttrs = separateAttributes()
 
 function CheckInOutForm({
   kioskMode,
   users,
   itemDefinitions,
-  attributes,
   categories,
 }: Props) {
   const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
@@ -39,7 +41,50 @@ function CheckInOutForm({
   >([])
   const [selectedCategory, setSelectedCategory] =
     React.useState<CategoryResponse | null>()
-  const splitAttrs = separateAttributes(attributes)
+  const [filteredItemDefinitions, setFilteredItemDefinitions] =
+    React.useState<ItemDefinitionResponse[]>(itemDefinitions)
+  const [splitAttrs, setSplitAttrs] =
+    React.useState<SeparatedAttributes>(defaultSplitAttrs)
+  const [aaSelected, setAaSelected] = React.useState<
+    AutocompleteAttributeOption[]
+  >([])
+
+  // Update filtered item defs when category changes
+  React.useEffect(() => {
+    if (selectedCategory) {
+      setFilteredItemDefinitions(
+        itemDefinitions.filter((itemDefinition) => {
+          if (
+            itemDefinition.category &&
+            itemDefinition.category.hasOwnProperty('_id')
+          ) {
+            return itemDefinition.category._id === selectedCategory._id
+          }
+        })
+      )
+    } else {
+      setFilteredItemDefinitions(itemDefinitions)
+    }
+  }, [selectedCategory, itemDefinitions])
+
+  // Update split attributes when item definition changes
+  React.useEffect(() => {
+    if (selectedItemDefinition) {
+      setSplitAttrs(
+        separateAttributes(
+          selectedItemDefinition.attributes as AttributeResponse[]
+        )
+      )
+    } else {
+      setSplitAttrs(defaultSplitAttrs)
+      setSelectedAttributes([])
+      setAaSelected([])
+    }
+  }, [selectedItemDefinition])
+
+  React.useEffect(() => {
+    console.log(selectedAttributes)
+  }, [selectedAttributes])
 
   // if you select an item definition without selecting a category, infer the category
   React.useEffect(() => {
@@ -86,7 +131,7 @@ function CheckInOutForm({
         disabled={!!selectedItemDefinition}
       />
       <Autocomplete
-        options={itemDefinitions}
+        options={filteredItemDefinitions}
         sx={{ marginTop: 4 }}
         renderInput={(params) => <TextField {...params} label="Item" />}
         onChange={(_e, itemDefinition) =>
@@ -100,6 +145,8 @@ function CheckInOutForm({
         onChange={(_e, attributes) => {
           setSelectedAttributes(attributes)
         }}
+        value={aaSelected}
+        setValue={setAaSelected}
       />
       <QuantityForm quantity={quantity} setQuantity={setQuantity} />
     </FormControl>

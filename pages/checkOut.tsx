@@ -43,7 +43,6 @@ export default function CheckOutPage({ categories }: Props) {
                 kioskMode={true}
                 users={[]}
                 itemDefinitions={[]}
-                attributes={[]}
                 categories={categories}
               />
             </CardContent>

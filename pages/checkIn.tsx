@@ -63,7 +63,6 @@ export default function CheckInPage({ categories }: Props) {
                 kioskMode={true}
                 users={[]}
                 itemDefinitions={[]}
-                attributes={[]}
                 categories={categories}
               />
             </CardContent>
