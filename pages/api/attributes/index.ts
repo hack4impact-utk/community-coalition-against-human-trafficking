@@ -8,7 +8,7 @@ import constants from 'utils/constants'
 
 // @route GET api/attributes - Returns a list of all Attributes in the database - Private
 // @route POST api/attributes - Create an Attribute from request body - Private
-export default async function handler(
+export default async function attributesHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

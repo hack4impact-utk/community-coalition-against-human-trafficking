@@ -29,6 +29,7 @@ export interface InventoryItemAttributeRequest {
 export interface InventoryItemRequest extends InventoryItem {
   itemDefinition: string
   attributes?: InventoryItemAttributeRequest[]
+  assignee?: string
 }
 
 export type CategoryPostRequest = Omit<Category, '_id'>
