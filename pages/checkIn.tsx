@@ -132,7 +132,7 @@ export default function CheckInPage() {
                 itemDefinitions={testItemDefinitions}
                 categories={testCategories}
                 onChange={(item) => {
-                  console.log(item)
+                  // console.log(item)
                 }}
                 inventoryItem={testInventoryItem}
               />

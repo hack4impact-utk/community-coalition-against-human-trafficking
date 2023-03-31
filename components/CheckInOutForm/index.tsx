@@ -20,7 +20,7 @@ import {
 import { usePrevious } from 'utils/hooks/usePrevious'
 
 interface CheckInOutFormData {
-  assignee: UserResponse
+  user: UserResponse
   date: Dayjs
   category: CategoryResponse
   itemDefinition: ItemDefinitionResponse
@@ -39,7 +39,7 @@ interface Props {
 
 function blankFormData(): CheckInOutFormData {
   return {
-    assignee: {} as UserResponse,
+    user: {} as UserResponse,
     date: dayjs(new Date()),
     category: {} as CategoryResponse,
     itemDefinition: {} as ItemDefinitionResponse,
@@ -87,7 +87,6 @@ function CheckInOutForm({
       separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
     )
   const initialFormData: Partial<CheckInOutFormData> = {
-    assignee: inventoryItem?.assignee,
     category: inventoryItem?.itemDefinition?.category,
     itemDefinition: inventoryItem?.itemDefinition,
     attributes: inventoryItem?.attributes
@@ -144,13 +143,25 @@ function CheckInOutForm({
       )
     } else {
       setSplitAttrs(defaultSplitAttrs)
-    }
-
-    if (prevFormData?.itemDefinition !== undefined) {
       setSelectedAttributes([])
       setAaSelected([])
       setFormData((formData) =>
-        updateFormData(formData, { attributes: undefined })
+        updateFormData(formData, {
+          attributes: undefined,
+        })
+      )
+    }
+
+    if (
+      formData.itemDefinition !== prevFormData?.itemDefinition &&
+      prevFormData?.itemDefinition
+    ) {
+      setSelectedAttributes([])
+      setAaSelected([])
+      setFormData((formData) =>
+        updateFormData(formData, {
+          attributes: undefined,
+        })
       )
     }
   }, [formData.itemDefinition, prevFormData?.itemDefinition])
@@ -168,7 +179,7 @@ function CheckInOutForm({
           onChange={(_e, user) => {
             setFormData(
               updateFormData(formData, {
-                assignee: user || undefined,
+                user: user || undefined,
               })
             )
           }}
