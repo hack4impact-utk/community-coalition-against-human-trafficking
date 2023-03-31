@@ -118,7 +118,7 @@ interface EnhancedTableProps {
   orderBy: string
 }
 
-function InventoryItemListHeader(props: EnhancedTableProps) {
+function DesktopInventoryItemListHeader(props: EnhancedTableProps) {
   const { order, orderBy, onRequestSort } = props
   const createSortHandler =
     (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
@@ -163,7 +163,7 @@ interface Props {
   category: string
 }
 
-export default function InventoryItemList(props: Props) {
+export default function DesktopInventoryItemList(props: Props) {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
   const [page, setPage] = React.useState(0)
@@ -201,7 +201,7 @@ export default function InventoryItemList(props: Props) {
           aria-labelledby="tableTitle"
           size="medium"
         >
-          <InventoryItemListHeader
+          <DesktopInventoryItemListHeader
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
