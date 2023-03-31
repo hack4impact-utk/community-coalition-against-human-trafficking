@@ -1,0 +1,2157 @@
+use("test")
+
+// if specified, clear out all existing collections (except the users collection)
+if (true) {
+   db.attributes.deleteMany({}); 
+   db.categories.deleteMany({}); 
+   db.inventoryItems.deleteMany({}); 
+   db.itemDefinitions.deleteMany({}); 
+}
+
+// CATEGORIES
+const categoryId1 = ObjectId();
+const categoryId2 = ObjectId();
+const categoryId3 = ObjectId();
+const categoryId4 = ObjectId();
+const categoryId5 = ObjectId();
+const categoryId6 = ObjectId();
+const categoryId7 = ObjectId();
+const categoryId8 = ObjectId();
+
+db.categories.insertMany([
+    {
+        "_id": categoryId1,
+        "name": "Clothing"
+    },
+    {
+        "_id": categoryId2,
+        "name": "Toiletries"
+    },
+    {
+        "_id": categoryId3,
+        "name": "Furniture"
+    },
+    {
+        "_id": categoryId4,
+        "name": "Large Appliances"
+    },
+    {
+        "_id": categoryId5,
+        "name": "Small Appliances"
+    },
+    {
+        "_id": categoryId6,
+        "name": "Administrative Supplies"
+    },
+    {
+        "_id": categoryId7,
+        "name": "Linens"
+    },
+    {
+        "_id": categoryId8,
+        "name": "Cleaning Supplies"
+    }
+]);
+
+
+// ATTRIBUTES
+const attributeId1 = ObjectId();
+const attributeId2 = ObjectId();
+const attributeId3 = ObjectId();
+const attributeId4 = ObjectId();
+const attributeId5 = ObjectId();
+const attributeId6 = ObjectId();
+const attributeId7 = ObjectId();
+const attributeId8 = ObjectId();
+const attributeId9 = ObjectId();
+const attributeId10 = ObjectId();
+const attributeId11 = ObjectId();
+const attributeId12 = ObjectId();
+const attributeId13 = ObjectId();
+const attributeId14 = ObjectId();
+const attributeId15 = ObjectId();
+const color1 = "#ebebeb";
+const color2 = "#c7dbda";
+const color3 = "#e2f0cb";
+const color4 = "#55cbcd";
+const color5 = "#143f46";
+const color6 = "#ff6961";
+
+db.attributes.insertMany([
+    {
+        "_id": attributeId1,
+        "name": "Top Size",
+        "possibleValues": ["Small", "Medium", "Large", "Extra-Large"],
+        "color": color1
+    },
+    {
+        "_id": attributeId2,
+        "name": "Shirt Type",
+        "possibleValues": ["Short-Sleeve", "Long-Sleeve"],
+        "color": color2
+    },
+    {
+        "_id": attributeId3,
+        "name": "Pants Length",
+        "possibleValues": ["Shorts", "Long Pants"],
+        "color": color3
+    },
+    {
+        "_id": attributeId4,
+        "name": "Pants Size",
+        "possibleValues": "text",
+        "color": color4
+    },
+    {
+        "_id": attributeId5,
+        "name": "Shoe Size",
+        "possibleValues": "number",
+        "color": color5
+    },
+    {
+        "_id": attributeId6,
+        "name": "Shoe Type",
+        "possibleValues": "text",
+        "color": color6
+    },
+    {
+        "_id": attributeId7,
+        "name": "Bra Size",
+        "possibleValues": "text",
+        "color": color1
+    },
+    {
+        "_id": attributeId8,
+        "name": "Toiletry Size",
+        "possibleValues": "number",
+        "color": color2
+    },
+    {
+        "_id": attributeId9,
+        "name": "Brand",
+        "possibleValues": "text",
+        "color": color3
+    },
+    {
+        "_id": attributeId10,
+        "name": "Type",
+        "possibleValues": "text",
+        "color": color4
+    },
+    {
+        "_id": attributeId11,
+        "name": "Oven Type",
+        "possibleValues": ["Electric", "Gas"],
+        "color": color5
+    },
+    {
+        "_id": attributeId15,
+        "name": "Serial Number",
+        "possibleValues": "text",
+        "color": color6
+    },
+    {
+        "_id": attributeId12,
+        "name": "Value",
+        "possibleValues": "number",
+        "color": color1
+    },
+    {
+        "_id": attributeId13,
+        "name": "Sheet Size",
+        "possibleValues": ["Twin", "Twin XL", "Full", "Queen", "King"],
+        "color": color2
+    },
+    {
+        "_id": attributeId14,
+        "name": "Condition",
+        "possibleValues": ["New", "Used"],
+        "color": color3
+    },
+]);
+
+
+
+// ITEM DEFINITIONS
+const itemDefinitionId1 = ObjectId();
+const itemDefinitionId2 = ObjectId();
+const itemDefinitionId3 = ObjectId();
+const itemDefinitionId4 = ObjectId();
+const itemDefinitionId5 = ObjectId();
+const itemDefinitionId6 = ObjectId();
+const itemDefinitionId7 = ObjectId();
+const itemDefinitionId8 = ObjectId();
+const itemDefinitionId9 = ObjectId();
+const itemDefinitionId10 = ObjectId();
+const itemDefinitionId11 = ObjectId();
+const itemDefinitionId12 = ObjectId();
+const itemDefinitionId13 = ObjectId();
+const itemDefinitionId14 = ObjectId();
+const itemDefinitionId15 = ObjectId();
+const itemDefinitionId16 = ObjectId();
+const itemDefinitionId17 = ObjectId();
+const itemDefinitionId18 = ObjectId();
+const itemDefinitionId19 = ObjectId();
+const itemDefinitionId20 = ObjectId();
+const itemDefinitionId21 = ObjectId();
+const itemDefinitionId22 = ObjectId();
+const itemDefinitionId23 = ObjectId();
+const itemDefinitionId24 = ObjectId();
+const itemDefinitionId25 = ObjectId();
+const itemDefinitionId26 = ObjectId();
+const itemDefinitionId27 = ObjectId();
+const itemDefinitionId28 = ObjectId();
+const itemDefinitionId29 = ObjectId();
+const itemDefinitionId30 = ObjectId();
+const itemDefinitionId31 = ObjectId();
+const itemDefinitionId32 = ObjectId();
+
+db.itemDefinitions.insertMany([
+    // clothing
+    {
+        "_id": itemDefinitionId1,
+        "name": "Shirt",
+        "category": categoryId1,
+        "attributes": [attributeId1, attributeId2],
+        "internal": false,
+        "lowStockThreshold": 20,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId2,
+        "name": "Pants",
+        "category": categoryId1,
+        "attributes": [attributeId3, attributeId4],
+        "internal": false,
+        "lowStockThreshold": 15,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId3,
+        "name": "Shoes",
+        "category": categoryId1,
+        "attributes": [attributeId5, attributeId6],
+        "internal": false,
+        "lowStockThreshold": 5,
+        "criticalStockThreshold": 2
+    },
+    {
+        "_id": itemDefinitionId4,
+        "name": "Bra",
+        "category": categoryId1,
+        "attributes": [attributeId7],
+        "internal": false,
+        "lowStockThreshold": 5,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId5,
+        "name": "Underwear",
+        "category": categoryId1,
+        "attributes": [],
+        "internal": false,
+        "lowStockThreshold": 15,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId6,
+        "name": "Socks",
+        "category": categoryId1,
+        "attributes": [],
+        "internal": false,
+        "lowStockThreshold": 30,
+        "criticalStockThreshold": 10
+    },
+
+
+
+    // toiletries
+    {
+        "_id": itemDefinitionId7,
+        "name": "Shampoo",
+        "category": categoryId2,
+        "attributes": [attributeId8],
+        "internal": false,
+        "lowStockThreshold": 30,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId8,
+        "name": "Conditioner",
+        "category": categoryId2,
+        "attributes": [attributeId8],
+        "internal": false,
+        "lowStockThreshold": 30,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId9,
+        "name": "Soap",
+        "category": categoryId2,
+        "attributes": [],
+        "internal": false,
+        "lowStockThreshold": 50,
+        "criticalStockThreshold": 20
+    },
+    {
+        "_id": itemDefinitionId10,
+        "name": "Body Wash",
+        "category": categoryId2,
+        "attributes": [attributeId8],
+        "internal": false,
+        "lowStockThreshold": 30,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId11,
+        "name": "Shaving Cream",
+        "category": categoryId2,
+        "attributes": [attributeId8],
+        "internal": false,
+        "lowStockThreshold": 30,
+        "criticalStockThreshold": 10
+    },
+    {
+        "_id": itemDefinitionId12,
+        "name": "Razor",
+        "category": categoryId2,
+        "attributes": [],
+        "internal": false,
+        "lowStockThreshold": 30,
+        "criticalStockThreshold": 10
+    },
+
+
+
+
+    // furniture
+    {
+        "_id": itemDefinitionId13,
+        "name": "Couch",
+        "category": categoryId3,
+        "attributes": [attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId14,
+        "name": "Table",
+        "category": categoryId3,
+        "attributes": [attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId15,
+        "name": "Chair",
+        "category": categoryId3,
+        "attributes": [attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+
+
+
+    // large appliances
+    {
+        "_id": itemDefinitionId16,
+        "name": "Oven",
+        "category": categoryId4,
+        "attributes": [attributeId9, attributeId11, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId17,
+        "name": "Refrigerator",
+        "category": categoryId4,
+        "attributes": [attributeId9, attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId18,
+        "name": "Dishwasher",
+        "category": categoryId4,
+        "attributes": [attributeId9, attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+
+
+
+
+
+    // small appliances
+    {
+        "_id": itemDefinitionId19,
+        "name": "Mini Fridge",
+        "category": categoryId5,
+        "attributes": [attributeId9, attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId20,
+        "name": "Coffee Maker",
+        "category": categoryId5,
+        "attributes": [attributeId9, attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId21,
+        "name": "Toaster",
+        "category": categoryId5,
+        "attributes": [attributeId9, attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId22,
+        "name": "Blender",
+        "category": categoryId5,
+        "attributes": [attributeId9, attributeId10, attributeId14],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+
+
+
+
+
+    // administrative supplies
+    {
+        "_id": itemDefinitionId23,
+        "name": "Laptop",
+        "category": categoryId6,
+        "attributes": [attributeId9, attributeId12, attributeId15],
+        "internal": true,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId24,
+        "name": "Keyboard",
+        "category": categoryId6,
+        "attributes": [attributeId9, attributeId12, attributeId15],
+        "internal": true,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId25,
+        "name": "Mouse",
+        "category": categoryId6,
+        "attributes": [attributeId9, attributeId12, attributeId15],
+        "internal": true,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId26,
+        "name": "Monitor",
+        "category": categoryId6,
+        "attributes": [attributeId9, attributeId12, attributeId15],
+        "internal": true,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+
+
+
+
+
+
+    // no category
+    {
+        "_id": itemDefinitionId27,
+        "name": "Jumper Cables",
+        "attributes": [],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId28,
+        "name": "Vacuum Cleaner",
+        "attributes": [attributeId9],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    
+
+
+    // linens
+    {
+        "_id": itemDefinitionId29,
+        "name": "Towel",
+        "category": categoryId7,
+        "attributes": [],
+        "internal": false,
+        "lowStockThreshold": 5,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId30,
+        "name": "Bedsheet",
+        "category": categoryId7,
+        "attributes": [attributeId13],
+        "internal": false,
+        "lowStockThreshold": 0,
+        "criticalStockThreshold": 0
+    },
+    {
+        "_id": itemDefinitionId31,
+        "name": "Blanket",
+        "category": categoryId7,
+        "attributes": [],
+        "internal": false,
+        "lowStockThreshold": 10,
+        "criticalStockThreshold": 5
+    },
+    {
+        "_id": itemDefinitionId32,
+        "name": "Pillow",
+        "category": categoryId7,
+        "attributes": [],
+        "internal": false,
+        "lowStockThreshold": 10,
+        "criticalStockThreshold": 5
+    }
+]);
+
+
+
+
+const userId1 = ObjectId("63fcb70862199670ed36177a");
+const userId2 = ObjectId("63fa5c9265ada1f23e68b638");
+const userId3 = ObjectId("63f95a8a55d930aa6176f06b");
+
+
+// INVENTORY ITEMS
+db.inventoryItems.insertMany([
+    // shirt
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Small"
+            }, 
+            {
+                "attribute": attributeId2,
+                "value": "Short-Sleeve"
+            }
+        ],
+        "quantity": 24
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Small"
+            }, 
+            {
+                "attribute": attributeId2,
+                "value": "Long-Sleeve"
+            }
+        ],
+        "quantity": 26
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Medium"
+            }, 
+            {
+                "attribute": attributeId2,
+                "value": "Long-Sleeve"
+            }
+        ],
+        "quantity": 6
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Large"
+            },
+            {
+                "attribute": attributeId2,
+                "value": "Long-Sleeve"
+            }
+            
+        ],
+        "quantity": 15
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Large"
+            },
+            {
+                "attribute": attributeId2,
+                "value": "Short-Sleeve"
+            }
+            
+        ],
+        "quantity": 22
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Extra-Large"
+            }, 
+            {
+                "attribute": attributeId2,
+                "value": "Long-Sleeve"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId1,
+        "attributes": [
+            {
+                "attribute": attributeId1,
+                "value": "Extra-Large"
+            }, 
+        ],
+        "quantity": 0
+    },
+
+
+
+    // pants
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId2,
+        "attributes": [
+            {
+                "attribute": attributeId3,
+                "value": "Shorts"
+            }, 
+            {
+                "attribute": attributeId4,
+                "value": "28x30"
+            }
+        ],
+        "quantity": 16
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId2,
+        "attributes": [
+            {
+                "attribute": attributeId3,
+                "value": "Shorts"
+            }, 
+            {
+                "attribute": attributeId4,
+                "value": "28x32"
+            }
+        ],
+        "quantity": 21
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId2,
+        "attributes": [
+            {
+                "attribute": attributeId3,
+                "value": "Long Pants"
+            }, 
+            {
+                "attribute": attributeId4,
+                "value": "Medium"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId2,
+        "attributes": [
+            {
+                "attribute": attributeId3,
+                "value": "Long Pants"
+            }, 
+            {
+                "attribute": attributeId4,
+                "value": "28x30"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId2,
+        "attributes": [
+            {
+                "attribute": attributeId3,
+                "value": "Long Pants"
+            }, 
+            {
+                "attribute": attributeId4,
+                "value": "Large"
+            }
+        ],
+        "quantity": 12
+    },
+
+
+
+    // shoes
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 12
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 6
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 4
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 7
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 8
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 7
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 11
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 12.5
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 11.5
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Tennis Shoes"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 12
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 6
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 4
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 7
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 8
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 7
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 11
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 12.5
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 11.5
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Dress Shoes"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 12
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 6
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 4
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 7
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 8
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 7
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 11
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 12.5
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId3,
+        "attributes": [
+            {
+                "attribute": attributeId5,
+                "value": 11.5
+            }, 
+            {
+                "attribute": attributeId6,
+                "value": "Boots"
+            }
+        ],
+        "quantity": 0
+    },
+
+    // bra
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "30A"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "32B"
+            }
+        ],
+        "quantity": 10
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "34C"
+            }
+        ],
+        "quantity": 7
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "36D"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "38DD"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "40C"
+            }
+        ],
+        "quantity": 6
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "42B"
+            }
+        ],
+        "quantity": 4
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "44A"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "46D"
+            }
+        ],
+        "quantity": 8
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId4,
+        "attributes": [
+            {
+                "attribute": attributeId7,
+                "value": "48DD"
+            }
+        ],
+        "quantity": 1
+    },
+
+    // Underwear
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId5,
+        "attributes": [],
+        "quantity": 20
+    },
+
+    // socks
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId6,
+        "attributes": [],
+        "quantity": 50
+    },
+
+
+
+
+
+
+
+
+    // Toiletries
+    // Shampoo
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId7,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 16
+            }
+        ],
+        "quantity": 20
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId7,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 32
+            }
+        ],
+        "quantity": 12
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId7,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 8
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId7,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 12
+            }
+        ],
+        "quantity": 8
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId7,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 24
+            }
+        ],
+        "quantity": 10
+    },
+
+    // conditioner
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId8,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 16
+            }
+        ],
+        "quantity": 20
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId8,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 32
+            }
+        ],
+        "quantity": 12
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId8,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 8
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId8,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 12
+            }
+        ],
+        "quantity": 8
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId8,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 24
+            }
+        ],
+        "quantity": 10
+    },
+
+    // Soap
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId9,
+        "attributes": [],
+        "quantity": 75
+    },
+
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId10,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 16
+            }
+        ],
+        "quantity": 20
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId10,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 32
+            }
+        ],
+        "quantity": 12
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId10,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 8
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId10,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 12
+            }
+        ],
+        "quantity": 8
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId10,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 24
+            }
+        ],
+        "quantity": 10
+    },
+
+    // shaving cream
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId11,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 8
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId11,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 16
+            }
+        ],
+        "quantity": 40
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId11,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 24
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId11,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 12
+            }
+        ],
+        "quantity": 15
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId11,
+        "attributes": [
+            {
+                "attribute": attributeId8,
+                "value": 32
+            }
+        ],
+        "quantity": 8
+    },
+
+
+    // Razor
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId12,
+        "attributes": [],
+        "quantity": 50
+    }, 
+
+    // FURNITURE
+    // couch
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId13,
+        "attributes": [
+            {
+                "attributeId": attributeId10,
+                "value": "Sectional"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId13,
+        "attributes": [
+            {
+                "attributeId": attributeId10,
+                "value": "Recliner"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 2
+    },
+
+    // Table
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId14,
+        "attributes": [
+            {
+                "attributeId": attributeId10,
+                "value": "Coffee Table"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId14,
+        "attributes": [
+            {
+                "attributeId": attributeId10,
+                "value": "End Table"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 2
+    },
+
+    // Chair
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId15,
+        "attributes": [
+            {
+                "attributeId": attributeId10,
+                "value": "Dining Chair"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 4
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId15,
+        "attributes": [
+            {
+                "attributeId": attributeId10,
+                "value": "Armchair"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 1
+    },
+
+    // Oven
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId16,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Samsung"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Electric"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId16,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "LG"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Gas"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 3
+    },
+
+    // Refrigerator
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId17,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Whirlpool"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "French Door"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId17,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "GE"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Side-by-Side"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 1
+    },
+
+    // Dishwasher
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId18,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Bosch"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Built-in"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 4
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId18,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "KitchenAid"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Portable"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 2
+    },
+
+    // Mini Fridge
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId19,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "LG"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Compact"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 10
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId19,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Samsung"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Mini"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId19,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Whirlpool"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Small"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 2
+    },
+
+    // Coffee Maker
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId20,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Keurig"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Single Serve"},
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 8
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId20,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Cuisinart"
+            },
+            {
+                "attributeId": attributeId11,
+                "value": "Drip"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 4
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId20,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Hamilton Beach"},
+            {
+                "attributeId": attributeId11,
+                "value": "Percolator"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 1
+    },
+
+    // Toaster
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId21,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Cuisinart"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "2 Slice"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 10
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId21,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "KitchenAid"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "4 Slice"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 5
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId21,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Black & Decker"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Toaster Oven"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 2
+    },
+
+    // Blender
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId22,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Ninja"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Countertop"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 8
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId22,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Vitamix"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Personal"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "New"
+            }
+        ],
+        "quantity": 4
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId22,
+        "attributes": [
+            {
+                "attributeId": attributeId9,
+                "value": "Oster"
+            },
+            {
+                "attributeId": attributeId10,
+                "value": "Handheld"
+            },
+            {
+                "attributeId": attributeId14,
+                "value": "Used"
+            }
+        ],
+        "quantity": 1
+    },
+
+
+    // ADMINISTRATIVE SUPPLIES
+
+    //Laptop
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId23,
+        "attributes": [
+            {
+                "attribute": attributeId9,
+                "value": "Dell"
+            },
+            {
+                "attribute": attributeId12,
+                "value": 1300
+            },
+            {
+                "attribute": attributeId15,
+                "value": "ABCD1234"
+            }
+        ],
+        "quantity": 1,
+        "assignee": userId1
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId23,
+        "attributes": [
+            {"attribute": attributeId9, "value": "Lenovo"},
+            {"attribute": attributeId12, "value": 1200},
+            {"attribute": attributeId15, "value": "EFGH5678"}
+        ],
+        "quantity": 1,
+        "assignee": userId2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId23,
+        "attributes": [
+            {"attribute": attributeId9, "value": "HP"},
+            {"attribute": attributeId12, "value": 1800},
+            {"attribute": attributeId15, "value": "IJKL9012"}
+        ],
+        "quantity": 1,
+        "assignee": userId3
+    },
+
+    //Keyboard
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId24,
+        "attributes": [
+            {"attribute": attributeId9, "value": "Dell"},
+            {"attribute": attributeId12, "value": 50},
+            {"attribute": attributeId15, "value": "MNOP3456"}
+        ],
+        "quantity": 1,
+        "assignee": userId1
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId24,
+        "attributes": [
+            {"attribute": attributeId9, "value": "Lenovo"},
+            {"attribute": attributeId12, "value": 40},
+            {"attribute": attributeId15, "value": "QRST7890"}
+        ],
+        "quantity": 1,
+        "assignee": userId2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId24,
+        "attributes": [
+            {"attribute": attributeId9, "value": "HP"},
+            {"attribute": attributeId12, "value": 60},
+            {"attribute": attributeId15, "value": "UVWX1234"}
+        ],
+        "quantity": 1,
+        "assignee": userId3
+    },
+
+    // Mouse
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId25,
+        "attributes": [
+            {"attribute": attributeId9, "value": "Dell"},
+            {"attribute": attributeId12, "value": 50},
+            {"attribute": attributeId15, "value": "ABCD1234"}
+        ],
+        "quantity": 1,
+        "assignee": userId1
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId25,
+        "attributes": [
+            {"attribute": attributeId9, "value": "Lenovo"},
+            {"attribute": attributeId12, "value": 40},
+            {"attribute": attributeId15, "value": "EFGH5678"}
+        ],
+        "quantity": 1,
+        "assignee": userId2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId25,
+        "attributes": [
+            {"attribute": attributeId9, "value": "HP"},
+            {"attribute": attributeId12, "value": 60},
+            {"attribute": attributeId15, "value": "IJKL9012"}
+        ],
+        "quantity": 1,
+        "assignee": userId3
+    },
+
+    // Monitor
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId26,
+        "attributes": [
+            {"attribute": attributeId9, "value": "Dell"},
+            {"attribute": attributeId12, "value": 1500},
+            {"attribute": attributeId15, "value": "MNOP3456"}
+        ],
+        "quantity": 1,
+        "assignee": userId1
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId26,
+        "attributes": [
+            {"attribute": attributeId9, "value": "Lenovo"},
+            {"attribute": attributeId12, "value": 1200},
+            {"attribute": attributeId15, "value": "QRST7890"}
+        ],
+        "quantity": 1,
+        "assignee": userId2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId26,
+        "attributes": [
+            {"attribute": attributeId9, "value": "HP"},
+            {"attribute": attributeId12, "value": 1800},
+            {"attribute": attributeId15, "value": "UVWX1234"}
+        ],
+        "quantity": 1,
+        "assignee": userId3
+    },
+
+
+    // NO CATEGORY
+
+    // Jumper Cables
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId27,
+        "attributes": [],
+        "quantity": 10
+    },
+
+    // Vacuum Cleaner
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId28,
+        "attributes": [
+            {
+                "attribute": attributeId9,
+                "value": "Dyson"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId28,
+        "attributes": [
+            {
+                "attribute": attributeId9,
+                "value": "Hoover"
+            }
+        ],
+        "quantity": 1
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId28,
+        "attributes": [
+            {
+                "attribute": attributeId9,
+                "value": "Shark"
+            }
+        ],
+        "quantity": 3
+    },
+
+    // Towel
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId29,
+        "attributes": [],
+        "quantity": 1
+    },
+
+    // Bedsheet
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId30,
+        "attributes": [
+            {
+                "attribute": attributeId13,
+                "value": "Twin"
+            }
+        ],
+        "quantity": 3
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId30,
+        "attributes": [
+            {
+                "attribute": attributeId13,
+                "value": "Twin XL"
+            }
+        ],
+        "quantity": 7
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId30,
+        "attributes": [
+            {
+                "attribute": attributeId13,
+                "value": "Full"
+            }
+        ],
+        "quantity": 2
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId30,
+        "attributes": [
+            {
+            "attribute": attributeId13,
+            "value": "Queen"
+            }
+        ],
+        "quantity": 0
+    },
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId30,
+        "attributes": [
+            {
+                "attribute": attributeId13,
+                "value": "King"
+            }
+        ],
+        "quantity": 1
+    },
+
+    // Blanket
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId31,
+        "attributes": [],
+        "quantity": 15
+    },
+
+    // Pillow
+    {
+        "_id": ObjectId(),
+        "itemDefinition": itemDefinitionId32,
+        "attributes": [],
+        "quantity": 2
+    }
+])
