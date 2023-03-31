@@ -1,4 +1,3 @@
-import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
 import { TableRow, TableCell, Chip, Tooltip, Box } from '@mui/material'
 import { InventoryItemResponse } from 'utils/types'

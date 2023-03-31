@@ -1,19 +1,9 @@
 import { List } from '@mui/material'
-import { InventoryItem, ItemDefinition, Attribute, User } from 'utils/types'
+import { InventoryItemResponse } from 'utils/types'
 import MobileInventoryItemListItem from './MobileInventoryItemListItem'
 
-// TODO: use updated type from andrews pr when ready
-interface ExpandedInventoryItem extends InventoryItem {
-  itemDefinition: ItemDefinition
-  attributes: {
-    attribute: Attribute
-    value: string | number
-  }[]
-  assignee?: User
-}
-
 interface MobileInventoryItemListProps {
-  inventoryItems: ExpandedInventoryItem[]
+  inventoryItems: InventoryItemResponse[]
 }
 export default function MobileInventoryItemList({
   inventoryItems,

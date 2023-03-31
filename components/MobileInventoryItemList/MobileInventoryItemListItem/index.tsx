@@ -6,7 +6,7 @@ import {
   Typography,
   Avatar,
 } from '@mui/material'
-import { Attribute, InventoryItem, ItemDefinition, User } from 'utils/types'
+import { InventoryItemResponse } from 'utils/types'
 import React from 'react'
 import theme from 'utils/theme'
 import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
@@ -14,17 +14,7 @@ import WarningIcon from '@mui/icons-material/Warning'
 import getContrastYIQ from 'utils/getContrastYIQ'
 
 interface MobileInventoryItemListItemProps {
-  inventoryItem: ExpandedInventoryItem
-}
-
-// TODO: use updated type from andrews pr when ready
-interface ExpandedInventoryItem extends InventoryItem {
-  itemDefinition: ItemDefinition
-  attributes: {
-    attribute: Attribute
-    value: string | number
-  }[]
-  assignee?: User
+  inventoryItem: InventoryItemResponse
 }
 
 export default function MobileInventoryItemListItem({
@@ -70,7 +60,7 @@ export default function MobileInventoryItemListItem({
             )}
 
             <br />
-            {inventoryItem.attributes.map((attribute) => (
+            {inventoryItem.attributes?.map((attribute) => (
               <Chip
                 label={
                   typeof attribute.attribute.possibleValues === 'object'
