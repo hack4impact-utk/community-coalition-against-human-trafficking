@@ -1,4 +1,4 @@
-import InventoryItemListItem from 'components/InventoryItemListItem'
+import DesktopInventoryItemListItem from 'components/DesktopInventoryItemListItem'
 import { InventoryItemResponse, ItemDefinitionResponse } from 'utils/types'
 import { Table, TableBody, TableContainer, Paper } from '@mui/material'
 
@@ -39,7 +39,7 @@ export default function Home() {
           _id: 'testId',
           name: 'color',
           possibleValues: 'text',
-          color: '# 3D3D3D',
+          color: '#3D3D3D',
         },
         value: 'black',
       },
@@ -48,7 +48,7 @@ export default function Home() {
           _id: 'testId',
           name: 'sleeve',
           possibleValues: 'text',
-          color: '#3D3D3D',
+          color: '#FFFF00',
         },
         value: 'long-sleeve',
       },
@@ -57,7 +57,7 @@ export default function Home() {
           _id: 'testId',
           name: 'size',
           possibleValues: 'text',
-          color: '#3D3D3D',
+          color: '#000000',
         },
         value: 'medium',
       },
@@ -66,7 +66,7 @@ export default function Home() {
           _id: 'testId',
           name: 'color',
           possibleValues: 'text',
-          color: '# 3D3D3D',
+          color: '#123456',
         },
         value: 'black',
       },
@@ -299,10 +299,10 @@ export default function Home() {
     >
       <Table sx={{ width: 'max-content' }}>
         <TableBody>
-          <InventoryItemListItem inventoryItem={testItem} />
-          <InventoryItemListItem inventoryItem={testItem2} />
-          <InventoryItemListItem inventoryItem={testItem3} />
-          <InventoryItemListItem inventoryItem={testItem4} />
+          <DesktopInventoryItemListItem inventoryItem={testItem} />
+          <DesktopInventoryItemListItem inventoryItem={testItem2} />
+          <DesktopInventoryItemListItem inventoryItem={testItem3} />
+          <DesktopInventoryItemListItem inventoryItem={testItem4} />
         </TableBody>
       </Table>
     </TableContainer>

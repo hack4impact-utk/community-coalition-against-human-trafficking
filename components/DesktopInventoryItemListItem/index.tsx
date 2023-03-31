@@ -10,7 +10,7 @@ interface InventoryItemListItemProps {
   inventoryItem: InventoryItemResponse
 }
 
-export default function InventoryItemListItem({
+export default function DesktopInventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
@@ -68,6 +68,12 @@ export default function InventoryItemListItem({
           size="small"
           label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
           key={i}
+          sx={{
+            backgroundColor: itemAttribute.attribute.color,
+            '& .MuiChip-label': {
+              color: getContrastYIQ(itemAttribute.attribute.color),
+            },
+          }}
         />
       )
     })
