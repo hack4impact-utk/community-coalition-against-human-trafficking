@@ -12,7 +12,7 @@ import constants from 'utils/constants'
 // @route GET api/categories/[categoryId] - Returns a single Category object given a categoryId - Private
 // @route PUT api/users/[categoryId] - Updates an existing Category object (identified by categoryId) with a new Category object - Private
 // @route DELETE api/users/[categoryId] - Deletes a single Category object (identified by categoryId) - Private
-export default async function handler(
+export default async function categoryHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

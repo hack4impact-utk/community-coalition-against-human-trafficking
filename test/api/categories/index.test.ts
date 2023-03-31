@@ -1,14 +1,19 @@
 import { ObjectId } from 'mongodb'
 import CategorySchema, { CategoryDocument } from 'server/models/Category'
-import { ApiError, CategoryResponse } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/categories'
+import categoriesHandler from 'pages/api/categories'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
+import {
+  validCategoryResponse,
+  mockObjectId,
+  validCategoryPostRequest,
+} from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -37,7 +42,7 @@ describe('api/categories', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await categoriesHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -53,7 +58,7 @@ describe('api/categories', () => {
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await categoriesHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -80,7 +85,7 @@ describe('api/categories', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await categoriesHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(serverAuth).toHaveBeenCalledTimes(1)
@@ -102,7 +107,7 @@ describe('api/categories', () => {
 
       const response = createResponse()
 
-      await handler(request, response)
+      await categoriesHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
@@ -114,17 +119,11 @@ describe('api/categories', () => {
 
   describe('POST', () => {
     test('valid call returns correct data', async () => {
-      const fakeObjectId = '5f9f1c7b9c9b9b0b0c0c0c0c'
       const mockCreateEntity = jest
         .spyOn(MongoDriver, 'createEntity')
         .mockImplementation(
           async () =>
-            ({
-              ...validCategoryResponse[0],
-              _id: fakeObjectId,
-            } as CategoryDocument & {
-              _id: ObjectId
-            })
+            validCategoryResponse[0] as CategoryDocument & { _id: ObjectId }
         )
       const mockApiCategoryValidation = jest
         .spyOn(apiValidator, 'apiCategoryValidation')
@@ -133,28 +132,22 @@ describe('api/categories', () => {
       const request = createRequest({
         method: 'POST',
         url: `/api/categories`,
-        body: validCategoryResponse[0],
+        body: validCategoryPostRequest,
       })
 
       const response = createResponse()
 
-      await handler(request, response)
+      await categoriesHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockApiCategoryValidation).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).toHaveBeenCalledTimes(1)
       expect(mockCreateEntity).lastCalledWith(
         CategorySchema,
-        validCategoryResponse[0]
+        validCategoryPostRequest
       )
       expect(response.statusCode).toBe(201)
-      expect(data).toEqual(fakeObjectId)
+      expect(data).toEqual(mockObjectId)
     })
   })
 })
-const validCategoryResponse: CategoryResponse[] = [
-  {
-    _id: '1',
-    name: 'test',
-  },
-]

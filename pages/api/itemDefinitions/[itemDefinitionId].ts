@@ -17,7 +17,7 @@ import constants from 'utils/constants'
 // @route GET api/itemDefintions/[itemDefinitionId] - Returns a single ItemDefinition object given a itemDefinitionId - Private
 // @route PUT api/users/[itemDefinitionId] - Updates an existing ItemDefinition object (identified by itemDefinitionId) with a new ItemDefinition object - Private
 // @route DELETE api/users/[itemDefinitionId] - Deletes a single ItemDefinition object (identified by itemDefinitionId) - Private
-export default async function handler(
+export default async function itemDefinitionHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

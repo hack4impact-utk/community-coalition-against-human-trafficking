@@ -1,14 +1,19 @@
 import { ObjectId } from 'mongodb'
 import UserSchema, { UserDocument } from 'server/models/User'
-import { ApiError, UserResponse } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import handler from 'pages/api/users/[userId]'
+import userHandler from 'pages/api/users/[userId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import constants from 'utils/constants'
+import {
+  validUserResponse,
+  mockObjectId,
+  validUserPutRequest,
+} from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(apiValidator, 'apiObjectIdValidation').mockImplementation()
@@ -18,7 +23,7 @@ beforeAll(() => {
   jest
     .spyOn(MongoDriver, 'getEntity')
     .mockImplementation(
-      async () => validUserResponse as UserDocument & { _id: ObjectId }
+      async () => validUserResponse[0] as UserDocument & { _id: ObjectId }
     )
 })
 
@@ -43,14 +48,14 @@ describe('api/users/[userId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: `/api/users/${fakeObjectId}`,
+      url: `/api/users/${mockObjectId}`,
       query: {
-        userId: fakeObjectId,
+        userId: mockObjectId,
       },
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await userHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -62,14 +67,14 @@ describe('api/users/[userId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: `/api/users/${fakeObjectId}`,
+      url: `/api/users/${mockObjectId}`,
       query: {
-        userId: fakeObjectId,
+        userId: mockObjectId,
       },
     })
     const response = createResponse()
 
-    await handler(request, response)
+    await userHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -83,26 +88,26 @@ describe('api/users/[userId]', () => {
       const mockGetEntity = jest
         .spyOn(MongoDriver, 'getEntity')
         .mockImplementation(
-          async () => validUserResponse as UserDocument & { _id: ObjectId }
+          async () => validUserResponse[0] as UserDocument & { _id: ObjectId }
         )
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/users/${fakeObjectId}`,
+        url: `/api/users/${mockObjectId}`,
         query: {
-          userId: fakeObjectId,
+          userId: mockObjectId,
         },
       })
 
       const response = createResponse()
 
-      await handler(request, response)
+      await userHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
-      expect(mockGetEntity).lastCalledWith(UserSchema, fakeObjectId)
+      expect(mockGetEntity).lastCalledWith(UserSchema, mockObjectId)
       expect(response.statusCode).toBe(200)
-      expect(data).toEqual(validUserResponse)
+      expect(data).toEqual(validUserResponse[0])
     })
   })
 
@@ -119,24 +124,24 @@ describe('api/users/[userId]', () => {
 
       const request = createRequest({
         method: 'PUT',
-        url: `/api/users/${fakeObjectId}`,
+        url: `/api/users/${mockObjectId}`,
         query: {
-          userId: fakeObjectId,
+          userId: mockObjectId,
         },
-        body: validUserResponse,
+        body: validUserPutRequest,
       })
 
       const response = createResponse()
 
-      await handler(request, response)
+      await userHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockApiUserValidation).toHaveBeenCalledTimes(1)
       expect(mockUpdateEntity).toHaveBeenCalledTimes(1)
       expect(mockUpdateEntity).lastCalledWith(
         UserSchema,
-        fakeObjectId,
-        validUserResponse
+        mockObjectId,
+        validUserPutRequest
       )
       expect(response.statusCode).toBe(200)
       expect(data).toEqual({})
@@ -151,26 +156,19 @@ describe('api/users/[userId]', () => {
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: `/api/users/${fakeObjectId}`,
+        url: `/api/users/${mockObjectId}`,
         query: {
-          userId: fakeObjectId,
+          userId: mockObjectId,
         },
       })
       const response = createResponse()
 
-      await handler(request, response)
+      await userHandler(request, response)
 
       expect(mockDeleteEntity).toHaveBeenCalledTimes(1)
-      expect(mockDeleteEntity).lastCalledWith(UserSchema, fakeObjectId)
+      expect(mockDeleteEntity).lastCalledWith(UserSchema, mockObjectId)
       expect(response.statusCode).toBe(200)
       expect(response._getJSONData().payload).toEqual({})
     })
   })
 })
-const validUserResponse: UserResponse = {
-  _id: '1',
-  name: 'Test User',
-  email: 'test@user.com',
-  image: 'https://test.com/image.jpg',
-}
-const fakeObjectId = '6408a7156668c5655c25b105'

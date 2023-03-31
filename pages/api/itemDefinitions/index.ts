@@ -13,7 +13,7 @@ import constants from 'utils/constants'
 
 // @route GET api/itemDefintions - Returns a list of all itemDefintions in the database - Private
 // @route POST /api/itemDefintions - Create a itemDefinition from request body - Private
-export default async function handler(
+export default async function itemDefinitionsHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
