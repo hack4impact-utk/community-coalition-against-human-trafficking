@@ -63,9 +63,9 @@ export default function MobileInventoryItemListItem({
             {inventoryItem.attributes?.map((itemAttribute) => (
               <Chip
                 label={
-                  typeof itemAttribute.attribute?.possibleValues === 'object'
+                  typeof itemAttribute.attribute.possibleValues === 'object'
                     ? `${itemAttribute.value}`
-                    : `${itemAttribute.attribute?.name}: ${itemAttribute.value}`
+                    : `${itemAttribute.attribute.name}: ${itemAttribute.value}`
                 }
                 sx={{
                   backgroundColor: itemAttribute.attribute.color,
