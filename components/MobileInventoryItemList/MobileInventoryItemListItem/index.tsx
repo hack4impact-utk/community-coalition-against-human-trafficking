@@ -60,22 +60,22 @@ export default function MobileInventoryItemListItem({
             )}
 
             <br />
-            {inventoryItem.attributes?.map((attribute) => (
+            {inventoryItem.attributes?.map((itemAttribute) => (
               <Chip
                 label={
-                  typeof attribute.attribute.possibleValues === 'object'
-                    ? `${attribute.value}`
-                    : `${attribute.attribute.name}: ${attribute.value}`
+                  typeof itemAttribute.attribute?.possibleValues === 'object'
+                    ? `${itemAttribute.value}`
+                    : `${itemAttribute.attribute?.name}: ${itemAttribute.value}`
                 }
                 sx={{
-                  backgroundColor: attribute.attribute.color,
+                  backgroundColor: itemAttribute.attribute.color,
                   '& .MuiChip-label': {
-                    color: getContrastYIQ(attribute.attribute.color),
+                    color: getContrastYIQ(itemAttribute.attribute.color),
                   },
                   mr: 1,
                   mt: 1,
                 }}
-                key={`${attribute.attribute.name}-${attribute.value}`}
+                key={`${itemAttribute.attribute.name}-${itemAttribute.value}`}
                 size="small"
               />
             ))}
