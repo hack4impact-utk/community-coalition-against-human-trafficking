@@ -1,4 +1,4 @@
-import DesktopInventoryItemListItem from 'components/DesktopInventoryItemListItem'
+import DesktopInventoryItemListItem from 'components/DesktopInventoryItemList/DesktopInventoryItemListItem'
 import { InventoryItemResponse, ItemDefinitionResponse } from 'utils/types'
 import { Table, TableBody, TableContainer, Paper } from '@mui/material'
 
