@@ -10,8 +10,11 @@ interface InventoryItemListProps {
 }
 
 export default function InventoryItemList( {inventoryItems, search, category}: InventoryItemListProps) {
+  // This value was determined by seeing at what screen width the table would stop being bigger than the html element
+  const mobileBreakpoint = 1035
+
   const theme = useTheme()
-  const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
+  const isMobileView = useMediaQuery(theme.breakpoints.down(mobileBreakpoint))
 
   return (
     <>
