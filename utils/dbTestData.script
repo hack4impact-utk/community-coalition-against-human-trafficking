@@ -1432,11 +1432,11 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId13,
         "attributes": [
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Sectional"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "Used"
             }
         ],
@@ -1447,11 +1447,11 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId13,
         "attributes": [
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Recliner"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1464,11 +1464,11 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId14,
         "attributes": [
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Coffee Table"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1479,11 +1479,11 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId14,
         "attributes": [
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "End Table"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "Used"
             }
         ],
@@ -1496,11 +1496,11 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId15,
         "attributes": [
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Dining Chair"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1511,11 +1511,11 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId15,
         "attributes": [
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Armchair"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "Used"
             }
         ],
@@ -1528,15 +1528,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId16,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Samsung"
             },
             {
-                "attributeId": attributeId11,
+                "attribute": attributeId11,
                 "value": "Electric"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1547,15 +1547,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId16,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "LG"
             },
             {
-                "attributeId": attributeId11,
+                "attribute": attributeId11,
                 "value": "Gas"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "Used"
             }
         ],
@@ -1568,15 +1568,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId17,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Whirlpool"
             },
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "French Door"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1587,15 +1587,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId17,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "GE"
             },
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Side-by-Side"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "Used"
             }
         ],
@@ -1608,15 +1608,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId18,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Bosch"
             },
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Built-in"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1627,15 +1627,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId18,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "KitchenAid"
             },
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Portable"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "Used"
             }
         ],
@@ -1648,15 +1648,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId19,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "LG"
             },
             {
-                "attributeId": attributeId11,
+                "attribute": attributeId11,
                 "value": "Compact"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1667,15 +1667,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId19,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Samsung"
             },
             {
-                "attributeId": attributeId11,
+                "attribute": attributeId11,
                 "value": "Mini"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1686,15 +1686,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId19,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Whirlpool"
             },
             {
-                "attributeId": attributeId11,
+                "attribute": attributeId11,
                 "value": "Small"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "Used"
             }
         ],
@@ -1707,14 +1707,14 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId20,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Keurig"
             },
             {
-                "attributeId": attributeId11,
+                "attribute": attributeId11,
                 "value": "Single Serve"},
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1725,15 +1725,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId20,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Cuisinart"
             },
             {
-                "attributeId": attributeId11,
+                "attribute": attributeId11,
                 "value": "Drip"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1744,14 +1744,14 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId20,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Hamilton Beach"},
             {
-                "attributeId": attributeId11,
+                "attribute": attributeId11,
                 "value": "Percolator"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "Used"
             }
         ],
@@ -1764,15 +1764,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId21,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Cuisinart"
             },
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "2 Slice"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1783,15 +1783,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId21,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "KitchenAid"
             },
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "4 Slice"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1802,15 +1802,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId21,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Black & Decker"
             },
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Toaster Oven"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "Used"
             }
         ],
@@ -1823,15 +1823,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId22,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Ninja"
             },
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Countertop"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1842,15 +1842,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId22,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Vitamix"
             },
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Personal"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "New"
             }
         ],
@@ -1861,15 +1861,15 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId22,
         "attributes": [
             {
-                "attributeId": attributeId9,
+                "attribute": attributeId9,
                 "value": "Oster"
             },
             {
-                "attributeId": attributeId10,
+                "attribute": attributeId10,
                 "value": "Handheld"
             },
             {
-                "attributeId": attributeId14,
+                "attribute": attributeId14,
                 "value": "Used"
             }
         ],
