@@ -1,12 +1,14 @@
 import { Autocomplete, Box, FormControl, TextField } from '@mui/material'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   ItemDefinitionResponse,
   UserResponse,
   CategoryResponse,
   InventoryItemResponse,
+  CheckInOutFormData,
+  TextFieldAttributesInternalRepresentation,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete, {
@@ -18,23 +20,14 @@ import {
 } from 'utils/attribute'
 import { usePrevious } from 'utils/hooks/usePrevious'
 
-interface CheckInOutFormData {
-  user: UserResponse
-  date: Dayjs
-  category: CategoryResponse
-  itemDefinition: ItemDefinitionResponse
-  attributes: AutocompleteAttributeOption[]
-  textFieldAttributes: TextFieldAttributesInternalRepresentation
-  quantityDelta: number
-}
-
 interface Props {
   kioskMode: boolean
   users: UserResponse[]
   itemDefinitions: ItemDefinitionResponse[]
   categories: CategoryResponse[]
   inventoryItem?: InventoryItemResponse
-  onChange: (data: CheckInOutFormData) => void
+  formData: CheckInOutFormData
+  setFormData: (formData: CheckInOutFormData) => void
 }
 
 function blankFormData(): CheckInOutFormData {
@@ -59,10 +52,6 @@ function updateFormData(
   }
 }
 
-interface TextFieldAttributesInternalRepresentation {
-  [key: string]: string | number
-}
-
 const defaultSplitAttrs = separateAttributeResponses()
 
 function CheckInOutForm({
@@ -71,7 +60,8 @@ function CheckInOutForm({
   itemDefinitions,
   categories,
   inventoryItem,
-  onChange,
+  formData,
+  setFormData,
 }: Props) {
   const [filteredItemDefinitions, setFilteredItemDefinitions] =
     React.useState<ItemDefinitionResponse[]>(itemDefinitions)
@@ -103,10 +93,12 @@ function CheckInOutForm({
     AutocompleteAttributeOption[]
   >(initialFormData.attributes || [])
 
-  const [formData, setFormData] = React.useState<CheckInOutFormData>({
-    ...blankFormData(),
-    ...initialFormData,
-  })
+  useEffect(() => {
+    setFormData({
+      ...blankFormData(),
+      ...initialFormData,
+    })
+  }, [])
 
   const updateTextFieldAttributes = (
     e: string | number,
@@ -114,7 +106,7 @@ function CheckInOutForm({
   ) => {
     const attributeValue: string | number = e
 
-    setFormData((formData) =>
+    setFormData(
       updateFormData(formData, {
         textFieldAttributes: {
           ...formData.textFieldAttributes,
@@ -127,14 +119,10 @@ function CheckInOutForm({
 
   // if you select an item definition without selecting a category, infer the category
   React.useEffect(() => {
-    setFormData((formData) =>
+    setFormData(
       updateFormData(formData, { category: formData.itemDefinition?.category })
     )
   }, [formData.itemDefinition])
-
-  React.useEffect(() => {
-    onChange(formData)
-  }, [onChange, formData])
 
   // Update filtered item defs when category changes
   React.useEffect(() => {
@@ -158,7 +146,7 @@ function CheckInOutForm({
         separateAttributeResponses(formData.itemDefinition.attributes)
       )
 
-      setFormData((formData) =>
+      setFormData(
         updateFormData(formData, {
           attributes: [],
           textFieldAttributes: {},
@@ -167,7 +155,7 @@ function CheckInOutForm({
     } else {
       setSplitAttrs(defaultSplitAttrs)
       setAaSelected([])
-      setFormData((formData) =>
+      setFormData(
         updateFormData(formData, {
           attributes: undefined,
           textFieldAttributes: {},
@@ -180,7 +168,7 @@ function CheckInOutForm({
       prevFormData?.itemDefinition
     ) {
       setAaSelected([])
-      setFormData((formData) =>
+      setFormData(
         updateFormData(formData, {
           attributes: undefined,
         })
