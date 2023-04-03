@@ -65,7 +65,6 @@ export default function CheckInPage({ categories }: Props) {
                 itemDefinitions={[]}
                 categories={categories}
                 onChange={(item) => {}}
-                inventoryItem={}
               />
             </CardContent>
 
