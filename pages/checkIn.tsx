@@ -24,7 +24,6 @@ import { createResponse } from 'node-mocks-http'
 import categoriesHandler from '@api/categories'
 import { GetServerSidePropsContext, NextApiRequest } from 'next'
 import React from 'react'
-import itemDefinitionsHandler from '@api/itemDefinitions'
 
 const realCategory: CategoryResponse = {
   _id: '642892e2bacccd5ff01c4512',
@@ -74,24 +73,16 @@ const realInventoryItem: InventoryItemResponse = {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const res = createResponse()
   await categoriesHandler(context.req as NextApiRequest, res)
-  const categoryResData: CategoryResponse[] = res._getJSONData().payload
-  const res2 = createResponse()
-  await itemDefinitionsHandler(context.req as NextApiRequest, res2)
-  const itemDefinitionResData: ItemDefinitionResponse[] =
-    res2._getJSONData().payload
+  const responseData: CategoryResponse[] = res._getJSONData().payload
   return {
-    props: {
-      categories: categoryResData,
-      itemDefinitions: itemDefinitionResData,
-    },
+    props: { categories: responseData },
   }
 }
 interface Props {
   categories: CategoryResponse[]
-  itemDefinitions: ItemDefinitionResponse[]
 }
 
-export default function CheckInPage({ categories, itemDefinitions }: Props) {
+export default function CheckInPage({ categories }: Props) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -155,7 +146,7 @@ export default function CheckInPage({ categories, itemDefinitions }: Props) {
               <CheckInOutForm
                 kioskMode={true}
                 users={[]}
-                itemDefinitions={itemDefinitions}
+                itemDefinitions={[realItemDefinition]}
                 categories={categories}
                 formData={formData}
                 setFormData={setFormData}
