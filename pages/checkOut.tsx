@@ -59,5 +59,3 @@ export default function CheckOutPage({ categories }: Props) {
     </Grid2>
   )
 }
-
-["string", 0].reduce(((item, acc) => item + acc), 0) => 10
