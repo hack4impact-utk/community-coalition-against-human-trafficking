@@ -56,12 +56,26 @@ export default function CheckInPage({ categories, itemDefinitions }: Props) {
   const onSubmit = async (formData: CheckInOutFormData) => {
     const inventoryItem: Partial<InventoryItemRequest> = {
       itemDefinition: formData.itemDefinition._id,
-      attributes: formData.attributes.map(
-        (attributeOption): InventoryItemAttributeRequest => ({
-          attribute: attributeOption.id,
-          value: attributeOption.value,
-        })
-      ),
+      attributes: [
+        ...formData.attributes.map(
+          (attributeOption): InventoryItemAttributeRequest => ({
+            attribute: attributeOption.id,
+            value: attributeOption.value,
+          })
+        ),
+
+        ...Object.keys(formData.textFieldAttributes).reduce(
+          (acc, attributeId) => {
+            const attribute: InventoryItemAttributeRequest = {
+              attribute: attributeId,
+              value: formData.textFieldAttributes[attributeId],
+            }
+
+            return [...acc, attribute]
+          },
+          [] as InventoryItemAttributeRequest[]
+        ),
+      ],
       assignee: formData.user?._id,
     }
 
