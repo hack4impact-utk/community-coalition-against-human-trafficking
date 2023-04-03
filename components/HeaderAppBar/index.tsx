@@ -36,6 +36,8 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
     handleCloseUserMenu()
   }
 
+  console.log(session)
+
   return (
     <AppBar color="transparent" position="relative" sx={{ px: 2 }}>
       <Toolbar disableGutters>
