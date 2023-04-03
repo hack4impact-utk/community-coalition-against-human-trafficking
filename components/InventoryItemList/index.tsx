@@ -206,7 +206,6 @@ export default function InventoryItemList(props: Props) {
     <Box sx={{ width: '100%' }}>
       <TableContainer>
         <Table
-          sx={{ minWidth: 750 }}
           aria-labelledby="tableTitle"
           size="medium"
         >
