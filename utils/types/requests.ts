@@ -1,4 +1,11 @@
-import { Attribute, Category, InventoryItem, ItemDefinition, User } from '.'
+import {
+  Attribute,
+  Category,
+  InventoryItem,
+  InventoryItemAttribute,
+  ItemDefinition,
+  User,
+} from '.'
 
 export type UserPostRequest = UserRequest
 export interface UserPutRequest extends UserRequest {
@@ -21,9 +28,8 @@ export interface InventoryItemPutRequest extends InventoryItemRequest {
   _id: string
 }
 
-export interface InventoryItemAttributeRequest {
-  attribute: string
-  value: string | number
+export interface InventoryItemAttributeRequest extends InventoryItemAttribute {
+  attribute: string // the id of the attribute
 }
 
 export interface InventoryItemRequest extends InventoryItem {

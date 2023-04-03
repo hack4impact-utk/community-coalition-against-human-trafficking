@@ -44,6 +44,7 @@ export default function CheckOutPage({ categories }: Props) {
                 users={[]}
                 itemDefinitions={[]}
                 categories={categories}
+                onChange={(item) => {}}
               />
             </CardContent>
 
