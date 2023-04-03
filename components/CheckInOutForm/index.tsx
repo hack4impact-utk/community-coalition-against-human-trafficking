@@ -5,7 +5,6 @@ import React from 'react'
 import {
   ItemDefinitionResponse,
   UserResponse,
-  InventoryItemAttributeRequest,
   CategoryResponse,
   InventoryItemResponse,
 } from 'utils/types'
@@ -17,9 +16,10 @@ import {
   separateAttributeResponses,
   SeparatedAttributeResponses,
 } from 'utils/attribute'
+import { usePrevious } from 'utils/hooks/usePrevious'
 
 interface CheckInOutFormData {
-  assignee: UserResponse
+  user: UserResponse
   date: Dayjs
   category: CategoryResponse
   itemDefinition: ItemDefinitionResponse
@@ -39,7 +39,7 @@ interface Props {
 
 function blankFormData(): CheckInOutFormData {
   return {
-    assignee: {} as UserResponse,
+    user: {} as UserResponse,
     date: dayjs(new Date()),
     category: {} as CategoryResponse,
     itemDefinition: {} as ItemDefinitionResponse,
@@ -80,7 +80,6 @@ function CheckInOutForm({
       separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
     )
   const initialFormData: Partial<CheckInOutFormData> = {
-    assignee: inventoryItem?.assignee,
     category: inventoryItem?.itemDefinition?.category,
     itemDefinition: inventoryItem?.itemDefinition,
     attributes: inventoryItem?.attributes
@@ -124,19 +123,12 @@ function CheckInOutForm({
       })
     )
   }
+  const prevFormData = usePrevious(formData)
 
   // if you select an item definition without selecting a category, infer the category
   React.useEffect(() => {
-    // TODO: Update this when types are updated
-    if (
-      !formData.itemDefinition ||
-      !formData.itemDefinition.category ||
-      typeof formData.itemDefinition.category === 'string'
-    ) {
-      return
-    }
     setFormData((formData) =>
-      updateFormData(formData, { category: formData.itemDefinition.category })
+      updateFormData(formData, { category: formData.itemDefinition?.category })
     )
   }, [formData.itemDefinition])
 
@@ -149,10 +141,7 @@ function CheckInOutForm({
     if (formData.category && !formData.itemDefinition) {
       setFilteredItemDefinitions(
         itemDefinitions.filter((itemDefinition) => {
-          if (
-            itemDefinition.category &&
-            itemDefinition.category.hasOwnProperty('_id')
-          ) {
+          if (itemDefinition.category) {
             return itemDefinition.category._id === formData.category._id
           }
         })
@@ -185,7 +174,19 @@ function CheckInOutForm({
         })
       )
     }
-  }, [formData.itemDefinition])
+
+    if (
+      formData.itemDefinition !== prevFormData?.itemDefinition &&
+      prevFormData?.itemDefinition
+    ) {
+      setAaSelected([])
+      setFormData((formData) =>
+        updateFormData(formData, {
+          attributes: undefined,
+        })
+      )
+    }
+  }, [formData.itemDefinition, prevFormData?.itemDefinition])
 
   return (
     <FormControl fullWidth>
@@ -199,10 +200,11 @@ function CheckInOutForm({
           )}
           getOptionLabel={(user) => user.name}
           onChange={(_e, user) => {
-            const updatedFormData = updateFormData(formData, {
-              assignee: user || ({} as UserResponse),
-            })
-            setFormData(updatedFormData)
+            setFormData(
+              updateFormData(formData, {
+                user: user || undefined,
+              })
+            )
           }}
         />
       )}
@@ -226,10 +228,11 @@ function CheckInOutForm({
         renderInput={(params) => <TextField {...params} label="Category" />}
         isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, category) => {
-          const updatedFormData = updateFormData(formData, {
-            category: category || undefined,
-          })
-          setFormData(updatedFormData)
+          setFormData(
+            updateFormData(formData, {
+              category: category || undefined,
+            })
+          )
         }}
         getOptionLabel={(category) => category.name}
         value={formData.category || null}
@@ -241,10 +244,11 @@ function CheckInOutForm({
         renderInput={(params) => <TextField {...params} label="Item" />}
         isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, itemDefinition) => {
-          const updatedFormData = updateFormData(formData, {
-            itemDefinition: itemDefinition || undefined,
-          })
-          setFormData(updatedFormData)
+          setFormData(
+            updateFormData(formData, {
+              itemDefinition: itemDefinition || undefined,
+            })
+          )
         }}
         getOptionLabel={(itemDefinition) => itemDefinition.name}
         value={formData.itemDefinition || null}
@@ -253,10 +257,11 @@ function CheckInOutForm({
         attributes={splitAttrs.list}
         sx={{ mt: 4 }}
         onChange={(_e, attributes) => {
-          const updatedFormData = updateFormData(formData, {
-            attributes: attributes || undefined,
-          })
-          setFormData(updatedFormData)
+          setFormData(
+            updateFormData(formData, {
+              attributes: attributes || undefined,
+            })
+          )
         }}
         value={aaSelected}
         setValue={setAaSelected}

@@ -74,9 +74,9 @@ export default function AttributeAutocomplete({
       value={value}
       renderInput={(params) => <TextField {...params} label="Attributes" />}
       onChange={(e, attributes) => {
-        if (!!setValue) setValue(attributes)
+        if (setValue) setValue(attributes)
         if (!attributes.length) {
-          if (!!onChange) onChange(e, [] as AutocompleteAttributeOption[])
+          if (onChange) onChange(e, [] as AutocompleteAttributeOption[])
           return
         }
 
@@ -92,7 +92,7 @@ export default function AttributeAutocomplete({
         if (idx != -1) attributes[idx] = newAttr
         else attributes.push(newAttr)
 
-        if (!!onChange) onChange(e, attributes)
+        if (onChange) onChange(e, attributes)
       }}
       sx={sx}
     />

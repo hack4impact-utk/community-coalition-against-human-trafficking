@@ -9,7 +9,7 @@ import constants from 'utils/constants'
 // @route   GET api/users/[userId] - Returns a single User object for user with userId - Private
 // @route   DELETE api/users/[userId] - Deletes a single User object for user with userId - Private
 // @route   PUT api/users/[userId] - Updates a the existing User object with _id of userId with the new user - Private
-export default async function handler(
+export default async function userHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

@@ -42,7 +42,7 @@ export interface Attribute {
   color: string
 }
 
-export interface ListAttribute {
+export interface ListAttribute extends Attribute {
   possibleValues: string[]
 }
 
