@@ -73,15 +73,6 @@ function CheckInOutForm({
   inventoryItem,
   onChange,
 }: Props) {
-  // TODO: remove after merge conflicts are fixed
-  const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
-  const [quantity, setQuantity] = React.useState<number>(1)
-  const [selectedStaff, setSelectedStaff] =
-    React.useState<UserResponse | null>()
-  const [selectedItemDefinition, setSelectedItemDefinition] =
-    React.useState<ItemDefinitionResponse | null>()
-  const [selectedCategory, setSelectedCategory] =
-    React.useState<CategoryResponse>({} as CategoryResponse)
   const [filteredItemDefinitions, setFilteredItemDefinitions] =
     React.useState<ItemDefinitionResponse[]>(itemDefinitions)
   const [splitAttrs, setSplitAttrs] =
@@ -100,14 +91,13 @@ function CheckInOutForm({
         value: String(attr.value),
         color: attr.attribute.color,
       })),
-    textFieldAttributes: inventoryItem?.attributes
-      ?.filter((attr) => !(attr.attribute.possibleValues instanceof Array))
-      .reduce((acc, attr) => {
-        return {
-          ...acc,
-          [attr.attribute._id]: attr.value,
-        }
-      }, {} as TextFieldAttributesInternalRepresentation),
+    textFieldAttributes: inventoryItem?.attributes?.reduce(
+      (acc, attr) =>
+        !(attr.attribute.possibleValues instanceof Array)
+          ? { ...acc, [attr.attribute._id]: attr.value }
+          : acc,
+      {} as TextFieldAttributesInternalRepresentation
+    ),
   }
 
   const [aaSelected, setAaSelected] = React.useState<
@@ -120,10 +110,10 @@ function CheckInOutForm({
   })
 
   const updateTextFieldAttributes = (
-    _e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    e: string | number,
     attributeId: string
   ) => {
-    const attributeValue: string | number = _e.target.value
+    const attributeValue: string | number = e
 
     setFormData((formData) =>
       updateFormData(formData, {
@@ -177,6 +167,13 @@ function CheckInOutForm({
     if (formData.itemDefinition) {
       setSplitAttrs(
         separateAttributeResponses(formData.itemDefinition.attributes)
+      )
+
+      setFormData((formData) =>
+        updateFormData(formData, {
+          attributes: [],
+          textFieldAttributes: {},
+        })
       )
     } else {
       setSplitAttrs(defaultSplitAttrs)
@@ -269,7 +266,9 @@ function CheckInOutForm({
         <TextField
           key={textAttr._id}
           label={textAttr.name}
-          onChange={(_e) => updateTextFieldAttributes(_e, textAttr._id)}
+          onChange={(e) =>
+            updateTextFieldAttributes(e.target.value, textAttr._id)
+          }
           sx={{ marginTop: 4 }}
           defaultValue={formData.textFieldAttributes?.[textAttr._id]}
         />
@@ -281,11 +280,14 @@ function CheckInOutForm({
           key={numAttr._id}
           label={numAttr.name}
           type="number"
-          onChange={(_e) => updateTextFieldAttributes(_e, numAttr._id)}
+          onChange={(e) =>
+            updateTextFieldAttributes(Number(e.target.value), numAttr._id)
+          }
           sx={{ marginTop: 4 }}
           defaultValue={formData.textFieldAttributes?.[numAttr._id]}
         />
       ))}
+
       <QuantityForm
         onChange={(quantity) => {
           setFormData(
