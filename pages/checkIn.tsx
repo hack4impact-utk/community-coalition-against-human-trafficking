@@ -10,8 +10,6 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-<<<<<<< HEAD
-=======
 import { CategoryResponse } from 'utils/types'
 import { createResponse } from 'node-mocks-http'
 import categoriesHandler from '@api/categories'
@@ -28,7 +26,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 interface Props {
   categories: CategoryResponse[]
 }
->>>>>>> 6a27a9d9a6059140b0588ce5e885e5e2ca54f7fd
 
 export default function CheckInPage({ categories }: Props) {
   const theme = useTheme()
