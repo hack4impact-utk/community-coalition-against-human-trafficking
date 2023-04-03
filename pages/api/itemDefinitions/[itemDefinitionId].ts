@@ -1,18 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getItemDefinition } from 'server/actions/ItemDefinition'
-import { ApiError, ItemDefinition } from 'utils/types'
+import {
+  ApiError,
+  ItemDefinitionPutRequest,
+  ItemDefinitionResponse,
+} from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import {
   apiItemDefinitionValidation,
   apiObjectIdValidation,
 } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
-import ItemDefinitionSchema from 'server/models/Category'
+import ItemDefinitionSchema from 'server/models/ItemDefinition'
+import constants from 'utils/constants'
 
 // @route GET api/itemDefintions/[itemDefinitionId] - Returns a single ItemDefinition object given a itemDefinitionId - Private
 // @route PUT api/users/[itemDefinitionId] - Updates an existing ItemDefinition object (identified by itemDefinitionId) with a new ItemDefinition object - Private
 // @route DELETE api/users/[itemDefinitionId] - Deletes a single ItemDefinition object (identified by itemDefinitionId) - Private
-export default async function handler(
+export default async function itemDefinitionHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -24,7 +29,9 @@ export default async function handler(
     const itemDefinitionId = req.query.itemDefinitionId as string
     switch (req.method) {
       case 'GET': {
-        const itemDefinition = await getItemDefinition(itemDefinitionId)
+        const itemDefinition: ItemDefinitionResponse = await getItemDefinition(
+          itemDefinitionId
+        )
 
         return res.status(200).json({
           success: true,
@@ -32,8 +39,8 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        apiItemDefinitionValidation(req.body)
-        const updatedItemDefinition = req.body as ItemDefinition
+        apiItemDefinitionValidation(req.body, 'PUT')
+        const updatedItemDefinition: ItemDefinitionPutRequest = req.body
         await MongoDriver.updateEntity(
           ItemDefinitionSchema,
           itemDefinitionId,
@@ -54,7 +61,7 @@ export default async function handler(
         })
       }
       default: {
-        throw new ApiError(405, 'Method Not Allowed')
+        throw new ApiError(405, constants.errors.invalidReqMethod)
       }
     }
   } catch (e) {

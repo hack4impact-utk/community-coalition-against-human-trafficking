@@ -9,8 +9,8 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
-import { InventoryItem } from 'utils/types'
 import InventoryItemListItem from 'components/InventoryItemListItem'
+import { InventoryItemResponse } from 'utils/types'
 
 interface Data {
   name: string
@@ -167,7 +167,7 @@ function InventoryItemListHeader(props: EnhancedTableProps) {
 }
 
 interface Props {
-  inventoryItems: InventoryItem[]
+  inventoryItems: InventoryItemResponse[]
   search: string
   category: string
 }
@@ -205,17 +205,13 @@ export default function InventoryItemList(props: Props) {
   return (
     <Box sx={{ width: '100%' }}>
       <TableContainer>
-        <Table
-          aria-labelledby="tableTitle"
-          size="medium"
-        >
+        <Table aria-labelledby="tableTitle" size="medium">
           <InventoryItemListHeader
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-
             {props.inventoryItems.map((item) => (
               <InventoryItemListItem inventoryItem={item} key={item._id} />
             ))}

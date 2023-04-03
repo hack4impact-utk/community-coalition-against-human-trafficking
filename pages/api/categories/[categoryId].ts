@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, Category } from 'utils/types'
+import { ApiError, CategoryPutRequest, CategoryResponse } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import {
   apiCategoryValidation,
@@ -7,11 +7,12 @@ import {
 } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import CategorySchema from 'server/models/Category'
+import constants from 'utils/constants'
 
 // @route GET api/categories/[categoryId] - Returns a single Category object given a categoryId - Private
 // @route PUT api/users/[categoryId] - Updates an existing Category object (identified by categoryId) with a new Category object - Private
 // @route DELETE api/users/[categoryId] - Deletes a single Category object (identified by categoryId) - Private
-export default async function handler(
+export default async function categoryHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -24,7 +25,10 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        const category = await MongoDriver.getEntity(CategorySchema, categoryId)
+        const category: CategoryResponse = await MongoDriver.getEntity(
+          CategorySchema,
+          categoryId
+        )
 
         return res.status(200).json({
           success: true,
@@ -32,8 +36,8 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        apiCategoryValidation(req.body)
-        const updatedCategory = req.body as Category
+        apiCategoryValidation(req.body, 'PUT')
+        const updatedCategory: CategoryPutRequest = req.body
         await MongoDriver.updateEntity(
           CategorySchema,
           categoryId,
@@ -54,7 +58,7 @@ export default async function handler(
         })
       }
       default: {
-        throw new ApiError(405, 'Method Not Allowed')
+        throw new ApiError(405, constants.errors.invalidReqMethod)
       }
     }
   } catch (e) {

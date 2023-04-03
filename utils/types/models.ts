@@ -52,11 +52,6 @@ export interface NumberAttribute extends Attribute {
   possibleValues: 'number'
 }
 
-export interface InventoryItemAttributeRequest {
-  attribute: string
-  value: string | number
-}
-
 export type ServerModel =
   | User
   | ItemDefinition

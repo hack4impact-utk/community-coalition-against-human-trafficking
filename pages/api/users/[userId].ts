@@ -1,14 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { apiObjectIdValidation, apiUserValidation } from 'utils/apiValidators'
 import { userEndpointServerAuth } from 'utils/auth'
-import { ApiError, User } from 'utils/types'
+import { ApiError, UserPutRequest, UserResponse } from 'utils/types'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import UserSchema from 'server/models/User'
+import constants from 'utils/constants'
 
 // @route   GET api/users/[userId] - Returns a single User object for user with userId - Private
 // @route   DELETE api/users/[userId] - Deletes a single User object for user with userId - Private
 // @route   PUT api/users/[userId] - Updates a the existing User object with _id of userId with the new user - Private
-export default async function handler(
+export default async function userHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -17,7 +18,7 @@ export default async function handler(
 
     // get user to verify identity
     const userId = req.query.userId as string
-    const user = await MongoDriver.getEntity(UserSchema, userId)
+    const user: UserResponse = await MongoDriver.getEntity(UserSchema, userId)
 
     await userEndpointServerAuth(req, res, user.email)
 
@@ -37,8 +38,8 @@ export default async function handler(
         })
       }
       case 'PUT': {
-        apiUserValidation(req.body)
-        const updatedUser = req.body as User
+        apiUserValidation(req.body, 'PUT')
+        const updatedUser: UserPutRequest = req.body
         await MongoDriver.updateEntity(UserSchema, userId, updatedUser)
 
         return res.status(200).json({
@@ -47,7 +48,7 @@ export default async function handler(
         })
       }
       default: {
-        throw new ApiError(405, 'Method Not Allowed')
+        throw new ApiError(405, constants.errors.invalidReqMethod)
       }
     }
   } catch (e) {

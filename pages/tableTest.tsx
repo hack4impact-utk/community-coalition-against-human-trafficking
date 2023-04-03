@@ -1,6 +1,8 @@
-import InventoryItemListItem from 'components/InventoryItemListItem'
-import { InventoryItem, ItemDefinition } from 'utils/types'
-import { Table, TableBody, TableContainer, Box, Paper } from '@mui/material'
+import {
+  InventoryItem,
+  InventoryItemResponse,
+  ItemDefinition,
+} from 'utils/types'
 import InventoryItemList from 'components/InventoryItemList'
 
 export default function Home() {
@@ -13,7 +15,7 @@ export default function Home() {
   )
 }
 
-export const testInventoryItems: InventoryItem[] = [
+export const testInventoryItems: InventoryItemResponse[] = [
   {
     _id: '1',
     itemDefinition: {
@@ -22,7 +24,7 @@ export const testInventoryItems: InventoryItem[] = [
       category: {
         _id: '1',
         name: 'test category',
-      } ,
+      },
       attributes: [
         {
           _id: '1',
@@ -43,16 +45,30 @@ export const testInventoryItems: InventoryItem[] = [
     },
     attributes: [
       {
-        attribute: '1',
+        attribute: {
+          _id: '1',
+          name: 'color',
+          possibleValues: ['red', 'blue', 'green'],
+          color: '#000000',
+        },
         value: 'red',
       },
       {
-        attribute: '2',
+        attribute: {
+          _id: '2',
+          name: 'size',
+          possibleValues: ['small', 'medium', 'large'],
+          color: '#0000FF',
+        },
         value: 'small',
       },
     ],
     quantity: 10,
-    assignee: '1',
+    assignee: {
+      name: 'Yaren',
+      email: 'nobody@gmail.com',
+      image: 'url.com',
+    },
   },
   {
     _id: '2',
@@ -83,15 +99,24 @@ export const testInventoryItems: InventoryItem[] = [
     },
     attributes: [
       {
-        attribute: '1',
+        attribute: {
+          _id: '1',
+          name: 'color',
+          possibleValues: ['red', 'blue', 'green'],
+          color: '#000000',
+        },
         value: 'blue',
       },
       {
-        attribute: '2',
+        attribute: {
+          _id: '2',
+          name: 'size',
+          possibleValues: ['small', 'medium', 'large'],
+          color: '#0000FF',
+        },
         value: 'medium',
       },
     ],
     quantity: 20,
-    assignee: '1',
   },
 ]

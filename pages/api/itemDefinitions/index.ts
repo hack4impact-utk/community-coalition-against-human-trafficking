@@ -1,14 +1,19 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, ItemDefinition } from 'utils/types'
+import {
+  ApiError,
+  ItemDefinitionPostRequest,
+  ItemDefinitionResponse,
+} from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { apiItemDefinitionValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import ItemDefinitionSchema from 'server/models/ItemDefinition'
 import { getItemDefinitions } from 'server/actions/ItemDefinition'
+import constants from 'utils/constants'
 
 // @route GET api/itemDefintions - Returns a list of all itemDefintions in the database - Private
 // @route POST /api/itemDefintions - Create a itemDefinition from request body - Private
-export default async function handler(
+export default async function itemDefinitionsHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -18,7 +23,7 @@ export default async function handler(
 
     switch (req.method) {
       case 'GET': {
-        const items = await getItemDefinitions()
+        const items: ItemDefinitionResponse[] = await getItemDefinitions()
         const resStatus = items.length ? 200 : 204
         return res.status(resStatus).json({
           success: true,
@@ -26,8 +31,8 @@ export default async function handler(
         })
       }
       case 'POST': {
-        apiItemDefinitionValidation(req.body)
-        const itemDefinition = req.body as ItemDefinition
+        apiItemDefinitionValidation(req.body, 'POST')
+        const itemDefinition: ItemDefinitionPostRequest = req.body
         const response = await MongoDriver.createEntity(
           ItemDefinitionSchema,
           itemDefinition
@@ -35,11 +40,11 @@ export default async function handler(
 
         return res.status(201).json({
           success: true,
-          payload: response.id,
+          payload: response._id,
         })
       }
       default: {
-        throw new ApiError(405, 'Method Not Allowed')
+        throw new ApiError(405, constants.errors.invalidReqMethod)
       }
     }
   } catch (e) {

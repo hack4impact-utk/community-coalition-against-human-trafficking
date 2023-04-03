@@ -1,66 +1,21 @@
-import {
-  TableRow,
-  TableCell,
-  Chip,
-  IconButton,
-  Tooltip,
-  Typography,
-  Menu,
-  MenuItem,
-  Box,
-} from '@mui/material'
 import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
-import { InventoryOutlined, MoreVert } from '@mui/icons-material'
+import { TableRow, TableCell, Chip, Tooltip, Box } from '@mui/material'
+import { InventoryItemResponse } from 'utils/types'
 import theme from 'utils/theme'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import * as React from 'react'
+import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
 
 interface InventoryItemListItemProps {
-  inventoryItem: InventoryItem
+  inventoryItem: InventoryItemResponse
 }
-
-const settings = ['Check in', 'Check out', 'Delete']
 
 export default function InventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
-  // kebab menu functionality
-  const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
-    null
-  )
-
-  const handleOpenKebabMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElKebab(event.currentTarget)
-  }
-
-  const handleCloseKebabMenu = () => {
-    setAnchorElKebab(null)
-  }
-
-  // TODO: fix when the database schema is split between request and response types
-  // needed to deal with the possible union types defined in the database schema
-  const narrowCategory = (inventoryItem: InventoryItem) => {
-    if (
-      typeof inventoryItem.itemDefinition === 'string' ||
-      !inventoryItem.itemDefinition.category
-    ) {
-      return ' '
-    }
-
-    if (typeof inventoryItem.itemDefinition.category === 'string') {
-      return inventoryItem.itemDefinition.category
-    }
-
-    return inventoryItem.itemDefinition.category.name
-  }
-
   // renders the red or yellow warning symbol if necesary
-  const renderWarningIcon = (inventoryItem: InventoryItem) => {
-    if (typeof inventoryItem.itemDefinition === 'string') {
-      return
-    }
-
+  const renderWarningIcon = (inventoryItem: InventoryItemResponse) => {
     if (
       inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
     ) {
@@ -88,19 +43,23 @@ export default function InventoryItemListItem({
     }
   }
 
-  const renderAttributeChips = (inventoryItem: InventoryItem) => {
+  const renderAttributeChips = (inventoryItem: InventoryItemResponse) => {
     return inventoryItem.attributes?.map((itemAttribute, i) => {
       // attributes that are strings or numbers show the attribute name
       // attributes that are list types do not
 
-      // TODO: remove this if statement after database types are split between
-      // response and request
-      if (typeof itemAttribute.attribute === 'string') {
+      if (itemAttribute.attribute.possibleValues instanceof Array) {
         return (
           <Chip
             size="small"
-            label={`${itemAttribute.attribute}: ${itemAttribute.value}`}
+            label={`${itemAttribute.value}`}
             key={i}
+            sx={{
+              backgroundColor: itemAttribute.attribute.color,
+              '& .MuiChip-label': {
+                color: getContrastYIQ(itemAttribute.attribute.color),
+              },
+            }}
           />
         )
       }
@@ -108,18 +67,8 @@ export default function InventoryItemListItem({
       return (
         <Chip
           size="small"
-          label={
-            typeof itemAttribute.attribute.possibleValues === 'object'
-              ? `${itemAttribute.value}`
-              : `${itemAttribute.attribute.name}: ${itemAttribute.value}`
-          }
+          label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
           key={i}
-          sx={{
-            backgroundColor: itemAttribute.attribute.color,
-            '& .MuiChip-label': {
-              color: getContrastYIQ(itemAttribute.attribute.color),
-            },
-          }}
         />
       )
     })
@@ -134,17 +83,13 @@ export default function InventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {/* TODO: fix when the database schema is split between request and response types */}
-        {typeof inventoryItem.itemDefinition === 'string'
-          ? inventoryItem.itemDefinition
-          : inventoryItem.itemDefinition.name}
+        {inventoryItem.itemDefinition.name}
       </TableCell>
       <TableCell
         sx={{
           alignItems: 'center',
           alignContent: 'center',
           gap: '0.25rem',
-        
         }}
       >
         {renderAttributeChips(inventoryItem)}
@@ -154,14 +99,12 @@ export default function InventoryItemListItem({
           alignItems: 'center',
           justifyContent: 'center',
         }}
-      >
-        {narrowCategory(inventoryItem)}
-      </TableCell>
+      ></TableCell>
       <TableCell
         sx={{
           alignItems: 'center',
           justifyContent: 'center',
-          wordBreak: 'break-word',          
+          wordBreak: 'break-word',
         }}
       >
         {inventoryItem.quantity.toLocaleString()}
@@ -179,32 +122,10 @@ export default function InventoryItemListItem({
           ? inventoryItem.assignee.name
           : ''}
       </TableCell>
-      <TableCell sx={{width: '10px'}}>
-        <IconButton onClick={handleOpenKebabMenu}>
-          <MoreVert sx={{ color: theme.palette.grey['500'] }} />
-        </IconButton>
-        <Menu
-          sx={{ mt: 5}}
-          id="kebab-menu"
-          anchorEl={anchorElKebab}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          keepMounted
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          open={Boolean(anchorElKebab)}
-          onClose={handleCloseKebabMenu}
-        >
-          {settings.map((setting) => (
-            <MenuItem key={setting} onClick={() => handleCloseKebabMenu()}>
-              <Typography textAlign="center">{setting}</Typography>
-            </MenuItem>
-          ))}
-        </Menu>
+      <TableCell sx={{ width: '10px' }}>
+        <Box sx={{ flexGrow: 0, ml: 'auto' }}>
+          <InventoryItemListItemKebab inventoryItem={inventoryItem} />
+        </Box>
       </TableCell>
     </TableRow>
   )

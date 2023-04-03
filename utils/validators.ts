@@ -1,28 +1,25 @@
-import { ObjectId } from 'mongodb'
-
-interface Property {
-  key: string
-  types: string
-  required: boolean
-}
-
-export interface ValidationResult {
-  success: boolean
-  message: string
-}
-
-interface ValidationErrorList {
-  errorName: string
-  errors: string[]
-}
+import { Property, validateProperties } from 'utils/validation'
+import deepCopy from './deepCopy'
 
 /**
  * Checks the validity of an Attribute object. Does not validate child objects.
  * @param attribute The Attribute object to test
  * @returns A ValidationResult object
  */
-export function validateAttribute(attribute: Record<string, unknown>) {
-  return validateProperties(attributeModelProperties, attribute)
+export function validateAttributeRequest(
+  attribute: Record<string, unknown>,
+  requestType?: 'POST' | 'PUT'
+) {
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = attributePutModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = attributePostModelProperties
+  } else {
+    validationModel = attributeRequestModelProperties
+  }
+
+  return validateProperties(validationModel, attribute)
 }
 
 /**
@@ -30,8 +27,20 @@ export function validateAttribute(attribute: Record<string, unknown>) {
  * @param category The Category object to test
  * @returns A ValidationResult object
  */
-export function validateCategory(category: Record<string, unknown>) {
-  return validateProperties(categoryModelProperties, category)
+export function validateCategoryRequest(
+  category: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = categoryPutModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = categoryPostModelProperties
+  } else {
+    validationModel = categoryRequestModelProperties
+  }
+
+  return validateProperties(validationModel, category)
 }
 
 /**
@@ -39,10 +48,20 @@ export function validateCategory(category: Record<string, unknown>) {
  * @param itemDefinition The ItemDefinition object to test
  * @returns A ValidationResult object
  */
-export function validateItemDefinition(
-  itemDefinition: Record<string, unknown>
+export function validateItemDefinitionRequest(
+  itemDefinition: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
 ) {
-  return validateProperties(itemDefinitionModelProperties, itemDefinition)
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = itemDefinitionPutModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = itemDefinitionPostModelProperties
+  } else {
+    validationModel = itemDefinitionRequestModelProperties
+  }
+
+  return validateProperties(validationModel, itemDefinition)
 }
 
 /**
@@ -50,8 +69,20 @@ export function validateItemDefinition(
  * @param inventoryItem The InventoryItem object to test
  * @returns A ValidationResult object
  */
-export function validateInventoryItem(inventoryItem: Record<string, unknown>) {
-  return validateProperties(inventoryItemModelProperties, inventoryItem)
+export function validateInventoryItemRequest(
+  inventoryItem: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = inventoryItemPutModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = inventoryItemPostModelProperties
+  } else {
+    validationModel = inventoryItemRequestModelProperties
+  }
+
+  return validateProperties(validationModel, inventoryItem)
 }
 
 /**
@@ -59,101 +90,20 @@ export function validateInventoryItem(inventoryItem: Record<string, unknown>) {
  * @param user The User object to test
  * @returns A ValidationResult object
  */
-export function validateUser(user: Record<string, unknown>) {
-  return validateProperties(userModelProperties, user)
-}
-
-/**
- * Validates a given id to ensure it is a valid ObjectId. Throws an error if invalid.
- * @param id - The ObjectId to validate
- * @returns true if the objectId was valid, false if not
- */
-export function validateObjectId(id: string) {
-  if (!id) return false
-  if (ObjectId.isValid(id)) {
-    if (String(new ObjectId(id)) === id) return true
-  }
-  return false
-}
-
-/**
- * Generic object validator that checks for required fields, extra fields, and type mismatches
- * @param modelProperties An array of Property objects
- * @param obj The object to validate
- * @returns A ValidationResult object
- */
-function validateProperties(
-  modelProperties: Property[],
-  obj: Record<string, unknown>
-): ValidationResult {
-  const result: ValidationResult = {
-    success: true,
-    message: '',
+export function validateUserRequest(
+  user: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = userPutModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = userPostModelProperties
+  } else {
+    validationModel = userRequestModelProperties
   }
 
-  const missingProperties: string[] = []
-  const invalidProperties: string[] = []
-  const typeMismatches: string[] = []
-  const validationErrors: ValidationErrorList[] = [
-    { errorName: 'Missing Required Properties:', errors: missingProperties },
-    { errorName: 'Invalid Properties:', errors: invalidProperties },
-    { errorName: 'Type Mismatches:', errors: typeMismatches },
-  ]
-
-  if (typeof obj !== 'object') {
-    result.message = 'Validation target is not an instance of an object.'
-    result.success = false
-    return result
-  }
-
-  // ensures all required properties are present
-  const isValidObject = true
-  for (const modelProp of modelProperties) {
-    if (
-      isValidObject &&
-      modelProp.required &&
-      !obj.hasOwnProperty(modelProp.key)
-    ) {
-      missingProperties.push(modelProp.key)
-    }
-  }
-
-  // checks validity of all object properties.
-  for (const objKey in obj) {
-    const i = modelProperties.findIndex((prop) => prop.key === objKey)
-
-    // property is not part of server model
-    if (i < 0) {
-      invalidProperties.push(objKey)
-      continue
-    }
-
-    // type mismatch
-    if (!modelProperties[i].types.includes(typeof obj[objKey])) {
-      typeMismatches.push(
-        `'${objKey}': Expected type '${
-          modelProperties[i].types
-        }' but got type '${typeof obj[objKey]}'`
-      )
-    }
-  }
-  for (const errorList of validationErrors) {
-    if (errorList.errors.length) {
-      result.success = false
-      result.message += errorList.errorName
-      let firstError = true
-      for (const error of errorList.errors) {
-        if (!firstError) {
-          result.message += ','
-        }
-        result.message += ` ${error}`
-        firstError = false
-      }
-      result.message += '\n'
-    }
-  }
-  console.log(result)
-  return result
+  return validateProperties(validationModel, user)
 }
 
 /*
@@ -164,7 +114,7 @@ function validateProperties(
  * slightly different format.
  */
 
-const attributeModelProperties: Property[] = [
+export const attributeRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -187,7 +137,16 @@ const attributeModelProperties: Property[] = [
   },
 ]
 
-const categoryModelProperties: Property[] = [
+export const attributePostModelProperties: Property[] = deepCopy(
+  attributeRequestModelProperties
+)
+
+export const attributePutModelProperties: Property[] = deepCopy(
+  attributeRequestModelProperties
+)
+attributePutModelProperties.find((prop) => prop.key === '_id')!.required = true
+
+export const categoryRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -200,7 +159,16 @@ const categoryModelProperties: Property[] = [
   },
 ]
 
-const itemDefinitionModelProperties: Property[] = [
+export const categoryPostModelProperties: Property[] = deepCopy(
+  categoryRequestModelProperties
+)
+
+export const categoryPutModelProperties: Property[] = deepCopy(
+  categoryPostModelProperties
+)
+categoryPutModelProperties.find((prop) => prop.key === '_id')!.required = true
+
+export const itemDefinitionRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -213,7 +181,7 @@ const itemDefinitionModelProperties: Property[] = [
   },
   {
     key: 'category',
-    types: 'string|object',
+    types: 'string',
     required: false,
   },
   {
@@ -238,7 +206,17 @@ const itemDefinitionModelProperties: Property[] = [
   },
 ]
 
-const inventoryItemModelProperties: Property[] = [
+export const itemDefinitionPostModelProperties: Property[] = deepCopy(
+  itemDefinitionRequestModelProperties
+)
+
+export const itemDefinitionPutModelProperties: Property[] = deepCopy(
+  itemDefinitionRequestModelProperties
+)
+itemDefinitionPutModelProperties.find((prop) => prop.key === '_id')!.required =
+  true
+
+export const inventoryItemRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -246,7 +224,7 @@ const inventoryItemModelProperties: Property[] = [
   },
   {
     key: 'itemDefinition',
-    types: 'string|object',
+    types: 'string',
     required: true,
   },
   {
@@ -261,12 +239,22 @@ const inventoryItemModelProperties: Property[] = [
   },
   {
     key: 'assignee',
-    types: 'string|object',
-    required: true,
+    types: 'string',
+    required: false,
   },
 ]
 
-const userModelProperties: Property[] = [
+export const inventoryItemPostModelProperties: Property[] = deepCopy(
+  inventoryItemRequestModelProperties
+)
+
+export const inventoryItemPutModelProperties: Property[] = deepCopy(
+  inventoryItemRequestModelProperties
+)
+inventoryItemPutModelProperties.find((prop) => prop.key === '_id')!.required =
+  true
+
+export const userRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -288,3 +276,12 @@ const userModelProperties: Property[] = [
     required: true,
   },
 ]
+
+export const userPostModelProperties: Property[] = deepCopy(
+  userRequestModelProperties
+)
+
+export const userPutModelProperties: Property[] = deepCopy(
+  userRequestModelProperties
+)
+userPutModelProperties.find((prop) => prop.key === '_id')!.required = true
