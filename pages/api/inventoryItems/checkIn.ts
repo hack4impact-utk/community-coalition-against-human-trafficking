@@ -4,7 +4,7 @@ import { serverAuth } from 'utils/auth'
 import { checkInInventoryItem } from 'server/actions/InventoryItems'
 
 // @route POST /api/inventoryItems/checkIn - Checks in an inventory item - Private
-export default async function inventoryItemsHandler(
+export default async function inventoryItemsCheckInHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
