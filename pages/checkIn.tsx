@@ -33,6 +33,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const itemDefinitionResData: ItemDefinitionResponse[] =
     itemDefinitionRes._getJSONData().payload
 
+  // TODO return users once CCAHT-104 is merged in
+
   return {
     props: {
       categories: categoryResData,
