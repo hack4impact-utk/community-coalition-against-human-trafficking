@@ -8,13 +8,11 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from 'next'
+import { getInventoryItemsApi } from 'utils/apiWrappers'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const res = createResponse()
-  await inventoryItemsHandler(context.req as NextApiRequest, res)
-  const responseData: InventoryItemResponse[] = res._getJSONData().payload
   return {
-    props: { inventoryItems: responseData },
+    props: { inventoryItems: await getInventoryItemsApi(context) },
   }
 }
 interface Props {
@@ -22,6 +20,7 @@ interface Props {
 }
 
 export default function InventoryPage({ inventoryItems }: Props) {
+  console.log(inventoryItems)
   return (
     <>
       <InventoryItemList

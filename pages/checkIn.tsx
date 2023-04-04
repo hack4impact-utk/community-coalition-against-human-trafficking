@@ -13,38 +13,25 @@ import {
 import {
   CategoryResponse,
   CheckInOutFormData,
-  InventoryItemAttributeRequest,
   InventoryItemRequest,
   ItemDefinitionResponse,
   UserResponse,
 } from 'utils/types'
-import { createResponse } from 'node-mocks-http'
-import categoriesHandler from '@api/categories'
-import { GetServerSidePropsContext, NextApiRequest } from 'next'
+import { GetServerSidePropsContext } from 'next'
 import React from 'react'
-import itemDefinitionsHandler from '@api/itemDefinitions'
-import usersHandler from '@api/users'
 import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import {
+  getCategoriesApi,
+  getUsersApi,
+  getItemDefinitionsApi,
+} from 'utils/apiWrappers'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const categoryRes = createResponse()
-  await categoriesHandler(context.req as NextApiRequest, categoryRes)
-  const categoryResData: CategoryResponse[] = categoryRes._getJSONData().payload
-
-  const itemDefinitionRes = createResponse()
-  await itemDefinitionsHandler(context.req as NextApiRequest, itemDefinitionRes)
-  const itemDefinitionResData: ItemDefinitionResponse[] =
-    itemDefinitionRes._getJSONData().payload
-
-  const userRes = createResponse()
-  await usersHandler(context.req as NextApiRequest, userRes)
-  const userResData: UserResponse[] = userRes._getJSONData().payload
-
   return {
     props: {
-      categories: categoryResData,
-      itemDefinitions: itemDefinitionResData,
-      users: userResData,
+      categories: await getCategoriesApi(context),
+      itemDefinitions: await getItemDefinitionsApi(context),
+      users: await getUsersApi(context),
     },
   }
 }
