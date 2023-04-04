@@ -20,7 +20,6 @@ interface Props {
 }
 
 export default function InventoryPage({ inventoryItems }: Props) {
-  console.log(inventoryItems)
   return (
     <>
       <InventoryItemList
