@@ -16,12 +16,15 @@ import {
   InventoryItemAttributeRequest,
   InventoryItemRequest,
   ItemDefinitionResponse,
+  UserResponse,
 } from 'utils/types'
 import { createResponse } from 'node-mocks-http'
 import categoriesHandler from '@api/categories'
 import { GetServerSidePropsContext, NextApiRequest } from 'next'
 import React from 'react'
 import itemDefinitionsHandler from '@api/itemDefinitions'
+import usersHandler from '@api/users'
+import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const categoryRes = createResponse()
@@ -33,21 +36,29 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const itemDefinitionResData: ItemDefinitionResponse[] =
     itemDefinitionRes._getJSONData().payload
 
-  // TODO return users once CCAHT-104 is merged in
+  const userRes = createResponse()
+  await usersHandler(context.req as NextApiRequest, userRes)
+  const userResData: UserResponse[] = userRes._getJSONData().payload
 
   return {
     props: {
       categories: categoryResData,
       itemDefinitions: itemDefinitionResData,
+      users: userResData,
     },
   }
 }
 interface Props {
   categories: CategoryResponse[]
   itemDefinitions: ItemDefinitionResponse[]
+  users: UserResponse[]
 }
 
-export default function CheckInPage({ categories, itemDefinitions }: Props) {
+export default function CheckInPage({
+  categories,
+  itemDefinitions,
+  users,
+}: Props) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
 
@@ -56,30 +67,8 @@ export default function CheckInPage({ categories, itemDefinitions }: Props) {
   )
 
   const onSubmit = async (formData: CheckInOutFormData) => {
-    const inventoryItem: Partial<InventoryItemRequest> = {
-      itemDefinition: formData.itemDefinition._id,
-      attributes: [
-        ...formData.attributes.map(
-          (attributeOption): InventoryItemAttributeRequest => ({
-            attribute: attributeOption.id,
-            value: attributeOption.value,
-          })
-        ),
-
-        ...Object.keys(formData.textFieldAttributes).reduce(
-          (acc, attributeId) => {
-            const attribute: InventoryItemAttributeRequest = {
-              attribute: attributeId,
-              value: formData.textFieldAttributes[attributeId],
-            }
-
-            return [...acc, attribute]
-          },
-          [] as InventoryItemAttributeRequest[]
-        ),
-      ],
-      assignee: formData.user?._id,
-    }
+    const inventoryItem: Partial<InventoryItemRequest> =
+      CheckInOutFormDataToInventoryItemRequest(formData)
 
     // TODO better way of coding URLs
     await fetch(
@@ -124,7 +113,7 @@ export default function CheckInPage({ categories, itemDefinitions }: Props) {
               </Typography>
               <CheckInOutForm
                 kioskMode={true}
-                users={[]}
+                users={users}
                 itemDefinitions={itemDefinitions}
                 categories={categories}
                 formData={formData}

@@ -69,7 +69,7 @@ describe('api/inventoryItems/checkIn', () => {
   })
 
   describe('POST', () => {
-    test('valid call returns correct data', async () => {
+    test('valid call', async () => {
       const mockCheckIn = jest
         .spyOn(InventoryItemActions, 'checkInInventoryItem')
         .mockImplementation()
