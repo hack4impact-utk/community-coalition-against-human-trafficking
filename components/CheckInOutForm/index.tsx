@@ -27,7 +27,7 @@ interface Props {
   categories: CategoryResponse[]
   inventoryItem?: InventoryItemResponse
   formData: CheckInOutFormData
-  setFormData: (formData: CheckInOutFormData) => void
+  setFormData: React.Dispatch<React.SetStateAction<CheckInOutFormData>>
 }
 
 function blankFormData(): CheckInOutFormData {
@@ -106,7 +106,7 @@ function CheckInOutForm({
   ) => {
     const attributeValue: string | number = e
 
-    setFormData(
+    setFormData((formData) =>
       updateFormData(formData, {
         textFieldAttributes: {
           ...formData.textFieldAttributes,
@@ -119,7 +119,7 @@ function CheckInOutForm({
 
   // if you select an item definition without selecting a category, infer the category
   React.useEffect(() => {
-    setFormData(
+    setFormData((formData) =>
       updateFormData(formData, { category: formData.itemDefinition?.category })
     )
   }, [formData.itemDefinition])
@@ -146,7 +146,7 @@ function CheckInOutForm({
         separateAttributeResponses(formData.itemDefinition.attributes)
       )
 
-      setFormData(
+      setFormData((formData) =>
         updateFormData(formData, {
           attributes: [],
           textFieldAttributes: {},
@@ -155,7 +155,7 @@ function CheckInOutForm({
     } else {
       setSplitAttrs(defaultSplitAttrs)
       setAaSelected([])
-      setFormData(
+      setFormData((formData) =>
         updateFormData(formData, {
           attributes: undefined,
           textFieldAttributes: {},
@@ -168,7 +168,7 @@ function CheckInOutForm({
       prevFormData?.itemDefinition
     ) {
       setAaSelected([])
-      setFormData(
+      setFormData((formData) =>
         updateFormData(formData, {
           attributes: undefined,
         })
@@ -188,7 +188,7 @@ function CheckInOutForm({
           )}
           getOptionLabel={(user) => user.name}
           onChange={(_e, user) => {
-            setFormData(
+            setFormData((formData) =>
               updateFormData(formData, {
                 user: user || undefined,
               })
@@ -201,7 +201,7 @@ function CheckInOutForm({
           label="Date"
           value={formData.date}
           onChange={(date) => {
-            setFormData(
+            setFormData((formData) =>
               updateFormData(formData, {
                 date: date as Dayjs,
               })
@@ -216,7 +216,7 @@ function CheckInOutForm({
         renderInput={(params) => <TextField {...params} label="Category" />}
         isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, category) => {
-          setFormData(
+          setFormData((formData) =>
             updateFormData(formData, {
               category: category || undefined,
             })
@@ -232,7 +232,7 @@ function CheckInOutForm({
         renderInput={(params) => <TextField {...params} label="Item" />}
         isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, itemDefinition) => {
-          setFormData(
+          setFormData((formData) =>
             updateFormData(formData, {
               itemDefinition: itemDefinition || undefined,
             })
@@ -245,7 +245,7 @@ function CheckInOutForm({
         attributes={splitAttrs.list}
         sx={{ mt: 4 }}
         onChange={(_e, attributes) => {
-          setFormData(
+          setFormData((formData) =>
             updateFormData(formData, {
               attributes: attributes || undefined,
             })
@@ -283,7 +283,7 @@ function CheckInOutForm({
 
       <QuantityForm
         onChange={(quantity) => {
-          setFormData(
+          setFormData((formData) =>
             updateFormData(formData, {
               quantityDelta: quantity,
             })
