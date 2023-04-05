@@ -64,7 +64,9 @@ export default function CheckInPage({ categories }: Props) {
                 users={[]}
                 itemDefinitions={[]}
                 categories={categories}
-                onChange={(item) => {}}
+                onChange={(item) => {
+                  console.log(item)
+                }}
               />
             </CardContent>
 
