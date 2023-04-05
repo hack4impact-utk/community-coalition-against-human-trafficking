@@ -20,18 +20,17 @@ import {
 import { GetServerSidePropsContext } from 'next'
 import React from 'react'
 import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
-import {
-  getCategoriesApi,
-  getUsersApi,
-  getItemDefinitionsApi,
-} from 'utils/apiWrappers'
+import { apiWrapper } from 'utils/apiWrappers'
+import usersHandler from '@api/users'
+import itemDefinitionsHandler from '@api/itemDefinitions'
+import categoriesHandler from '@api/categories'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
-      categories: await getCategoriesApi(context),
-      itemDefinitions: await getItemDefinitionsApi(context),
-      users: await getUsersApi(context),
+      categories: await apiWrapper(categoriesHandler, context),
+      itemDefinitions: await apiWrapper(itemDefinitionsHandler, context),
+      users: await apiWrapper(usersHandler, context),
     },
   }
 }

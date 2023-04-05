@@ -12,11 +12,12 @@ import {
 } from '@mui/material'
 import { CategoryResponse } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
-import { getCategoriesApi } from 'utils/apiWrappers'
+import { apiWrapper } from 'utils/apiWrappers'
+import categoriesHandler from '@api/categories'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
-    props: { categories: await getCategoriesApi(context) },
+    props: { categories: await apiWrapper(categoriesHandler, context) },
   }
 }
 interface Props {
