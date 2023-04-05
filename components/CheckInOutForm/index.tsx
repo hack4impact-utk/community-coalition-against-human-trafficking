@@ -69,6 +69,7 @@ function CheckInOutForm({
     React.useState<SeparatedAttributeResponses>(
       separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
     )
+
   const initialFormData: Partial<CheckInOutFormData> = {
     category: inventoryItem?.itemDefinition?.category,
     itemDefinition: inventoryItem?.itemDefinition,
@@ -98,7 +99,7 @@ function CheckInOutForm({
       ...blankFormData(),
       ...initialFormData,
     })
-  }, [])
+  }, [setFormData])
 
   const updateTextFieldAttributes = (
     e: string | number,
@@ -122,7 +123,7 @@ function CheckInOutForm({
     setFormData((formData) =>
       updateFormData(formData, { category: formData.itemDefinition?.category })
     )
-  }, [formData.itemDefinition])
+  }, [formData.itemDefinition, setFormData])
 
   // Update filtered item defs when category changes
   React.useEffect(() => {
@@ -145,22 +146,6 @@ function CheckInOutForm({
       setSplitAttrs(
         separateAttributeResponses(formData.itemDefinition.attributes)
       )
-
-      setFormData((formData) =>
-        updateFormData(formData, {
-          attributes: [],
-          textFieldAttributes: {},
-        })
-      )
-    } else {
-      setSplitAttrs(defaultSplitAttrs)
-      setAaSelected([])
-      setFormData((formData) =>
-        updateFormData(formData, {
-          attributes: undefined,
-          textFieldAttributes: {},
-        })
-      )
     }
 
     if (
@@ -168,13 +153,15 @@ function CheckInOutForm({
       prevFormData?.itemDefinition
     ) {
       setAaSelected([])
-      setFormData((formData) =>
-        updateFormData(formData, {
+      setFormData((formData) => {
+        const fd = updateFormData(formData, {
           attributes: undefined,
+          textFieldAttributes: {},
         })
-      )
+        return fd
+      })
     }
-  }, [formData.itemDefinition, prevFormData?.itemDefinition])
+  }, [formData.itemDefinition, prevFormData?.itemDefinition, setFormData])
 
   return (
     <FormControl fullWidth>
@@ -187,6 +174,13 @@ function CheckInOutForm({
             <TextField {...params} label="Staff Member" />
           )}
           getOptionLabel={(user) => user.name}
+          renderOption={(props, option) => {
+            return (
+              <li {...props} key={option._id}>
+                {option.name}
+              </li>
+            )
+          }}
           onChange={(_e, user) => {
             setFormData((formData) =>
               updateFormData(formData, {
@@ -263,7 +257,7 @@ function CheckInOutForm({
             updateTextFieldAttributes(e.target.value, textAttr._id)
           }
           sx={{ marginTop: 4 }}
-          defaultValue={formData.textFieldAttributes?.[textAttr._id]}
+          value={formData.textFieldAttributes?.[textAttr._id] || ''}
         />
       ))}
 
@@ -277,7 +271,7 @@ function CheckInOutForm({
             updateTextFieldAttributes(Number(e.target.value), numAttr._id)
           }
           sx={{ marginTop: 4 }}
-          defaultValue={formData.textFieldAttributes?.[numAttr._id]}
+          value={formData.textFieldAttributes?.[numAttr._id] || ''}
         />
       ))}
 
