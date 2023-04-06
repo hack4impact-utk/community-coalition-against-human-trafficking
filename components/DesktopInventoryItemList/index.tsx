@@ -9,6 +9,7 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
+import DesktopInventoryItemListItem from 'components/DesktopInventoryItemList/DesktopInventoryItemListItem'
 import { InventoryItemResponse } from 'utils/types'
 
 interface Data {
@@ -17,6 +18,7 @@ interface Data {
   category: string
   quantity: number
   assignee: string
+  kebab: string
 }
 
 const rows = []
@@ -95,7 +97,7 @@ const headCells: readonly HeadCell[] = [
   },
   {
     id: 'quantity',
-    numeric: true,
+    numeric: false,
     disablePadding: false,
     label: 'Quantity',
     sortable: true,
@@ -106,6 +108,13 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Assignee',
     sortable: true,
+  },
+  {
+    id: 'kebab',
+    numeric: false,
+    disablePadding: false,
+    label: '',
+    sortable: false,
   },
 ]
 
@@ -118,7 +127,7 @@ interface EnhancedTableProps {
   orderBy: string
 }
 
-function DesktopInventoryItemListHeader(props: EnhancedTableProps) {
+function InventoryItemListHeader(props: EnhancedTableProps) {
   const { order, orderBy, onRequestSort } = props
   const createSortHandler =
     (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
@@ -196,17 +205,20 @@ export default function DesktopInventoryItemList(props: Props) {
   return (
     <Box sx={{ width: '100%' }}>
       <TableContainer>
-        <Table
-          sx={{ minWidth: 750 }}
-          aria-labelledby="tableTitle"
-          size="medium"
-        >
-          <DesktopInventoryItemListHeader
+        <Table aria-labelledby="tableTitle" size="medium">
+          <InventoryItemListHeader
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
           />
-          <TableBody>{/* todo: add list item component here */}</TableBody>
+          <TableBody>
+            {props.inventoryItems.map((item) => (
+              <DesktopInventoryItemListItem
+                inventoryItem={item}
+                key={item._id}
+              />
+            ))}
+          </TableBody>
         </Table>
       </TableContainer>
       <TablePagination

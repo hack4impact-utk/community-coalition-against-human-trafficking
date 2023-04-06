@@ -80,13 +80,11 @@ export default function DesktopInventoryItemListItem({
   }
 
   return (
-    <TableRow sx={{ display: 'flex' }}>
+    <TableRow>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100px',
           wordBreak: 'break-word',
         }}
       >
@@ -94,30 +92,23 @@ export default function DesktopInventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           alignContent: 'center',
-          flexWrap: 'wrap',
           gap: '0.25rem',
-          width: '400px',
         }}
       >
         {renderAttributeChips(inventoryItem)}
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100px',
         }}
       ></TableCell>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100px',
           wordBreak: 'break-word',
         }}
       >
@@ -126,13 +117,17 @@ export default function DesktopInventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
-          width: '200px',
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.assignee ? inventoryItem.assignee.name : ''}
+        {typeof inventoryItem.assignee === 'string'
+          ? inventoryItem.assignee
+          : inventoryItem.assignee
+          ? inventoryItem.assignee.name
+          : ''}
+      </TableCell>
+      <TableCell sx={{ width: '10px' }}>
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
           <InventoryItemListItemKebab inventoryItem={inventoryItem} />
         </Box>
