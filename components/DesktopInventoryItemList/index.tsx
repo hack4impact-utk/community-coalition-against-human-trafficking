@@ -166,7 +166,7 @@ const DEFAULT_ROWS_PER_PAGE = 5
 const DEFAULT_ORDER_BY = 'name'
 const DEFAULT_ORDER = 'asc'
 
-export default function InventoryItemList(props: Props) {
+export default function DesktopInventoryItemList(props: Props) {
   const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
   const [orderBy, setOrderBy] = React.useState<keyof Data>(DEFAULT_ORDER_BY)
   const [page, setPage] = React.useState(0)

@@ -10,7 +10,7 @@ interface InventoryItemListItemProps {
   inventoryItem: Data
 }
 
-export default function InventoryItemListItem({
+export default function DesktopInventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
