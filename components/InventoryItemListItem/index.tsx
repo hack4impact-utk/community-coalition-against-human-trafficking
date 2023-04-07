@@ -31,6 +31,7 @@ export default function InventoryItemListItem({
           <WarningIcon
             fontSize="small"
             sx={{
+              top: '10px',
               color:
                 inventoryItem.quantity <
                 inventoryItem.itemDefinition.criticalStockThreshold
@@ -99,9 +100,12 @@ export default function InventoryItemListItem({
           alignItems: 'center',
           justifyContent: 'center',
         }}
-      ></TableCell>
+      >
+        {inventoryItem.itemDefinition.category?.name}
+      </TableCell>
       <TableCell
         sx={{
+          // display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           wordBreak: 'break-word',
@@ -116,11 +120,7 @@ export default function InventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {typeof inventoryItem.assignee === 'string'
-          ? inventoryItem.assignee
-          : inventoryItem.assignee
-          ? inventoryItem.assignee.name
-          : ''}
+        {inventoryItem.assignee ? inventoryItem.assignee.name : ''}
       </TableCell>
       <TableCell sx={{ width: '10px' }}>
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>

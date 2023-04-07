@@ -11,6 +11,7 @@ export interface ItemDefinitionResponse extends ItemDefinition {
 }
 
 export interface InventoryItemResponse extends InventoryItem {
+  [x: string]: any
   _id: string
   itemDefinition: ItemDefinitionResponse
   attributes?: {
