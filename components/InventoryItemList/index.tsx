@@ -172,11 +172,24 @@ interface Props {
   category: string
 }
 
+const DEFAULT_ROWS_PER_PAGE = 5
+
 export default function InventoryItemList(props: Props) {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
   const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
+  const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
+
+  const [visibleRows, setVisibleRows] = React.useState<InventoryItemResponse[] | null>(null)
+
+  React.useEffect(() => {
+    const rowsOnMount = props.inventoryItems.slice(
+      0 * DEFAULT_ROWS_PER_PAGE,
+      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
+    )
+
+    setVisibleRows(rowsOnMount)
+  }, [props.inventoryItems])
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -189,13 +202,24 @@ export default function InventoryItemList(props: Props) {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
+    const updatedRows = props.inventoryItems.slice(
+      newPage * rowsPerPage,
+      newPage * rowsPerPage + rowsPerPage
+    )
+    setVisibleRows(updatedRows)
   }
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
+    const updatedRowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(updatedRowsPerPage)
     setPage(0)
+    const updatedRows = props.inventoryItems.slice(
+      0 * updatedRowsPerPage,
+      0 * updatedRowsPerPage + updatedRowsPerPage
+    )
+    setVisibleRows(updatedRows)
   }
 
   // Avoid a layout jump when reaching the last page with empty rows.
@@ -212,7 +236,7 @@ export default function InventoryItemList(props: Props) {
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {props.inventoryItems.map((item) => (
+            {visibleRows && visibleRows.map((item) => (
               <InventoryItemListItem inventoryItem={item} key={item._id} />
             ))}
           </TableBody>
@@ -221,7 +245,7 @@ export default function InventoryItemList(props: Props) {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={rows.length}
+        count={props.inventoryItems.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
