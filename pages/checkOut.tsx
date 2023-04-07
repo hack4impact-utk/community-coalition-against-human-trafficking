@@ -43,8 +43,6 @@ export default function CheckOutPage({ categories }: Props) {
                 users={[]}
                 itemDefinitions={[]}
                 categories={categories}
-                formData={{} as any}
-                setFormData={() => {}}
               />
             </CardContent>
 

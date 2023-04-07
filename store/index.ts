@@ -5,7 +5,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import type { TypedUseSelectorHook } from 'react-redux'
 import { createWrapper } from 'next-redux-wrapper'
 import storage from 'redux-persist/lib/storage'
-import { persistReducer, persistStore } from 'redux-persist'
+import {
+  persistReducer,
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist'
 
 export type RootState = {
   kiosk: KioskState
@@ -49,6 +58,12 @@ const makeStore = () => {
     } = configureStore({
       reducer: persistedReducer,
       preloadedState: preloadState(),
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+          serializableCheck: {
+            ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+          },
+        }),
       devTools: process.env.NODE_ENV !== 'production',
     })
     store.__persistor = persistStore(store)

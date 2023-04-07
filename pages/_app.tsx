@@ -10,9 +10,9 @@ import { PersistGate } from 'redux-persist/integration/react'
 
 export default function App({
   Component,
-  pageProps: { session, ...rest },
+  pageProps: { session, ...pageProps },
 }: AppProps) {
-  const { store, props } = wrapper.useWrappedStore(rest)
+  const { store } = wrapper.useWrappedStore(pageProps)
   return (
     <>
       <Provider store={store}>
@@ -21,7 +21,7 @@ export default function App({
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <SessionProvider session={session}>
               <DefaultLayout>
-                <Component {...props.pageProps} />
+                <Component {...pageProps} />
               </DefaultLayout>
               <style jsx global>{`
                 html,
