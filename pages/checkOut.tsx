@@ -11,16 +11,13 @@ import {
   useTheme,
 } from '@mui/material'
 import { CategoryResponse } from 'utils/types'
-import { createResponse } from 'node-mocks-http'
+import { GetServerSidePropsContext } from 'next'
+import { apiWrapper } from 'utils/apiWrappers'
 import categoriesHandler from '@api/categories'
-import { GetServerSidePropsContext, NextApiRequest } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const res = createResponse()
-  await categoriesHandler(context.req as NextApiRequest, res)
-  const responseData: CategoryResponse[] = res._getJSONData().payload
   return {
-    props: { categories: responseData },
+    props: { categories: await apiWrapper(categoriesHandler, context) },
   }
 }
 interface Props {
@@ -44,7 +41,6 @@ export default function CheckOutPage({ categories }: Props) {
                 users={[]}
                 itemDefinitions={[]}
                 categories={categories}
-                onChange={(item) => {}}
               />
             </CardContent>
 

@@ -1,12 +1,14 @@
 import { Autocomplete, Box, FormControl, TextField } from '@mui/material'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   ItemDefinitionResponse,
   UserResponse,
   CategoryResponse,
   InventoryItemResponse,
+  CheckInOutFormData,
+  TextFieldAttributesInternalRepresentation,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete, {
@@ -18,23 +20,14 @@ import {
 } from 'utils/attribute'
 import { usePrevious } from 'utils/hooks/usePrevious'
 
-interface CheckInOutFormData {
-  user: UserResponse
-  date: Dayjs
-  category: CategoryResponse
-  itemDefinition: ItemDefinitionResponse
-  attributes: AutocompleteAttributeOption[]
-  textFieldAttributes: TextFieldAttributesInternalRepresentation
-  quantityDelta: number
-}
-
 interface Props {
   kioskMode: boolean
   users: UserResponse[]
   itemDefinitions: ItemDefinitionResponse[]
   categories: CategoryResponse[]
   inventoryItem?: InventoryItemResponse
-  onChange: (data: CheckInOutFormData) => void
+  formData: CheckInOutFormData
+  setFormData: React.Dispatch<React.SetStateAction<CheckInOutFormData>>
 }
 
 function blankFormData(): CheckInOutFormData {
@@ -59,10 +52,6 @@ function updateFormData(
   }
 }
 
-interface TextFieldAttributesInternalRepresentation {
-  [key: string]: string | number
-}
-
 const defaultSplitAttrs = separateAttributeResponses()
 
 function CheckInOutForm({
@@ -71,7 +60,8 @@ function CheckInOutForm({
   itemDefinitions,
   categories,
   inventoryItem,
-  onChange,
+  formData,
+  setFormData,
 }: Props) {
   const [filteredItemDefinitions, setFilteredItemDefinitions] =
     React.useState<ItemDefinitionResponse[]>(itemDefinitions)
@@ -79,6 +69,7 @@ function CheckInOutForm({
     React.useState<SeparatedAttributeResponses>(
       separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
     )
+
   const initialFormData: Partial<CheckInOutFormData> = {
     category: inventoryItem?.itemDefinition?.category,
     itemDefinition: inventoryItem?.itemDefinition,
@@ -103,10 +94,12 @@ function CheckInOutForm({
     AutocompleteAttributeOption[]
   >(initialFormData.attributes || [])
 
-  const [formData, setFormData] = React.useState<CheckInOutFormData>({
-    ...blankFormData(),
-    ...initialFormData,
-  })
+  useEffect(() => {
+    setFormData({
+      ...blankFormData(),
+      ...initialFormData,
+    })
+  }, [setFormData])
 
   const updateTextFieldAttributes = (
     e: string | number,
@@ -130,11 +123,7 @@ function CheckInOutForm({
     setFormData((formData) =>
       updateFormData(formData, { category: formData.itemDefinition?.category })
     )
-  }, [formData.itemDefinition])
-
-  React.useEffect(() => {
-    onChange(formData)
-  }, [onChange, formData])
+  }, [formData.itemDefinition, setFormData])
 
   // Update filtered item defs when category changes
   React.useEffect(() => {
@@ -157,22 +146,6 @@ function CheckInOutForm({
       setSplitAttrs(
         separateAttributeResponses(formData.itemDefinition.attributes)
       )
-
-      setFormData((formData) =>
-        updateFormData(formData, {
-          attributes: [],
-          textFieldAttributes: {},
-        })
-      )
-    } else {
-      setSplitAttrs(defaultSplitAttrs)
-      setAaSelected([])
-      setFormData((formData) =>
-        updateFormData(formData, {
-          attributes: undefined,
-          textFieldAttributes: {},
-        })
-      )
     }
 
     if (
@@ -180,13 +153,15 @@ function CheckInOutForm({
       prevFormData?.itemDefinition
     ) {
       setAaSelected([])
-      setFormData((formData) =>
-        updateFormData(formData, {
+      setFormData((formData) => {
+        const fd = updateFormData(formData, {
           attributes: undefined,
+          textFieldAttributes: {},
         })
-      )
+        return fd
+      })
     }
-  }, [formData.itemDefinition, prevFormData?.itemDefinition])
+  }, [formData.itemDefinition, prevFormData?.itemDefinition, setFormData])
 
   return (
     <FormControl fullWidth>
@@ -199,8 +174,15 @@ function CheckInOutForm({
             <TextField {...params} label="Staff Member" />
           )}
           getOptionLabel={(user) => user.name}
+          renderOption={(props, option) => {
+            return (
+              <li {...props} key={option._id}>
+                {option.name}
+              </li>
+            )
+          }}
           onChange={(_e, user) => {
-            setFormData(
+            setFormData((formData) =>
               updateFormData(formData, {
                 user: user || undefined,
               })
@@ -213,7 +195,7 @@ function CheckInOutForm({
           label="Date"
           value={formData.date}
           onChange={(date) => {
-            setFormData(
+            setFormData((formData) =>
               updateFormData(formData, {
                 date: date as Dayjs,
               })
@@ -228,7 +210,7 @@ function CheckInOutForm({
         renderInput={(params) => <TextField {...params} label="Category" />}
         isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, category) => {
-          setFormData(
+          setFormData((formData) =>
             updateFormData(formData, {
               category: category || undefined,
             })
@@ -244,7 +226,7 @@ function CheckInOutForm({
         renderInput={(params) => <TextField {...params} label="Item" />}
         isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, itemDefinition) => {
-          setFormData(
+          setFormData((formData) =>
             updateFormData(formData, {
               itemDefinition: itemDefinition || undefined,
             })
@@ -257,7 +239,7 @@ function CheckInOutForm({
         attributes={splitAttrs.list}
         sx={{ mt: 4 }}
         onChange={(_e, attributes) => {
-          setFormData(
+          setFormData((formData) =>
             updateFormData(formData, {
               attributes: attributes || undefined,
             })
@@ -275,7 +257,7 @@ function CheckInOutForm({
             updateTextFieldAttributes(e.target.value, textAttr._id)
           }
           sx={{ marginTop: 4 }}
-          defaultValue={formData.textFieldAttributes?.[textAttr._id]}
+          value={formData.textFieldAttributes?.[textAttr._id] || ''}
         />
       ))}
 
@@ -289,13 +271,13 @@ function CheckInOutForm({
             updateTextFieldAttributes(Number(e.target.value), numAttr._id)
           }
           sx={{ marginTop: 4 }}
-          defaultValue={formData.textFieldAttributes?.[numAttr._id]}
+          value={formData.textFieldAttributes?.[numAttr._id] || ''}
         />
       ))}
 
       <QuantityForm
         onChange={(quantity) => {
-          setFormData(
+          setFormData((formData) =>
             updateFormData(formData, {
               quantityDelta: quantity,
             })
