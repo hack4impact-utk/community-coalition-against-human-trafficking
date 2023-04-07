@@ -9,6 +9,7 @@ import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
 import { PipelineStage } from 'mongoose'
 import constants from 'utils/constants'
+import deepCopy from 'utils/deepCopy'
 
 // aggregate pipeline does the following:
 // looks up itemDefinition _id in inventoryItem
@@ -150,11 +151,12 @@ export async function checkInInventoryItem(
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
   if (itemMatches.length) {
     itemMatches[0].quantity += itemQuantity
+    item = deepCopy(itemMatches[0])
     apiInventoryItemValidation(item, 'PUT')
     MongoDriver.updateEntity(
       InventoryItemSchema,
-      itemMatches[0].id,
-      itemMatches[0] as InventoryItemPutRequest
+      item._id as string,
+      item as InventoryItemPutRequest
     )
   } else {
     item.quantity = itemQuantity

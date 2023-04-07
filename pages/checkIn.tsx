@@ -10,26 +10,64 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { CategoryResponse } from 'utils/types'
-import { createResponse } from 'node-mocks-http'
+import {
+  CategoryResponse,
+  CheckInOutFormData,
+  InventoryItemRequest,
+  ItemDefinitionResponse,
+  UserResponse,
+} from 'utils/types'
+import { GetServerSidePropsContext } from 'next'
+import React from 'react'
+import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import { apiWrapper } from 'utils/apiWrappers'
+import usersHandler from '@api/users'
+import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
-import { GetServerSidePropsContext, NextApiRequest } from 'next'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const res = createResponse()
-  await categoriesHandler(context.req as NextApiRequest, res)
-  const responseData: CategoryResponse[] = res._getJSONData().payload
   return {
-    props: { categories: responseData },
+    props: {
+      categories: await apiWrapper(categoriesHandler, context),
+      itemDefinitions: await apiWrapper(itemDefinitionsHandler, context),
+      users: await apiWrapper(usersHandler, context),
+    },
   }
 }
 interface Props {
   categories: CategoryResponse[]
+  itemDefinitions: ItemDefinitionResponse[]
+  users: UserResponse[]
 }
 
-export default function CheckInPage({ categories }: Props) {
+export default function CheckInPage({
+  categories,
+  itemDefinitions,
+  users,
+}: Props) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
+
+  const [formData, setFormData] = React.useState<CheckInOutFormData>(
+    {} as CheckInOutFormData
+  )
+
+  const onSubmit = async (formData: CheckInOutFormData) => {
+    const inventoryItem: Partial<InventoryItemRequest> =
+      CheckInOutFormDataToInventoryItemRequest(formData)
+
+    // TODO better way of coding URLs
+    await fetch(
+      `http://localhost:3000/api/inventoryItems/checkIn?quantity=${formData.quantityDelta}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inventoryItem),
+      }
+    )
+  }
 
   return (
     <Grid2 container sx={{ flexGrow: 1 }}>
@@ -61,16 +99,20 @@ export default function CheckInPage({ categories }: Props) {
               </Typography>
               <CheckInOutForm
                 kioskMode={true}
-                users={[]}
-                itemDefinitions={[]}
+                users={users}
+                itemDefinitions={itemDefinitions}
                 categories={categories}
+                formData={formData}
+                setFormData={setFormData}
               />
             </CardContent>
 
             <CardActions
               sx={{ alignSelf: { xs: 'end' }, mt: { xs: 1, sm: 0 } }}
             >
-              <Button variant="contained">Check in</Button>
+              <Button onClick={() => onSubmit(formData)} variant="contained">
+                Check in
+              </Button>
             </CardActions>
           </Box>
         </Card>

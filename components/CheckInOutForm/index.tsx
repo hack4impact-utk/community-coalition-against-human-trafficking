@@ -1,104 +1,167 @@
 import { Autocomplete, Box, FormControl, TextField } from '@mui/material'
 import { DateTimePicker } from '@mui/x-date-pickers'
 import dayjs, { Dayjs } from 'dayjs'
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   ItemDefinitionResponse,
   UserResponse,
-  InventoryItemAttributeRequest,
-  AttributeResponse,
   CategoryResponse,
+  InventoryItemResponse,
+  CheckInOutFormData,
+  TextFieldAttributesInternalRepresentation,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete, {
   AutocompleteAttributeOption,
 } from 'components/AttributeAutocomplete'
-import { separateAttributes, SeparatedAttributes } from 'utils/attribute'
+import {
+  separateAttributeResponses,
+  SeparatedAttributeResponses,
+} from 'utils/attribute'
+import { usePrevious } from 'utils/hooks/usePrevious'
 
 interface Props {
   kioskMode: boolean
   users: UserResponse[]
   itemDefinitions: ItemDefinitionResponse[]
   categories: CategoryResponse[]
+  inventoryItem?: InventoryItemResponse
+  formData: CheckInOutFormData
+  setFormData: React.Dispatch<React.SetStateAction<CheckInOutFormData>>
 }
 
-const defaultSplitAttrs = separateAttributes()
+function blankFormData(): CheckInOutFormData {
+  return {
+    user: {} as UserResponse,
+    date: dayjs(new Date()),
+    category: {} as CategoryResponse,
+    itemDefinition: {} as ItemDefinitionResponse,
+    attributes: [],
+    textFieldAttributes: {} as TextFieldAttributesInternalRepresentation,
+    quantityDelta: 0,
+  }
+}
+
+function updateFormData(
+  formData: CheckInOutFormData,
+  update: Partial<CheckInOutFormData>
+): CheckInOutFormData {
+  return {
+    ...formData,
+    ...update,
+  }
+}
+
+const defaultSplitAttrs = separateAttributeResponses()
 
 function CheckInOutForm({
   kioskMode,
   users,
   itemDefinitions,
   categories,
+  inventoryItem,
+  formData,
+  setFormData,
 }: Props) {
-  const [date, setDate] = React.useState<Dayjs | null>(dayjs(new Date()))
-  const [quantity, setQuantity] = React.useState<number>(1)
-  const [selectedStaff, setSelectedStaff] =
-    React.useState<UserResponse | null>()
-  const [selectedItemDefinition, setSelectedItemDefinition] =
-    React.useState<ItemDefinitionResponse | null>()
-  const [selectedAttributes, setSelectedAttributes] = React.useState<
-    InventoryItemAttributeRequest[]
-  >([])
-  const [selectedCategory, setSelectedCategory] =
-    React.useState<CategoryResponse | null>()
   const [filteredItemDefinitions, setFilteredItemDefinitions] =
     React.useState<ItemDefinitionResponse[]>(itemDefinitions)
   const [splitAttrs, setSplitAttrs] =
-    React.useState<SeparatedAttributes>(defaultSplitAttrs)
+    React.useState<SeparatedAttributeResponses>(
+      separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
+    )
+
+  const initialFormData: Partial<CheckInOutFormData> = {
+    category: inventoryItem?.itemDefinition?.category,
+    itemDefinition: inventoryItem?.itemDefinition,
+    attributes: inventoryItem?.attributes
+      ?.filter((attr) => attr.attribute.possibleValues instanceof Array)
+      .map((attr) => ({
+        id: attr.attribute._id,
+        label: attr.attribute.name,
+        value: String(attr.value),
+        color: attr.attribute.color,
+      })),
+    textFieldAttributes: inventoryItem?.attributes?.reduce(
+      (acc, attr) =>
+        !(attr.attribute.possibleValues instanceof Array)
+          ? { ...acc, [attr.attribute._id]: attr.value }
+          : acc,
+      {} as TextFieldAttributesInternalRepresentation
+    ),
+  }
+
   const [aaSelected, setAaSelected] = React.useState<
     AutocompleteAttributeOption[]
-  >([])
+  >(initialFormData.attributes || [])
+
+  useEffect(() => {
+    setFormData({
+      ...blankFormData(),
+      ...initialFormData,
+    })
+  }, [setFormData])
+
+  const updateTextFieldAttributes = (
+    e: string | number,
+    attributeId: string
+  ) => {
+    const attributeValue: string | number = e
+
+    setFormData((formData) =>
+      updateFormData(formData, {
+        textFieldAttributes: {
+          ...formData.textFieldAttributes,
+          [attributeId]: attributeValue,
+        },
+      })
+    )
+  }
+  const prevFormData = usePrevious(formData)
+
+  // if you select an item definition without selecting a category, infer the category
+  React.useEffect(() => {
+    setFormData((formData) =>
+      updateFormData(formData, { category: formData.itemDefinition?.category })
+    )
+  }, [formData.itemDefinition, setFormData])
 
   // Update filtered item defs when category changes
   React.useEffect(() => {
-    if (selectedCategory) {
+    if (formData.category && !formData.itemDefinition) {
       setFilteredItemDefinitions(
         itemDefinitions.filter((itemDefinition) => {
-          if (
-            itemDefinition.category &&
-            itemDefinition.category.hasOwnProperty('_id')
-          ) {
-            return itemDefinition.category._id === selectedCategory._id
+          if (itemDefinition.category) {
+            return itemDefinition.category._id === formData.category._id
           }
         })
       )
     } else {
       setFilteredItemDefinitions(itemDefinitions)
     }
-  }, [selectedCategory, itemDefinitions])
+  }, [formData.category, formData.itemDefinition, itemDefinitions])
 
-  // Update split attributes when item definition changes
+  // Update split attributes and attr form data when item definition changes
   React.useEffect(() => {
-    if (selectedItemDefinition) {
+    if (formData.itemDefinition) {
       setSplitAttrs(
-        separateAttributes(
-          selectedItemDefinition.attributes as AttributeResponse[]
-        )
+        separateAttributeResponses(formData.itemDefinition.attributes)
       )
-    } else {
-      setSplitAttrs(defaultSplitAttrs)
-      setSelectedAttributes([])
-      setAaSelected([])
     }
-  }, [selectedItemDefinition])
 
-  React.useEffect(() => {
-    console.log(selectedAttributes)
-  }, [selectedAttributes])
-
-  // if you select an item definition without selecting a category, infer the category
-  React.useEffect(() => {
-    // TODO: Update this when types are updated
     if (
-      selectedCategory ||
-      !selectedItemDefinition ||
-      !selectedItemDefinition.category ||
-      typeof selectedItemDefinition.category === 'string'
+      formData.itemDefinition !== prevFormData?.itemDefinition &&
+      prevFormData?.itemDefinition
     ) {
-      return
+      setAaSelected([])
+      setFormData((formData) => {
+        const fd = updateFormData(formData, {
+          attributes: undefined,
+          textFieldAttributes: {},
+        })
+        return fd
+      })
     }
-    setSelectedCategory(selectedItemDefinition.category)
-  }, [selectedItemDefinition, selectedCategory])
+  }, [formData.itemDefinition, prevFormData?.itemDefinition, setFormData])
 
   return (
     <FormControl fullWidth>
@@ -106,18 +169,38 @@ function CheckInOutForm({
       {kioskMode && (
         <Autocomplete
           options={users}
+          isOptionEqualToValue={(option, value) => option._id === value._id}
           renderInput={(params) => (
             <TextField {...params} label="Staff Member" />
           )}
           getOptionLabel={(user) => user.name}
-          onChange={(_e, user) => setSelectedStaff(user)}
+          renderOption={(props, option) => {
+            return (
+              <li {...props} key={option._id}>
+                {option.name}
+              </li>
+            )
+          }}
+          onChange={(_e, user) => {
+            setFormData((formData) =>
+              updateFormData(formData, {
+                user: user || undefined,
+              })
+            )
+          }}
         />
       )}
       <Box sx={{ marginTop: 4 }}>
         <DateTimePicker
           label="Date"
-          value={date}
-          onChange={(date) => setDate(date)}
+          value={formData.date}
+          onChange={(date) => {
+            setFormData((formData) =>
+              updateFormData(formData, {
+                date: date as Dayjs,
+              })
+            )
+          }}
           renderInput={(params) => <TextField {...params} fullWidth />}
         />
       </Box>
@@ -125,30 +208,82 @@ function CheckInOutForm({
         options={categories}
         sx={{ marginTop: 4 }}
         renderInput={(params) => <TextField {...params} label="Category" />}
-        onChange={(_e, Category) => setSelectedCategory(Category)}
-        getOptionLabel={(Category) => Category.name}
-        inputValue={selectedCategory ? selectedCategory.name : ''}
-        disabled={!!selectedItemDefinition}
+        isOptionEqualToValue={(option, value) => option._id === value._id}
+        onChange={(_e, category) => {
+          setFormData((formData) =>
+            updateFormData(formData, {
+              category: category || undefined,
+            })
+          )
+        }}
+        getOptionLabel={(category) => category.name}
+        value={formData.category || null}
+        disabled={!!formData.itemDefinition}
       />
       <Autocomplete
         options={filteredItemDefinitions}
         sx={{ marginTop: 4 }}
         renderInput={(params) => <TextField {...params} label="Item" />}
-        onChange={(_e, itemDefinition) =>
-          setSelectedItemDefinition(itemDefinition)
-        }
+        isOptionEqualToValue={(option, value) => option._id === value._id}
+        onChange={(_e, itemDefinition) => {
+          setFormData((formData) =>
+            updateFormData(formData, {
+              itemDefinition: itemDefinition || undefined,
+            })
+          )
+        }}
         getOptionLabel={(itemDefinition) => itemDefinition.name}
+        value={formData.itemDefinition || null}
       />
       <AttributeAutocomplete
-        attributes={splitAttrs.options}
+        attributes={splitAttrs.list}
         sx={{ mt: 4 }}
         onChange={(_e, attributes) => {
-          setSelectedAttributes(attributes)
+          setFormData((formData) =>
+            updateFormData(formData, {
+              attributes: attributes || undefined,
+            })
+          )
         }}
         value={aaSelected}
         setValue={setAaSelected}
       />
-      <QuantityForm quantity={quantity} setQuantity={setQuantity} />
+      {/* Text Fields */}
+      {splitAttrs.text.map((textAttr) => (
+        <TextField
+          key={textAttr._id}
+          label={textAttr.name}
+          onChange={(e) =>
+            updateTextFieldAttributes(e.target.value, textAttr._id)
+          }
+          sx={{ marginTop: 4 }}
+          value={formData.textFieldAttributes?.[textAttr._id] || ''}
+        />
+      ))}
+
+      {/* Number Fields */}
+      {splitAttrs.number.map((numAttr) => (
+        <TextField
+          key={numAttr._id}
+          label={numAttr.name}
+          type="number"
+          onChange={(e) =>
+            updateTextFieldAttributes(Number(e.target.value), numAttr._id)
+          }
+          sx={{ marginTop: 4 }}
+          value={formData.textFieldAttributes?.[numAttr._id] || ''}
+        />
+      ))}
+
+      <QuantityForm
+        onChange={(quantity) => {
+          setFormData((formData) =>
+            updateFormData(formData, {
+              quantityDelta: quantity,
+            })
+          )
+        }}
+      />
     </FormControl>
   )
 }
