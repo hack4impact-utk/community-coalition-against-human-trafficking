@@ -9,19 +9,9 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
-import InventoryItemListItem from 'components/InventoryItemListItem'
+import InventoryItemListItem from 'components/InventoryItemList/InventoryItemListItem'
 import { InventoryItemResponse } from 'utils/types'
-
-interface Data {
-  name: string
-  attributes: string
-  category: string
-  quantity: number
-  assignee: string
-  kebab: string
-}
-
-const rows = []
+import { Data } from './types'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -173,36 +163,69 @@ interface Props {
 }
 
 const DEFAULT_ROWS_PER_PAGE = 5
+const DEFAULT_ORDER_BY = 'name'
+const DEFAULT_ORDER = 'asc'
 
 export default function InventoryItemList(props: Props) {
-  const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
+  const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
+  const [orderBy, setOrderBy] = React.useState<keyof Data>(DEFAULT_ORDER_BY)
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-
-  const [visibleRows, setVisibleRows] = React.useState<InventoryItemResponse[] | null>(null)
+  const [visibleRows, setVisibleRows] = React.useState<Data[] | null>(null)
+  const [tableData, setTableData] = React.useState<Data[]>([])
 
   React.useEffect(() => {
-    const rowsOnMount = props.inventoryItems.slice(
+    const newTableData = props.inventoryItems.map((item) => {
+      return {
+        name: item.itemDefinition.name,
+        attributes: item.attributes,
+        category: item.itemDefinition.category?.name,
+        quantity: item.quantity,
+        assignee: item.assignee?.name,
+        kebab: '',
+        _id: item._id,
+        lowStockThreshold: item.itemDefinition.lowStockThreshold,
+        criticalStockThreshold: item.itemDefinition.criticalStockThreshold,
+        inventoryItem: item,
+      }
+    })
+    setTableData(newTableData)
+    let rowsOnMount = stableSort(
+      newTableData,
+      getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY)
+    )
+    rowsOnMount = rowsOnMount.slice(
       0 * DEFAULT_ROWS_PER_PAGE,
       0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
     )
 
     setVisibleRows(rowsOnMount)
-  }, [props.inventoryItems])
+  }, [])
 
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data
-  ) => {
-    const isAsc = orderBy === property && order === 'asc'
-    setOrder(isAsc ? 'desc' : 'asc')
-    setOrderBy(property)
-  }
+  const handleRequestSort = React.useCallback(
+    (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => {
+      const isAsc = orderBy === newOrderBy && order === 'asc'
+      const toggledOrder = isAsc ? 'desc' : 'asc'
+      setOrder(toggledOrder)
+      setOrderBy(newOrderBy)
+
+      const sortedRows = stableSort(
+        tableData,
+        getComparator(toggledOrder, newOrderBy)
+      )
+      const updatedRows = sortedRows.slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      )
+      setVisibleRows(updatedRows)
+    },
+    [order, orderBy, page, rowsPerPage, tableData]
+  )
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
-    const updatedRows = props.inventoryItems.slice(
+    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
+    const updatedRows = sortedRows.slice(
       newPage * rowsPerPage,
       newPage * rowsPerPage + rowsPerPage
     )
@@ -212,19 +235,17 @@ export default function InventoryItemList(props: Props) {
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10);
+    const updatedRowsPerPage = parseInt(event.target.value, 10)
     setRowsPerPage(updatedRowsPerPage)
     setPage(0)
-    const updatedRows = props.inventoryItems.slice(
+
+    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
+    const updatedRows = sortedRows.slice(
       0 * updatedRowsPerPage,
       0 * updatedRowsPerPage + updatedRowsPerPage
     )
     setVisibleRows(updatedRows)
   }
-
-  // Avoid a layout jump when reaching the last page with empty rows.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -236,16 +257,17 @@ export default function InventoryItemList(props: Props) {
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {visibleRows && visibleRows.map((item) => (
-              <InventoryItemListItem inventoryItem={item} key={item._id} />
-            ))}
+            {visibleRows &&
+              visibleRows.map((item) => (
+                <InventoryItemListItem inventoryItem={item} key={item._id} />
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={props.inventoryItems.length}
+        count={tableData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
