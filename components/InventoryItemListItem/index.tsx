@@ -31,7 +31,7 @@ export default function InventoryItemListItem({
           <WarningIcon
             fontSize="small"
             sx={{
-              top: '10px',
+              ml: 1,
               color:
                 inventoryItem.quantity <
                 inventoryItem.itemDefinition.criticalStockThreshold
@@ -106,13 +106,20 @@ export default function InventoryItemListItem({
       <TableCell
         sx={{
           // display: 'flex',
-          alignItems: 'center',
+          alignItems: 'baseline',
           justifyContent: 'center',
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.quantity.toLocaleString()}
-        {renderWarningIcon(inventoryItem)}
+        <span
+          style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+          }}
+        >
+          {inventoryItem.quantity.toLocaleString()}
+          {renderWarningIcon(inventoryItem)}
+        </span>
       </TableCell>
       <TableCell
         sx={{
