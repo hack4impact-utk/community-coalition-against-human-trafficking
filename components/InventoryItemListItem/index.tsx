@@ -56,6 +56,8 @@ export default function InventoryItemListItem({
             label={`${itemAttribute.value}`}
             key={i}
             sx={{
+              ml: 1,
+              my: 0.5,
               backgroundColor: itemAttribute.attribute.color,
               '& .MuiChip-label': {
                 color: getContrastYIQ(itemAttribute.attribute.color),
@@ -68,6 +70,10 @@ export default function InventoryItemListItem({
       return (
         <Chip
           size="small"
+          sx={{
+            ml: 1,
+            my: 0.5,
+          }}
           label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
           key={i}
         />
