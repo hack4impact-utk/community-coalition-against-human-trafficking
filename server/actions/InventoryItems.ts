@@ -50,6 +50,7 @@ const requestPipeline: PipelineStage[] = [
       as: 'itemDefinition',
     },
   },
+  // itemDefinition was being returned as an array, so extract it from the array
   {
     $set: {
       itemDefinition: { $arrayElemAt: ['$itemDefinition', 0] },

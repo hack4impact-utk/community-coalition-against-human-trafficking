@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
-import InventoryItemListItem from 'components/InventoryItemList/InventoryItemListItem'
+import InventoryItemListItem from 'components/DesktopInventoryItemList/DesktopInventoryItemListItem'
 import { InventoryItemResponse } from 'utils/types'
 import { Data } from './types'
 
