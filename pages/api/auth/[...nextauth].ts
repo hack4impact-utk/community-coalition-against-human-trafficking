@@ -26,6 +26,12 @@ export const authOptions: NextAuthOptions = {
       }
       return true
     },
+    // modifies the session returned to have the user's id. to find this, we use the token.sub which is the subject of the token.
+    async session({ session, token }) {
+      if (!token.sub) return session
+      session.user._id = token.sub
+      return session
+    },
   },
 }
 

@@ -1,21 +1,13 @@
 import InventoryItemList from 'components/InventoryItemList'
 import { InventoryItemResponse } from 'utils/types'
-import { createRequest, createResponse, Headers } from 'node-mocks-http'
 import inventoryItemsHandler from 'pages/api/inventoryItems'
-import { Typography } from '@mui/material'
-import {
-  GetServerSidePropsContext,
-  NextApiRequest,
-  NextApiResponse,
-} from 'next'
+import { GetServerSidePropsContext } from 'next'
 import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
+import { apiWrapper } from 'utils/apiWrappers'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const res = createResponse()
-  await inventoryItemsHandler(context.req as NextApiRequest, res)
-  const responseData: InventoryItemResponse[] = res._getJSONData().payload
   return {
-    props: { inventoryItems: responseData },
+    props: { inventoryItems: await apiWrapper(inventoryItemsHandler, context) },
   }
 }
 interface Props {
