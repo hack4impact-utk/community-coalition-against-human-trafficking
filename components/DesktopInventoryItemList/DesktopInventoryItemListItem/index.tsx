@@ -1,29 +1,25 @@
-import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
 import { TableRow, TableCell, Chip, Tooltip, Box } from '@mui/material'
-import { InventoryItemResponse } from 'utils/types'
 import theme from 'utils/theme'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import * as React from 'react'
 import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
+import { Data } from '../types'
 
 interface InventoryItemListItemProps {
-  inventoryItem: InventoryItemResponse
+  inventoryItem: Data
 }
 
-export default function InventoryItemListItem({
+export default function DesktopInventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
-  const renderWarningIcon = (inventoryItem: InventoryItemResponse) => {
-    if (
-      inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
-    ) {
+  const renderWarningIcon = (inventoryItem: Data) => {
+    if (inventoryItem.quantity < inventoryItem.lowStockThreshold) {
       return (
         <Tooltip
           title={
-            inventoryItem.quantity <
-            inventoryItem.itemDefinition.criticalStockThreshold
+            inventoryItem.quantity < inventoryItem.criticalStockThreshold
               ? 'This item has critically low stock.'
               : 'This item has low stock.'
           }
@@ -31,9 +27,9 @@ export default function InventoryItemListItem({
           <WarningIcon
             fontSize="small"
             sx={{
+              ml: 1,
               color:
-                inventoryItem.quantity <
-                inventoryItem.itemDefinition.criticalStockThreshold
+                inventoryItem.quantity < inventoryItem.criticalStockThreshold
                   ? theme.palette.error.main
                   : theme.palette.warning.light,
             }}
@@ -43,7 +39,7 @@ export default function InventoryItemListItem({
     }
   }
 
-  const renderAttributeChips = (inventoryItem: InventoryItemResponse) => {
+  const renderAttributeChips = (inventoryItem: Data) => {
     return inventoryItem.attributes?.map((itemAttribute, i) => {
       // attributes that are strings or numbers show the attribute name
       // attributes that are list types do not
@@ -55,6 +51,8 @@ export default function InventoryItemListItem({
             label={`${itemAttribute.value}`}
             key={i}
             sx={{
+              ml: 1,
+              my: 0.5,
               backgroundColor: itemAttribute.attribute.color,
               '& .MuiChip-label': {
                 color: getContrastYIQ(itemAttribute.attribute.color),
@@ -67,6 +65,10 @@ export default function InventoryItemListItem({
       return (
         <Chip
           size="small"
+          sx={{
+            ml: 1,
+            my: 0.5,
+          }}
           label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
           key={i}
         />
@@ -75,61 +77,64 @@ export default function InventoryItemListItem({
   }
 
   return (
-    <TableRow sx={{ display: 'flex' }}>
+    <TableRow>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100px',
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.itemDefinition.name}
+        {inventoryItem.name}
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           alignContent: 'center',
-          flexWrap: 'wrap',
           gap: '0.25rem',
-          width: '400px',
         }}
       >
         {renderAttributeChips(inventoryItem)}
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100px',
-        }}
-      ></TableCell>
-      <TableCell
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '100px',
-          wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.quantity.toLocaleString()}
-        {renderWarningIcon(inventoryItem)}
+        {inventoryItem.category}
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
-          alignItems: 'center',
-          width: '200px',
+          // display: 'flex',
+          alignItems: 'baseline',
+          justifyContent: 'center',
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.assignee ? inventoryItem.assignee.name : ''}
+        <span
+          style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+          }}
+        >
+          {inventoryItem.quantity.toLocaleString()}
+          {renderWarningIcon(inventoryItem)}
+        </span>
+      </TableCell>
+      <TableCell
+        sx={{
+          alignItems: 'center',
+          wordBreak: 'break-word',
+        }}
+      >
+        {inventoryItem.assignee ? inventoryItem.assignee : ''}
+      </TableCell>
+      <TableCell sx={{ width: '10px' }}>
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
-          <InventoryItemListItemKebab inventoryItem={inventoryItem} />
+          <InventoryItemListItemKebab
+            inventoryItem={inventoryItem.inventoryItem}
+          />
         </Box>
       </TableCell>
     </TableRow>
