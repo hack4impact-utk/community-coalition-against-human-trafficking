@@ -26,6 +26,10 @@ interface Props {
 
 export default function CheckOutPage({ categories }: Props) {
   const theme = useTheme()
+  const router = useRouter()
+  const inventoryItem = !!router.query.inventoryItem
+    ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
+    : undefined
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1 }}>
@@ -41,6 +45,7 @@ export default function CheckOutPage({ categories }: Props) {
                 users={[]}
                 itemDefinitions={[]}
                 categories={categories}
+                inventoryItem={inventoryItem}
               />
             </CardContent>
 

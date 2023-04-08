@@ -35,7 +35,12 @@ export default function InventoryItemListItemKebab({
   const option: InventoryItemListItemKebabOption[] = [
     {
       name: 'Check in',
-      onClick: () => router.push(`/checkIn?inventoryItem=${inventoryItem}`),
+      onClick: () =>
+        router.push(
+          `/checkIn?inventoryItem=${encodeURIComponent(
+            JSON.stringify(inventoryItem)
+          )}`
+        ),
     },
     {
       name: 'Check out',
@@ -43,11 +48,13 @@ export default function InventoryItemListItemKebab({
     },
     {
       name: 'Delete',
-      onClick: () =>
-        MongoDriver.deleteEntity(
-          InventoryItemSchema,
-          String(inventoryItem._id)
-        ),
+      onClick: () => {
+        fetch(`/api/inventoryItems/${inventoryItem._id}`, {
+          method: 'DELETE',
+        }).then(() => {
+          window.location.reload()
+        })
+      },
     },
   ]
   return (
