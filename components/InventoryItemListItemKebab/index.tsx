@@ -48,13 +48,7 @@ export default function InventoryItemListItemKebab({
     },
     {
       name: 'Delete',
-      onClick: () => {
-        fetch(`/api/inventoryItems/${inventoryItem._id}`, {
-          method: 'DELETE',
-        }).then(() => {
-          window.location.reload()
-        })
-      },
+      onClick: () => {},
     },
   ]
   return (
