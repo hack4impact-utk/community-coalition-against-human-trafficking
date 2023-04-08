@@ -3,6 +3,9 @@ import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React from 'react'
 import theme from 'utils/theme'
 import { InventoryItem } from 'utils/types'
+import { useRouter } from 'next/router'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import InventoryItemSchema from 'server/models/InventoryItem'
 
 interface InventoryItemListItemKebabOption {
   name: string
@@ -12,21 +15,6 @@ interface InventoryItemListItemKebabOption {
 interface InventoryItemListItemKebabProps {
   inventoryItem: InventoryItem
 }
-
-const settings: InventoryItemListItemKebabOption[] = [
-  {
-    name: 'Check in',
-    onClick: () => console.log('check in'),
-  },
-  {
-    name: 'Check out',
-    onClick: () => console.log('check out'),
-  },
-  {
-    name: 'Delete',
-    onClick: () => console.log('delete'),
-  },
-]
 
 export default function InventoryItemListItemKebab({
   inventoryItem,
@@ -43,6 +31,25 @@ export default function InventoryItemListItemKebab({
   const handleCloseKebabMenu = () => {
     setAnchorElKebab(null)
   }
+  const router = useRouter()
+  const option: InventoryItemListItemKebabOption[] = [
+    {
+      name: 'Check in',
+      onClick: () => router.push(`/checkIn?inventoryItem=${inventoryItem}`),
+    },
+    {
+      name: 'Check out',
+      onClick: () => router.push(`/checkOut?inventoryItem=${inventoryItem}`),
+    },
+    {
+      name: 'Delete',
+      onClick: () =>
+        MongoDriver.deleteEntity(
+          InventoryItemSchema,
+          String(inventoryItem._id)
+        ),
+    },
+  ]
   return (
     <>
       <IconButton onClick={handleOpenKebabMenu}>
@@ -64,15 +71,15 @@ export default function InventoryItemListItemKebab({
         open={Boolean(anchorElKebab)}
         onClose={handleCloseKebabMenu}
       >
-        {settings.map((setting) => (
+        {option.map((option) => (
           <MenuItem
-            key={setting.name}
+            key={option.name}
             onClick={() => {
-              setting.onClick()
+              option.onClick()
               handleCloseKebabMenu()
             }}
           >
-            <Typography textAlign="center">{setting.name}</Typography>
+            <Typography textAlign="center">{option.name}</Typography>
           </MenuItem>
         ))}
       </Menu>

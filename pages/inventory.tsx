@@ -8,6 +8,7 @@ import {
   NextApiRequest,
   NextApiResponse,
 } from 'next'
+import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const res = createResponse()
@@ -29,6 +30,7 @@ export default function InventoryPage({ inventoryItems }: Props) {
         search={''}
         category={''}
       />
+      <InventoryItemListItemKebab inventoryItem={inventoryItems[0]} />
     </>
   )
 }
