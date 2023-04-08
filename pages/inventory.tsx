@@ -2,7 +2,6 @@ import InventoryItemList from 'components/InventoryItemList'
 import { InventoryItemResponse } from 'utils/types'
 import inventoryItemsHandler from 'pages/api/inventoryItems'
 import { GetServerSidePropsContext } from 'next'
-import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
 import { apiWrapper } from 'utils/apiWrappers'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -22,7 +21,6 @@ export default function InventoryPage({ inventoryItems }: Props) {
         search={''}
         category={''}
       />
-      <InventoryItemListItemKebab inventoryItem={inventoryItems[0]} />
     </>
   )
 }

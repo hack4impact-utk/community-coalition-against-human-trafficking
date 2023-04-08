@@ -10,10 +10,17 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material'
-import { CategoryResponse } from 'utils/types'
+import {
+  CategoryResponse,
+  CheckInOutFormData,
+  InventoryItemRequest,
+} from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import categoriesHandler from '@api/categories'
+import { useRouter } from 'next/router'
+import React from 'react'
+import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -30,6 +37,28 @@ export default function CheckOutPage({ categories }: Props) {
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
+
+  const [formData, setFormData] = React.useState<CheckInOutFormData>(
+    {} as CheckInOutFormData
+  )
+
+  const onSubmit = async (formData: CheckInOutFormData) => {
+    const inventoryItem: Partial<InventoryItemRequest> =
+      CheckInOutFormDataToInventoryItemRequest(formData)
+
+    // TODO better way of coding URLs
+    await fetch(
+      `http://localhost:3000/api/inventoryItems/checkIn?quantity=${formData.quantityDelta}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inventoryItem),
+      }
+    )
+  }
+
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1 }}>
@@ -45,6 +74,8 @@ export default function CheckOutPage({ categories }: Props) {
                 users={[]}
                 itemDefinitions={[]}
                 categories={categories}
+                formData={formData}
+                setFormData={setFormData}
                 inventoryItem={inventoryItem}
               />
             </CardContent>
@@ -52,7 +83,9 @@ export default function CheckOutPage({ categories }: Props) {
             <CardActions
               sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'end' } }}
             >
-              <Button variant="contained">Check out</Button>
+              <Button onClick={() => onSubmit(formData)} variant="contained">
+                Check in
+              </Button>
             </CardActions>
           </Box>
         </Card>

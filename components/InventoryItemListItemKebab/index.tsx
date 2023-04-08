@@ -4,8 +4,6 @@ import React from 'react'
 import theme from 'utils/theme'
 import { InventoryItem } from 'utils/types'
 import { useRouter } from 'next/router'
-import * as MongoDriver from 'server/actions/MongoDriver'
-import InventoryItemSchema from 'server/models/InventoryItem'
 
 interface InventoryItemListItemKebabOption {
   name: string
@@ -44,11 +42,22 @@ export default function InventoryItemListItemKebab({
     },
     {
       name: 'Check out',
-      onClick: () => router.push(`/checkOut?inventoryItem=${inventoryItem}`),
+      onClick: () =>
+        router.push(
+          `/checkOut?inventoryItem=${encodeURIComponent(
+            JSON.stringify(inventoryItem)
+          )}`
+        ),
     },
     {
       name: 'Delete',
-      onClick: () => {},
+      onClick: () => {
+        fetch(`/api/inventoryItems/${inventoryItem._id}`, {
+          method: 'DELETE',
+        }).then(() => {
+          window.location.reload()
+        })
+      },
     },
   ]
   return (
