@@ -65,12 +65,16 @@ export default function DesktopInventoryItemListItem({
       return (
         <Chip
           size="small"
+          label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
+          key={i}
           sx={{
             ml: 1,
             my: 0.5,
+            backgroundColor: itemAttribute.attribute.color,
+            '& .MuiChip-label': {
+              color: getContrastYIQ(itemAttribute.attribute.color),
+            },
           }}
-          label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
-          key={i}
         />
       )
     })
