@@ -4,6 +4,7 @@ import React from 'react'
 import theme from 'utils/theme'
 import { InventoryItem } from 'utils/types'
 import { useRouter } from 'next/router'
+import ConfirmationDialog from 'components/ConfirmationDialog'
 
 interface InventoryItemListItemKebabOption {
   name: string
