@@ -1,4 +1,3 @@
-import { InventoryItem } from 'utils/types'
 import WarningIcon from '@mui/icons-material/Warning'
 import { TableRow, TableCell, Chip, Tooltip, Box } from '@mui/material'
 import { InventoryItemResponse } from 'utils/types'
@@ -11,7 +10,7 @@ interface InventoryItemListItemProps {
   inventoryItem: InventoryItemResponse
 }
 
-export default function InventoryItemListItem({
+export default function DesktopInventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
@@ -69,19 +68,23 @@ export default function InventoryItemListItem({
           size="small"
           label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
           key={i}
+          sx={{
+            backgroundColor: itemAttribute.attribute.color,
+            '& .MuiChip-label': {
+              color: getContrastYIQ(itemAttribute.attribute.color),
+            },
+          }}
         />
       )
     })
   }
 
   return (
-    <TableRow sx={{ display: 'flex' }}>
+    <TableRow>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100px',
           wordBreak: 'break-word',
         }}
       >
@@ -89,30 +92,23 @@ export default function InventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           alignContent: 'center',
-          flexWrap: 'wrap',
           gap: '0.25rem',
-          width: '400px',
         }}
       >
         {renderAttributeChips(inventoryItem)}
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100px',
         }}
       ></TableCell>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          width: '100px',
           wordBreak: 'break-word',
         }}
       >
@@ -121,13 +117,17 @@ export default function InventoryItemListItem({
       </TableCell>
       <TableCell
         sx={{
-          display: 'flex',
           alignItems: 'center',
-          width: '200px',
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.assignee ? inventoryItem.assignee.name : ''}
+        {typeof inventoryItem.assignee === 'string'
+          ? inventoryItem.assignee
+          : inventoryItem.assignee
+          ? inventoryItem.assignee.name
+          : ''}
+      </TableCell>
+      <TableCell sx={{ width: '10px' }}>
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
           <InventoryItemListItemKebab inventoryItem={inventoryItem} />
         </Box>

@@ -50,6 +50,12 @@ const requestPipeline: PipelineStage[] = [
       as: 'itemDefinition',
     },
   },
+  // itemDefinition was being returned as an array, so extract it from the array
+  {
+    $set: {
+      itemDefinition: { $arrayElemAt: ['$itemDefinition', 0] },
+    },
+  },
   // creates a temporary array of attribute documents called 'attributeDocs' containing all relevant attribute documents
   {
     $lookup: {
