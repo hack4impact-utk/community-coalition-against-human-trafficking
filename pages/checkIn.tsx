@@ -67,6 +67,7 @@ export default function CheckInPage({
         body: JSON.stringify(inventoryItem),
       }
     )
+    setFormData({} as CheckInOutFormData)
   }
 
   return (
