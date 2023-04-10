@@ -1,22 +1,31 @@
 import { Search } from '@mui/icons-material'
-import { InputAdornment, OutlinedInput, TextField } from '@mui/material'
+import { InputAdornment, OutlinedInput } from '@mui/material'
 import React from 'react'
-import { debounce } from 'ts-debounce'
 import {
   addURLQueryParam,
   removeURLQueryParam,
   useRouterQuery,
 } from 'utils/queryParams'
+import { debounce } from 'ts-debounce'
+import { NextRouter } from 'next/router'
+
+const updateSearchQuery = (search: string, router: NextRouter) => {
+  if (!search) removeURLQueryParam(router, 'search')
+  else addURLQueryParam(router, 'search', search)
+}
+
+const debouncedUpdateSearchQuery = debounce(updateSearchQuery, 500)
 
 export default function SearchField() {
   const { router } = useRouterQuery()
+  const [search, setSearch] = React.useState<string>(
+    (router.query.search as string) || ''
+  )
 
   const onChange = (search: string) => {
-    if (!search) removeURLQueryParam(router, 'search')
-    else addURLQueryParam(router, 'search', search)
+    setSearch(search)
+    debouncedUpdateSearchQuery(search, router)
   }
-  const debouncedOnChange = debounce(onChange, 500)
-
   return (
     <OutlinedInput
       placeholder="Search"
@@ -26,8 +35,8 @@ export default function SearchField() {
           <Search />
         </InputAdornment>
       }
-      onChange={(e) => debouncedOnChange(e.target.value)}
-      value={router.query.search || ''}
+      onChange={(e) => onChange(e.target.value)}
+      value={search}
     ></OutlinedInput>
   )
 }
