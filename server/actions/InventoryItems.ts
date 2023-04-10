@@ -189,7 +189,7 @@ export async function checkOutInventoryItem(
   if (itemMatches.length) {
     itemMatches[0].quantity -= quantityRemoved
     item = deepCopy(itemMatches[0])
-    if (item < 0) {
+    if (item.quantity < 0) {
       throw new ApiError(400, 'Check out would result in negative quantity.')
     } else {
       apiInventoryItemValidation(item, 'PUT')
