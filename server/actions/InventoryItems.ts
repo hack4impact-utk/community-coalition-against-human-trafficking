@@ -187,15 +187,16 @@ export async function checkOutInventoryItem(
   }
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
   if (itemMatches.length) {
-    const modifiedItemQuantity = (itemMatches[0].quantity -= quantityRemoved)
-    if (modifiedItemQuantity < 0) {
+    itemMatches[0].quantity -= quantityRemoved
+    item = deepCopy(itemMatches[0])
+    if (item < 0) {
       throw new ApiError(400, 'Check out would result in negative quantity.')
     } else {
       apiInventoryItemValidation(item, 'PUT')
       MongoDriver.updateEntity(
         InventoryItemSchema,
-        itemMatches[0].id,
-        itemMatches[0] as InventoryItemPutRequest
+        item._id as string,
+        item as InventoryItemPutRequest
       )
     }
   } else {
