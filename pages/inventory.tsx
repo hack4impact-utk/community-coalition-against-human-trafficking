@@ -7,6 +7,7 @@ import { apiWrapper } from 'utils/apiWrappers'
 import { Typography, Unstable_Grid2 as Grid2 } from '@mui/material'
 import SearchField from 'components/SearchField'
 import SearchAutocomplete from 'components/SearchAutocomplete'
+import { useRouter } from 'next/router'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -24,6 +25,8 @@ interface Props {
 }
 
 export default function InventoryPage({ inventoryItems, categories }: Props) {
+  const router = useRouter()
+  console.log(router.query)
   return (
     <>
       <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
@@ -46,8 +49,8 @@ export default function InventoryPage({ inventoryItems, categories }: Props) {
         <Grid2 xs={12}>
           <InventoryItemList
             inventoryItems={inventoryItems}
-            search={''}
-            category={''}
+            search={router.query.search as string}
+            category={router.query.category as string}
           />
         </Grid2>
       </Grid2>

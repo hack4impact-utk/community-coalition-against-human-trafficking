@@ -214,6 +214,14 @@ export default function DesktopInventoryItemList(props: Props) {
         }),
       ]
     }
+
+    if (props.category) {
+      newTableData = [
+        ...newTableData.filter((item) => {
+          return item.category === props.category
+        }),
+      ]
+    }
     setTableData(newTableData)
     let rowsOnMount = stableSort(
       newTableData,
@@ -225,7 +233,7 @@ export default function DesktopInventoryItemList(props: Props) {
     )
 
     setVisibleRows(rowsOnMount)
-  }, [])
+  }, [props.search, props.category])
 
   const handleRequestSort = React.useCallback(
     (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => {
