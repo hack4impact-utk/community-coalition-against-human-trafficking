@@ -32,6 +32,7 @@ export default function SearchAutocomplete({
       renderInput={(params) => (
         <TextField {...params} placeholder={placeholder} variant="outlined" />
       )}
+      value={(router.query[searchKey] as string) || null}
     />
   )
 }

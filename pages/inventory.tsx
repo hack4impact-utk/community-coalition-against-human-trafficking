@@ -13,7 +13,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     props: {
       inventoryItems: await apiWrapper(inventoryItemsHandler, context),
       categories: (await apiWrapper(categoriesHandler, context)).map(
-        (c) => c.name
+        (c: CategoryResponse) => c.name
       ),
     },
   }
@@ -28,14 +28,14 @@ export default function InventoryPage({ inventoryItems, categories }: Props) {
     <>
       <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
         <Grid2 xs={12}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
+          <Typography variant="h5" sx={{ mb: 2 }}>
             Inventory
           </Typography>
         </Grid2>
-        <Grid2 xs={12} md={4}>
+        <Grid2 xs={12} md={5} lg={4}>
           <SearchField />
         </Grid2>
-        <Grid2 xs={12} md={4}>
+        <Grid2 xs={12} md={5} lg={4}>
           <SearchAutocomplete
             searchKey="category"
             options={categories}
