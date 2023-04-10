@@ -25,6 +25,7 @@ import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import dayjs from 'dayjs'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -72,6 +73,13 @@ export default function CheckOutPage({
         body: JSON.stringify(inventoryItem),
       }
     )
+    setFormData((formData) => {
+      return {
+        user: formData.user,
+        date: dayjs(new Date()),
+        quantityDelta: 0,
+      } as CheckInOutFormData
+    })
   }
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1 }}>

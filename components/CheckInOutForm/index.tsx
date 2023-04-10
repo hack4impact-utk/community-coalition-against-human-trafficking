@@ -138,6 +138,7 @@ function CheckInOutForm({
     } else {
       setFilteredItemDefinitions(itemDefinitions)
     }
+    console.log(formData)
   }, [formData.category, formData.itemDefinition, itemDefinitions])
 
   // Update split attributes and attr form data when item definition changes
@@ -276,13 +277,14 @@ function CheckInOutForm({
       ))}
 
       <QuantityForm
-        onChange={(quantity) => {
+        setQuantity={(quantity) => {
           setFormData((formData) =>
             updateFormData(formData, {
               quantityDelta: quantity,
             })
           )
         }}
+        quantity={formData.quantityDelta || 0}
       />
     </FormControl>
   )

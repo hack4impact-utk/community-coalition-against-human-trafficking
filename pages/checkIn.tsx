@@ -25,6 +25,7 @@ import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -72,7 +73,13 @@ export default function CheckInPage({
         body: JSON.stringify(inventoryItem),
       }
     )
-    setFormData({} as CheckInOutFormData)
+    setFormData((formData) => {
+      return {
+        user: formData.user,
+        date: dayjs(new Date()),
+        quantityDelta: 0,
+      } as CheckInOutFormData
+    })
   }
 
   return (
