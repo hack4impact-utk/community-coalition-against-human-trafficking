@@ -84,7 +84,7 @@ export default function CheckOutPage({ categories }: Props) {
               sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'end' } }}
             >
               <Button onClick={() => onSubmit(formData)} variant="contained">
-                Check in
+                Check Out
               </Button>
             </CardActions>
           </Box>
