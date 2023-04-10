@@ -48,7 +48,7 @@ export default function CheckOutPage({ categories }: Props) {
 
     // TODO better way of coding URLs
     await fetch(
-      `http://localhost:3000/api/inventoryItems/checkIn?quantity=${formData.quantityDelta}`,
+      `http://localhost:3000/api/inventoryItems/checkOut?quantity=${formData.quantityDelta}`,
       {
         method: 'POST',
         headers: {
