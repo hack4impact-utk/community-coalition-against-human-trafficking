@@ -1,5 +1,6 @@
 import { Search } from '@mui/icons-material'
 import { InputAdornment, OutlinedInput, TextField } from '@mui/material'
+import React from 'react'
 import { debounce } from 'ts-debounce'
 import {
   addURLQueryParam,
@@ -19,6 +20,7 @@ export default function SearchField() {
   return (
     <OutlinedInput
       placeholder="Search"
+      fullWidth
       endAdornment={
         <InputAdornment position="end">
           <Search />
@@ -26,6 +28,7 @@ export default function SearchField() {
       }
       fullWidth
       onChange={(e) => debouncedOnChange(e.target.value)}
+      value={router.query.search || ''}
     ></OutlinedInput>
   )
 }
