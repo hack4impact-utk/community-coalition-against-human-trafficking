@@ -24,6 +24,7 @@ import { apiWrapper } from 'utils/apiWrappers'
 import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
+import { useAppSelector } from 'store'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -45,8 +46,10 @@ export default function CheckInPage({
   itemDefinitions,
   users,
 }: Props) {
+  // console.log(categories, itemDefinitions, users)
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
+  const kioskMode = useAppSelector((state) => state.kiosk)
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
     {} as CheckInOutFormData
@@ -98,7 +101,7 @@ export default function CheckInPage({
                 Check in items
               </Typography>
               <CheckInOutForm
-                kioskMode={true}
+                kioskMode={kioskMode.enabled}
                 users={users}
                 itemDefinitions={itemDefinitions}
                 categories={categories}
