@@ -20,7 +20,11 @@ export default function InventoryItemList({
   return (
     <>
       {isMobileView ? (
-        <MobileInventoryItemList inventoryItems={inventoryItems} />
+        <MobileInventoryItemList
+          inventoryItems={inventoryItems}
+          search={search}
+          category={category}
+        />
       ) : (
         <DesktopInventoryItemList
           inventoryItems={inventoryItems}
