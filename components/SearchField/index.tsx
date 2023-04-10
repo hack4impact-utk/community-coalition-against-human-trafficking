@@ -26,7 +26,6 @@ export default function SearchField() {
           <Search />
         </InputAdornment>
       }
-      fullWidth
       onChange={(e) => debouncedOnChange(e.target.value)}
       value={router.query.search || ''}
     ></OutlinedInput>
