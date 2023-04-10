@@ -4,10 +4,15 @@ import inventoryItemsHandler from 'pages/api/inventoryItems'
 import categoriesHandler from 'pages/api/categories'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
-import { Typography, Unstable_Grid2 as Grid2 } from '@mui/material'
+import {
+  Typography,
+  Unstable_Grid2 as Grid2,
+  useMediaQuery,
+} from '@mui/material'
 import SearchField from 'components/SearchField'
 import SearchAutocomplete from 'components/SearchAutocomplete'
 import { useRouter } from 'next/router'
+import theme from 'utils/theme'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -26,19 +31,19 @@ interface Props {
 
 export default function InventoryPage({ inventoryItems, categories }: Props) {
   const router = useRouter()
-  console.log(router.query)
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   return (
     <>
-      <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
+      <Grid2 container my={2} sx={{ flexGrow: 1 }} gap={2}>
         <Grid2 xs={12}>
-          <Typography variant="h5" sx={{ mb: 2 }}>
+          <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
             Inventory
           </Typography>
         </Grid2>
-        <Grid2 xs={12} md={5} lg={4}>
+        <Grid2 xs={12} md={5} lg={4} sx={{ px: 2 }}>
           <SearchField />
         </Grid2>
-        <Grid2 xs={12} md={5} lg={4}>
+        <Grid2 xs={12} md={5} lg={4} sx={{ px: 2 }}>
           <SearchAutocomplete
             searchKey="category"
             options={categories}
@@ -46,7 +51,7 @@ export default function InventoryPage({ inventoryItems, categories }: Props) {
           />
         </Grid2>
 
-        <Grid2 xs={12}>
+        <Grid2 xs={12} sx={{ px: isMobileView ? 0 : 2 }}>
           <InventoryItemList
             inventoryItems={inventoryItems}
             search={router.query.search as string}
