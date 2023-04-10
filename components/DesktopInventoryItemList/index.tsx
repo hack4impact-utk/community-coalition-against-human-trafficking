@@ -10,7 +10,10 @@ import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import InventoryItemListItem from 'components/DesktopInventoryItemList/DesktopInventoryItemListItem'
-import { InventoryItemResponse } from 'utils/types'
+import {
+  InventoryItemAttributeResponse,
+  InventoryItemResponse,
+} from 'utils/types'
 import { Data } from './types'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -175,7 +178,7 @@ export default function DesktopInventoryItemList(props: Props) {
   const [tableData, setTableData] = React.useState<Data[]>([])
 
   React.useEffect(() => {
-    const newTableData = props.inventoryItems.map((item) => {
+    let newTableData = props.inventoryItems.map((item) => {
       return {
         name: item.itemDefinition.name,
         attributes: item.attributes,
@@ -189,6 +192,28 @@ export default function DesktopInventoryItemList(props: Props) {
         inventoryItem: item,
       }
     })
+
+    if (props.search) {
+      const search = props.search.toLowerCase()
+      newTableData = [
+        ...newTableData.filter((item) => {
+          return (
+            item.name.toLowerCase().includes(search) ||
+            (item.attributes &&
+              (item.attributes
+                .map((attr) => String(attr.value).toLowerCase())
+                .join(' ')
+                .includes(search) ||
+                item.attributes
+                  .map((attr) => attr.attribute.name.toLowerCase())
+                  .join(' ')
+                  .includes(search))) ||
+            (item.category && item.category.toLowerCase().includes(search)) ||
+            (item.assignee && item.assignee.toLowerCase().includes(search))
+          )
+        }),
+      ]
+    }
     setTableData(newTableData)
     let rowsOnMount = stableSort(
       newTableData,
