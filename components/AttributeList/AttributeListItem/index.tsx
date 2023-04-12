@@ -22,7 +22,7 @@ export default function AttributeListItem({
                 key={`${possibleValue}-${index}`}
               />
             ))
-          : attribute.possibleValues}
+          : attribute.possibleValues.charAt(0).toUpperCase() + attribute.possibleValues.slice(1)}
       </TableCell>
       <TableCell>
         <CircleIcon sx={{ color: attribute.color }} />
