@@ -1,5 +1,8 @@
+import { Box, Typography, Button } from '@mui/material'
 import AttributeList from 'components/AttributeList'
+import SearchField from 'components/SearchField'
 import { AttributeResponse } from 'utils/types'
+import AddIcon from '@mui/icons-material/Add';
 
 const attributes: AttributeResponse[] = [
   { _id: '1', name: 'attribute', possibleValues: 'number', color: '#666666' },
@@ -43,5 +46,20 @@ const attributes: AttributeResponse[] = [
 ]
 
 export default function AttributesPage() {
-  return <AttributeList attributes={attributes} search={''} />
+  return (
+    <Box display="flex" flexDirection="column" mt={2}>
+      <Box display="flex">
+        <Typography variant="h5" sx={{ ml: 2 }}>
+          Attributes
+        </Typography>
+        <Button variant="outlined" startIcon={<AddIcon />} sx={{ ml: 'auto', mr: 2 }}>
+          Create New Attribute
+        </Button>
+      </Box>
+      <Box width="33%" ml={2}>
+        <SearchField />
+      </Box>
+      <AttributeList attributes={attributes} search={''} />
+    </Box>
+  )
 }
