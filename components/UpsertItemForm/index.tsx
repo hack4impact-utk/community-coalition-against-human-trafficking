@@ -1,14 +1,15 @@
 import {
+  Autocomplete,
   Checkbox,
   FormControl,
   FormControlLabel,
   TextField,
 } from '@mui/material'
-import { Attribute, Category } from 'utils/types'
+import { AttributeResponse, CategoryResponse } from 'utils/types'
 
 interface Props {
-  categories: Category[]
-  attributes: Attribute[]
+  categories: CategoryResponse[]
+  attributes: AttributeResponse[]
 }
 
 export default function UpsertItemForm({ categories, attributes }: Props) {
@@ -20,6 +21,12 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
         sx={{ marginTop: 4 }}
       />
       <TextField label="Item Name" variant="outlined" sx={{ marginTop: 4 }} />
+      <Autocomplete
+        multiple
+        options={attributes}
+        getOptionLabel={(option) => option.name}
+        renderInput={(params) => <TextField {...params} label="Attribute" />}
+      />
     </FormControl>
   )
 }
