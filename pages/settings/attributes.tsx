@@ -1,51 +1,23 @@
+import attributesHandler from '@api/attributes'
 import { Box, Typography, Button } from '@mui/material'
 import AttributeList from 'components/AttributeList'
 import SearchField from 'components/SearchField'
+import { GetServerSidePropsContext } from 'next'
+import { apiWrapper } from 'utils/apiWrappers'
 import { AttributeResponse } from 'utils/types'
 import AddIcon from '@mui/icons-material/Add';
 
-const attributes: AttributeResponse[] = [
-  { _id: '1', name: 'attribute', possibleValues: 'number', color: '#666666' },
-  { _id: '2', name: 'attribute2', possibleValues: 'text', color: '#123456' },
-  {
-    _id: '3',
-    name: 'attribute3',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-  {
-    _id: '4',
-    name: 'b',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-  {
-    _id: '5',
-    name: 'c',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-  {
-    _id: '6',
-    name: 'd',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-  {
-    _id: '7',
-    name: 'e',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-  {
-    _id: '8',
-    name: 'f',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-]
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return {
+    props: { attributes: await apiWrapper(attributesHandler, context) },
+  }
+}
 
-export default function AttributesPage() {
+interface AttributesPageProps {
+  attributes: AttributeResponse[]
+}
+
+export default function AttributesPage({ attributes }: AttributesPageProps) {
   return (
     <Box display="flex" flexDirection="column" mt={2}>
       <Box display="flex">
