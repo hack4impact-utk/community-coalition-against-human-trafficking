@@ -18,8 +18,6 @@ interface AttributesPageProps {
 }
 
 export default function AttributesPage({ attributes }: AttributesPageProps) {
-  return <AttributeList attributes={attributes} search={''} />
-export default function AttributesPage() {
   return (
     <Box display="flex" flexDirection="column" mt={2}>
       <Box display="flex">
