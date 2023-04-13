@@ -14,6 +14,7 @@ import { CategoryResponse } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import categoriesHandler from '@api/categories'
+import { useAppSelector } from 'store'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -27,6 +28,7 @@ interface Props {
 export default function CheckOutPage({ categories }: Props) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
+  const kioskMode = useAppSelector((state) => state.kiosk)
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1 }}>
       <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
@@ -37,7 +39,7 @@ export default function CheckOutPage({ categories }: Props) {
                 Check out items
               </Typography>
               <CheckInOutForm
-                kioskMode={true}
+                kioskMode={kioskMode.enabled}
                 users={[]}
                 itemDefinitions={[]}
                 categories={categories}
