@@ -24,6 +24,7 @@ import { apiWrapper } from 'utils/apiWrappers'
 import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
+import { useRouter } from 'next/router'
 import { useAppSelector } from 'store'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -49,6 +50,10 @@ export default function CheckInPage({
   // console.log(categories, itemDefinitions, users)
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
+  const router = useRouter()
+  const inventoryItem = !!router.query.inventoryItem
+    ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
+    : undefined
   const kioskMode = useAppSelector((state) => state.kiosk)
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
@@ -107,6 +112,7 @@ export default function CheckInPage({
                 categories={categories}
                 formData={formData}
                 setFormData={setFormData}
+                inventoryItem={inventoryItem}
               />
             </CardContent>
 
