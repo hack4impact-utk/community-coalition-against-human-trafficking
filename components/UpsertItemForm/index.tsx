@@ -25,7 +25,7 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
         renderInput={(params) => <TextField {...params} label="Category" />}
         sx={{ marginTop: 4 }}
       />
-      
+
       <FormControlLabel
         control={<Checkbox defaultChecked />}
         label="Check out to clients?"
@@ -55,7 +55,7 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
           <AddIcon fontSize="large" />
         </IconButton>
       </Box>
-      
+
       {/* Low Stock Threshold Prompt */}
       <Box sx={{ display: 'flex', alignSelf: 'flex-start', marginTop: 4 }}>
         <Typography
