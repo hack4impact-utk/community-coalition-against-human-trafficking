@@ -95,7 +95,7 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
           onChange={(e) => {
             Number(e.target.value) < 0 ? (e.target.value = '0') : e.target.value
           }}
-          type="tel"
+          type="number"
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
