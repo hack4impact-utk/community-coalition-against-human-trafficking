@@ -21,6 +21,7 @@ import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import { useAppSelector } from 'store'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -60,6 +61,7 @@ export default function CheckOutPage({ categories }: Props) {
   }
 
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
+  const kioskMode = useAppSelector((state) => state.kiosk)
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1 }}>
       <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
@@ -70,7 +72,7 @@ export default function CheckOutPage({ categories }: Props) {
                 Check out items
               </Typography>
               <CheckInOutForm
-                kioskMode={true}
+                kioskMode={kioskMode.enabled}
                 users={[]}
                 itemDefinitions={[]}
                 categories={categories}
