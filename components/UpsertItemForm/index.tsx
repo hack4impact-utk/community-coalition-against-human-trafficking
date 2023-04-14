@@ -66,7 +66,7 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
         </Typography>
         <TextField
           sx={{
-            width: 56,
+            width: 76,
             marginRight: 1.5,
           }}
           onChange={(e) => {
@@ -89,7 +89,7 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
         </Typography>
         <TextField
           sx={{
-            width: 56,
+            width: 76,
             marginRight: 1.5,
           }}
           onChange={(e) => {
