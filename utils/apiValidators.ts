@@ -4,6 +4,7 @@ import {
   validateCategoryRequest,
   validateInventoryItemRequest,
   validateItemDefinitionRequest,
+  validateLogRequest,
   validateUserRequest,
 } from 'utils/validators'
 import { validateObjectId, ValidationResult } from 'utils/validation'
@@ -52,6 +53,14 @@ export function apiInventoryItemValidation(
   requestType?: 'PUT' | 'POST'
 ) {
   const response = validateInventoryItemRequest(inventoryItem, requestType)
+  badBodyValidationResponse(response)
+}
+
+export function apiLogValidation(
+  log: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  const response = validateLogRequest(log, requestType)
   badBodyValidationResponse(response)
 }
 
