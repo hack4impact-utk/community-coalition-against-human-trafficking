@@ -1,28 +1,25 @@
 import WarningIcon from '@mui/icons-material/Warning'
 import { TableRow, TableCell, Chip, Tooltip, Box } from '@mui/material'
-import { InventoryItemResponse } from 'utils/types'
 import theme from 'utils/theme'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import * as React from 'react'
 import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
+import { Data } from '../types'
 
 interface InventoryItemListItemProps {
-  inventoryItem: InventoryItemResponse
+  inventoryItem: Data
 }
 
 export default function DesktopInventoryItemListItem({
   inventoryItem,
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
-  const renderWarningIcon = (inventoryItem: InventoryItemResponse) => {
-    if (
-      inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
-    ) {
+  const renderWarningIcon = (inventoryItem: Data) => {
+    if (inventoryItem.quantity < inventoryItem.lowStockThreshold) {
       return (
         <Tooltip
           title={
-            inventoryItem.quantity <
-            inventoryItem.itemDefinition.criticalStockThreshold
+            inventoryItem.quantity < inventoryItem.criticalStockThreshold
               ? 'This item has critically low stock.'
               : 'This item has low stock.'
           }
@@ -30,9 +27,9 @@ export default function DesktopInventoryItemListItem({
           <WarningIcon
             fontSize="small"
             sx={{
+              ml: 1,
               color:
-                inventoryItem.quantity <
-                inventoryItem.itemDefinition.criticalStockThreshold
+                inventoryItem.quantity < inventoryItem.criticalStockThreshold
                   ? theme.palette.error.main
                   : theme.palette.warning.light,
             }}
@@ -42,7 +39,7 @@ export default function DesktopInventoryItemListItem({
     }
   }
 
-  const renderAttributeChips = (inventoryItem: InventoryItemResponse) => {
+  const renderAttributeChips = (inventoryItem: Data) => {
     return inventoryItem.attributes?.map((itemAttribute, i) => {
       // attributes that are strings or numbers show the attribute name
       // attributes that are list types do not
@@ -54,6 +51,8 @@ export default function DesktopInventoryItemListItem({
             label={`${itemAttribute.value}`}
             key={i}
             sx={{
+              ml: 1,
+              my: 0.5,
               backgroundColor: itemAttribute.attribute.color,
               '& .MuiChip-label': {
                 color: getContrastYIQ(itemAttribute.attribute.color),
@@ -69,6 +68,8 @@ export default function DesktopInventoryItemListItem({
           label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
           key={i}
           sx={{
+            ml: 1,
+            my: 0.5,
             backgroundColor: itemAttribute.attribute.color,
             '& .MuiChip-label': {
               color: getContrastYIQ(itemAttribute.attribute.color),
@@ -88,7 +89,7 @@ export default function DesktopInventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.itemDefinition.name}
+        {inventoryItem.name}
       </TableCell>
       <TableCell
         sx={{
@@ -104,16 +105,26 @@ export default function DesktopInventoryItemListItem({
           alignItems: 'center',
           justifyContent: 'center',
         }}
-      ></TableCell>
+      >
+        {inventoryItem.category}
+      </TableCell>
       <TableCell
         sx={{
-          alignItems: 'center',
+          // display: 'flex',
+          alignItems: 'baseline',
           justifyContent: 'center',
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.quantity.toLocaleString()}
-        {renderWarningIcon(inventoryItem)}
+        <span
+          style={{
+            display: 'flex',
+            alignItems: 'flex-end',
+          }}
+        >
+          {inventoryItem.quantity.toLocaleString()}
+          {renderWarningIcon(inventoryItem)}
+        </span>
       </TableCell>
       <TableCell
         sx={{
@@ -121,15 +132,13 @@ export default function DesktopInventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {typeof inventoryItem.assignee === 'string'
-          ? inventoryItem.assignee
-          : inventoryItem.assignee
-          ? inventoryItem.assignee.name
-          : ''}
+        {inventoryItem.assignee ? inventoryItem.assignee : ''}
       </TableCell>
       <TableCell sx={{ width: '10px' }}>
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
-          <InventoryItemListItemKebab inventoryItem={inventoryItem} />
+          <InventoryItemListItemKebab
+            inventoryItem={inventoryItem.inventoryItem}
+          />
         </Box>
       </TableCell>
     </TableRow>

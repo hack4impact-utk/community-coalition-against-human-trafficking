@@ -30,11 +30,9 @@ export function useRouterQuery() {
  * - See file for more details on keeping track of path.
  */
 export function addURLQueryParam(router: NextRouter, key: string, val: string) {
-  if (!router.query[key]) {
-    router.replace({
-      query: { ...router.query, [key]: val },
-    })
-  }
+  router.replace({
+    query: { ...router.query, [key]: val },
+  })
 }
 
 /**
