@@ -4,6 +4,7 @@ import {
   InventoryItem,
   InventoryItemAttribute,
   ItemDefinition,
+  Log,
   User,
 } from '.'
 
@@ -48,9 +49,16 @@ export interface NumberAttributeResponse extends AttributeResponse {
   possibleValues: 'number'
 }
 
+export interface LogResponse extends Log {
+  _id: string
+  staff: UserResponse
+  item: InventoryItemResponse
+}
+
 export type ServerResponse =
   | UserResponse
   | ItemDefinitionResponse
   | InventoryItemResponse
   | CategoryResponse
   | AttributeResponse
+  | LogResponse
