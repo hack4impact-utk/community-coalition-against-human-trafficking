@@ -14,7 +14,7 @@ const updateSearchQuery = (search: string, router: NextRouter) => {
   else addURLQueryParam(router, 'search', search)
 }
 
-const debouncedUpdateSearchQuery = debounce(updateSearchQuery, 500)
+const debouncedUpdateSearchQuery = debounce(updateSearchQuery, 300)
 
 export default function SearchField() {
   const { router } = useRouterQuery()
