@@ -26,7 +26,6 @@ import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
 import { useAppSelector } from 'store'
-import DialogLink from 'components/DialogLink'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
