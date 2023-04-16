@@ -26,6 +26,7 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
 import dayjs from 'dayjs'
+import { useAppSelector } from 'store'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -81,6 +82,8 @@ export default function CheckOutPage({
       } as CheckInOutFormData
     })
   }
+
+  const kioskMode = useAppSelector((state) => state.kiosk)
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1 }}>
       <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
@@ -91,7 +94,7 @@ export default function CheckOutPage({
                 Check out items
               </Typography>
               <CheckInOutForm
-                kioskMode={true}
+                kioskMode={kioskMode.enabled}
                 users={users}
                 itemDefinitions={itemDefinitions}
                 categories={categories}
@@ -105,7 +108,7 @@ export default function CheckOutPage({
               sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'end' } }}
             >
               <Button onClick={() => onSubmit(formData)} variant="contained">
-                Check out
+                Check Out
               </Button>
             </CardActions>
           </Box>
