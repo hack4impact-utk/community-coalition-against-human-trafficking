@@ -48,7 +48,6 @@ export default function CheckInPage({
   itemDefinitions,
   users,
 }: Props) {
-  // console.log(categories, itemDefinitions, users)
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   const router = useRouter()

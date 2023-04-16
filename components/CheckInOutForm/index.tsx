@@ -138,7 +138,6 @@ function CheckInOutForm({
     } else {
       setFilteredItemDefinitions(itemDefinitions)
     }
-    console.log(formData)
   }, [formData.category, formData.itemDefinition, itemDefinitions])
 
   // Update split attributes and attr form data when item definition changes
