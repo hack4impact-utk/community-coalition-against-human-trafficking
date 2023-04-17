@@ -35,7 +35,7 @@ export default function AttributesPage({ attributes }: AttributesPageProps) {
           Attributes
         </Typography>
       </Grid2>
-      <Grid2 container xs={12} direction={isMobileView ? "column-reverse" : "row"} sx={{ px: 2}}>
+      <Grid2 container xs={12} direction={isMobileView ? "column-reverse" : "row"} gap={isMobileView ? 2 : 0}  sx={{ px: 2}}>
         <Grid2 xs={12} md={4}>
           <SearchField />
         </Grid2>
