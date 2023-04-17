@@ -2,6 +2,7 @@ import {
   Autocomplete,
   Box,
   Checkbox,
+  Chip,
   FormControl,
   FormControlLabel,
   IconButton,
@@ -47,7 +48,17 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
           multiple
           options={attributes}
           getOptionLabel={(option) => option.name}
-          renderInput={(params) => <TextField {...params} label="Attribute" />}
+          renderInput={(params) => <TextField {...params} label="Attributes" />}
+          renderTags={(tagValue, getTagProps) =>
+            tagValue.map((option, index) => (
+              <Chip
+                label={option.name}
+                style={{ backgroundColor: option.color }}
+                {...getTagProps({ index })}
+                key={option._id}
+              />
+            ))
+          }
           sx={{ marginRight: 2, alignSelf: 'center' }}
           fullWidth
         />
