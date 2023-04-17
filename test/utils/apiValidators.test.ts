@@ -8,7 +8,7 @@ import {
 } from 'utils/apiValidators'
 import * as validators from 'utils/validators'
 import { ApiError } from 'utils/types'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants'
 
 describe('apiValidators', () => {
   const validationFailedReturn = {
@@ -29,7 +29,7 @@ describe('apiValidators', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(ApiError)
         expect(error.statusCode).toBe(400)
-        expect(error.message).toBe(constants.errors.invalidObjectIdFormat)
+        expect(error.message).toBe(errors.invalidObjectIdFormat)
       }
     })
   })
@@ -56,7 +56,7 @@ describe('apiValidators', () => {
         expect(error).toBeInstanceOf(ApiError)
         expect(error.statusCode).toBe(400)
         expect(error.message).toBe(
-          constants.errors.prefixes.badBody + validationFailedReturn.message
+          errors.prefixes.badBody + validationFailedReturn.message
         )
       }
     })
@@ -84,7 +84,7 @@ describe('apiValidators', () => {
         expect(error).toBeInstanceOf(ApiError)
         expect(error.statusCode).toBe(400)
         expect(error.message).toBe(
-          constants.errors.prefixes.badBody + validationFailedReturn.message
+          errors.prefixes.badBody + validationFailedReturn.message
         )
       }
     })
@@ -112,7 +112,7 @@ describe('apiValidators', () => {
         expect(error).toBeInstanceOf(ApiError)
         expect(error.statusCode).toBe(400)
         expect(error.message).toBe(
-          constants.errors.prefixes.badBody + validationFailedReturn.message
+          errors.prefixes.badBody + validationFailedReturn.message
         )
       }
     })
@@ -140,7 +140,7 @@ describe('apiValidators', () => {
         expect(error).toBeInstanceOf(ApiError)
         expect(error.statusCode).toBe(400)
         expect(error.message).toBe(
-          constants.errors.prefixes.badBody + validationFailedReturn.message
+          errors.prefixes.badBody + validationFailedReturn.message
         )
       }
     })
