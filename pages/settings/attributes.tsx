@@ -35,12 +35,12 @@ export default function AttributesPage({ attributes }: AttributesPageProps) {
           Attributes
         </Typography>
       </Grid2>
-      <Grid2 container xs={12} sx={{ px: 2 }}>
+      <Grid2 container xs={12} direction={isMobileView ? "column-reverse" : "row"} sx={{ px: 2}}>
         <Grid2 xs={12} md={4}>
           <SearchField />
         </Grid2>
-        <Grid2 xs="auto" ml={isMobileView ? '' : 'auto'}>
-          <Button variant="outlined" startIcon={<AddIcon />}>
+        <Grid2 ml={isMobileView ? '' : 'auto'}>
+          <Button variant="outlined" startIcon={<AddIcon />} sx={{width: "100%"}}>
             Create New Attribute
           </Button>
         </Grid2>
