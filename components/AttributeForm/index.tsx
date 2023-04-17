@@ -16,7 +16,7 @@ import getContrastYIQ from 'utils/getContrastYIQ'
 import { Attribute, AttributeRequest } from 'utils/types'
 
 type PossibleValues = 'text' | 'number' | 'list'
-interface AttributeFormData {
+export interface AttributeFormData {
   name: string
   color: string
   valueType: PossibleValues
@@ -24,8 +24,8 @@ interface AttributeFormData {
 }
 interface AttributeFormProps {
   attribute?: AttributeRequest
-  onSubmit: (e: React.SyntheticEvent, attrFormData: AttributeFormData) => void
-  submitBtnText: string
+  onChange: (attrFormData: AttributeFormData) => void
+  children?: React.ReactNode
 }
 
 function transformAttributeToFormData(attr?: Attribute): AttributeFormData {
@@ -57,13 +57,17 @@ function transformAttributeToFormData(attr?: Attribute): AttributeFormData {
 }
 
 export default function AttributeForm({
-  onSubmit,
+  onChange,
   attribute,
-  submitBtnText,
+  children,
 }: AttributeFormProps) {
   const [formData, setFormData] = React.useState<AttributeFormData>(
     transformAttributeToFormData(attribute)
   )
+
+  React.useEffect(() => {
+    onChange(formData)
+  }, [onChange, formData])
 
   return (
     <form>
@@ -157,15 +161,7 @@ export default function AttributeForm({
             />
           </Grid2>
         )}
-        <Grid2 xs={12} sx={{ mt: 2 }} display="flex" justifyContent="flex-end">
-          <Button
-            variant="outlined"
-            size="large"
-            onClick={(e) => onSubmit(e, formData)}
-          >
-            {submitBtnText}
-          </Button>
-        </Grid2>
+        {children}
       </Grid2>
     </form>
   )
