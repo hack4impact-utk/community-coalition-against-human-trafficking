@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@api/auth/[...nextauth]'
 import { ApiError } from 'utils/types'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants'
 
 /**
  * This function ensures that the person making the server call is logged in AND that the email passed in as
@@ -21,7 +21,7 @@ export async function userEndpointServerAuth(
     !session ||
     (!!userEmail && (!session.user || session.user.email !== userEmail))
   ) {
-    throw new ApiError(403, constants.errors.unauthorized)
+    throw new ApiError(403, errors.unauthorized)
   }
 }
 

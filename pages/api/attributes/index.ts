@@ -4,7 +4,7 @@ import { apiAttributeValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import AttributeSchema from 'server/models/Attribute'
 import { serverAuth } from 'utils/auth'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants'
 
 // @route GET api/attributes - Returns a list of all Attributes in the database - Private
 // @route POST api/attributes - Create an Attribute from request body - Private
@@ -41,7 +41,7 @@ export default async function attributesHandler(
         })
       }
       default: {
-        throw new ApiError(405, constants.errors.invalidReqMethod)
+        throw new ApiError(405, errors.invalidReqMethod)
       }
     }
   } catch (e) {
