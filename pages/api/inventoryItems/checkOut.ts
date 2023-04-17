@@ -3,8 +3,8 @@ import { ApiError, InventoryItem } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { checkOutInventoryItem } from 'server/actions/InventoryItems'
 
-// @route POST /api/inventoryItems/checkIn - Checks in an inventory item - Private
-export default async function inventoryItemsCheckInHandler(
+// @route POST /api/inventoryItems/checkOut - Checks out an inventory item - Private
+export default async function inventoryItemsCheckOutHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
