@@ -1,4 +1,6 @@
+import { AttributeFormData } from 'components/AttributeForm'
 import {
+  AttributeRequest,
   CheckInOutFormData,
   InventoryItemAttributeRequest,
   InventoryItemRequest,
@@ -9,7 +11,7 @@ import {
  * @param formData The form data to convert
  * @returns A new `Partial<InventoryItemRequest>` object.
  */
-export function CheckInOutFormDataToInventoryItemRequest(
+export function checkInOutFormDataToInventoryItemRequest(
   formData: CheckInOutFormData
 ): Partial<InventoryItemRequest> {
   return {
@@ -34,5 +36,18 @@ export function CheckInOutFormDataToInventoryItemRequest(
         [] as InventoryItemAttributeRequest[]
       ),
     ],
+  }
+}
+
+export function attributeFormDataToAttributeRequest(
+  formData: AttributeFormData
+): AttributeRequest {
+  return {
+    name: formData.name,
+    color: formData.color,
+    possibleValues:
+      formData.valueType === 'list'
+        ? formData.listOptions!
+        : formData.valueType,
   }
 }

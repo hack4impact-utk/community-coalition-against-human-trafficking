@@ -12,12 +12,21 @@ import {
   Unstable_Grid2 as Grid2,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-import { AttributeResponse, CategoryResponse } from 'utils/types'
+import {
+  AttributeRequest,
+  AttributeResponse,
+  CategoryResponse,
+} from 'utils/types'
 import React from 'react'
 import AttributeForm, { AttributeFormData } from 'components/AttributeForm'
+import { attributeFormDataToAttributeRequest } from 'utils/transformations'
 
 interface Props {
   categories: CategoryResponse[]
+  attributes: AttributeResponse[]
+}
+
+interface ItemDefinitionFormData {
   attributes: AttributeResponse[]
 }
 
@@ -26,6 +35,41 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
   const [attrFormData, setAttrFormData] = React.useState(
     {} as AttributeFormData
   )
+  const [formData, setFormData] = React.useState({} as ItemDefinitionFormData)
+  const [proxyAttributes, setProxyAttributes] = React.useState(attributes)
+
+  const createNewAttribute = async (fd: AttributeFormData) => {
+    // TODO better way of coding URLs
+    const attrReq = attributeFormDataToAttributeRequest(fd)
+    const response = await fetch(`http://localhost:3000/api/attributes`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(attrReq),
+    })
+    const data = await response.json()
+
+    const attrRes = {
+      ...attrReq,
+      _id: data.payload,
+    }
+
+    setFormData((fd) => {
+      return {
+        ...fd,
+        attributes: [...fd.attributes, attrRes],
+      }
+    })
+    setProxyAttributes((pa) => {
+      return [...pa, attrRes]
+    })
+  }
+
+  React.useEffect(() => {
+    console.log(formData)
+  }, [formData])
+
   return (
     <FormControl fullWidth>
       <Autocomplete
@@ -54,7 +98,7 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
       >
         <Autocomplete
           multiple
-          options={attributes}
+          options={proxyAttributes}
           getOptionLabel={(option) => option.name}
           renderInput={(params) => <TextField {...params} label="Attributes" />}
           renderTags={(tagValue, getTagProps) =>
@@ -67,16 +111,23 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
               />
             ))
           }
+          value={formData.attributes || []}
+          onChange={(_e, val) => {
+            setFormData((fd) => ({
+              ...fd,
+              attributes: val,
+            }))
+          }}
           sx={{ marginRight: 2, alignSelf: 'center' }}
           fullWidth
         />
-        <IconButton size="large">
-          <AddIcon
-            fontSize="large"
-            onClick={(_e) => {
-              setShowAttributeForm(true)
-            }}
-          />
+        <IconButton
+          onClick={(_e) => {
+            setShowAttributeForm(true)
+          }}
+          size="large"
+        >
+          <AddIcon fontSize="large" />
         </IconButton>
       </Box>
 
@@ -104,7 +155,10 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
               <Button
                 variant="outlined"
                 size="large"
-                onClick={(_e) => setShowAttributeForm(false)}
+                onClick={(_e) => {
+                  createNewAttribute(attrFormData)
+                  setShowAttributeForm(false)
+                }}
               >
                 Add Attribute
               </Button>
