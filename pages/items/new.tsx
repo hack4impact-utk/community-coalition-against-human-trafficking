@@ -67,6 +67,7 @@ export default function NewItemPage() {
         <Button
           onClick={(_e) => {
             createItem(itemDefinitionFormData).then(() => {
+              // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
               router.back()
             })
           }}
