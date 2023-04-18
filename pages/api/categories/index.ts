@@ -28,7 +28,6 @@ export default async function categoriesHandler(
         })
       }
       case 'POST': {
-        console.log(req.body)
         apiCategoryValidation(req.body, 'POST')
         const category: CategoryPostRequest = req.body
         const response: CategoryResponse = await MongoDriver.createEntity(
