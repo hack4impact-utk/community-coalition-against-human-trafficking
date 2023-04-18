@@ -6,9 +6,12 @@ import {
   DialogContent,
   DialogTitle,
 } from '@mui/material'
-import UpsertItemForm from 'components/UpsertItemForm'
+import UpsertItemForm, {
+  ItemDefinitionFormData,
+} from 'components/UpsertItemForm'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { itemDefinitionFormDataToItemDefinitionRequest } from 'utils/transformations'
 import { AttributeResponse, CategoryResponse } from 'utils/types'
 let categories: CategoryResponse[]
 let attributes: AttributeResponse[] = [] as AttributeResponse[]
@@ -27,6 +30,21 @@ fetch('http://localhost:3000/api/attributes', {
   })
 })
 
+let itemDefinitionFormData: ItemDefinitionFormData
+
+function createItem(formData: ItemDefinitionFormData) {
+  console.log(formData)
+  const itemDefReq = itemDefinitionFormDataToItemDefinitionRequest(formData)
+
+  return fetch('http://localhost:3000/api/itemDefinitions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(itemDefReq),
+  })
+}
+
 export default function NewItemPage() {
   const router = useRouter()
 
@@ -34,13 +52,27 @@ export default function NewItemPage() {
     <>
       <DialogTitle>Create New Item</DialogTitle>
       <DialogContent>
-        <UpsertItemForm categories={categories} attributes={attributes} />
+        <UpsertItemForm
+          categories={categories}
+          attributes={attributes}
+          onChange={(formData) => {
+            itemDefinitionFormData = formData
+          }}
+        />
       </DialogContent>
       <DialogActions>
         <Button onClick={(_e) => router.back()} color="inherit">
           Close
         </Button>
-        <Button onClick={(_e) => router.back()}>Submit</Button>
+        <Button
+          onClick={(_e) => {
+            createItem(itemDefinitionFormData).then(() => {
+              router.back()
+            })
+          }}
+        >
+          Submit
+        </Button>
       </DialogActions>
     </>
   )
