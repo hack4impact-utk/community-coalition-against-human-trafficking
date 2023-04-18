@@ -11,12 +11,19 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { AttributeResponse, CategoryResponse } from 'utils/types'
 let categories: CategoryResponse[]
-const attributes: AttributeResponse[] = [] as AttributeResponse[]
+let attributes: AttributeResponse[] = [] as AttributeResponse[]
 fetch('http://localhost:3000/api/categories', {
   method: 'GET',
 }).then((response) => {
   response.json().then((data) => {
     categories = data.payload
+  })
+})
+fetch('http://localhost:3000/api/attributes', {
+  method: 'GET',
+}).then((response) => {
+  response.json().then((data) => {
+    attributes = data.payload
   })
 })
 
@@ -30,7 +37,10 @@ export default function NewItemPage() {
         <UpsertItemForm categories={categories} attributes={attributes} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={(_e) => router.back()}>Close</Button>
+        <Button onClick={(_e) => router.back()} color="inherit">
+          Close
+        </Button>
+        <Button onClick={(_e) => router.back()}>Submit</Button>
       </DialogActions>
     </>
   )

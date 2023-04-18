@@ -26,6 +26,7 @@ import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
 import { useAppSelector } from 'store'
+import DialogLink from 'components/DialogLink'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -88,14 +89,16 @@ export default function CheckInPage({
         smOffset={2}
         lgOffset={3}
       >
-        <Button
-          variant="outlined"
-          fullWidth={isMobileView}
-          size="large"
-          sx={{ my: 2 }}
-        >
-          Create new item
-        </Button>
+        <DialogLink href="/items/new">
+          <Button
+            variant="outlined"
+            fullWidth={isMobileView}
+            size="large"
+            sx={{ my: 2 }}
+          >
+            Create new item
+          </Button>
+        </DialogLink>
       </Grid2>
 
       <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
