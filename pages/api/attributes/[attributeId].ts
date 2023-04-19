@@ -7,7 +7,7 @@ import {
 } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import AttributeSchema from 'server/models/Attribute'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 // @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId - Private
 // @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by attributeId) with a new Attribute object - Private

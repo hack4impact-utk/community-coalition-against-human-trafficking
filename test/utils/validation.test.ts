@@ -4,7 +4,7 @@ import {
   validateObjectId,
   validateProperties,
 } from 'utils/validation'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 describe('validation', () => {
   describe('validateObjectId', () => {
