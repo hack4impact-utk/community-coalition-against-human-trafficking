@@ -101,7 +101,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
               value={router.query.startDate || null}
             />
             <Box ml={1} mr={1}>
-              <HorizontalRuleIcon />
+              <HorizontalRuleIcon sx={{ color: theme.palette.grey['500'] }} />
             </Box>
             <DatePicker
               label="End Date"
