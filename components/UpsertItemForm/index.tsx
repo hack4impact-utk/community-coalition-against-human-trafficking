@@ -36,6 +36,8 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
     {} as AttributeFormData
   )
   const [formData, setFormData] = React.useState({} as ItemDefinitionFormData)
+
+  // this is here to support adding newly created attributes to the create new item form attributes list options after they are created
   const [proxyAttributes, setProxyAttributes] = React.useState(attributes)
 
   const createNewAttribute = async (fd: AttributeFormData) => {
@@ -50,7 +52,8 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
     })
     const data = await response.json()
 
-    const attrRes = {
+    // creates AttributeResponse object that can be used in the form
+    const newAttr: AttributeResponse = {
       ...attrReq,
       _id: data.payload,
     }
@@ -58,17 +61,13 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
     setFormData((fd) => {
       return {
         ...fd,
-        attributes: [...fd.attributes, attrRes],
+        attributes: [...(fd.attributes ?? []), newAttr],
       }
     })
     setProxyAttributes((pa) => {
-      return [...pa, attrRes]
+      return [...pa, newAttr]
     })
   }
-
-  React.useEffect(() => {
-    console.log(formData)
-  }, [formData])
 
   return (
     <FormControl fullWidth>
@@ -122,7 +121,7 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
           fullWidth
         />
         <IconButton
-          onClick={(_e) => {
+          onClick={() => {
             setShowAttributeForm(true)
           }}
           size="large"
@@ -148,14 +147,14 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
               <Button
                 color="inherit"
                 sx={{ mr: 2 }}
-                onClick={(_e) => setShowAttributeForm(false)}
+                onClick={() => setShowAttributeForm(false)}
               >
                 Cancel
               </Button>
               <Button
                 variant="outlined"
                 size="large"
-                onClick={(_e) => {
+                onClick={() => {
                   createNewAttribute(attrFormData)
                   setShowAttributeForm(false)
                 }}
