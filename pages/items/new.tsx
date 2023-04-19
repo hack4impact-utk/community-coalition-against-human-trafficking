@@ -37,10 +37,10 @@ export default function NewItemPage() {
         <UpsertItemForm categories={categories} attributes={attributes} />
       </DialogContent>
       <DialogActions>
-        <Button onClick={(_e) => router.back()} color="inherit">
+        <Button onClick={() => router.back()} color="inherit">
           Close
         </Button>
-        <Button onClick={(_e) => router.back()}>Submit</Button>
+        <Button onClick={() => router.back()}>Submit</Button>
       </DialogActions>
     </>
   )
