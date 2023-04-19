@@ -8,7 +8,7 @@ import {
 } from 'utils/apiValidators'
 import * as validators from 'utils/validators'
 import { ApiError } from 'utils/types'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 describe('apiValidators', () => {
   const validationFailedReturn = {

@@ -7,7 +7,7 @@ import {
   validateUserRequest,
 } from 'utils/validators'
 import { validateObjectId, ValidationResult } from 'utils/validation'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 export function apiObjectIdValidation(id: string) {
   if (!validateObjectId(id)) {

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 export interface Property {
   key: string

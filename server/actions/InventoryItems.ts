@@ -8,7 +8,7 @@ import {
 import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
 import { PipelineStage } from 'mongoose'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 import deepCopy from 'utils/deepCopy'
 
 // aggregate pipeline does the following:

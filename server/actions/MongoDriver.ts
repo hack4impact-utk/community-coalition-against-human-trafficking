@@ -15,7 +15,7 @@ import {
   ServerPutRequest,
 } from 'utils/types'
 import { ObjectId } from 'mongodb'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 /**
  * Gets a single Entity object from the database with the given id

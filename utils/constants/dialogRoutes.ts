@@ -1,4 +1,4 @@
-import TestDialog from 'pages/dialog/test'
+import TestDialog from 'pages/dialog/testDialog'
 import { ReactElement } from 'react'
 
 export interface DialogRoute {

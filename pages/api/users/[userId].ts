@@ -4,7 +4,7 @@ import { userEndpointServerAuth } from 'utils/auth'
 import { ApiError, UserPutRequest, UserResponse } from 'utils/types'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import UserSchema from 'server/models/User'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 // @route   GET api/users/[userId] - Returns a single User object for user with userId - Private
 // @route   DELETE api/users/[userId] - Deletes a single User object for user with userId - Private
