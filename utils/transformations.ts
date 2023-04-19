@@ -60,8 +60,6 @@ export function itemDefinitionFormDataToItemDefinitionRequest(
   return {
     ...formData,
     category: formData.category._id,
-    attributes: formData.attributes.map((attr) => {
-      return attr._id
-    }),
+    attributes: formData.attributes.map((attr) => attr._id),
   }
 }

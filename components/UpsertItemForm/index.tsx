@@ -99,7 +99,7 @@ export default function UpsertItemForm({
       />
 
       <FormControlLabel
-        control={<Checkbox defaultChecked checked={!formData.internal} />}
+        control={<Checkbox checked={!formData.internal} />}
         label="Check out to clients?"
         sx={{ marginTop: 4 }}
         onChange={(_e, val) => {
