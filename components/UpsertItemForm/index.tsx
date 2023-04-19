@@ -12,14 +12,12 @@ import {
   Unstable_Grid2 as Grid2,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-import {
-  AttributeRequest,
-  AttributeResponse,
-  CategoryResponse,
-} from 'utils/types'
+import { AttributeResponse, CategoryResponse } from 'utils/types'
 import React from 'react'
-import AttributeForm, { AttributeFormData } from 'components/AttributeForm'
 import { attributeFormDataToAttributeRequest } from 'utils/transformations'
+import UpsertAttributeForm, {
+  AttributeFormData,
+} from 'components/UpsertAttributeForm'
 
 interface Props {
   categories: CategoryResponse[]
@@ -137,7 +135,11 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
             mt: 4,
           }}
         >
-          <AttributeForm onChange={(attrFD) => setAttrFormData(attrFD)}>
+          <UpsertAttributeForm
+            onChange={(attrFD) => {
+              setAttrFormData(attrFD)
+            }}
+          >
             <Grid2
               xs={12}
               sx={{ mt: 2 }}
@@ -162,7 +164,7 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
                 Add Attribute
               </Button>
             </Grid2>
-          </AttributeForm>
+          </UpsertAttributeForm>
         </Box>
       )}
 
