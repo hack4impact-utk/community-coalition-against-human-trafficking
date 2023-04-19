@@ -4,7 +4,7 @@ import { serverAuth } from 'utils/auth'
 import { apiCategoryValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import CategorySchema from 'server/models/Category'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 // @route GET api/categories - Returns a list of all Categories in the database - Private
 // @route POST /api/categories - Create a category from request body - Private

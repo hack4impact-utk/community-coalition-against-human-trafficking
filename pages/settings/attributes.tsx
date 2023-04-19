@@ -1,47 +1,56 @@
+import attributesHandler from '@api/attributes'
+import {
+  Box,
+  Typography,
+  Button,
+  Unstable_Grid2 as Grid2,
+  useMediaQuery,
+} from '@mui/material'
 import AttributeList from 'components/AttributeList'
+import SearchField from 'components/SearchField'
+import { GetServerSidePropsContext } from 'next'
+import { apiWrapper } from 'utils/apiWrappers'
 import { AttributeResponse } from 'utils/types'
+import AddIcon from '@mui/icons-material/Add'
+import { useRouter } from 'next/router'
+import theme from 'utils/theme'
 
-const attributes: AttributeResponse[] = [
-  { _id: '1', name: 'attribute', possibleValues: 'number', color: '#666666' },
-  { _id: '2', name: 'attribute2', possibleValues: 'text', color: '#123456' },
-  {
-    _id: '3',
-    name: 'attribute3',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-  {
-    _id: '4',
-    name: 'b',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-  {
-    _id: '5',
-    name: 'c',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-  {
-    _id: '6',
-    name: 'd',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-  {
-    _id: '7',
-    name: 'e',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-  {
-    _id: '8',
-    name: 'f',
-    possibleValues: ['small', 'medium', 'large'],
-    color: '#000000',
-  },
-]
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  return {
+    props: { attributes: await apiWrapper(attributesHandler, context) },
+  }
+}
 
-export default function AttributesPage() {
-  return <AttributeList attributes={attributes} search={''} />
+interface AttributesPageProps {
+  attributes: AttributeResponse[]
+}
+
+export default function AttributesPage({ attributes }: AttributesPageProps) {
+  const router = useRouter()
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
+  return (
+    <Grid2 container my={2} sx={{ flexGrow: 1 }} gap={2}>
+      <Grid2 xs={12}>
+        <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
+          Attributes
+        </Typography>
+      </Grid2>
+      <Grid2 container xs={12} direction={isMobileView ? "column-reverse" : "row"} gap={isMobileView ? 2 : 0}  sx={{ px: 2}}>
+        <Grid2 xs={12} md={4}>
+          <SearchField />
+        </Grid2>
+        <Grid2 ml={isMobileView ? '' : 'auto'}>
+          <Button variant="outlined" startIcon={<AddIcon />} sx={{width: "100%"}}>
+            Create New Attribute
+          </Button>
+        </Grid2>
+      </Grid2>
+      <Grid2 xs={12} sx={{ px: isMobileView ? 0 : 2 }}>
+        <AttributeList
+          attributes={attributes}
+          search={router.query.search as string}
+        />
+      </Grid2>
+    </Grid2>
+  )
 }

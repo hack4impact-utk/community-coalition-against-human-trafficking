@@ -25,7 +25,7 @@ export interface AttributeFormData {
 interface AttributeFormProps {
   attribute?: AttributeRequest
   onChange: (attrFormData: AttributeFormData) => void
-  children?: React.ReactNode
+  children?: React.ReactNode // contains the form buttons (Add/Edit/Cancel)
 }
 
 function transformAttributeToFormData(attr?: Attribute): AttributeFormData {
@@ -56,7 +56,7 @@ function transformAttributeToFormData(attr?: Attribute): AttributeFormData {
   }
 }
 
-export default function AttributeForm({
+export default function UpsertAttributeForm({
   onChange,
   attribute,
   children,

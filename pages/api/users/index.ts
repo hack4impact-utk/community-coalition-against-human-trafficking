@@ -4,7 +4,7 @@ import { serverAuth } from 'utils/auth'
 import { apiUserValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import UserSchema from 'server/models/User'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 // @route   POST /api/users - Create a user from request body. - Public
 export default async function usersHandler(

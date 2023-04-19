@@ -7,7 +7,7 @@ import {
 } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import CategorySchema from 'server/models/Category'
-import { errors } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 // @route GET api/categories/[categoryId] - Returns a single Category object given a categoryId - Private
 // @route PUT api/users/[categoryId] - Updates an existing Category object (identified by categoryId) with a new Category object - Private

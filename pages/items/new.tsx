@@ -32,11 +32,10 @@ fetch('http://localhost:3000/api/attributes', {
 
 let itemDefinitionFormData: ItemDefinitionFormData
 
-function createItem(formData: ItemDefinitionFormData) {
-  console.log(formData)
+async function createItem(formData: ItemDefinitionFormData) {
   const itemDefReq = itemDefinitionFormDataToItemDefinitionRequest(formData)
 
-  return fetch('http://localhost:3000/api/itemDefinitions', {
+  await fetch('http://localhost:3000/api/itemDefinitions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -61,15 +60,14 @@ export default function NewItemPage() {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={(_e) => router.back()} color="inherit">
+        <Button onClick={() => router.back()} color="inherit">
           Close
         </Button>
         <Button
-          onClick={(_e) => {
-            createItem(itemDefinitionFormData).then(() => {
-              // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
-              router.back()
-            })
+          onClick={async () => {
+            await createItem(itemDefinitionFormData)
+            // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
+            router.back()
           }}
         >
           Submit
