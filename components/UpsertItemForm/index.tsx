@@ -14,7 +14,9 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import { AttributeResponse, CategoryResponse } from 'utils/types'
 import React from 'react'
-import AttributeForm, { AttributeFormData } from 'components/AttributeForm'
+import UpsertAttributeForm, {
+  AttributeFormData,
+} from 'components/UpsertAttributeForm'
 
 interface Props {
   categories: CategoryResponse[]
@@ -73,7 +75,7 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
         <IconButton size="large">
           <AddIcon
             fontSize="large"
-            onClick={(_e) => {
+            onClick={() => {
               setShowAttributeForm(true)
             }}
           />
@@ -87,7 +89,11 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
             mt: 4,
           }}
         >
-          <AttributeForm onChange={(attrFD) => setAttrFormData(attrFD)}>
+          <UpsertAttributeForm
+            onChange={(attrFD) => {
+              setAttrFormData(attrFD)
+            }}
+          >
             <Grid2
               xs={12}
               sx={{ mt: 2 }}
@@ -97,19 +103,19 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
               <Button
                 color="inherit"
                 sx={{ mr: 2 }}
-                onClick={(_e) => setShowAttributeForm(false)}
+                onClick={() => setShowAttributeForm(false)}
               >
                 Cancel
               </Button>
               <Button
                 variant="outlined"
                 size="large"
-                onClick={(_e) => setShowAttributeForm(false)}
+                onClick={() => setShowAttributeForm(false)}
               >
                 Add Attribute
               </Button>
             </Grid2>
-          </AttributeForm>
+          </UpsertAttributeForm>
         </Box>
       )}
 
