@@ -1,4 +1,3 @@
-import attributesHandler from '@api/attributes'
 import {
   Box,
   Typography,
@@ -10,16 +9,13 @@ import {
   Checkbox,
   useTheme,
 } from '@mui/material'
-import AttributeList from 'components/AttributeList'
 import SearchField from 'components/SearchField'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
-import { AttributeResponse, CategoryResponse, LogResponse } from 'utils/types'
-import AddIcon from '@mui/icons-material/Add'
+import { CategoryResponse, LogResponse } from 'utils/types'
 import { NextRouter, useRouter } from 'next/router'
-import theme from 'utils/theme'
 import categoriesHandler from '@api/categories'
-import { DatePicker, DateTimePicker } from '@mui/x-date-pickers'
+import { DatePicker } from '@mui/x-date-pickers'
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule'
 import { addURLQueryParam, removeURLQueryParam } from 'utils/queryParams'
 
