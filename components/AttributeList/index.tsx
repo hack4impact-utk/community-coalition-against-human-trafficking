@@ -1,20 +1,22 @@
-import * as React from 'react'
-import Box from '@mui/material/Box'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TablePagination from '@mui/material/TablePagination'
-import TableRow from '@mui/material/TableRow'
-import TableSortLabel from '@mui/material/TableSortLabel'
-import { visuallyHidden } from '@mui/utils'
-import InventoryItemListItem from 'components/DesktopInventoryItemList/DesktopInventoryItemListItem'
 import {
-  InventoryItemAttributeResponse,
-  InventoryItemResponse,
-} from 'utils/types'
-import { Data } from './types'
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TableSortLabel,
+} from '@mui/material'
+import { visuallyHidden } from '@mui/utils'
+import { AttributeResponse } from 'utils/types'
+import { useState, useEffect, useCallback } from 'react'
+import AttributeListItem from './AttributeListItem'
+
+interface AttributeTableData extends AttributeResponse {
+  kebab: string
+}
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,7 +63,7 @@ function stableSort<T>(
 
 interface HeadCell {
   disablePadding: boolean
-  id: keyof Data
+  id: keyof AttributeTableData
   label: string
   numeric: boolean
   sortable?: boolean
@@ -72,35 +74,22 @@ const headCells: readonly HeadCell[] = [
     id: 'name',
     numeric: false,
     disablePadding: true,
-    label: 'Item Name',
+    label: 'Attribute Name',
     sortable: true,
   },
   {
-    id: 'attributes',
+    id: 'possibleValues',
     numeric: false,
     disablePadding: false,
-    label: 'Item Attribute',
+    label: 'Possible Values',
+    sortable: false,
   },
   {
-    id: 'category',
+    id: 'color',
     numeric: false,
     disablePadding: false,
-    label: 'Category',
-    sortable: true,
-  },
-  {
-    id: 'quantity',
-    numeric: false,
-    disablePadding: false,
-    label: 'Quantity',
-    sortable: true,
-  },
-  {
-    id: 'assignee',
-    numeric: false,
-    disablePadding: false,
-    label: 'Assignee',
-    sortable: true,
+    label: 'Color',
+    sortable: false,
   },
   {
     id: 'kebab',
@@ -111,19 +100,23 @@ const headCells: readonly HeadCell[] = [
   },
 ]
 
-interface EnhancedTableProps {
+interface AttributeListHeaderProps {
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof Data
+    property: keyof AttributeTableData
   ) => void
   order: Order
   orderBy: string
 }
 
-function InventoryItemListHeader(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort } = props
+function AttributeListHeader({
+  order,
+  orderBy,
+  onRequestSort,
+}: AttributeListHeaderProps) {
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property: keyof AttributeTableData) =>
+    (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property)
     }
 
@@ -159,69 +152,58 @@ function InventoryItemListHeader(props: EnhancedTableProps) {
   )
 }
 
-interface Props {
-  inventoryItems: InventoryItemResponse[]
+interface AttributeListProps {
+  attributes: AttributeResponse[]
   search: string
-  category: string
 }
 
 const DEFAULT_ROWS_PER_PAGE = 5
 const DEFAULT_ORDER_BY = 'name'
 const DEFAULT_ORDER = 'asc'
 
-export default function DesktopInventoryItemList(props: Props) {
-  const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] = React.useState<keyof Data>(DEFAULT_ORDER_BY)
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = React.useState<Data[] | null>(null)
-  const [tableData, setTableData] = React.useState<Data[]>([])
+export default function AttributeList({
+  attributes,
+  search,
+}: AttributeListProps) {
+  const [order, setOrder] = useState<Order>(DEFAULT_ORDER)
+  const [orderBy, setOrderBy] =
+    useState<keyof AttributeTableData>(DEFAULT_ORDER_BY)
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE)
+  const [visibleRows, setVisibleRows] = useState<AttributeTableData[] | null>(
+    null
+  )
+  const [tableData, setTableData] = useState<AttributeTableData[]>([])
 
-  React.useEffect(() => {
-    let newTableData = props.inventoryItems.map((item) => {
+  useEffect(() => {
+    let newTableData = attributes.map((attribute) => {
       return {
-        name: item.itemDefinition.name,
-        attributes: item.attributes,
-        category: item.itemDefinition.category?.name,
-        quantity: item.quantity,
-        assignee: item.assignee?.name,
+        _id: attribute._id,
+        name: attribute.name,
+        possibleValues: attribute.possibleValues,
+        color: attribute.color,
         kebab: '',
-        _id: item._id,
-        lowStockThreshold: item.itemDefinition.lowStockThreshold,
-        criticalStockThreshold: item.itemDefinition.criticalStockThreshold,
-        inventoryItem: item,
       }
     })
 
-    if (props.search) {
-      const search = props.search.toLowerCase()
+    if (search) {
+      const lowercaseSearch = search.toLowerCase()
       newTableData = [
-        ...newTableData.filter((item) => {
+        ...newTableData.filter((attribute) => {
           return (
-            item.name.toLowerCase().includes(search) ||
-            (item.attributes &&
-              (item.attributes
-                .map((attr) => String(attr.value).toLowerCase())
+            attribute.name.toLowerCase().includes(search) ||
+            (typeof attribute.possibleValues === 'string' &&
+              attribute.possibleValues.includes(lowercaseSearch)) ||
+            (typeof attribute.possibleValues === 'object' &&
+              attribute.possibleValues
+                .map((value) => value.toLowerCase())
                 .join(' ')
-                .includes(search) ||
-                item.attributes
-                  .map((attr) => attr.attribute.name.toLowerCase())
-                  .join(' ')
-                  .includes(search))) ||
-            (item.category && item.category.toLowerCase().includes(search)) ||
-            (item.assignee && item.assignee.toLowerCase().includes(search))
+                .includes(lowercaseSearch))
           )
         }),
       ]
     }
 
-    if (props.category) {
-      newTableData = [
-        ...newTableData.filter((item) => {
-          return item.category === props.category
-        }),
-      ]
-    }
     setTableData(newTableData)
     let rowsOnMount = stableSort(
       newTableData,
@@ -233,10 +215,13 @@ export default function DesktopInventoryItemList(props: Props) {
     )
 
     setVisibleRows(rowsOnMount)
-  }, [props.search, props.category])
+  }, [search])
 
-  const handleRequestSort = React.useCallback(
-    (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => {
+  const handleRequestSort = useCallback(
+    (
+      event: React.MouseEvent<unknown>,
+      newOrderBy: keyof AttributeTableData
+    ) => {
       const isAsc = orderBy === newOrderBy && order === 'asc'
       const toggledOrder = isAsc ? 'desc' : 'asc'
       setOrder(toggledOrder)
@@ -284,7 +269,7 @@ export default function DesktopInventoryItemList(props: Props) {
     <Box sx={{ width: '100%' }}>
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
-          <InventoryItemListHeader
+          <AttributeListHeader
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
@@ -292,10 +277,7 @@ export default function DesktopInventoryItemList(props: Props) {
           <TableBody>
             {visibleRows &&
               visibleRows.map((item) => (
-                <InventoryItemListItem
-                  inventoryItemData={item}
-                  key={item._id}
-                />
+                <AttributeListItem attribute={item} key={item._id} />
               ))}
           </TableBody>
         </Table>

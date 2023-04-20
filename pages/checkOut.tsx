@@ -24,6 +24,9 @@ import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import { apiWrapper } from 'utils/apiWrappers'
 import categoriesHandler from '@api/categories'
+import { useRouter } from 'next/router'
+import { useAppSelector } from 'store'
+import { KioskState } from 'store/types'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -46,6 +49,11 @@ export default function CheckOutPage({
   users,
 }: Props) {
   const theme = useTheme()
+  const router = useRouter()
+  const inventoryItem = !!router.query.inventoryItem
+    ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
+    : undefined
+
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
@@ -68,6 +76,9 @@ export default function CheckOutPage({
       }
     )
   }
+  const kioskMode = useAppSelector(
+    (state: { kiosk: KioskState }) => state.kiosk
+  )
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1 }}>
       <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
@@ -78,7 +89,7 @@ export default function CheckOutPage({
                 Check out items
               </Typography>
               <CheckInOutForm
-                kioskMode={true}
+                kioskMode={kioskMode.enabled}
                 users={users}
                 itemDefinitions={itemDefinitions}
                 categories={categories}
@@ -91,7 +102,7 @@ export default function CheckOutPage({
               sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'end' } }}
             >
               <Button onClick={() => onSubmit(formData)} variant="contained">
-                Check out
+                Check Out
               </Button>
             </CardActions>
           </Box>

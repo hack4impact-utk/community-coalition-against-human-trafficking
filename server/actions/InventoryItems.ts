@@ -191,6 +191,7 @@ export async function checkOutInventoryItem(
     if (modifiedItemQuantity < 0) {
       throw new ApiError(400, 'Check out would result in negative quantity.')
     } else {
+      item = deepCopy(itemMatches[0])
       apiInventoryItemValidation(item, 'PUT')
       MongoDriver.updateEntity(
         InventoryItemSchema,
