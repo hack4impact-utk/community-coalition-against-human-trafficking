@@ -9,16 +9,28 @@ interface InventoryItemListProps {
   category: string
 }
 
-export default function InventoryItemList( {inventoryItems, search, category}: InventoryItemListProps) {
+export default function InventoryItemList({
+  inventoryItems,
+  search,
+  category,
+}: InventoryItemListProps) {
   const theme = useTheme()
-  const isMobileView = useMediaQuery(theme.breakpoints.down("md"))
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
 
   return (
     <>
       {isMobileView ? (
-        <MobileInventoryItemList inventoryItems={inventoryItems}/>
+        <MobileInventoryItemList
+          inventoryItems={inventoryItems}
+          search={search}
+          category={category}
+        />
       ) : (
-        <DesktopInventoryItemList inventoryItems={inventoryItems} search={search} category={category}/>
+        <DesktopInventoryItemList
+          inventoryItems={inventoryItems}
+          search={search}
+          category={category}
+        />
       )}
     </>
   )
