@@ -7,19 +7,20 @@ import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
 import { Data } from '../types'
 
 interface InventoryItemListItemProps {
-  inventoryItem: Data
+  inventoryItemData: Data
 }
 
 export default function DesktopInventoryItemListItem({
-  inventoryItem,
+  inventoryItemData: inventoryItemData,
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
-  const renderWarningIcon = (inventoryItem: Data) => {
-    if (inventoryItem.quantity < inventoryItem.lowStockThreshold) {
+  const renderWarningIcon = (inventoryItemData: Data) => {
+    if (inventoryItemData.quantity < inventoryItemData.lowStockThreshold) {
       return (
         <Tooltip
           title={
-            inventoryItem.quantity < inventoryItem.criticalStockThreshold
+            inventoryItemData.quantity <
+            inventoryItemData.criticalStockThreshold
               ? 'This item has critically low stock.'
               : 'This item has low stock.'
           }
@@ -29,7 +30,8 @@ export default function DesktopInventoryItemListItem({
             sx={{
               ml: 1,
               color:
-                inventoryItem.quantity < inventoryItem.criticalStockThreshold
+                inventoryItemData.quantity <
+                inventoryItemData.criticalStockThreshold
                   ? theme.palette.error.main
                   : theme.palette.warning.light,
             }}
@@ -39,8 +41,8 @@ export default function DesktopInventoryItemListItem({
     }
   }
 
-  const renderAttributeChips = (inventoryItem: Data) => {
-    return inventoryItem.attributes?.map((itemAttribute, i) => {
+  const renderAttributeChips = (inventoryItemData: Data) => {
+    return inventoryItemData.attributes?.map((itemAttribute, i) => {
       // attributes that are strings or numbers show the attribute name
       // attributes that are list types do not
 
@@ -89,7 +91,7 @@ export default function DesktopInventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.name}
+        {inventoryItemData.name}
       </TableCell>
       <TableCell
         sx={{
@@ -98,7 +100,7 @@ export default function DesktopInventoryItemListItem({
           gap: '0.25rem',
         }}
       >
-        {renderAttributeChips(inventoryItem)}
+        {renderAttributeChips(inventoryItemData)}
       </TableCell>
       <TableCell
         sx={{
@@ -106,11 +108,10 @@ export default function DesktopInventoryItemListItem({
           justifyContent: 'center',
         }}
       >
-        {inventoryItem.category}
+        {inventoryItemData.category}
       </TableCell>
       <TableCell
         sx={{
-          // display: 'flex',
           alignItems: 'baseline',
           justifyContent: 'center',
           wordBreak: 'break-word',
@@ -122,8 +123,8 @@ export default function DesktopInventoryItemListItem({
             alignItems: 'flex-end',
           }}
         >
-          {inventoryItem.quantity.toLocaleString()}
-          {renderWarningIcon(inventoryItem)}
+          {inventoryItemData.quantity.toLocaleString()}
+          {renderWarningIcon(inventoryItemData)}
         </span>
       </TableCell>
       <TableCell
@@ -132,12 +133,12 @@ export default function DesktopInventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.assignee ? inventoryItem.assignee : ''}
+        {inventoryItemData.assignee ? inventoryItemData.assignee : ''}
       </TableCell>
       <TableCell sx={{ width: '10px' }}>
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
           <InventoryItemListItemKebab
-            inventoryItem={inventoryItem.inventoryItem}
+            inventoryItem={inventoryItemData.inventoryItem}
           />
         </Box>
       </TableCell>
