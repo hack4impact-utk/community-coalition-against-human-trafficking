@@ -58,8 +58,8 @@ export interface NumberAttribute extends Attribute {
 
 export interface Log {
   _id?: string
-  staff: string | UserResponse
-  item: string | InventoryItemResponse
+  staff: string | User
+  item: string | InventoryItem
   quantityDelta: number
   date: Date
 }
