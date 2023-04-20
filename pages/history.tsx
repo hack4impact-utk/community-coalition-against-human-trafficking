@@ -36,13 +36,16 @@ const updateQuery = (router: NextRouter, key: string, val?: string) => {
   else addURLQueryParam(router, key, val)
 }
 
-const renderInternalCheckbox = (router: NextRouter) => {
+const renderInternalCheckbox = (router: NextRouter, isMobileView: boolean) => {
   return (
     <Grid2
       container
       md={2}
       direction="row"
-      sx={{ alignItems: 'center', justifyContent: 'center' }}
+      sx={{
+        alignItems: 'center',
+        justifyContent: `${isMobileView ? 'center' : 'normal'}`,
+      }}
     >
       <Checkbox
         onChange={(_e, checked) => {
@@ -80,7 +83,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
       <Grid2
         container
         xs={12}
-        direction={isMobileView ? 'column-reverse' : 'row'}
+        direction={isMobileView ? 'column' : 'row'}
         gap={isMobileView ? 2 : 4}
         sx={{ px: 2, alignItems: 'center' }}
       >
@@ -102,7 +105,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
             ></SearchAutocomplete>
           </Grid2>
           {isMobileView && (
-            <Grid2 xs={6}>{renderInternalCheckbox(router)}</Grid2>
+            <Grid2 xs={6}>{renderInternalCheckbox(router, isMobileView)}</Grid2>
           )}
         </Grid2>
         <Grid2 xs={12} md={4} direction="row">
@@ -144,7 +147,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
             />
           </Box>
         </Grid2>
-        {!isMobileView && renderInternalCheckbox(router)}
+        {!isMobileView && renderInternalCheckbox(router, isMobileView)}
       </Grid2>
     </Grid2>
   )
