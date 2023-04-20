@@ -13,17 +13,6 @@ interface AttributeListItemKebabProps {
   attribute: AttributeResponse
 }
 
-const settings: AttributeListItemKebabOption[] = [
-  {
-    name: 'Edit',
-    onClick: () => console.log('Edit'),
-  },
-  {
-    name: 'Delete',
-    onClick: () => console.log('delete'),
-  },
-]
-
 export default function AttributeListItemKebab({
   attribute,
 }: AttributeListItemKebabProps) {
@@ -39,6 +28,25 @@ export default function AttributeListItemKebab({
   const handleCloseKebabMenu = () => {
     setAnchorElKebab(null)
   }
+
+  // kebab menu actions
+  const settings: AttributeListItemKebabOption[] = [
+    {
+      name: 'Edit',
+      onClick: () => console.log('Edit'),
+    },
+    {
+      name: 'Delete',
+      onClick: () => {
+        if (window.confirm('Are you sure you want to delete this attribute?')) {
+          fetch(`/api/attributes/${attribute._id}`, { method: 'DELETE' }).then(
+            () => window.location.reload()
+          )
+        }
+      },
+    },
+  ]
+
   return (
     <>
       <IconButton onClick={handleOpenKebabMenu}>
