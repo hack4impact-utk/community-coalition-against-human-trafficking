@@ -290,7 +290,10 @@ export default function DesktopInventoryItemList(props: Props) {
           <TableBody>
             {visibleRows &&
               visibleRows.map((item) => (
-                <InventoryItemListItem inventoryItem={item} key={item._id} />
+                <InventoryItemListItem
+                  inventoryItemData={item}
+                  key={item._id}
+                />
               ))}
           </TableBody>
         </Table>

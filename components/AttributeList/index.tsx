@@ -176,7 +176,7 @@ export default function AttributeList({
   const [tableData, setTableData] = useState<AttributeTableData[]>([])
 
   useEffect(() => {
-    const newTableData = attributes.map((attribute) => {
+    let newTableData = attributes.map((attribute) => {
       return {
         _id: attribute._id,
         name: attribute.name,
@@ -185,6 +185,25 @@ export default function AttributeList({
         kebab: '',
       }
     })
+
+    if (search) {
+      const lowercaseSearch = search.toLowerCase()
+      newTableData = [
+        ...newTableData.filter((attribute) => {
+          return (
+            attribute.name.toLowerCase().includes(search) ||
+            (typeof attribute.possibleValues === 'string' &&
+              attribute.possibleValues.includes(lowercaseSearch)) ||
+            (typeof attribute.possibleValues === 'object' &&
+              attribute.possibleValues
+                .map((value) => value.toLowerCase())
+                .join(' ')
+                .includes(lowercaseSearch))
+          )
+        }),
+      ]
+    }
+
     setTableData(newTableData)
     let rowsOnMount = stableSort(
       newTableData,
@@ -196,7 +215,7 @@ export default function AttributeList({
     )
 
     setVisibleRows(rowsOnMount)
-  }, [])
+  }, [search])
 
   const handleRequestSort = useCallback(
     (

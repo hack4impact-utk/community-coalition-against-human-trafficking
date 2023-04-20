@@ -8,7 +8,7 @@ import {
 import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
 import { PipelineStage } from 'mongoose'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 import deepCopy from 'utils/deepCopy'
 
 // aggregate pipeline does the following:
@@ -189,9 +189,10 @@ export async function checkOutInventoryItem(
   if (itemMatches.length) {
     itemMatches[0].quantity -= quantityRemoved
     item = deepCopy(itemMatches[0])
-    if (item.quantity < 0) {
+    if (item.quantity! < 0) {
       throw new ApiError(400, 'Check out would result in negative quantity.')
     } else {
+      item = deepCopy(itemMatches[0])
       apiInventoryItemValidation(item, 'PUT')
       MongoDriver.updateEntity(
         InventoryItemSchema,
@@ -200,6 +201,6 @@ export async function checkOutInventoryItem(
       )
     }
   } else {
-    throw new ApiError(404, constants.errors.notFound)
+    throw new ApiError(404, errors.notFound)
   }
 }

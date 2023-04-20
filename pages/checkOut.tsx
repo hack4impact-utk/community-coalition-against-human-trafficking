@@ -27,6 +27,7 @@ import React from 'react'
 import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
 import dayjs from 'dayjs'
 import { useAppSelector } from 'store'
+import { KioskState } from 'store/types'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {

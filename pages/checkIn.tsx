@@ -27,6 +27,7 @@ import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
 import { useAppSelector } from 'store'
+import { KioskState } from 'store/types'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -54,7 +55,9 @@ export default function CheckInPage({
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
-  const kioskMode = useAppSelector((state) => state.kiosk)
+  const kioskMode = useAppSelector(
+    (state: { kiosk: KioskState }) => state.kiosk
+  )
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
     {} as CheckInOutFormData
