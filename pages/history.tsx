@@ -18,6 +18,7 @@ import categoriesHandler from '@api/categories'
 import { DatePicker } from '@mui/x-date-pickers'
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule'
 import { addURLQueryParam, removeURLQueryParam } from 'utils/queryParams'
+import SearchAutocomplete from 'components/SearchAutocomplete'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -33,6 +34,26 @@ interface HistoryPageProps {
 const updateQuery = (router: NextRouter, key: string, val?: string) => {
   if (!val) removeURLQueryParam(router, key)
   else addURLQueryParam(router, key, val)
+}
+
+const renderInternalCheckbox = (router: NextRouter) => {
+  return (
+    <Grid2
+      container
+      md={2}
+      direction="row"
+      sx={{ alignItems: 'center', justifyContent: 'center' }}
+    >
+      <Checkbox
+        onChange={(_e, checked) => {
+          if (checked) updateQuery(router, 'internal', 'true')
+          else updateQuery(router, 'internal', undefined)
+        }}
+        value={router.query.internal}
+      />
+      <Typography>Internal only</Typography>
+    </Grid2>
+  )
 }
 
 export default function HistoryPage({ logs, categories }: HistoryPageProps) {
@@ -66,26 +87,31 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
         <Grid2 xs={12} md={2}>
           <SearchField />
         </Grid2>
-        <Grid2 xs={12} md={2}>
-          <Autocomplete
-            value={
-              categories.filter(
-                (category) =>
-                  category.name === (router.query.category as string)
-              )[0]
-            }
-            options={categories}
-            renderInput={(params) => <TextField {...params} label="Category" />}
-            isOptionEqualToValue={(option, value) => option._id === value._id}
-            getOptionLabel={(category) => category.name}
-            onChange={(_e, category) => {
-              updateQuery(router, 'category', category?.name)
-            }}
-          />
+        <Grid2
+          xs={12}
+          md={2}
+          container
+          direction="row"
+          sx={{ alignItems: 'center' }}
+        >
+          <Grid2 xs={isMobileView ? 6 : 12}>
+            <SearchAutocomplete
+              searchKey="category"
+              options={categories.map((category) => category.name)}
+              placeholder="Category"
+            ></SearchAutocomplete>
+          </Grid2>
+          {isMobileView && (
+            <Grid2 xs={6}>{renderInternalCheckbox(router)}</Grid2>
+          )}
         </Grid2>
         <Grid2 xs={12} md={4} direction="row">
           <Box
-            sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
           >
             <DatePicker
               label="Start Date"
@@ -106,8 +132,8 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
             <DatePicker
               label="End Date"
               renderInput={(params) => <TextField {...params} fullWidth />}
-              onChange={(_e, date) => {
-                const endDate = new Date(_e as string)
+              onChange={(date) => {
+                const endDate = new Date(date as string)
                 updateQuery(
                   router,
                   'endDate',
@@ -118,17 +144,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
             />
           </Box>
         </Grid2>
-
-        <Grid2 container md={2} direction="row" sx={{ alignItems: 'center' }}>
-          <Checkbox
-            onChange={(_e, checked) => {
-              if (checked) updateQuery(router, 'internal', 'true')
-              else updateQuery(router, 'internal', undefined)
-            }}
-            value={router.query.internal}
-          />
-          <Typography>Internal only</Typography>
-        </Grid2>
+        {!isMobileView && renderInternalCheckbox(router)}
       </Grid2>
     </Grid2>
   )
