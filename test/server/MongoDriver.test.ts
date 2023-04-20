@@ -3,7 +3,7 @@ import * as MongoDriver from 'server/actions/MongoDriver'
 import { ApiError } from 'utils/types'
 import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 import { validCategoryResponse, mockObjectId } from 'test/testData'
 
 // restore mocked implementations and close db connections
@@ -73,7 +73,7 @@ describe('MongoDriver', () => {
       } catch (error) {
         expect(mockFindById).toHaveBeenCalledTimes(1)
         expect(error).toBeInstanceOf(ApiError)
-        expect(error.message).toBe(constants.errors.notFound)
+        expect(error.message).toBe(errors.notFound)
         expect(error.statusCode).toBe(404)
       }
     })
@@ -152,7 +152,7 @@ describe('MongoDriver', () => {
       } catch (error) {
         expect(mockUpdate).toHaveBeenCalledTimes(1)
         expect(error).toBeInstanceOf(ApiError)
-        expect(error.message).toBe(constants.errors.notFound)
+        expect(error.message).toBe(errors.notFound)
         expect(error.statusCode).toBe(404)
       }
     })
@@ -179,7 +179,7 @@ describe('MongoDriver', () => {
       } catch (error) {
         expect(mockDelete).toHaveBeenCalledTimes(1)
         expect(error).toBeInstanceOf(ApiError)
-        expect(error.message).toBe(constants.errors.notFound)
+        expect(error.message).toBe(errors.notFound)
         expect(error.statusCode).toBe(404)
       }
     })

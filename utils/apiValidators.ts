@@ -7,11 +7,11 @@ import {
   validateUserRequest,
 } from 'utils/validators'
 import { validateObjectId, ValidationResult } from 'utils/validation'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 export function apiObjectIdValidation(id: string) {
   if (!validateObjectId(id)) {
-    throw new ApiError(400, constants.errors.invalidObjectIdFormat)
+    throw new ApiError(400, errors.invalidObjectIdFormat)
   }
 }
 
@@ -57,10 +57,7 @@ export function apiInventoryItemValidation(
 
 function badBodyValidationResponse(response: ValidationResult) {
   if (!response.success) {
-    console.error(constants.errors.prefixes.badBody + response.message)
-    throw new ApiError(
-      400,
-      constants.errors.prefixes.badBody + response.message
-    )
+    console.error(errors.prefixes.badBody + response.message)
+    throw new ApiError(400, errors.prefixes.badBody + response.message)
   }
 }

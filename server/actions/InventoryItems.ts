@@ -8,7 +8,7 @@ import {
 import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
 import { PipelineStage } from 'mongoose'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 import deepCopy from 'utils/deepCopy'
 
 // aggregate pipeline does the following:
@@ -199,6 +199,6 @@ export async function checkOutInventoryItem(
       )
     }
   } else {
-    throw new ApiError(404, constants.errors.notFound)
+    throw new ApiError(404, errors.notFound)
   }
 }
