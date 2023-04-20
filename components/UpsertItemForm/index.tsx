@@ -11,6 +11,7 @@ import {
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { AttributeResponse, CategoryResponse } from 'utils/types'
+import getContrastYIQ from 'utils/getContrastYIQ'
 
 interface Props {
   categories: CategoryResponse[]
@@ -53,7 +54,10 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
             tagValue.map((option, index) => (
               <Chip
                 label={option.name}
-                style={{ backgroundColor: option.color }}
+                style={{
+                  backgroundColor: option.color,
+                  color: getContrastYIQ(option.color),
+                }}
                 {...getTagProps({ index })}
                 key={option._id}
               />
