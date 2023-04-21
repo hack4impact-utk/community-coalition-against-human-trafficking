@@ -4,7 +4,7 @@ import {
   validateObjectId,
   validateProperties,
 } from 'utils/validation'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 describe('validation', () => {
   describe('validateObjectId', () => {
@@ -111,14 +111,14 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message: `${constants.errors.prefixes.missingRequiredProperties} name\n`,
+        message: `${errors.prefixes.missingRequiredProperties} name\n`,
       })
     })
 
     test('missing multiple required fields returns unsuccessful ValidationResult with all missing listed', () => {
       expect(validateProperties(validationModel, {})).toEqual({
         success: false,
-        message: `${constants.errors.prefixes.missingRequiredProperties} name, id\n`,
+        message: `${errors.prefixes.missingRequiredProperties} name, id\n`,
       })
     })
 
@@ -131,7 +131,7 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message: `${constants.errors.prefixes.invalidProperties} extraField\n`,
+        message: `${errors.prefixes.invalidProperties} extraField\n`,
       })
     })
 
@@ -145,7 +145,7 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message: `${constants.errors.prefixes.invalidProperties} extraField, extraField2\n`,
+        message: `${errors.prefixes.invalidProperties} extraField, extraField2\n`,
       })
     })
 
@@ -157,7 +157,7 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message: `${constants.errors.prefixes.typeMismatches} 'name': Expected type 'string' but got type 'number'\n`,
+        message: `${errors.prefixes.typeMismatches} 'name': Expected type 'string' but got type 'number'\n`,
       })
     })
 
@@ -170,7 +170,7 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message: `${constants.errors.prefixes.typeMismatches} 'name': Expected type 'string' but got type 'number', 'id': Expected type 'string|number' but got type 'function'\n`,
+        message: `${errors.prefixes.typeMismatches} 'name': Expected type 'string' but got type 'number', 'id': Expected type 'string|number' but got type 'function'\n`,
       })
     })
 
@@ -182,7 +182,7 @@ describe('validation', () => {
 
       expect(validateProperties(validationModel, invalidObject)).toEqual({
         success: false,
-        message: `${constants.errors.prefixes.missingRequiredProperties} id\n${constants.errors.prefixes.invalidProperties} extraField\n${constants.errors.prefixes.typeMismatches} 'name': Expected type 'string' but got type 'number'\n`,
+        message: `${errors.prefixes.missingRequiredProperties} id\n${errors.prefixes.invalidProperties} extraField\n${errors.prefixes.typeMismatches} 'name': Expected type 'string' but got type 'number'\n`,
       })
     })
   })
