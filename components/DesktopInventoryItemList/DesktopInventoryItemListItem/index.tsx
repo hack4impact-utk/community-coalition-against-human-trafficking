@@ -28,7 +28,7 @@ export default function DesktopInventoryItemListItem({
           <WarningIcon
             fontSize="small"
             sx={{
-              ml: 1,
+              float: "right",
               color:
                 inventoryItemData.quantity <
                 inventoryItemData.criticalStockThreshold
@@ -116,13 +116,18 @@ export default function DesktopInventoryItemListItem({
           justifyContent: 'center',
           wordBreak: 'break-word',
         }}
-      >
+        align="right"
+
+        >
         <span
           style={{
             display: 'flex',
             alignItems: 'flex-end',
+            // justifyContent: 'flex-end',
+            flexDirection: 'row-reverse',
+            justifyContent: 'space-between',
           }}
-        >
+          >
           {inventoryItemData.quantity.toLocaleString()}
           {renderWarningIcon(inventoryItemData)}
         </span>
