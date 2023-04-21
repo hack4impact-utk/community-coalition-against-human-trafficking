@@ -10,13 +10,13 @@ import {
   TextField,
   Unstable_Grid2 as Grid2,
 } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { TwitterPicker } from 'react-color'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import { Attribute, AttributeRequest } from 'utils/types'
 
 type PossibleValues = 'text' | 'number' | 'list'
-interface AttributeFormData {
+export interface AttributeFormData {
   name: string
   color: string
   valueType: PossibleValues
@@ -64,6 +64,12 @@ export default function AttributeForm({
   const [formData, setFormData] = React.useState<AttributeFormData>(
     transformAttributeToFormData(attribute)
   )
+  
+  // the attribute passed into this form is sometimes undefined as it is still being fetched
+  // Thus, make sure to fill out the form when the attribute gets fetched
+  useEffect(() => {
+    setFormData(transformAttributeToFormData(attribute))
+  }, [attribute])
 
   return (
     <form>

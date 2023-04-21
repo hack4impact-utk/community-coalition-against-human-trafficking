@@ -1,5 +1,7 @@
 import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import DialogLink from 'components/DialogLink'
+import { useRouter } from 'next/router'
 import React from 'react'
 import theme from 'utils/theme'
 import { AttributeResponse } from 'utils/types'
@@ -16,6 +18,7 @@ interface AttributeListItemKebabProps {
 export default function AttributeListItemKebab({
   attribute,
 }: AttributeListItemKebabProps) {
+  const router = useRouter()
   // kebab menu functionality
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
@@ -33,7 +36,7 @@ export default function AttributeListItemKebab({
   const settings: AttributeListItemKebabOption[] = [
     {
       name: 'Edit',
-      onClick: () => console.log('Edit'),
+      onClick: () => console.log('edit button pressed'),
     },
     {
       name: 'Delete',
@@ -68,17 +71,31 @@ export default function AttributeListItemKebab({
         open={Boolean(anchorElKebab)}
         onClose={handleCloseKebabMenu}
       >
-        {settings.map((setting) => (
-          <MenuItem
-            key={setting.name}
-            onClick={() => {
-              setting.onClick()
-              handleCloseKebabMenu()
-            }}
-          >
-            <Typography textAlign="center">{setting.name}</Typography>
-          </MenuItem>
-        ))}
+        {settings.map((setting) =>
+          setting.name === 'edit' ? (
+            <DialogLink href={`/settings/attributes/${attribute._id}/edit`}>
+              <MenuItem
+                key={setting.name}
+                onClick={() => {
+                  setting.onClick()
+                  handleCloseKebabMenu()
+                }}
+              >
+                <Typography textAlign="center">{setting.name}</Typography>
+              </MenuItem>
+            </DialogLink>
+          ) : (
+            <MenuItem
+              key={setting.name}
+              onClick={() => {
+                setting.onClick()
+                handleCloseKebabMenu()
+              }}
+            >
+              <Typography textAlign="center">{setting.name}</Typography>
+            </MenuItem>
+          )
+        )}
       </Menu>
     </>
   )
