@@ -5,6 +5,7 @@ import {
   apiCategoryValidation,
   apiItemDefinitionValidation,
   apiUserValidation,
+  apiLogValidation,
 } from 'utils/apiValidators'
 import * as validators from 'utils/validators'
 import { ApiError } from 'utils/types'
@@ -141,6 +142,34 @@ describe('apiValidators', () => {
         expect(error.statusCode).toBe(400)
         expect(error.message).toBe(
           errors.prefixes.badBody + validationFailedReturn.message
+        )
+      }
+    })
+  })
+
+  describe('apiLogValidation', () => {
+    test('validation success', () => {
+      jest
+        .spyOn(validators, 'validateLogRequest')
+        .mockReturnValue(validationSuccessReturn)
+      try {
+        apiLogValidation({}, 'POST')
+      } catch (e) {
+        fail('should not have thrown an error: ' + e.message)
+      }
+    })
+
+    test('validation failed throws api error', () => {
+      jest
+        .spyOn(validators, 'validateLogRequest')
+        .mockReturnValue(validationFailedReturn)
+      try {
+        apiLogValidation({}, 'POST')
+      } catch (error) {
+        expect(error).toBeInstanceOf(ApiError)
+        expect(error.statusCode).toBe(400)
+        expect(error.message).toBe(
+          constants.errors.prefixes.badBody + validationFailedReturn.message
         )
       }
     })
