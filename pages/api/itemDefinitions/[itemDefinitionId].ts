@@ -12,7 +12,7 @@ import {
 } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import ItemDefinitionSchema from 'server/models/ItemDefinition'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 // @route GET api/itemDefintions/[itemDefinitionId] - Returns a single ItemDefinition object given a itemDefinitionId - Private
 // @route PUT api/users/[itemDefinitionId] - Updates an existing ItemDefinition object (identified by itemDefinitionId) with a new ItemDefinition object - Private
@@ -61,7 +61,7 @@ export default async function itemDefinitionHandler(
         })
       }
       default: {
-        throw new ApiError(405, constants.errors.invalidReqMethod)
+        throw new ApiError(405, errors.invalidReqMethod)
       }
     }
   } catch (e) {

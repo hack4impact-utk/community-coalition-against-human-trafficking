@@ -9,7 +9,7 @@ import { apiItemDefinitionValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import ItemDefinitionSchema from 'server/models/ItemDefinition'
 import { getItemDefinitions } from 'server/actions/ItemDefinition'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 // @route GET api/itemDefintions - Returns a list of all itemDefintions in the database - Private
 // @route POST /api/itemDefintions - Create a itemDefinition from request body - Private
@@ -44,7 +44,7 @@ export default async function itemDefinitionsHandler(
         })
       }
       default: {
-        throw new ApiError(405, constants.errors.invalidReqMethod)
+        throw new ApiError(405, errors.invalidReqMethod)
       }
     }
   } catch (e) {
