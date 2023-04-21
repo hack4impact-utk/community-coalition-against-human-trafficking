@@ -4,6 +4,8 @@ import React from 'react'
 import theme from 'utils/theme'
 import { InventoryItem } from 'utils/types'
 import { useRouter } from 'next/router'
+import { showSnackbar } from 'store/snackbar'
+import { useAppDispatch } from 'store'
 
 interface InventoryItemListItemKebabOption {
   name: string
@@ -30,6 +32,7 @@ export default function InventoryItemListItemKebab({
     setAnchorElKebab(null)
   }
   const router = useRouter()
+  const dispatch = useAppDispatch()
   const option: InventoryItemListItemKebabOption[] = [
     {
       name: 'Check in',
@@ -57,6 +60,7 @@ export default function InventoryItemListItemKebab({
           method: 'DELETE',
         }).then(() => {
           window.location.reload()
+          dispatch(showSnackbar({message: "Item successfully deleted.", severity: "success"}))
         })
       }},
     },

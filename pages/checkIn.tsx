@@ -25,8 +25,9 @@ import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
-import { useAppSelector } from 'store'
+import { useAppDispatch, useAppSelector } from 'store'
 import { KioskState } from 'store/types'
+import { showSnackbar } from 'store/snackbar'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -52,6 +53,7 @@ export default function CheckInPage({
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   const router = useRouter()
+  const dispatch = useAppDispatch()
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
@@ -68,7 +70,7 @@ export default function CheckInPage({
       CheckInOutFormDataToInventoryItemRequest(formData)
 
     // TODO better way of coding URLs
-    await fetch(
+    const response = await fetch(
       `http://localhost:3000/api/inventoryItems/checkIn?quantity=${formData.quantityDelta}`,
       {
         method: 'POST',
@@ -78,6 +80,14 @@ export default function CheckInPage({
         body: JSON.stringify(inventoryItem),
       }
     )
+
+    const data = await response.json()
+
+    if (data.success) {
+      dispatch(showSnackbar({message: "Item successfully checked out.", severity: "success"}))
+    } else {
+      dispatch(showSnackbar({message: data.message, severity: "error"}))
+    }
   }
 
   return (
