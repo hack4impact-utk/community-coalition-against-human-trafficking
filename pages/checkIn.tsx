@@ -56,9 +56,14 @@ export default function CheckInPage({
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
+  const [defaultItemDef, setDefaultItemDef] = React.useState(itemDefinitions.find((id) => id._id === router.query.item))
   const kioskMode = useAppSelector(
     (state: { kiosk: KioskState }) => state.kiosk
   )
+
+  React.useEffect(() => {
+    setDefaultItemDef(itemDefinitions.find((id) => id._id === router.query.item))
+  }, [router.query.item, itemDefinitions])
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
     {} as CheckInOutFormData
@@ -92,7 +97,7 @@ export default function CheckInPage({
         smOffset={2}
         lgOffset={3}
       >
-        <DialogLink href="/items/new">
+        <DialogLink href="/items/new" backHref='/checkIn'>
           <Button
             variant="outlined"
             fullWidth={isMobileView}
@@ -119,6 +124,7 @@ export default function CheckInPage({
                 formData={formData}
                 setFormData={setFormData}
                 inventoryItem={inventoryItem}
+                itemDefinition={defaultItemDef}
               />
             </CardContent>
 

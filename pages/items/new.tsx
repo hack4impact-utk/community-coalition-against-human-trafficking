@@ -35,17 +35,34 @@ let itemDefinitionFormData: ItemDefinitionFormData
 async function createItem(formData: ItemDefinitionFormData) {
   const itemDefReq = itemDefinitionFormDataToItemDefinitionRequest(formData)
 
-  await fetch('http://localhost:3000/api/itemDefinitions', {
+  const response = await fetch('http://localhost:3000/api/itemDefinitions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(itemDefReq),
   })
+
+  const data = await response.json()
+
+  return data.payload
 }
 
-export default function NewItemPage() {
+interface Props {
+  backHref?: string
+}
+
+export default function NewItemPage({backHref}: Props) {
   const router = useRouter()
+
+  const redirectBack = (queryStr?: string) => {
+    if (backHref) {
+      router.push(`${backHref}${queryStr}`)
+    } else {
+      router.reload()
+
+    }
+  }
 
   return (
     <>
@@ -60,14 +77,14 @@ export default function NewItemPage() {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => router.back()} color="inherit">
+        <Button onClick={() => redirectBack()} color="inherit">
           Close
         </Button>
         <Button
           onClick={async () => {
-            await createItem(itemDefinitionFormData)
+            const itemId = await createItem(itemDefinitionFormData)
             // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
-            router.back()
+            redirectBack(`?item=${itemId}`)
           }}
         >
           Submit
