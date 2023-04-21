@@ -16,16 +16,26 @@ import {
 export function checkInOutFormDataToInventoryItemRequest(
   formData: CheckInOutFormData
 ): Partial<InventoryItemRequest> {
-  return {
+  const transformedData = {
     itemDefinition: formData.itemDefinition._id,
-    attributes: [
+    attributes: [] as InventoryItemAttributeRequest[],
+  }
+  if (formData.attributes) {
+    transformedData.attributes = [
       ...formData.attributes.map(
-        (attributeOption): InventoryItemAttributeRequest => ({
-          attribute: attributeOption.id,
-          value: attributeOption.value,
-        })
+        (attributeOption): InventoryItemAttributeRequest => {
+          return {
+            attribute: attributeOption.id,
+            value: attributeOption.value,
+          }
+        }
       ),
+    ]
+  }
 
+  if (formData.textFieldAttributes) {
+    transformedData.attributes = [
+      ...transformedData.attributes,
       ...Object.keys(formData.textFieldAttributes).reduce(
         (acc, attributeId) => {
           const attribute: InventoryItemAttributeRequest = {
@@ -37,8 +47,10 @@ export function checkInOutFormDataToInventoryItemRequest(
         },
         [] as InventoryItemAttributeRequest[]
       ),
-    ],
+    ]
   }
+
+  return transformedData
 }
 
 export function attributeFormDataToAttributeRequest(
