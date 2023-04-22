@@ -23,7 +23,7 @@ beforeAll(() => {
 afterAll(() => {
   jest.restoreAllMocks()
   mongoose.connection.close()
-  clientPromise.then((client) => client.close())
+  
 })
 
 beforeEach(() => {
