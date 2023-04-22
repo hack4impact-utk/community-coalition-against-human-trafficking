@@ -45,7 +45,7 @@ describe('api/users', () => {
 
     const data = response._getJSONData()
 
-    expect(response.statusCode).toBe(402)
+    expect(response.statusCode).toBe(401)
     expect(data.message).toBe(errors.unauthorized)
     expect(data.success).toBe(false)
   })
