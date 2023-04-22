@@ -24,7 +24,7 @@ beforeAll(() => {
 // restore mocked implementations and close db connections
 afterAll(() => {
   jest.restoreAllMocks()
-  clientPromise.then((client) => client.close())
+  
 })
 
 beforeEach(() => {
