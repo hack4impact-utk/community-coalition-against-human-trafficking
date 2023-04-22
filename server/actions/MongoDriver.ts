@@ -15,7 +15,7 @@ import {
   ServerPutRequest,
 } from 'utils/types'
 import { ObjectId } from 'mongodb'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 /**
  * Gets a single Entity object from the database with the given id
@@ -40,7 +40,7 @@ export async function getEntity<Schema extends Document>(
   } else {
     response = await dbSchema.findById(id)
   }
-  if (!response) throw new ApiError(404, constants.errors.notFound)
+  if (!response) throw new ApiError(404, errors.notFound)
   return response
 }
 
@@ -95,7 +95,7 @@ export async function updateEntity<
   await mongoDb()
 
   const response = await dbSchema.findByIdAndUpdate(id, document)
-  if (!response) throw new ApiError(404, constants.errors.notFound)
+  if (!response) throw new ApiError(404, errors.notFound)
 }
 
 /**
@@ -111,7 +111,7 @@ export async function deleteEntity<Schema extends Document>(
 
   const response = await dbSchema.findByIdAndDelete(id)
   if (!response) {
-    throw new ApiError(404, constants.errors.notFound)
+    throw new ApiError(404, errors.notFound)
   }
 }
 
