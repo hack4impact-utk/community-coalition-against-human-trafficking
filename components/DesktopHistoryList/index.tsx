@@ -11,10 +11,13 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import InventoryItemListItem from 'components/DesktopInventoryItemList/DesktopInventoryItemListItem'
 import {
+  CategoryResponse,
   InventoryItemAttributeResponse,
   InventoryItemResponse,
   LogResponse,
 } from 'utils/types'
+import HistoryListItem from './DesktopHistoryListItem'
+import deepCopy from 'utils/deepCopy'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -61,7 +64,7 @@ function stableSort<T>(
 
 interface HistoryTableData extends LogResponse {
   kebab: string
-  category: string
+  category: string | CategoryResponse
 }
 
 interface HeadCell {
@@ -85,6 +88,7 @@ const headCells: readonly HeadCell[] = [
     numeric: false,
     disablePadding: false,
     label: 'Item',
+    sortable: true,
   },
   {
     id: 'category',
@@ -173,9 +177,9 @@ interface Props {
   internal: boolean
 }
 
-const DEFAULT_ROWS_PER_PAGE = 5
+const DEFAULT_ROWS_PER_PAGE = 2
 const DEFAULT_ORDER_BY = 'date'
-const DEFAULT_ORDER = 'asc'
+const DEFAULT_ORDER = 'desc'
 
 export default function DesktopHistoryList(props: Props) {
   const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
@@ -183,50 +187,54 @@ export default function DesktopHistoryList(props: Props) {
     React.useState<keyof HistoryTableData>(DEFAULT_ORDER_BY)
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = React.useState<
-    HistoryTableData[] | null
-  >(null)
-  const [tableData, setTableData] = React.useState<HistoryTableData[]>([])
+  const [visibleRows, setVisibleRows] = React.useState<any>(null)
+  const [tableData, setTableData] = React.useState<any>([])
+
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }
 
   React.useEffect(() => {
-    let newTableData = props.logs.map((log) => {
-      return {
-        _id: log._id,
-        staff: log.staff.name,
-        item: log.item.itemDefinition.name,
-        category: log.item.itemDefinition.category?.name,
-        quantity: log.quantityDelta,
-        date: log.date,
-        kebab: '',
-      }
-    })
+    let newTableData: LogResponse[] = deepCopy(props.logs)
 
-    // if (props.search) {
-    //   const search = props.search.toLowerCase()
-    //   newTableData = [
-    //     ...newTableData.filter((item) => {
-    //       return (
-    //         item.name.toLowerCase().includes(search) ||
-    //         (item.attributes &&
-    //           (item.attributes
-    //             .map((attr) => String(attr.value).toLowerCase())
-    //             .join(' ')
-    //             .includes(search) ||
-    //             item.attributes
-    //               .map((attr) => attr.attribute.name.toLowerCase())
-    //               .join(' ')
-    //               .includes(search))) ||
-    //         (item.category && item.category.toLowerCase().includes(search)) ||
-    //         (item.assignee && item.assignee.toLowerCase().includes(search))
-    //       )
-    //     }),
-    //   ]
-    // }
+    if (props.search) {
+      const search = props.search.toLowerCase()
+      newTableData = [
+        ...newTableData.filter((log) => {
+          return (
+            log.staff.name.toLowerCase().includes(search) ||
+            log.item.itemDefinition.name.toLowerCase().includes(search) ||
+            (log.item.attributes &&
+              log.item.attributes
+                .map((attr) =>
+                  `${attr.attribute.name}: ${attr.value}`.toLowerCase()
+                )
+                .join(' ')
+                .includes(search)) ||
+            (log.item.itemDefinition.category &&
+              log.item.itemDefinition.category.name
+                .toLowerCase()
+                .includes(search)) ||
+            log.quantityDelta.toString().toLowerCase().includes(search) ||
+            log.date
+              .toLocaleString('en-US', dateOptions)
+              .replace(' at', '')
+              .toLowerCase()
+              .includes(search)
+          )
+        }),
+      ]
+    }
 
     if (props.category) {
       newTableData = [
         ...newTableData.filter((item) => {
-          return item.category === props.category
+          return item.category.name === props.category
         }),
       ]
     }
@@ -243,50 +251,50 @@ export default function DesktopHistoryList(props: Props) {
     setVisibleRows(rowsOnMount)
   }, [props.search, props.category])
 
-  const handleRequestSort = React.useCallback(
-    (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder = isAsc ? 'desc' : 'asc'
-      setOrder(toggledOrder)
-      setOrderBy(newOrderBy)
+  // const handleRequestSort = React.useCallback(
+  //   (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => {
+  //     const isAsc = orderBy === newOrderBy && order === 'asc'
+  //     const toggledOrder = isAsc ? 'desc' : 'asc'
+  //     setOrder(toggledOrder)
+  //     setOrderBy(newOrderBy)
 
-      const sortedRows = stableSort(
-        tableData,
-        getComparator(toggledOrder, newOrderBy)
-      )
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
-      setVisibleRows(updatedRows)
-    },
-    [order, orderBy, page, rowsPerPage, tableData]
-  )
+  //     const sortedRows = stableSort(
+  //       tableData,
+  //       getComparator(toggledOrder, newOrderBy)
+  //     )
+  //     const updatedRows = sortedRows.slice(
+  //       page * rowsPerPage,
+  //       page * rowsPerPage + rowsPerPage
+  //     )
+  //     setVisibleRows(updatedRows)
+  //   },
+  //   [order, orderBy, page, rowsPerPage, tableData]
+  // )
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
-    const updatedRows = sortedRows.slice(
-      newPage * rowsPerPage,
-      newPage * rowsPerPage + rowsPerPage
-    )
-    setVisibleRows(updatedRows)
-  }
+  // const handleChangePage = (event: unknown, newPage: number) => {
+  //   setPage(newPage)
+  //   const sortedRows = stableSort(tableData, getComparator(order, orderBy))
+  //   const updatedRows = sortedRows.slice(
+  //     newPage * rowsPerPage,
+  //     newPage * rowsPerPage + rowsPerPage
+  //   )
+  //   setVisibleRows(updatedRows)
+  // }
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(updatedRowsPerPage)
-    setPage(0)
+  // const handleChangeRowsPerPage = (
+  //   event: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   const updatedRowsPerPage = parseInt(event.target.value, 10)
+  //   setRowsPerPage(updatedRowsPerPage)
+  //   setPage(0)
 
-    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
-    const updatedRows = sortedRows.slice(
-      0 * updatedRowsPerPage,
-      0 * updatedRowsPerPage + updatedRowsPerPage
-    )
-    setVisibleRows(updatedRows)
-  }
+  //   const sortedRows = stableSort(tableData, getComparator(order, orderBy))
+  //   const updatedRows = sortedRows.slice(
+  //     0 * updatedRowsPerPage,
+  //     0 * updatedRowsPerPage + updatedRowsPerPage
+  //   )
+  //   setVisibleRows(updatedRows)
+  // }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -298,15 +306,15 @@ export default function DesktopHistoryList(props: Props) {
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((item) => (
-                <HistoryListItem inventoryItemData={item} key={item._id} />
+            {true &&
+              props.logs.map((log) => (
+                <HistoryListItem log={log} key={log._id} />
               ))}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
+        rowsPerPageOptions={[2, 5, 10, 25]}
         component="div"
         count={tableData.length}
         rowsPerPage={rowsPerPage}
