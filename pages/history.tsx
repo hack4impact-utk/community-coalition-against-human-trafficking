@@ -34,7 +34,7 @@ const testData: LogResponse[] = [
 
     staff: {
       _id: '63f95a8a55d930aa6176f06b',
-      name: 'Andrew Rutter',
+      name: 'ZAndrew Rutter',
       email: 'andrewrules.rutter@gmail.com',
       image:
         'https://lh3.googleusercontent.com/a/AGNmyxax1wXEfj2xEQpfs0BR87d2cmvj1VrI1-h7l_ut=s96-c',

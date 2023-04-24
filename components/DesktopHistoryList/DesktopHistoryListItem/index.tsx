@@ -1,14 +1,23 @@
-import { TableRow, TableCell, Chip, Box, Avatar } from '@mui/material'
+import {
+  TableRow,
+  TableCell,
+  Chip,
+  Box,
+  Avatar,
+  useMediaQuery,
+} from '@mui/material'
 import { LogResponse } from 'utils/types'
 import HistoryListItemKebab from '../HistoryListItemKebab'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import Grid2 from '@mui/material/Unstable_Grid2'
+import theme from 'utils/theme'
 
 interface HistoryListItemProps {
   log: LogResponse
 }
 
 const renderAttributeChips = (log: LogResponse) => {
+  const isMediumView = useMediaQuery(theme.breakpoints.down('lg'))
   //TODO pull this into its own component
   return log.item.attributes?.map((itemAttribute, i) => {
     // attributes that are strings or numbers show the attribute name
@@ -25,7 +34,7 @@ const renderAttributeChips = (log: LogResponse) => {
         label={displayString}
         key={i}
         sx={{
-          ml: 1,
+          ml: !isMediumView ? 1 : 0,
           my: 0.5,
           backgroundColor: itemAttribute.attribute.color,
           '& .MuiChip-label': {
@@ -38,6 +47,8 @@ const renderAttributeChips = (log: LogResponse) => {
 }
 
 export default function HistoryListItem({ log }: HistoryListItemProps) {
+  const isMediumView = useMediaQuery(theme.breakpoints.down('lg'))
+
   const dateOptions: Intl.DateTimeFormatOptions = {
     month: 'long',
     day: 'numeric',
@@ -60,9 +71,17 @@ export default function HistoryListItem({ log }: HistoryListItemProps) {
         </Box>
       </TableCell>
       <TableCell>
-        <Grid2 container display="row" sx={{ alignItems: 'center' }}>
-          <Grid2 xs={4}>{log.item.itemDefinition.name}</Grid2>
-          <Grid2 xs={8}>{renderAttributeChips(log)}</Grid2>
+        <Grid2
+          container
+          direction={isMediumView ? 'column' : 'row'}
+          sx={{ alignItems: 'center' }}
+        >
+          <Grid2 md={12} lg={4}>
+            {log.item.itemDefinition.name}
+          </Grid2>
+          <Grid2 md={12} lg={8}>
+            <Box mt={isMediumView ? 1 : 0}>{renderAttributeChips(log)}</Box>
+          </Grid2>
         </Grid2>
       </TableCell>
       <TableCell>{log.item.itemDefinition.category?.name}</TableCell>

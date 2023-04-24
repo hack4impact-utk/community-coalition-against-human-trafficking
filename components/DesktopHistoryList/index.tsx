@@ -32,14 +32,16 @@ interface HeadCell {
 function sortTable(
   tableData: LogResponse[],
   sortBy: keyof HistoryTableData,
-  isAscending: boolean
+  order: Order
 ) {
   const orderByHeadCell = headCells.filter(
     (headCell) => headCell.id === sortBy.toString()
   )[0]
 
   return tableData.sort((a: LogResponse, b: LogResponse) =>
-    isAscending ? orderByHeadCell.sortFn!(a, b) : -orderByHeadCell.sortFn!(a, b)
+    order === 'asc'
+      ? orderByHeadCell.sortFn!(a, b)
+      : orderByHeadCell.sortFn!(b, a)
   )
 }
 
@@ -109,7 +111,7 @@ const headCells: readonly HeadCell[] = [
     label: 'Date',
     sortable: true,
     sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return new Date(log1.date).getTime() - new Date(log2.date).getTime()
+      return new Date(log2.date).getTime() - new Date(log1.date).getTime()
     },
   },
   {
@@ -204,7 +206,6 @@ export default function DesktopHistoryList(props: Props) {
 
   React.useEffect(() => {
     let newTableData: LogResponse[] = deepCopy(props.logs)
-    console.log(newTableData)
     if (props.search) {
       const search = props.search.toLowerCase()
       newTableData = [
@@ -242,16 +243,8 @@ export default function DesktopHistoryList(props: Props) {
       ]
     }
     setTableData(newTableData)
-
-    var rowsOnMount = sortTable(
-      newTableData,
-      DEFAULT_ORDER_BY,
-      DEFAULT_ORDER === 'asc' ? true : false
-    )
-    rowsOnMount = rowsOnMount.slice(
-      0 * DEFAULT_ROWS_PER_PAGE,
-      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
-    )
+    var rowsOnMount = sortTable(newTableData, orderBy, order)
+    rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
     setVisibleRows(rowsOnMount)
   }, [props.search, props.category])
@@ -263,7 +256,7 @@ export default function DesktopHistoryList(props: Props) {
       setOrder(toggledOrder)
       setOrderBy(newOrderBy)
 
-      const sortedRows = sortTable(tableData, newOrderBy, isAsc)
+      const sortedRows = sortTable(tableData, newOrderBy, toggledOrder)
       const updatedRows = sortedRows.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
@@ -275,12 +268,7 @@ export default function DesktopHistoryList(props: Props) {
 
   const handleChangePage = (_e: unknown, newPage: number) => {
     setPage(newPage)
-    const orderByHeadCell = headCells.filter(
-      (headCell) => headCell.id === orderBy.toString()
-    )[0]
-    const sortedRows = tableData.sort((a: LogResponse, b: LogResponse) =>
-      orderByHeadCell.sortFn!(a, b)
-    )
+    const sortedRows = sortTable(tableData, orderBy, order)
 
     const updatedRows = sortedRows.slice(
       newPage * rowsPerPage,
@@ -295,17 +283,11 @@ export default function DesktopHistoryList(props: Props) {
     const updatedRowsPerPage = parseInt(event.target.value, 10)
     setRowsPerPage(updatedRowsPerPage)
     setPage(0)
-
-    const orderByHeadCell = headCells.filter(
-      (headCell) => headCell.id === orderBy.toString()
-    )[0]
-    const sortedRows = tableData.sort((a: LogResponse, b: LogResponse) =>
-      orderByHeadCell.sortFn!(a, b)
-    )
+    const sortedRows = sortTable(tableData, orderBy, order)
 
     const updatedRows = sortedRows.slice(
-      0 * updatedRowsPerPage,
-      0 * updatedRowsPerPage + updatedRowsPerPage
+      page * updatedRowsPerPage,
+      page * updatedRowsPerPage + updatedRowsPerPage
     )
     setVisibleRows(updatedRows)
   }
@@ -339,4 +321,3 @@ export default function DesktopHistoryList(props: Props) {
     </Box>
   )
 }
-// TODO date ordering not working out of the box
