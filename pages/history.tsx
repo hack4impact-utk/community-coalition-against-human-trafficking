@@ -385,7 +385,9 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
             </Box>
             <DatePicker
               label="End Date"
-              renderInput={(params) => <TextField {...params} fullWidth />}
+              renderInput={(params) => (
+                <TextField {...params} variant="outlined" fullWidth />
+              )}
               onChange={(date) => {
                 const endDate = new Date(date as string)
                 updateQuery(
