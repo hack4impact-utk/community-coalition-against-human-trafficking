@@ -19,6 +19,7 @@ import {
   SeparatedAttributeResponses,
 } from 'utils/attribute'
 import { usePrevious } from 'utils/hooks/usePrevious'
+import { useSession } from 'next-auth/react'
 
 interface Props {
   kioskMode: boolean
@@ -52,7 +53,6 @@ function updateFormData(
   }
 }
 
-const defaultSplitAttrs = separateAttributeResponses()
 
 function CheckInOutForm({
   kioskMode,
@@ -69,6 +69,7 @@ function CheckInOutForm({
     React.useState<SeparatedAttributeResponses>(
       separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
     )
+      const session = useSession()
 
   const initialFormData: Partial<CheckInOutFormData> = {
     category: inventoryItem?.itemDefinition?.category,
@@ -100,6 +101,18 @@ function CheckInOutForm({
       ...initialFormData,
     })
   }, [setFormData])
+
+  useEffect(() => {
+    // check if kiosk mode
+    if (kioskMode) {
+      setFormData((fd) => {
+        return updateFormData(fd,
+          {
+            user: session.data?.user as UserResponse
+          })
+      })
+    }
+  }, [kioskMode, session, setFormData])
 
   const updateTextFieldAttributes = (
     e: string | number,
