@@ -8,7 +8,7 @@ import {
   Avatar,
 } from '@mui/material'
 import Grid2 from '@mui/material/Unstable_Grid2'
-import HistoryListItemKebab from 'components/DesktopHistoryList/HistoryListItemKebab'
+import HistoryListItemKebab from 'components/HistoryList/HistoryListItemKebab'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import { LogResponse } from 'utils/types'
 

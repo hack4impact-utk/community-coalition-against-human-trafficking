@@ -19,8 +19,8 @@ import { DatePicker } from '@mui/x-date-pickers'
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule'
 import { addURLQueryParam, removeURLQueryParam } from 'utils/queryParams'
 import SearchAutocomplete from 'components/SearchAutocomplete'
-import DesktopHistoryList from 'components/DesktopHistoryList'
-import MobileHistoryList from 'components/MobileHistoryList'
+import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
+import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {

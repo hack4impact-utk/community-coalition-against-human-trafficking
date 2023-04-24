@@ -7,7 +7,7 @@ import {
   useMediaQuery,
 } from '@mui/material'
 import { LogResponse } from 'utils/types'
-import HistoryListItemKebab from '../HistoryListItemKebab'
+import HistoryListItemKebab from '../../HistoryListItemKebab'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import Grid2 from '@mui/material/Unstable_Grid2'
 import theme from 'utils/theme'

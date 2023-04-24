@@ -2,7 +2,7 @@ import { List } from '@mui/material'
 import React from 'react'
 import deepCopy from 'utils/deepCopy'
 import { LogResponse } from 'utils/types'
-import MobileHistoryListItem from 'components/MobileHistoryList/MobileHistoryListItem'
+import MobileHistoryListItem from 'components/HistoryList/MobileHistoryList/MobileHistoryListItem'
 
 interface Props {
   logs: LogResponse[]

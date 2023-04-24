@@ -1,6 +1,6 @@
 import { Button } from '@mui/material'
-import DesktopHistoryList from 'components/DesktopHistoryList'
-import DesktopHistoryListItem from 'components/DesktopHistoryList/DesktopHistoryListItem'
+import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
+import DesktopHistoryListItem from 'components/HistoryList/DesktopHistoryList/DesktopHistoryListItem'
 import DialogLink from 'components/DialogLink'
 import { LogResponse } from 'utils/types'
 
