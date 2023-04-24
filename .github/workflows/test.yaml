@@ -1,0 +1,26 @@
+name: Node.js CI
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'npm'
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
