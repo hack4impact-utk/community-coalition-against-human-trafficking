@@ -5,7 +5,6 @@ import { InventoryItemAttributeResponse } from './types'
 const renderAttributeChips = (
   attributes?: InventoryItemAttributeResponse[]
 ) => {
-  //TODO pull this into its own component
   return attributes?.map((itemAttribute, i) => {
     // attributes that are strings or numbers show the attribute name
     // attributes that are list types do not
