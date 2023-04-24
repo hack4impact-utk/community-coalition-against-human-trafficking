@@ -20,6 +20,7 @@ import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule'
 import { addURLQueryParam, removeURLQueryParam } from 'utils/queryParams'
 import SearchAutocomplete from 'components/SearchAutocomplete'
 import DesktopHistoryList from 'components/DesktopHistoryList'
+import MobileHistoryList from 'components/MobileHistoryList'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -399,14 +400,25 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
         </Grid2>
         {!isMobileView && renderInternalCheckbox(router, isMobileView)}
       </Grid2>
-      <DesktopHistoryList
-        logs={testData}
-        search={''}
-        category={''}
-        endDate={new Date()}
-        startDate={new Date()}
-        internal={false}
-      />
+      {isMobileView ? (
+        <MobileHistoryList
+          logs={testData}
+          search={''}
+          category={''}
+          endDate={new Date()}
+          startDate={new Date()}
+          internal={false}
+        />
+      ) : (
+        <DesktopHistoryList
+          logs={testData}
+          search={''}
+          category={''}
+          endDate={new Date()}
+          startDate={new Date()}
+          internal={false}
+        />
+      )}
     </Grid2>
   )
 }
