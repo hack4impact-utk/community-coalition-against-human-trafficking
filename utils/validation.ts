@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb'
-import constants from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 export interface Property {
   key: string
@@ -52,15 +52,15 @@ export function validateProperties(
   const typeMismatches: string[] = []
   const validationErrors: ValidationErrorList[] = [
     {
-      errorName: constants.errors.prefixes.missingRequiredProperties,
+      errorName: errors.prefixes.missingRequiredProperties,
       errors: missingProperties,
     },
     {
-      errorName: constants.errors.prefixes.invalidProperties,
+      errorName: errors.prefixes.invalidProperties,
       errors: invalidProperties,
     },
     {
-      errorName: constants.errors.prefixes.typeMismatches,
+      errorName: errors.prefixes.typeMismatches,
       errors: typeMismatches,
     },
   ]

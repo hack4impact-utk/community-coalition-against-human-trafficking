@@ -7,12 +7,19 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { wrapper } from 'store'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import { useRouter } from 'next/router'
+import { dialogRoutes } from 'utils/constants'
+import { Dialog } from '@mui/material'
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
   const { store } = wrapper.useWrappedStore(pageProps)
+  const router = useRouter()
+  const dialog = router.query.dialog
+  const dialogRoute = dialogRoutes.find((dr) => dr.name === dialog)
+  console.log(dialogRoute)
   return (
     <>
       <Provider store={store}>
@@ -20,9 +27,19 @@ export default function App({
         <PersistGate loading={null} persistor={store.__persistor}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <SessionProvider session={session}>
-              <DefaultLayout>
-                <Component {...pageProps} />
-              </DefaultLayout>
+              <>
+                <DefaultLayout>
+                  <Component {...pageProps} />
+                </DefaultLayout>
+                <Dialog
+                  open={!!dialogRoute}
+                  onClose={() => {
+                    router.back()
+                  }}
+                >
+                  {dialogRoute?.component()}
+                </Dialog>
+              </>
               <style jsx global>{`
                 html,
                 body {
