@@ -2,46 +2,17 @@ import {
   ListItem,
   ListItemText,
   Typography,
-  Chip,
   Box,
   ListItemSecondaryAction,
   Avatar,
 } from '@mui/material'
 import Grid2 from '@mui/material/Unstable_Grid2'
 import HistoryListItemKebab from 'components/HistoryList/HistoryListItemKebab'
-import getContrastYIQ from 'utils/getContrastYIQ'
+import renderAttributeChips from 'utils/renderAttributeChips'
 import { LogResponse } from 'utils/types'
 
 interface Props {
   log: LogResponse
-}
-
-function renderAttributeChips(log: LogResponse) {
-  return log.item.attributes?.map((itemAttribute, i) => {
-    // attributes that are strings or numbers show the attribute name
-    // attributes that are list types do not
-
-    const displayString =
-      itemAttribute.attribute.possibleValues instanceof Array
-        ? itemAttribute.value
-        : `${itemAttribute.attribute.name}: ${itemAttribute.value}`
-
-    return (
-      <Chip
-        size="small"
-        label={displayString}
-        key={i}
-        sx={{
-          ml: 1,
-          my: 0.5,
-          backgroundColor: itemAttribute.attribute.color,
-          '& .MuiChip-label': {
-            color: getContrastYIQ(itemAttribute.attribute.color),
-          },
-        }}
-      />
-    )
-  })
 }
 
 export default function MobileHistoryListItem({ log }: Props) {
@@ -68,11 +39,11 @@ export default function MobileHistoryListItem({ log }: Props) {
             {`${log.quantityDelta > 0 ? '+' : ''}${log.quantityDelta}`}
             <br />
             <Grid2 container direction="row" sx={{ alignItems: 'center' }}>
-              <Grid2 md={12} lg={4}>
+              <Grid2 md={12} lg={4} mr={1}>
                 {log.item.itemDefinition.name}
               </Grid2>
               <Grid2 md={12} lg={8}>
-                <Box>{renderAttributeChips(log)}</Box>
+                <Box>{renderAttributeChips(log.item.attributes)}</Box>
               </Grid2>
             </Grid2>
           </Typography>
