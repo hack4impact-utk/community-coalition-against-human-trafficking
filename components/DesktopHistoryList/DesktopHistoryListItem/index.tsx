@@ -1,21 +1,8 @@
-import {
-  TableRow,
-  TableCell,
-  Chip,
-  Box,
-  Typography,
-  Avatar,
-} from '@mui/material'
-import AttributeListItemKebab from 'components/AttributeList/AttributeListItemKebab'
+import { TableRow, TableCell, Chip, Box, Avatar } from '@mui/material'
 import { LogResponse } from 'utils/types'
 import HistoryListItemKebab from '../HistoryListItemKebab'
 import getContrastYIQ from 'utils/getContrastYIQ'
-
-interface HistoryTableData extends LogResponse {
-  //TODO pull out
-  kebab: string
-  category: string
-}
+import Grid2 from '@mui/material/Unstable_Grid2'
 
 interface HistoryListItemProps {
   log: LogResponse
@@ -73,8 +60,10 @@ export default function HistoryListItem({ log }: HistoryListItemProps) {
         </Box>
       </TableCell>
       <TableCell>
-        {log.item.itemDefinition.name}
-        {renderAttributeChips(log)}
+        <Grid2 container display="row" sx={{ alignItems: 'center' }}>
+          <Grid2 xs={4}>{log.item.itemDefinition.name}</Grid2>
+          <Grid2 xs={8}>{renderAttributeChips(log)}</Grid2>
+        </Grid2>
       </TableCell>
       <TableCell>{log.item.itemDefinition.category?.name}</TableCell>
       <TableCell>

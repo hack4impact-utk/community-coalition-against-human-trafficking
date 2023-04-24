@@ -13,29 +13,7 @@ import { CategoryResponse, LogResponse } from 'utils/types'
 import HistoryListItem from './DesktopHistoryListItem'
 import deepCopy from 'utils/deepCopy'
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1
-  }
-  return 0
-}
-
 type Order = 'asc' | 'desc'
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy)
-}
 
 interface HistoryTableData extends LogResponse {
   kebab: string
@@ -48,7 +26,33 @@ interface HeadCell {
   label: string
   numeric: boolean
   sortable?: boolean
-  sortFn?(a: LogResponse, b: LogResponse, orderBy: Order): number
+  sortFn?(a: LogResponse, b: LogResponse): number
+}
+
+function sortTable(
+  tableData: LogResponse[],
+  sortBy: keyof HistoryTableData,
+  isAscending: boolean
+) {
+  const orderByHeadCell = headCells.filter(
+    (headCell) => headCell.id === sortBy.toString()
+  )[0]
+
+  return tableData.sort((a: LogResponse, b: LogResponse) =>
+    isAscending ? orderByHeadCell.sortFn!(a, b) : -orderByHeadCell.sortFn!(a, b)
+  )
+}
+
+function comparator(v1: string | Date, v2: string | Date) {
+  if (v1 < v2) {
+    return -1
+  }
+
+  if (v1 > v2) {
+    return 1
+  }
+
+  return 0
 }
 
 const headCells: readonly HeadCell[] = [
@@ -58,16 +62,8 @@ const headCells: readonly HeadCell[] = [
     disablePadding: true,
     label: 'Staff',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse, orderBy: Order) => {
-      if (log1.staff.name < log2.staff.name) {
-        return orderBy === 'asc' ? -1 : 1
-      }
-
-      if (log1.staff.name > log2.staff.name) {
-        return orderBy === 'asc' ? 1 : -1
-      }
-
-      return 0
+    sortFn: (log1: LogResponse, log2: LogResponse) => {
+      return comparator(log1.staff.name, log2.staff.name)
     },
   },
   {
@@ -76,16 +72,11 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Item',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse, orderBy: Order) => {
-      if (log1.item.itemDefinition.name < log2.item.itemDefinition.name) {
-        return orderBy === 'asc' ? -1 : 1
-      }
-
-      if (log1.item.itemDefinition.name > log2.item.itemDefinition.name) {
-        return orderBy === 'asc' ? 1 : -1
-      }
-
-      return 0
+    sortFn: (log1: LogResponse, log2: LogResponse) => {
+      return comparator(
+        log1.item.itemDefinition.name,
+        log2.item.itemDefinition.name
+      )
     },
   },
   {
@@ -94,22 +85,11 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Category',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse, orderBy: Order) => {
-      if (
-        log1.item.itemDefinition.category?.name! <
-        log2.item.itemDefinition.category?.name!
-      ) {
-        return orderBy === 'asc' ? -1 : 1
-      }
-
-      if (
-        log1.item.itemDefinition.category?.name! >
-        log2.item.itemDefinition.category?.name!
-      ) {
-        return orderBy === 'asc' ? 1 : -1
-      }
-
-      return 0
+    sortFn: (log1: LogResponse, log2: LogResponse) => {
+      return comparator(
+        log1.item.itemDefinition.category?.name ?? '',
+        log2.item.itemDefinition.category?.name ?? ''
+      )
     },
   },
   {
@@ -118,10 +98,8 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Quantity',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse, orderBy: Order) => {
-      return orderBy === 'asc'
-        ? log1.quantityDelta - log2.quantityDelta
-        : log2.quantityDelta - log1.quantityDelta
+    sortFn: (log1: LogResponse, log2: LogResponse) => {
+      return log1.quantityDelta - log2.quantityDelta
     },
   },
   {
@@ -130,16 +108,8 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Date',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse, orderBy: Order) => {
-      if (log1.date < log2.date) {
-        return orderBy === 'asc' ? -1 : 1
-      }
-
-      if (log1.date > log2.date) {
-        return orderBy === 'asc' ? 1 : -1
-      }
-
-      return 0
+    sortFn: (log1: LogResponse, log2: LogResponse) => {
+      return new Date(log1.date).getTime() - new Date(log2.date).getTime()
     },
   },
   {
@@ -210,7 +180,7 @@ interface Props {
 
 const DEFAULT_ROWS_PER_PAGE = 5
 const DEFAULT_ORDER_BY = 'date'
-const DEFAULT_ORDER = 'desc'
+const DEFAULT_ORDER = 'asc'
 
 export default function DesktopHistoryList(props: Props) {
   const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
@@ -221,7 +191,7 @@ export default function DesktopHistoryList(props: Props) {
   const [visibleRows, setVisibleRows] = React.useState<LogResponse[]>(
     [] as LogResponse[]
   )
-  const [tableData, setTableData] = React.useState<any>([])
+  const [tableData, setTableData] = React.useState<LogResponse[]>([])
 
   const dateOptions: Intl.DateTimeFormatOptions = {
     month: 'long',
@@ -234,7 +204,7 @@ export default function DesktopHistoryList(props: Props) {
 
   React.useEffect(() => {
     let newTableData: LogResponse[] = deepCopy(props.logs)
-
+    console.log(newTableData)
     if (props.search) {
       const search = props.search.toLowerCase()
       newTableData = [
@@ -273,11 +243,10 @@ export default function DesktopHistoryList(props: Props) {
     }
     setTableData(newTableData)
 
-    const orderByHeadCell = headCells.filter(
-      (headCell) => headCell.id === DEFAULT_ORDER_BY.toString()
-    )[0]
-    var rowsOnMount = newTableData.sort((a: LogResponse, b: LogResponse) =>
-      orderByHeadCell.sortFn!(a, b, DEFAULT_ORDER)
+    var rowsOnMount = sortTable(
+      newTableData,
+      DEFAULT_ORDER_BY,
+      DEFAULT_ORDER === 'asc' ? true : false
     )
     rowsOnMount = rowsOnMount.slice(
       0 * DEFAULT_ROWS_PER_PAGE,
@@ -294,12 +263,7 @@ export default function DesktopHistoryList(props: Props) {
       setOrder(toggledOrder)
       setOrderBy(newOrderBy)
 
-      const orderByHeadCell = headCells.filter(
-        (headCell) => headCell.id === newOrderBy.toString()
-      )[0]
-      const sortedRows = tableData.sort((a: LogResponse, b: LogResponse) =>
-        orderByHeadCell.sortFn!(a, b, toggledOrder)
-      )
+      const sortedRows = sortTable(tableData, newOrderBy, isAsc)
       const updatedRows = sortedRows.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
@@ -315,7 +279,7 @@ export default function DesktopHistoryList(props: Props) {
       (headCell) => headCell.id === orderBy.toString()
     )[0]
     const sortedRows = tableData.sort((a: LogResponse, b: LogResponse) =>
-      orderByHeadCell.sortFn!(a, b, order)
+      orderByHeadCell.sortFn!(a, b)
     )
 
     const updatedRows = sortedRows.slice(
@@ -336,7 +300,7 @@ export default function DesktopHistoryList(props: Props) {
       (headCell) => headCell.id === orderBy.toString()
     )[0]
     const sortedRows = tableData.sort((a: LogResponse, b: LogResponse) =>
-      orderByHeadCell.sortFn!(a, b, order)
+      orderByHeadCell.sortFn!(a, b)
     )
 
     const updatedRows = sortedRows.slice(
@@ -356,7 +320,7 @@ export default function DesktopHistoryList(props: Props) {
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {true &&
+            {visibleRows &&
               visibleRows.map((log) => (
                 <HistoryListItem log={log} key={log._id} />
               ))}
@@ -364,7 +328,7 @@ export default function DesktopHistoryList(props: Props) {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[2, 5, 10, 25]}
+        rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={tableData.length}
         rowsPerPage={rowsPerPage}
@@ -375,3 +339,4 @@ export default function DesktopHistoryList(props: Props) {
     </Box>
   )
 }
+// TODO date ordering not working out of the box

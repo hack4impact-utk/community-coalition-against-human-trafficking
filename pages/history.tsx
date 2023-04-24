@@ -88,7 +88,7 @@ const testData: LogResponse[] = [
       ],
       quantity: 23,
     },
-    quantityDelta: 5,
+    quantityDelta: -5,
     date: new Date('2022-02-10T14:47:12.419Z'),
   },
   {
