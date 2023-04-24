@@ -9,13 +9,7 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
-import InventoryItemListItem from 'components/DesktopInventoryItemList/DesktopInventoryItemListItem'
-import {
-  CategoryResponse,
-  InventoryItemAttributeResponse,
-  InventoryItemResponse,
-  LogResponse,
-} from 'utils/types'
+import { CategoryResponse, LogResponse } from 'utils/types'
 import HistoryListItem from './DesktopHistoryListItem'
 import deepCopy from 'utils/deepCopy'
 
@@ -43,25 +37,6 @@ function getComparator<Key extends keyof any>(
     : (a, b) => -descendingComparator(a, b, orderBy)
 }
 
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0])
-    if (order !== 0) {
-      return order
-    }
-    return a[1] - b[1]
-  })
-  return stabilizedThis.map((el) => el[0])
-}
-
 interface HistoryTableData extends LogResponse {
   kebab: string
   category: string | CategoryResponse
@@ -73,6 +48,7 @@ interface HeadCell {
   label: string
   numeric: boolean
   sortable?: boolean
+  sortFn?(a: LogResponse, b: LogResponse, orderBy: Order): number
 }
 
 const headCells: readonly HeadCell[] = [
@@ -82,6 +58,17 @@ const headCells: readonly HeadCell[] = [
     disablePadding: true,
     label: 'Staff',
     sortable: true,
+    sortFn: (log1: LogResponse, log2: LogResponse, orderBy: Order) => {
+      if (log1.staff.name < log2.staff.name) {
+        return orderBy === 'asc' ? -1 : 1
+      }
+
+      if (log1.staff.name > log2.staff.name) {
+        return orderBy === 'asc' ? 1 : -1
+      }
+
+      return 0
+    },
   },
   {
     id: 'item',
@@ -89,6 +76,17 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Item',
     sortable: true,
+    sortFn: (log1: LogResponse, log2: LogResponse, orderBy: Order) => {
+      if (log1.item.itemDefinition.name < log2.item.itemDefinition.name) {
+        return orderBy === 'asc' ? -1 : 1
+      }
+
+      if (log1.item.itemDefinition.name > log2.item.itemDefinition.name) {
+        return orderBy === 'asc' ? 1 : -1
+      }
+
+      return 0
+    },
   },
   {
     id: 'category',
@@ -96,6 +94,23 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Category',
     sortable: true,
+    sortFn: (log1: LogResponse, log2: LogResponse, orderBy: Order) => {
+      if (
+        log1.item.itemDefinition.category?.name! <
+        log2.item.itemDefinition.category?.name!
+      ) {
+        return orderBy === 'asc' ? -1 : 1
+      }
+
+      if (
+        log1.item.itemDefinition.category?.name! >
+        log2.item.itemDefinition.category?.name!
+      ) {
+        return orderBy === 'asc' ? 1 : -1
+      }
+
+      return 0
+    },
   },
   {
     id: 'quantityDelta',
@@ -103,6 +118,11 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Quantity',
     sortable: true,
+    sortFn: (log1: LogResponse, log2: LogResponse, orderBy: Order) => {
+      return orderBy === 'asc'
+        ? log1.quantityDelta - log2.quantityDelta
+        : log2.quantityDelta - log1.quantityDelta
+    },
   },
   {
     id: 'date',
@@ -110,6 +130,17 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Date',
     sortable: true,
+    sortFn: (log1: LogResponse, log2: LogResponse, orderBy: Order) => {
+      if (log1.date < log2.date) {
+        return orderBy === 'asc' ? -1 : 1
+      }
+
+      if (log1.date > log2.date) {
+        return orderBy === 'asc' ? 1 : -1
+      }
+
+      return 0
+    },
   },
   {
     id: 'kebab',
@@ -177,7 +208,7 @@ interface Props {
   internal: boolean
 }
 
-const DEFAULT_ROWS_PER_PAGE = 2
+const DEFAULT_ROWS_PER_PAGE = 5
 const DEFAULT_ORDER_BY = 'date'
 const DEFAULT_ORDER = 'desc'
 
@@ -187,7 +218,9 @@ export default function DesktopHistoryList(props: Props) {
     React.useState<keyof HistoryTableData>(DEFAULT_ORDER_BY)
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = React.useState<any>(null)
+  const [visibleRows, setVisibleRows] = React.useState<LogResponse[]>(
+    [] as LogResponse[]
+  )
   const [tableData, setTableData] = React.useState<any>([])
 
   const dateOptions: Intl.DateTimeFormatOptions = {
@@ -233,15 +266,18 @@ export default function DesktopHistoryList(props: Props) {
 
     if (props.category) {
       newTableData = [
-        ...newTableData.filter((item) => {
-          return item.category.name === props.category
+        ...newTableData.filter((log) => {
+          return log.item.itemDefinition.category?.name === props.category
         }),
       ]
     }
     setTableData(newTableData)
-    let rowsOnMount = stableSort(
-      newTableData,
-      getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY)
+
+    const orderByHeadCell = headCells.filter(
+      (headCell) => headCell.id === DEFAULT_ORDER_BY.toString()
+    )[0]
+    var rowsOnMount = newTableData.sort((a: LogResponse, b: LogResponse) =>
+      orderByHeadCell.sortFn!(a, b, DEFAULT_ORDER)
     )
     rowsOnMount = rowsOnMount.slice(
       0 * DEFAULT_ROWS_PER_PAGE,
@@ -251,50 +287,64 @@ export default function DesktopHistoryList(props: Props) {
     setVisibleRows(rowsOnMount)
   }, [props.search, props.category])
 
-  // const handleRequestSort = React.useCallback(
-  //   (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => {
-  //     const isAsc = orderBy === newOrderBy && order === 'asc'
-  //     const toggledOrder = isAsc ? 'desc' : 'asc'
-  //     setOrder(toggledOrder)
-  //     setOrderBy(newOrderBy)
+  const handleRequestSort = React.useCallback(
+    (_e: React.MouseEvent<unknown>, newOrderBy: keyof HistoryTableData) => {
+      const isAsc = orderBy === newOrderBy && order === 'asc'
+      const toggledOrder: Order = isAsc ? 'desc' : 'asc'
+      setOrder(toggledOrder)
+      setOrderBy(newOrderBy)
 
-  //     const sortedRows = stableSort(
-  //       tableData,
-  //       getComparator(toggledOrder, newOrderBy)
-  //     )
-  //     const updatedRows = sortedRows.slice(
-  //       page * rowsPerPage,
-  //       page * rowsPerPage + rowsPerPage
-  //     )
-  //     setVisibleRows(updatedRows)
-  //   },
-  //   [order, orderBy, page, rowsPerPage, tableData]
-  // )
+      const orderByHeadCell = headCells.filter(
+        (headCell) => headCell.id === newOrderBy.toString()
+      )[0]
+      const sortedRows = tableData.sort((a: LogResponse, b: LogResponse) =>
+        orderByHeadCell.sortFn!(a, b, toggledOrder)
+      )
+      const updatedRows = sortedRows.slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      )
+      setVisibleRows(updatedRows)
+    },
+    [order, orderBy, page, rowsPerPage, tableData]
+  )
 
-  // const handleChangePage = (event: unknown, newPage: number) => {
-  //   setPage(newPage)
-  //   const sortedRows = stableSort(tableData, getComparator(order, orderBy))
-  //   const updatedRows = sortedRows.slice(
-  //     newPage * rowsPerPage,
-  //     newPage * rowsPerPage + rowsPerPage
-  //   )
-  //   setVisibleRows(updatedRows)
-  // }
+  const handleChangePage = (_e: unknown, newPage: number) => {
+    setPage(newPage)
+    const orderByHeadCell = headCells.filter(
+      (headCell) => headCell.id === orderBy.toString()
+    )[0]
+    const sortedRows = tableData.sort((a: LogResponse, b: LogResponse) =>
+      orderByHeadCell.sortFn!(a, b, order)
+    )
 
-  // const handleChangeRowsPerPage = (
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   const updatedRowsPerPage = parseInt(event.target.value, 10)
-  //   setRowsPerPage(updatedRowsPerPage)
-  //   setPage(0)
+    const updatedRows = sortedRows.slice(
+      newPage * rowsPerPage,
+      newPage * rowsPerPage + rowsPerPage
+    )
+    setVisibleRows(updatedRows)
+  }
 
-  //   const sortedRows = stableSort(tableData, getComparator(order, orderBy))
-  //   const updatedRows = sortedRows.slice(
-  //     0 * updatedRowsPerPage,
-  //     0 * updatedRowsPerPage + updatedRowsPerPage
-  //   )
-  //   setVisibleRows(updatedRows)
-  // }
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const updatedRowsPerPage = parseInt(event.target.value, 10)
+    setRowsPerPage(updatedRowsPerPage)
+    setPage(0)
+
+    const orderByHeadCell = headCells.filter(
+      (headCell) => headCell.id === orderBy.toString()
+    )[0]
+    const sortedRows = tableData.sort((a: LogResponse, b: LogResponse) =>
+      orderByHeadCell.sortFn!(a, b, order)
+    )
+
+    const updatedRows = sortedRows.slice(
+      0 * updatedRowsPerPage,
+      0 * updatedRowsPerPage + updatedRowsPerPage
+    )
+    setVisibleRows(updatedRows)
+  }
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -307,7 +357,7 @@ export default function DesktopHistoryList(props: Props) {
           />
           <TableBody>
             {true &&
-              props.logs.map((log) => (
+              visibleRows.map((log) => (
                 <HistoryListItem log={log} key={log._id} />
               ))}
           </TableBody>

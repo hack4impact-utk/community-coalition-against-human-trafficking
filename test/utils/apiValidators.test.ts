@@ -169,7 +169,7 @@ describe('apiValidators', () => {
         expect(error).toBeInstanceOf(ApiError)
         expect(error.statusCode).toBe(400)
         expect(error.message).toBe(
-          constants.errors.prefixes.badBody + validationFailedReturn.message
+          errors.prefixes.badBody + validationFailedReturn.message
         )
       }
     })
