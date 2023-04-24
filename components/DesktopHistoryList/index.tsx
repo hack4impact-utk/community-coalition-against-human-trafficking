@@ -111,7 +111,7 @@ const headCells: readonly HeadCell[] = [
     label: 'Date',
     sortable: true,
     sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return new Date(log2.date).getTime() - new Date(log1.date).getTime()
+      return comparator(log2.date, log1.date)
     },
   },
   {

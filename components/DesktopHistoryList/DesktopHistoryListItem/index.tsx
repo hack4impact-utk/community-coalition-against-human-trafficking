@@ -89,7 +89,9 @@ export default function HistoryListItem({ log }: HistoryListItemProps) {
         {`${log.quantityDelta > 0 ? '+' : ''}${log.quantityDelta}`}
       </TableCell>
       <TableCell>
-        {log.date.toLocaleString('en-US', dateOptions).replace(' at', '')}
+        {new Date(log.date)
+          .toLocaleString('en-US', dateOptions)
+          .replace(' at', '')}
       </TableCell>
       <TableCell sx={{ width: '10px' }}>
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
