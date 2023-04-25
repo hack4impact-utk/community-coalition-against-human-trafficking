@@ -60,6 +60,7 @@ export default function InventoryItemListItemKebab({
           method: 'DELETE',
         }).then(() => {
           window.location.reload()
+          // @ts-ignore
           dispatch(showSnackbar({message: "Item successfully deleted.", severity: "success"}))
         })
       }},

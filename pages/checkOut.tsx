@@ -80,8 +80,10 @@ export default function CheckOutPage({
     const data = await response.json()
 
     if (data.success) {
+      // @ts-ignore
       dispatch(showSnackbar({message: "Item successfully checked out.", severity: "success"}))
     } else {
+      // @ts-ignore
       dispatch(showSnackbar({message: data.message, severity: "error"}))
     }
   }

@@ -84,8 +84,12 @@ export default function CheckInPage({
     const data = await response.json()
 
     if (data.success) {
-      dispatch(showSnackbar({message: "Item successfully checked out.", severity: "success"}))
+      // @ts-ignore
+      // @ts-ignore
+      dispatch(showSnackbar({message: "Item successfully checked in.", severity: "success"}))
     } else {
+      // @ts-ignore
+      // @ts-ignore
       dispatch(showSnackbar({message: data.message, severity: "error"}))
     }
   }

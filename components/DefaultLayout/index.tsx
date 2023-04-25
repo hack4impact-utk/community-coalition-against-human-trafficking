@@ -14,11 +14,18 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
   const dispatch = useAppDispatch();
   const snackbar = useAppSelector((state) => state.snackbar)
 
-  const handleClose = (event?: React.SyntheticEvent | Event, reason?: string) => {
+  React.useEffect(() => {
+    // @ts-ignore
+    dispatch(clearSnackbar())
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [children])
+
+  const handleClose = (_e?: React.SyntheticEvent | Event, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
 
+    // @ts-ignore
     dispatch(clearSnackbar());
   };
   return (
@@ -32,13 +39,13 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
         <NavigationDrawer setDrawerOpen={setDrawerOpen} open={drawerOpen} />
         <Box component="main" sx={{ flexGrow: 1 }}>
           {children}
+          <Snackbar key={snackbar.message} open={snackbar.open} autoHideDuration={10000} onClose={handleClose} sx={{ mt: 8}} anchorOrigin={{vertical: "top", horizontal: "right"}} >
+            <Alert onClose={handleClose} severity={snackbar.severity} sx={{ width: '100%' }} elevation={8}>
+              {snackbar.message}
+            </Alert>
+          </Snackbar>
         </Box>
       </Box>
-      <Snackbar open={snackbar.open} autoHideDuration={10000} onClose={handleClose} anchorOrigin={{vertical: "bottom", horizontal: "right"}} >
-        <Alert onClose={handleClose} severity={snackbar.severity} sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
     </>
   )
 }
