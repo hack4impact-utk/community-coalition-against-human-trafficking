@@ -8,6 +8,7 @@ import {
   TextField,
   Checkbox,
   useTheme,
+  IconButton,
 } from '@mui/material'
 import SearchField from 'components/SearchField'
 import { GetServerSidePropsContext } from 'next'
@@ -19,6 +20,7 @@ import { DatePicker } from '@mui/x-date-pickers'
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule'
 import { addURLQueryParam, removeURLQueryParam } from 'utils/queryParams'
 import SearchAutocomplete from 'components/SearchAutocomplete'
+import { Clear } from '@mui/icons-material'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -118,7 +120,17 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
           >
             <DatePicker
               label="Start Date"
-              renderInput={(params) => <TextField {...params} fullWidth />}
+              renderInput={(params) => (
+                <Box style={{ position: "relative", display: "inline-block", width: '100%' }} >
+                  <TextField {...params} label="Start Date" variant='outlined' fullWidth />
+                  {router.query.startDate &&
+                    <IconButton style={{ position: "absolute", top: ".5rem", margin: "auto", right: "2rem" }} onClick={() => removeURLQueryParam(router, "startDate")}>
+                      <Clear />
+                    </IconButton>
+                  }
+                </Box>
+              )
+              }
               onChange={(date) => {
                 const startDate = new Date(date as string)
                 updateQuery(
@@ -135,8 +147,16 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
             <DatePicker
               label="End Date"
               renderInput={(params) => (
-                <TextField {...params} variant="outlined" fullWidth />
-              )}
+                <Box style={{ position: "relative", display: "inline-block", width: '100%' }} >
+                  <TextField {...params} label="End Date" variant='outlined' fullWidth />
+                  {router.query.endDate &&
+                    <IconButton style={{ position: "absolute", top: ".5rem", margin: "auto", right: "2rem" }} onClick={() => removeURLQueryParam(router, "endDate")}>
+                      <Clear />
+                    </IconButton>
+                  }
+                </Box>
+              )
+              }
               onChange={(date) => {
                 const endDate = new Date(date as string)
                 updateQuery(
