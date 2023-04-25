@@ -1,6 +1,7 @@
 import {
   Autocomplete,
   Box,
+  Button,
   Checkbox,
   Chip,
   FormControl,
@@ -8,9 +9,14 @@ import {
   IconButton,
   TextField,
   Typography,
+  Unstable_Grid2 as Grid2,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { AttributeResponse, CategoryResponse } from 'utils/types'
+import React from 'react'
+import UpsertAttributeForm, {
+  AttributeFormData,
+} from 'components/UpsertAttributeForm'
 import getContrastYIQ from 'utils/getContrastYIQ'
 
 interface Props {
@@ -19,6 +25,10 @@ interface Props {
 }
 
 export default function UpsertItemForm({ categories, attributes }: Props) {
+  const [showAttributeForm, setShowAttributeForm] = React.useState(false)
+  const [attrFormData, setAttrFormData] = React.useState(
+    {} as AttributeFormData
+  )
   return (
     <FormControl fullWidth>
       <Autocomplete
@@ -67,9 +77,51 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
           fullWidth
         />
         <IconButton size="large">
-          <AddIcon fontSize="large" />
+          <AddIcon
+            fontSize="large"
+            onClick={() => {
+              setShowAttributeForm(true)
+            }}
+          />
         </IconButton>
       </Box>
+
+      {showAttributeForm && (
+        <Box
+          sx={{
+            width: '80%',
+            mt: 4,
+          }}
+        >
+          <UpsertAttributeForm
+            onChange={(attrFD) => {
+              setAttrFormData(attrFD)
+            }}
+          >
+            <Grid2
+              xs={12}
+              sx={{ mt: 2 }}
+              display="flex"
+              justifyContent="flex-end"
+            >
+              <Button
+                color="inherit"
+                sx={{ mr: 2 }}
+                onClick={() => setShowAttributeForm(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                onClick={() => setShowAttributeForm(false)}
+              >
+                Add Attribute
+              </Button>
+            </Grid2>
+          </UpsertAttributeForm>
+        </Box>
+      )}
 
       {/* Low Stock Threshold Prompt */}
       <Box sx={{ display: 'flex', alignSelf: 'flex-start', marginTop: 4 }}>
