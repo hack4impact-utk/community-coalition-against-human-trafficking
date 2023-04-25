@@ -85,10 +85,8 @@ export default function CheckInPage({
 
     if (data.success) {
       // @ts-ignore
-      // @ts-ignore
       dispatch(showSnackbar({message: "Item successfully checked in.", severity: "success"}))
     } else {
-      // @ts-ignore
       // @ts-ignore
       dispatch(showSnackbar({message: data.message, severity: "error"}))
     }
