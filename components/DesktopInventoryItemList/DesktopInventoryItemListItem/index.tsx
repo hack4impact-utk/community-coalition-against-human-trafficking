@@ -15,7 +15,6 @@ export default function DesktopInventoryItemListItem({
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
   const renderWarningIcon = (inventoryItemData: Data) => {
-    if (inventoryItemData.quantity < inventoryItemData.lowStockThreshold) {
       return (
         <Tooltip
           title={
@@ -28,6 +27,7 @@ export default function DesktopInventoryItemListItem({
           <WarningIcon
             fontSize="small"
             sx={{
+              visibility: inventoryItemData.quantity < inventoryItemData.lowStockThreshold ? "visible" : "hidden",
               float: "right",
               color:
                 inventoryItemData.quantity <
@@ -38,7 +38,6 @@ export default function DesktopInventoryItemListItem({
           />
         </Tooltip>
       )
-    }
   }
 
   const renderAttributeChips = (inventoryItemData: Data) => {
