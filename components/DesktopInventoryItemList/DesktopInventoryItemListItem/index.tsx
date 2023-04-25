@@ -1,5 +1,5 @@
 import WarningIcon from '@mui/icons-material/Warning'
-import { TableRow, TableCell, Chip, Tooltip, Box } from '@mui/material'
+import { TableRow, TableCell, Chip, Tooltip, Box, Unstable_Grid2 as Grid2 } from '@mui/material'
 import theme from 'utils/theme'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import * as React from 'react'
@@ -119,18 +119,14 @@ export default function DesktopInventoryItemListItem({
         align="right"
 
         >
-        <span
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-            // justifyContent: 'flex-end',
-            flexDirection: 'row-reverse',
-            justifyContent: 'space-between',
-          }}
-          >
-          {inventoryItemData.quantity.toLocaleString()}
-          {renderWarningIcon(inventoryItemData)}
-        </span>
+          <Grid2 container gap={1} justifyContent="flex-end">
+            <Grid2 xs={6}>
+            {inventoryItemData.quantity.toLocaleString()}
+            </Grid2>
+            <Grid2 xs="auto">
+            {renderWarningIcon(inventoryItemData)}
+            </Grid2>
+          </Grid2>
       </TableCell>
       <TableCell
         sx={{

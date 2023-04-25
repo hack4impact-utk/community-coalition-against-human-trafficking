@@ -90,7 +90,7 @@ const headCells: readonly HeadCell[] = [
   },
   {
     id: 'quantity',
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: 'Quantity',
     sortable: true,
