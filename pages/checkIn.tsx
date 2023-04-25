@@ -25,6 +25,7 @@ import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
 import { useAppSelector } from 'store'
 import { KioskState } from 'store/types'
 
@@ -48,7 +49,6 @@ export default function CheckInPage({
   itemDefinitions,
   users,
 }: Props) {
-  // console.log(categories, itemDefinitions, users)
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   const router = useRouter()
@@ -78,6 +78,13 @@ export default function CheckInPage({
         body: JSON.stringify(inventoryItem),
       }
     )
+    setFormData((formData) => {
+      return {
+        user: formData.user,
+        date: dayjs(new Date()),
+        quantityDelta: 0,
+      } as CheckInOutFormData
+    })
   }
 
   return (
