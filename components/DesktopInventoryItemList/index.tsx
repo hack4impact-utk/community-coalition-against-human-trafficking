@@ -200,14 +200,12 @@ export default function DesktopInventoryItemList(props: Props) {
           return (
             item.name.toLowerCase().includes(search) ||
             (item.attributes &&
-              (item.attributes
-                .map((attr) => String(attr.value).toLowerCase())
+              item.attributes
+                .map((attr) =>
+                  `${attr.attribute.name}: ${attr.value}`.toLowerCase()
+                )
                 .join(' ')
-                .includes(search) ||
-                item.attributes
-                  .map((attr) => attr.attribute.name.toLowerCase())
-                  .join(' ')
-                  .includes(search))) ||
+                .includes(search)) ||
             (item.category && item.category.toLowerCase().includes(search)) ||
             (item.assignee && item.assignee.toLowerCase().includes(search))
           )
