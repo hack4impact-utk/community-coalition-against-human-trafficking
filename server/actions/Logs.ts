@@ -1,15 +1,6 @@
 import LogSchema from 'server/models/Log'
 import * as MongoDriver from 'server/actions/MongoDriver'
-import {
-  InventoryItem,
-  InventoryItemPostRequest,
-  InventoryItemPutRequest,
-} from 'utils/types'
-import { ApiError } from 'utils/types'
-import { apiInventoryItemValidation } from 'utils/apiValidators'
 import { PipelineStage } from 'mongoose'
-import { errors } from 'utils/constants/errors'
-import deepCopy from 'utils/deepCopy'
 
 // aggregate pipeline does the following:
 // looks up user _ids in log
@@ -19,19 +10,6 @@ import deepCopy from 'utils/deepCopy'
 // looks up attribute _ids in itemDefinition
 // looks up attribute _ids in inventoryItem
 const requestPipeline: PipelineStage[] = [
-  {
-    $lookup: {
-      from: 'inventoryItems',
-      localField: 'item',
-      foreignField: '_id',
-      as: 'item',
-    },
-  },
-  {
-    $set: {
-      item: { $arrayElemAt: ['$item', 0] },
-    },
-  },
   {
     $lookup: {
       from: 'itemDefinitions',
