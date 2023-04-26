@@ -16,7 +16,7 @@ export const dialogRoutes: DialogRoute[] = [
   },
   {
     name: 'editAttribute',
-    path: '/settings/attributes/[id]/edit.tsx',
-    component: () => AttributeEditForm,
+    path: '/settings/attributes/:id/edit',
+    component: AttributeEditForm,
   },
 ]

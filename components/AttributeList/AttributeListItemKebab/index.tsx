@@ -3,6 +3,7 @@ import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import DialogLink from 'components/DialogLink'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { dialogPush } from 'utils/dialogLink'
 import theme from 'utils/theme'
 import { AttributeResponse } from 'utils/types'
 
@@ -36,7 +37,9 @@ export default function AttributeListItemKebab({
   const settings: AttributeListItemKebabOption[] = [
     {
       name: 'Edit',
-      onClick: () => console.log('edit button pressed'),
+      onClick: () => {
+        dialogPush(router, `/settings/attributes/${attribute._id}/edit`)
+      },
     },
     {
       name: 'Delete',
@@ -78,6 +81,12 @@ export default function AttributeListItemKebab({
                 key={setting.name}
                 onClick={() => {
                   setting.onClick()
+                  console.log(
+                    dialogPush(
+                      router,
+                      `/settings/attributes/${attribute._id}/edit`
+                    )
+                  )
                   handleCloseKebabMenu()
                 }}
               >
