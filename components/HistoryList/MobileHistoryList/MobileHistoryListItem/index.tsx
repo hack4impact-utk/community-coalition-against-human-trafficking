@@ -19,8 +19,8 @@ export default function MobileHistoryListItem({ log }: Props) {
   const theme = useTheme()
   return (
     <ListItem alignItems="flex-start" divider>
-      <ListItemText
-        primary={
+      <Box>
+        <ListItemText>
           <Typography
             sx={{
               fontWeight: 'bold',
@@ -30,23 +30,21 @@ export default function MobileHistoryListItem({ log }: Props) {
           >
             {log.item.itemDefinition.name}
           </Typography>
-        }
-        secondary={
-          <Box>
-            {renderAttributeChips(log.item.attributes)}
-            <Typography
-              variant="body2"
-              color={
-                log.quantityDelta > 0
-                  ? theme.palette.success.light
-                  : theme.palette.error.light
-              }
-            >
-              {`${log.quantityDelta > 0 ? '+' : ''}${log.quantityDelta}`}
-            </Typography>
-          </Box>
-        }
-      />
+        </ListItemText>
+        <ListItemText>
+          {renderAttributeChips(log.item.attributes)}
+          <Typography
+            variant="body2"
+            color={
+              log.quantityDelta > 0
+                ? theme.palette.success.light
+                : theme.palette.error.light
+            }
+          >
+            {`${log.quantityDelta > 0 ? '+' : ''}${log.quantityDelta}`}
+          </Typography>
+        </ListItemText>
+      </Box>
       <ListItemSecondaryAction sx={{ display: 'flex' }}>
         <Avatar src={log.staff.image} sx={{ mr: 2 }} />
         <HistoryListItemKebab log={log} />
