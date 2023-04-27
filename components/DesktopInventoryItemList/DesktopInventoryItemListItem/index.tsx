@@ -1,10 +1,10 @@
 import WarningIcon from '@mui/icons-material/Warning'
-import { TableRow, TableCell, Chip, Tooltip, Box } from '@mui/material'
+import { TableRow, TableCell, Tooltip, Box } from '@mui/material'
 import theme from 'utils/theme'
-import getContrastYIQ from 'utils/getContrastYIQ'
 import * as React from 'react'
 import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
 import { Data } from '../types'
+import renderAttributeChips from 'utils/renderAttributeChips'
 
 interface InventoryItemListItemProps {
   inventoryItemData: Data
@@ -41,47 +41,6 @@ export default function DesktopInventoryItemListItem({
     }
   }
 
-  const renderAttributeChips = (inventoryItemData: Data) => {
-    return inventoryItemData.attributes?.map((itemAttribute, i) => {
-      // attributes that are strings or numbers show the attribute name
-      // attributes that are list types do not
-
-      if (itemAttribute.attribute.possibleValues instanceof Array) {
-        return (
-          <Chip
-            size="small"
-            label={`${itemAttribute.value}`}
-            key={i}
-            sx={{
-              ml: 1,
-              my: 0.5,
-              backgroundColor: itemAttribute.attribute.color,
-              '& .MuiChip-label': {
-                color: getContrastYIQ(itemAttribute.attribute.color),
-              },
-            }}
-          />
-        )
-      }
-
-      return (
-        <Chip
-          size="small"
-          label={`${itemAttribute.attribute.name}: ${itemAttribute.value}`}
-          key={i}
-          sx={{
-            ml: 1,
-            my: 0.5,
-            backgroundColor: itemAttribute.attribute.color,
-            '& .MuiChip-label': {
-              color: getContrastYIQ(itemAttribute.attribute.color),
-            },
-          }}
-        />
-      )
-    })
-  }
-
   return (
     <TableRow>
       <TableCell
@@ -100,7 +59,7 @@ export default function DesktopInventoryItemListItem({
           gap: '0.25rem',
         }}
       >
-        {renderAttributeChips(inventoryItemData)}
+        {renderAttributeChips(inventoryItemData.attributes)}
       </TableCell>
       <TableCell
         sx={{
