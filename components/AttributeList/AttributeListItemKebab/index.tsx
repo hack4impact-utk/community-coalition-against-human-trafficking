@@ -14,10 +14,14 @@ interface AttributeListItemKebabOption {
 
 interface AttributeListItemKebabProps {
   attribute: AttributeResponse
+  setSelectedAttribute: (attribute: AttributeResponse) => void
+  setDialogOpen: (bool: boolean) => void
 }
 
 export default function AttributeListItemKebab({
   attribute,
+  setSelectedAttribute,
+  setDialogOpen,
 }: AttributeListItemKebabProps) {
   const router = useRouter()
   // kebab menu functionality
@@ -38,7 +42,9 @@ export default function AttributeListItemKebab({
     {
       name: 'Edit',
       onClick: () => {
-        dialogPush(router, `/settings/attributes/${attribute._id}/edit`)
+        setSelectedAttribute(attribute)
+        setDialogOpen(true)
+        //dialogPush(router, `/settings/attributes/${attribute._id}/edit`)
       },
     },
     {

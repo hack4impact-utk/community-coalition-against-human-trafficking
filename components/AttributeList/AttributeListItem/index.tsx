@@ -5,10 +5,14 @@ import AttributeListItemKebab from '../AttributeListItemKebab'
 
 interface AttributeListItemProps {
   attribute: AttributeResponse
+  setSelectedAttribute: (attribute: AttributeResponse) => void
+  setDialogOpen: (bool: boolean) => void
 }
 
 export default function AttributeListItem({
   attribute,
+  setSelectedAttribute,
+  setDialogOpen,
 }: AttributeListItemProps) {
   return (
     <TableRow>
@@ -22,7 +26,8 @@ export default function AttributeListItem({
                 key={`${possibleValue}-${index}`}
               />
             ))
-          : attribute.possibleValues.charAt(0).toUpperCase() + attribute.possibleValues.slice(1)}
+          : attribute.possibleValues.charAt(0).toUpperCase() +
+            attribute.possibleValues.slice(1)}
       </TableCell>
       <TableCell>
         <CircleIcon sx={{ color: attribute.color }} />
@@ -31,6 +36,8 @@ export default function AttributeListItem({
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
           <AttributeListItemKebab
             attribute={attribute}
+            setSelectedAttribute={setSelectedAttribute}
+            setDialogOpen={setDialogOpen}
           />
         </Box>
       </TableCell>

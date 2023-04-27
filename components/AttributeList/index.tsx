@@ -155,6 +155,8 @@ function AttributeListHeader({
 interface AttributeListProps {
   attributes: AttributeResponse[]
   search: string
+  setSelectedAttribute: (attribute: AttributeResponse) => void
+  setDialogOpen: (bool: boolean) => void
 }
 
 const DEFAULT_ROWS_PER_PAGE = 5
@@ -164,6 +166,8 @@ const DEFAULT_ORDER = 'asc'
 export default function AttributeList({
   attributes,
   search,
+  setSelectedAttribute,
+  setDialogOpen,
 }: AttributeListProps) {
   const [order, setOrder] = useState<Order>(DEFAULT_ORDER)
   const [orderBy, setOrderBy] =
@@ -277,7 +281,12 @@ export default function AttributeList({
           <TableBody>
             {visibleRows &&
               visibleRows.map((item) => (
-                <AttributeListItem attribute={item} key={item._id} />
+                <AttributeListItem
+                  attribute={item}
+                  key={item._id}
+                  setSelectedAttribute={setSelectedAttribute}
+                  setDialogOpen={setDialogOpen}
+                />
               ))}
           </TableBody>
         </Table>
