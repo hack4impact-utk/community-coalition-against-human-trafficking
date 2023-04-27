@@ -9,6 +9,7 @@ import {
 } from '@mui/material'
 import HistoryListItemKebab from 'components/HistoryList/HistoryListItemKebab'
 import renderAttributeChips from 'utils/renderAttributeChips'
+import { DateToReadableDateString } from 'utils/transformations'
 import { LogResponse } from 'utils/types'
 
 interface Props {
@@ -20,28 +21,36 @@ export default function MobileHistoryListItem({ log }: Props) {
   return (
     <ListItem alignItems="flex-start" divider>
       <Box>
-        <ListItemText>
-          <Typography
-            sx={{
-              fontWeight: 'bold',
-            }}
-            component="span"
-            variant="body1"
+        <ListItemText sx={{ mb: -0.5 }}>
+          <Box
+            sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
           >
-            {log.item.itemDefinition.name}
-          </Typography>
+            <Typography
+              sx={{
+                fontWeight: 'bold',
+              }}
+              component="span"
+              variant="body1"
+            >
+              {log.item.itemDefinition.name}
+            </Typography>
+            <Typography
+              variant="body2"
+              color={
+                log.quantityDelta > 0
+                  ? theme.palette.success.light
+                  : theme.palette.error.light
+              }
+              ml={1}
+            >
+              {`${log.quantityDelta > 0 ? '+' : ''}${log.quantityDelta}`}
+            </Typography>
+          </Box>
         </ListItemText>
         <ListItemText>
           {renderAttributeChips(log.item.attributes)}
-          <Typography
-            variant="body2"
-            color={
-              log.quantityDelta > 0
-                ? theme.palette.success.light
-                : theme.palette.error.light
-            }
-          >
-            {`${log.quantityDelta > 0 ? '+' : ''}${log.quantityDelta}`}
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+            {DateToReadableDateString(log.date)}
           </Typography>
         </ListItemText>
       </Box>
