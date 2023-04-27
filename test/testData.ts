@@ -14,6 +14,9 @@ import {
   InventoryItemPostRequest,
   InventoryItemPutRequest,
   InventoryItemResponse,
+  LogPostRequest,
+  LogPutRequest,
+  LogResponse,
 } from 'utils/types'
 
 export const mockObjectId = '6408a7156668c5655c25b105'
@@ -123,5 +126,27 @@ export const validInventoryItemResponse: InventoryItemResponse[] = [
       },
     ],
     assignee: validUserResponse[0],
+  },
+]
+
+export const validLogPostRequest: LogPostRequest = {
+  staff: validUserResponse[0]._id,
+  item: validInventoryItemResponse[0]._id,
+  quantityDelta: 1,
+  date: new Date(),
+}
+
+export const validLogPutRequest: LogPutRequest = {
+  ...validLogPostRequest,
+  _id: mockObjectId,
+}
+
+export const validLogResponse: LogResponse[] = [
+  {
+    _id: mockObjectId,
+    item: validInventoryItemResponse[0],
+    quantityDelta: 1,
+    staff: validUserResponse[0],
+    date: new Date(),
   },
 ]
