@@ -39,6 +39,11 @@ export default function AttributeListItemKebab({
       name: 'Edit',
       onClick: () => {
         dialogPush(router, `/settings/attributes/${attribute._id}/edit`)
+        // router.push(
+        //   `?showDialog=true&attributeId=${attribute._id}`,
+        //   undefined,
+        //   { shallow: true }
+        // )
       },
     },
     {

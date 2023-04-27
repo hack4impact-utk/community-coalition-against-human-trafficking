@@ -1,5 +1,5 @@
-import { NextRouter } from "next/router"
-import { DialogRoute, dialogRoutes } from "./constants"
+import { NextRouter } from 'next/router'
+import { DialogRoute, dialogRoutes } from './constants'
 
 interface MatchResult {
   success: boolean
@@ -34,13 +34,18 @@ const matchParams = (href: string, definedHref: string): MatchResult => {
   return mr
 }
 
-const constructDialogRoute = (dialogRoute?: DialogRoute, params: { [key: string]: string }) => {
+const constructDialogRoute = (
+  dialogRoute?: DialogRoute,
+  params: { [key: string]: string }
+) => {
   if (!dialogRoute) return ''
-  return `?dialog=${dialogRoute.name}&${Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&')}`
+  return `?showDialog=true&${Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&')}`
 }
 
 export const dialogPush = (router: NextRouter, href: string) => {
-  let mr: MatchResult = {success: false, params: {}};
+  let mr: MatchResult = { success: false, params: {} }
   const f = () => {
     const attemptedDr = dialogRoutes.find((dr) => dr.path === href)
 
@@ -53,7 +58,7 @@ export const dialogPush = (router: NextRouter, href: string) => {
         }
       }
     }
-    return attemptedDr;
+    return attemptedDr
   }
   const dr = f()
 
@@ -62,5 +67,4 @@ export const dialogPush = (router: NextRouter, href: string) => {
   router.push(`${actualRoute}`)
 
   // window.history.pushState({}, '', `${window.location.pathname}${actualRoute}`)
-
 }

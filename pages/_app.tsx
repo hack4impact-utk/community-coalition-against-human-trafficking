@@ -10,6 +10,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { useRouter } from 'next/router'
 import { dialogRoutes } from 'utils/constants'
 import { Dialog } from '@mui/material'
+import dynamic from 'next/dynamic'
 
 export default function App({
   Component,
@@ -17,9 +18,7 @@ export default function App({
 }: AppProps) {
   const { store } = wrapper.useWrappedStore(pageProps)
   const router = useRouter()
-  const dialog = router.query.dialog
-  const dialogRoute = dialogRoutes.find((dr) => dr.name === dialog)
-  console.log(dialogRoute)
+
   return (
     <>
       <Provider store={store}>
@@ -31,14 +30,6 @@ export default function App({
                 <DefaultLayout>
                   <Component {...pageProps} />
                 </DefaultLayout>
-                <Dialog
-                  open={!!dialogRoute}
-                  onClose={() => {
-                    router.back()
-                  }}
-                >
-                  {dialogRoute?.component()}
-                </Dialog>
               </>
               <style jsx global>{`
                 html,
