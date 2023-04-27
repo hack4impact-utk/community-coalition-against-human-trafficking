@@ -52,7 +52,7 @@ interface Props {
   backHref?: string
 }
 
-export default function NewItemPage({backHref}: Props) {
+export default function NewItemPage({ backHref }: Props) {
   const router = useRouter()
 
   const redirectBack = (queryStr?: string) => {
@@ -60,7 +60,6 @@ export default function NewItemPage({backHref}: Props) {
       router.push(`${backHref}${queryStr}`)
     } else {
       router.reload()
-
     }
   }
 
@@ -77,7 +76,7 @@ export default function NewItemPage({backHref}: Props) {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => redirectBack()} color="inherit">
+        <Button onClick={() => redirectBack('')} color="inherit">
           Close
         </Button>
         <Button
