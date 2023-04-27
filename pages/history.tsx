@@ -395,7 +395,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
                         position: 'absolute',
                         top: '.5rem',
                         margin: 'auto',
-                        right: '2rem',
+                        right: !isMobileView ? '2rem' : '0.5rem',
                       }}
                       onClick={() => removeURLQueryParam(router, 'startDate')}
                     >
@@ -439,7 +439,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
                         position: 'absolute',
                         top: '.5rem',
                         margin: 'auto',
-                        right: '2rem',
+                        right: !isMobileView ? '2rem' : '0.5rem',
                       }}
                       onClick={() => removeURLQueryParam(router, 'endDate')}
                     >
