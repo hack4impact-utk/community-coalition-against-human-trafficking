@@ -12,6 +12,7 @@ import { visuallyHidden } from '@mui/utils'
 import { CategoryResponse, LogResponse } from 'utils/types'
 import HistoryListItem from './DesktopHistoryListItem'
 import deepCopy from 'utils/deepCopy'
+import { DateToReadableDateString } from 'utils/transformations'
 
 type Order = 'asc' | 'desc'
 
@@ -195,15 +196,6 @@ export default function DesktopHistoryList(props: Props) {
   )
   const [tableData, setTableData] = React.useState<LogResponse[]>([])
 
-  const dateOptions: Intl.DateTimeFormatOptions = {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: 'numeric',
-    hour12: true,
-  }
-
   React.useEffect(() => {
     let newTableData: LogResponse[] = deepCopy(props.logs)
     if (props.search) {
@@ -225,11 +217,7 @@ export default function DesktopHistoryList(props: Props) {
                 .toLowerCase()
                 .includes(search)) ||
             log.quantityDelta.toString().toLowerCase().includes(search) ||
-            log.date
-              .toLocaleString('en-US', dateOptions)
-              .replace(' at', '')
-              .toLowerCase()
-              .includes(search)
+            DateToReadableDateString(log.date).toLowerCase().includes(search)
           )
         }),
       ]

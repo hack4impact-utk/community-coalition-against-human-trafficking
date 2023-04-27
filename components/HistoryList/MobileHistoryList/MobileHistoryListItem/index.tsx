@@ -9,6 +9,7 @@ import {
 } from '@mui/material'
 import HistoryListItemKebab from 'components/HistoryList/HistoryListItemKebab'
 import renderAttributeChips from 'utils/renderAttributeChips'
+import { DateToReadableDateString } from 'utils/transformations'
 import { LogResponse } from 'utils/types'
 
 interface Props {
@@ -19,21 +20,20 @@ export default function MobileHistoryListItem({ log }: Props) {
   const theme = useTheme()
   return (
     <ListItem alignItems="flex-start" divider>
-      <ListItemText
-        primary={
-          <Typography
-            sx={{
-              fontWeight: 'bold',
-            }}
-            component="span"
-            variant="body1"
+      <Box>
+        <ListItemText sx={{ mb: -0.5 }}>
+          <Box
+            sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
           >
-            {log.item.itemDefinition.name}
-          </Typography>
-        }
-        secondary={
-          <Box>
-            {renderAttributeChips(log.item.attributes)}
+            <Typography
+              sx={{
+                fontWeight: 'bold',
+              }}
+              component="span"
+              variant="body1"
+            >
+              {log.item.itemDefinition.name}
+            </Typography>
             <Typography
               variant="body2"
               color={
@@ -41,12 +41,19 @@ export default function MobileHistoryListItem({ log }: Props) {
                   ? theme.palette.success.light
                   : theme.palette.error.light
               }
+              ml={1}
             >
               {`${log.quantityDelta > 0 ? '+' : ''}${log.quantityDelta}`}
             </Typography>
           </Box>
-        }
-      />
+        </ListItemText>
+        <ListItemText>
+          {renderAttributeChips(log.item.attributes)}
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+            {DateToReadableDateString(log.date)}
+          </Typography>
+        </ListItemText>
+      </Box>
       <ListItemSecondaryAction sx={{ display: 'flex' }}>
         <Avatar src={log.staff.image} sx={{ mr: 2 }} />
         <HistoryListItemKebab log={log} />
