@@ -1,5 +1,5 @@
-import { Search } from '@mui/icons-material'
-import { InputAdornment, OutlinedInput } from '@mui/material'
+import { Close, Search } from '@mui/icons-material'
+import { IconButton, InputAdornment, OutlinedInput } from '@mui/material'
 import React from 'react'
 import {
   addURLQueryParam,
@@ -31,12 +31,22 @@ export default function SearchField() {
       placeholder="Search"
       fullWidth
       endAdornment={
+        <>
+        { search &&
+          <InputAdornment position='end'>
+            <IconButton size='small' sx={{ p: 0 }} onClick={() => onChange("")}>
+              <Close fontSize='small' />
+            </IconButton>
+          </InputAdornment>
+        }
         <InputAdornment position="end">
           <Search />
         </InputAdornment>
+        </>
       }
       onChange={(e) => onChange(e.target.value)}
       value={search}
+      
     ></OutlinedInput>
   )
 }
