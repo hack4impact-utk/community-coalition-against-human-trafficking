@@ -72,8 +72,8 @@ export default function AttributeEditForm() {
             ? attributeFormData.listOptions
             : attributeFormData.valueType,
       }),
-      // router.back(), uncomment when done testing
     })
+    router.push('/settings/attributes')
   }
   return (
     <>
