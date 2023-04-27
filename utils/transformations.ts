@@ -1,4 +1,4 @@
-import { AttributeFormData } from 'components/AttributeForm'
+import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
   AttributeRequest,
   CheckInOutFormData,
