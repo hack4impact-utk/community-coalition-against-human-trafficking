@@ -1,5 +1,5 @@
 import { AttributeResponse, ItemDefinitionResponse } from 'utils/types'
-import { Chip, Stack, TableCell, TableRow } from '@mui/material'
+import { Chip, Stack, TableCell, TableRow, Typography } from '@mui/material'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import ItemDefinitionListItemKebab from 'components/ItemDefinitionList/ItemDefinitionListItemKebab'
 
@@ -35,9 +35,9 @@ export default function ItemDefinitionListItem({ itemDefinition }: Props) {
       <TableCell>{itemDefinition.category?.name}</TableCell>
       <TableCell>{itemDefinition.internal ? 'Staff' : 'Client'}</TableCell>
       <TableCell>
-        <Stack direction="column" spacing={1}>
-          {itemDefinition.lowStockThreshold}
-          {itemDefinition.criticalStockThreshold}
+        <Stack direction="column">
+          <Typography variant='body1'>{itemDefinition.lowStockThreshold}</Typography>
+          <Typography variant='body1'>{itemDefinition.criticalStockThreshold}</Typography>
         </Stack>
       </TableCell>
       <TableCell>
