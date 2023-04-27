@@ -54,7 +54,7 @@ const renderInternalCheckbox = (router: NextRouter, isMobileView: boolean) => {
           if (checked) updateQuery(router, 'internal', 'true')
           else updateQuery(router, 'internal', undefined)
         }}
-        value={router.query.internal}
+        checked={router.query.internal === 'true' ? true : false}
       />
       <Typography>Internal only</Typography>
     </Grid2>
@@ -121,16 +121,34 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
             <DatePicker
               label="Start Date"
               renderInput={(params) => (
-                <Box style={{ position: "relative", display: "inline-block", width: '100%' }} >
-                  <TextField {...params} label="Start Date" variant='outlined' fullWidth />
-                  {router.query.startDate &&
-                    <IconButton style={{ position: "absolute", top: ".5rem", margin: "auto", right: "2rem" }} onClick={() => removeURLQueryParam(router, "startDate")}>
+                <Box
+                  style={{
+                    position: 'relative',
+                    display: 'inline-block',
+                    width: '100%',
+                  }}
+                >
+                  <TextField
+                    {...params}
+                    label="Start Date"
+                    variant="outlined"
+                    fullWidth
+                  />
+                  {router.query.startDate && (
+                    <IconButton
+                      style={{
+                        position: 'absolute',
+                        top: '.5rem',
+                        margin: 'auto',
+                        right: '2rem',
+                      }}
+                      onClick={() => removeURLQueryParam(router, 'startDate')}
+                    >
                       <Clear />
                     </IconButton>
-                  }
+                  )}
                 </Box>
-              )
-              }
+              )}
               onChange={(date) => {
                 const startDate = new Date(date as string)
                 updateQuery(
@@ -147,16 +165,34 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
             <DatePicker
               label="End Date"
               renderInput={(params) => (
-                <Box style={{ position: "relative", display: "inline-block", width: '100%' }} >
-                  <TextField {...params} label="End Date" variant='outlined' fullWidth />
-                  {router.query.endDate &&
-                    <IconButton style={{ position: "absolute", top: ".5rem", margin: "auto", right: "2rem" }} onClick={() => removeURLQueryParam(router, "endDate")}>
+                <Box
+                  style={{
+                    position: 'relative',
+                    display: 'inline-block',
+                    width: '100%',
+                  }}
+                >
+                  <TextField
+                    {...params}
+                    label="End Date"
+                    variant="outlined"
+                    fullWidth
+                  />
+                  {router.query.endDate && (
+                    <IconButton
+                      style={{
+                        position: 'absolute',
+                        top: '.5rem',
+                        margin: 'auto',
+                        right: '2rem',
+                      }}
+                      onClick={() => removeURLQueryParam(router, 'endDate')}
+                    >
                       <Clear />
                     </IconButton>
-                  }
+                  )}
                 </Box>
-              )
-              }
+              )}
               onChange={(date) => {
                 const endDate = new Date(date as string)
                 updateQuery(
