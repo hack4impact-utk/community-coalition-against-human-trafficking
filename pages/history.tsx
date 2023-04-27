@@ -23,10 +23,14 @@ import SearchAutocomplete from 'components/SearchAutocomplete'
 import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
 import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
+import LogsHandler from '@api/logs'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
-    props: { categories: await apiWrapper(categoriesHandler, context) },
+    props: {
+      categories: await apiWrapper(categoriesHandler, context),
+      logs: await apiWrapper(LogsHandler, context),
+    },
   }
 }
 
@@ -460,21 +464,21 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
       </Grid2>
       {isMobileView ? (
         <MobileHistoryList
-          logs={testData}
-          search={''}
-          category={''}
-          endDate={new Date()}
-          startDate={new Date()}
-          internal={false}
+          logs={logs}
+          search={router.query.search as string}
+          category={router.query.categroy as string}
+          endDate={new Date(router.query.endDate as string)}
+          startDate={new Date(router.query.startDate as string)}
+          internal={!!router.query.internal}
         />
       ) : (
         <DesktopHistoryList
-          logs={testData}
-          search={''}
-          category={''}
-          endDate={new Date()}
-          startDate={new Date()}
-          internal={false}
+          logs={logs}
+          search={router.query.search as string}
+          category={router.query.categroy as string}
+          endDate={new Date(router.query.endDate as string)}
+          startDate={new Date(router.query.startDate as string)}
+          internal={!!router.query.internal}
         />
       )}
     </Grid2>

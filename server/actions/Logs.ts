@@ -123,6 +123,19 @@ const requestPipeline: PipelineStage[] = [
       item: { $arrayElemAt: ['$item', 0] },
     },
   },
+  {
+    $lookup: {
+      from: 'users',
+      localField: 'staff',
+      foreignField: '_id',
+      as: 'staff',
+    },
+  },
+  {
+    $set: {
+      staff: { $arrayElemAt: ['$staff', 0] },
+    },
+  },
 ]
 
 /**
