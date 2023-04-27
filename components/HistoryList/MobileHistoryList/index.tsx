@@ -3,6 +3,7 @@ import React from 'react'
 import deepCopy from 'utils/deepCopy'
 import { LogResponse } from 'utils/types'
 import MobileHistoryListItem from 'components/HistoryList/MobileHistoryList/MobileHistoryListItem'
+import { DateToReadableDateString } from 'utils/transformations'
 
 interface Props {
   logs: LogResponse[]
@@ -11,15 +12,6 @@ interface Props {
   endDate: Date
   startDate: Date
   internal: boolean
-}
-
-const dateOptions: Intl.DateTimeFormatOptions = {
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-  hour: 'numeric',
-  minute: 'numeric',
-  hour12: true,
 }
 
 export default function MobileHistoryList(props: Props) {
@@ -47,11 +39,7 @@ export default function MobileHistoryList(props: Props) {
                 .toLowerCase()
                 .includes(search)) ||
             log.quantityDelta.toString().toLowerCase().includes(search) ||
-            log.date
-              .toLocaleString('en-US', dateOptions)
-              .replace(' at', '')
-              .toLowerCase()
-              .includes(search)
+            DateToReadableDateString(log.date).toLowerCase().includes(search)
           )
         }),
       ]
