@@ -55,6 +55,7 @@ export default function AttributeAutocomplete({
   return (
     <Autocomplete
       multiple
+      disableCloseOnSelect
       options={options}
       groupBy={(option) => option.label}
       getOptionLabel={(option) => option.value}
