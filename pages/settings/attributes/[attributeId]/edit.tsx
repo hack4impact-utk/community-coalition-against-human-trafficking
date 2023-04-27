@@ -1,36 +1,12 @@
-import attributeHandler from '@api/attributes/[attributeId]'
 import {
-  Button,
-  DialogActions,
   DialogContent,
   DialogTitle,
 } from '@mui/material'
 import AttributeForm, { AttributeFormData } from 'components/AttributeForm'
-import { GetServerSidePropsContext } from 'next'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useEffect, useState } from 'react'
-import { apiWrapper } from 'utils/apiWrappers'
-import { DialogProps } from 'utils/constants'
 import { AttributeResponse } from 'utils/types'
-
-interface Props {
-  attribute: AttributeResponse
-}
-
-const getAttribute = async (): Promise<AttributeResponse> => {
-  const params = new URLSearchParams(document.location.search)
-  const id = params.get('id')
-  const response = await fetch(`/api/attributes/${id}`, { method: 'GET' })
-  const data = await response.json()
-  return data.payload
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return {
-    props: { attribute: await apiWrapper(attributeHandler, context) },
-  }
-}
 
 export default function AttributeEditForm() {
   // you have to do this to otherwise the AttributeForm says that
@@ -50,12 +26,6 @@ export default function AttributeEditForm() {
     fetchAttribute()
   }, [id])
 
-  // React.useEffect(() => {
-  //   getAttribute().then((data) => {
-  //     setDialogState({ ...dialogState, attribute: data })
-  //   })
-  // }, [])
-
   const handleSubmit = async (
     e: React.SyntheticEvent,
     attributeFormData: AttributeFormData
@@ -73,7 +43,8 @@ export default function AttributeEditForm() {
             : attributeFormData.valueType,
       }),
     })
-    router.push('/settings/attributes')
+    await router.push('/settings/attributes')
+    router.reload()
   }
   return (
     <>
