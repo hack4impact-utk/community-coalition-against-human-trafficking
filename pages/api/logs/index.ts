@@ -25,16 +25,17 @@ export default async function LogsHandler(
           payload: logs,
         })
       }
-      case 'POST': {
-        apiLogValidation(req.body)
-        const log: LogRequest = req.body
-        const response = await MongoDriver.createEntity(LogSchema, log)
+      // there is an issue with this, it will be resolved in CCHAT-145
+      // case 'POST': {
+      //   apiLogValidation(req.body)
+      //   const log: LogRequest = req.body
+      //   const response = await MongoDriver.createEntity(LogSchema, log)
 
-        return res.status(201).json({
-          success: true,
-          payload: response._id,
-        })
-      }
+      //   return res.status(201).json({
+      //     success: true,
+      //     payload: response._id,
+      //   })
+      // }
       default: {
         throw new ApiError(405, 'Method Not Allowed')
       }
