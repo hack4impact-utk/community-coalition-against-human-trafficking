@@ -14,6 +14,18 @@ interface Props {
   internal: boolean
 }
 
+function dateComparator(v1: Date, v2: Date) {
+  if (v1 < v2) {
+    return -1
+  }
+
+  if (v1 > v2) {
+    return 1
+  }
+
+  return 0
+}
+
 export default function MobileHistoryList(props: Props) {
   const [filteredData, setFilteredData] = React.useState<LogResponse[]>(
     [] as LogResponse[]
@@ -52,6 +64,12 @@ export default function MobileHistoryList(props: Props) {
         }),
       ]
     }
+
+    // sort table by date
+    newTableData.sort((log1: LogResponse, log2: LogResponse) =>
+      dateComparator(log2.date, log1.date)
+    )
+
     setFilteredData(newTableData)
   }, [props.search, props.category])
   return (
