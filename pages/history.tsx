@@ -466,8 +466,8 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
           logs={logs}
           search={router.query.search as string}
           category={router.query.category as string}
-          endDate={new Date(router.query.endDate as string)}
-          startDate={new Date(router.query.startDate as string)}
+          endDate={router.query.endDate as string}
+          startDate={router.query.startDate as string}
           internal={!!router.query.internal}
         />
       ) : (

@@ -198,6 +198,13 @@ export default function DesktopHistoryList(props: Props) {
 
   React.useEffect(() => {
     let newTableData: LogResponse[] = deepCopy(props.logs)
+
+    if (props.internal) {
+      newTableData = newTableData.filter(
+        (log) => log.item.itemDefinition.internal
+      )
+    }
+
     if (props.search) {
       const search = props.search.toLowerCase()
       newTableData = [
@@ -225,11 +232,8 @@ export default function DesktopHistoryList(props: Props) {
 
     if (props.startDate || props.endDate) {
       // if props.startDate or props.endDate are not present, use an arbitrarily far-away date
-      console.log(props.startDate)
       const startDate = new Date(props.startDate ?? '1000-01-01').getTime()
       const endDate = new Date(props.endDate ?? '9999-01-01').getTime()
-      console.log(startDate)
-      console.log(endDate)
       newTableData = [
         ...newTableData.filter((log) => {
           return (

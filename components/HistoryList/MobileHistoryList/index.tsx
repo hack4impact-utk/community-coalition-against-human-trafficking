@@ -9,8 +9,8 @@ interface Props {
   logs: LogResponse[]
   search: string
   category: string
-  endDate: Date
-  startDate: Date
+  endDate: string
+  startDate: string
   internal: boolean
 }
 
@@ -32,6 +32,13 @@ export default function MobileHistoryList(props: Props) {
   )
   React.useEffect(() => {
     let newTableData: LogResponse[] = deepCopy(props.logs)
+
+    if (props.internal) {
+      newTableData = newTableData.filter(
+        (log) => log.item.itemDefinition.internal
+      )
+    }
+
     if (props.search) {
       const search = props.search.toLowerCase()
       newTableData = [
@@ -57,6 +64,20 @@ export default function MobileHistoryList(props: Props) {
       ]
     }
 
+    if (props.startDate || props.endDate) {
+      // if props.startDate or props.endDate are not present, use an arbitrarily far-away date
+      const startDate = new Date(props.startDate ?? '1000-01-01').getTime()
+      const endDate = new Date(props.endDate ?? '9999-01-01').getTime()
+      newTableData = [
+        ...newTableData.filter((log) => {
+          return (
+            new Date(log.date).getTime() >= startDate &&
+            new Date(log.date).getTime() <= endDate
+          )
+        }),
+      ]
+    }
+
     if (props.category) {
       newTableData = [
         ...newTableData.filter((log) => {
@@ -71,7 +92,13 @@ export default function MobileHistoryList(props: Props) {
     )
 
     setFilteredData(newTableData)
-  }, [props.search, props.category])
+  }, [
+    props.search,
+    props.category,
+    props.startDate,
+    props.endDate,
+    props.internal,
+  ])
   return (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {filteredData.map((log) => (
