@@ -13,6 +13,7 @@ import {
 import {
   CategoryResponse,
   CheckInOutFormData,
+  CheckInOutRequest,
   InventoryItemRequest,
   ItemDefinitionResponse,
   LogRequest,
@@ -20,7 +21,7 @@ import {
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import React from 'react'
-import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
 import { apiWrapper } from 'utils/apiWrappers'
 import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
@@ -65,43 +66,23 @@ export default function CheckInPage({
   )
 
   const onSubmit = async (formData: CheckInOutFormData) => {
-    const inventoryItem: Partial<InventoryItemRequest> =
-      CheckInOutFormDataToInventoryItemRequest(formData)
+    const checkInOutRequest: CheckInOutRequest =
+      checkInOutFormDataToCheckInOutRequest(formData)
 
     // TODO better way of coding URLs
-    const response = await fetch(
-      `http://localhost:3000/api/inventoryItems/checkIn?quantity=${formData.quantityDelta}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(inventoryItem),
-      }
-    )
+    await fetch(`http://localhost:3000/api/inventoryItems/checkIn`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(checkInOutRequest),
+    })
     setFormData((formData) => {
       return {
         user: formData.user,
         date: dayjs(new Date()),
         quantityDelta: 0,
       } as CheckInOutFormData
-    })
-
-    const inventoryItemId = await response.json()
-    const log: LogRequest = {
-      staff: formData.user._id,
-      item: inventoryItemId.payload,
-      quantityDelta: formData.quantityDelta,
-      date: formData.date.toDate(),
-    }
-
-    // TODO better way of coding URLs
-    await fetch(`http://localhost:3000/api/logs`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(log),
     })
   }
 

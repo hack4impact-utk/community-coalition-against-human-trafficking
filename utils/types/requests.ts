@@ -62,6 +62,13 @@ export interface LogPutRequest extends LogRequest {
   _id: string
 }
 
+export interface CheckInOutRequest {
+  quantityDelta: number
+  date: Date
+  staff: string
+  inventoryItem: Partial<InventoryItemRequest>
+}
+
 export type ServerPostRequest =
   | UserPostRequest
   | ItemDefinitionPostRequest

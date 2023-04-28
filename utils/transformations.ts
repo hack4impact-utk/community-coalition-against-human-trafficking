@@ -1,23 +1,23 @@
 import {
   CheckInOutFormData,
+  CheckInOutRequest,
   InventoryItemAttributeRequest,
-  InventoryItemRequest,
 } from 'utils/types'
 
 /**
- * Converts a `CheckInOutFormData` object into a `Partial<InventoryItemRequest>` object
+ * Converts a `CheckInOutFormData` object into a `CheckInOutRequest` object
  * @param formData The form data to convert
- * @returns A new `Partial<InventoryItemRequest>` object.
+ * @returns A new `CheckInOutRequest` object.
  */
-export function CheckInOutFormDataToInventoryItemRequest(
+export function checkInOutFormDataToCheckInOutRequest(
   formData: CheckInOutFormData
-): Partial<InventoryItemRequest> {
-  const transformedData = {
+): CheckInOutRequest {
+  const partialInventoryItem = {
     itemDefinition: formData.itemDefinition._id,
     attributes: [] as InventoryItemAttributeRequest[],
   }
   if (formData.attributes) {
-    transformedData.attributes = [
+    partialInventoryItem.attributes = [
       ...formData.attributes.map(
         (attributeOption): InventoryItemAttributeRequest => {
           return {
@@ -30,8 +30,8 @@ export function CheckInOutFormDataToInventoryItemRequest(
   }
 
   if (formData.textFieldAttributes) {
-    transformedData.attributes = [
-      ...transformedData.attributes,
+    partialInventoryItem.attributes = [
+      ...partialInventoryItem.attributes,
       ...Object.keys(formData.textFieldAttributes).reduce(
         (acc, attributeId) => {
           const attribute: InventoryItemAttributeRequest = {
@@ -46,7 +46,14 @@ export function CheckInOutFormDataToInventoryItemRequest(
     ]
   }
 
-  return transformedData
+  const retVal: CheckInOutRequest = {
+    staff: formData.user._id,
+    quantityDelta: formData.quantityDelta,
+    date: formData.date.toDate(),
+    inventoryItem: partialInventoryItem,
+  }
+
+  return retVal
 }
 
 /**
@@ -55,7 +62,7 @@ export function CheckInOutFormDataToInventoryItemRequest(
  * @param date The date to convert
  * @returns A human-readable date string
  */
-export function DateToReadableDateString(date: Date) {
+export function dateToReadableDateString(date: Date) {
   const dateOptions: Intl.DateTimeFormatOptions = {
     month: 'long',
     day: 'numeric',
