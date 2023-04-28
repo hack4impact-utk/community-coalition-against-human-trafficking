@@ -4,7 +4,6 @@ import {
   Button,
   Unstable_Grid2 as Grid2,
   useMediaQuery,
-  Autocomplete,
   TextField,
   Checkbox,
   useTheme,
@@ -466,7 +465,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
         <MobileHistoryList
           logs={logs}
           search={router.query.search as string}
-          category={router.query.categroy as string}
+          category={router.query.category as string}
           endDate={new Date(router.query.endDate as string)}
           startDate={new Date(router.query.startDate as string)}
           internal={!!router.query.internal}
@@ -475,9 +474,9 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
         <DesktopHistoryList
           logs={logs}
           search={router.query.search as string}
-          category={router.query.categroy as string}
-          endDate={new Date(router.query.endDate as string)}
-          startDate={new Date(router.query.startDate as string)}
+          category={router.query.category as string}
+          endDate={router.query.endDate as string}
+          startDate={router.query.startDate as string}
           internal={!!router.query.internal}
         />
       )}

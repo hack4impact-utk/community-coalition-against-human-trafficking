@@ -176,8 +176,8 @@ interface Props {
   logs: LogResponse[]
   search: string
   category: string
-  endDate: Date
-  startDate: Date
+  endDate: string
+  startDate: string
   internal: boolean
 }
 
@@ -223,19 +223,40 @@ export default function DesktopHistoryList(props: Props) {
       ]
     }
 
-    if (props.category) {
+    if (props.startDate || props.endDate) {
+      // if props.startDate or props.endDate are not present, use an arbitrarily far-away date
+      console.log(props.startDate)
+      const startDate = new Date(props.startDate ?? '1000-01-01').getTime()
+      const endDate = new Date(props.endDate ?? '9999-01-01').getTime()
+      console.log(startDate)
+      console.log(endDate)
       newTableData = [
         ...newTableData.filter((log) => {
-          return log.item.itemDefinition.category?.name === props.category
+          return (
+            new Date(log.date).getTime() >= startDate &&
+            new Date(log.date).getTime() <= endDate
+          )
         }),
       ]
+    }
+
+    if (props.category) {
+      newTableData = newTableData.filter((log) => {
+        return log.item.itemDefinition.category?.name === props.category
+      })
     }
     setTableData(newTableData)
     var rowsOnMount = sortTable(newTableData, orderBy, order)
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
     setVisibleRows(rowsOnMount)
-  }, [props.search, props.category])
+  }, [
+    props.search,
+    props.category,
+    props.startDate,
+    props.endDate,
+    props.internal,
+  ])
 
   const handleRequestSort = React.useCallback(
     (_e: React.MouseEvent<unknown>, newOrderBy: keyof HistoryTableData) => {
