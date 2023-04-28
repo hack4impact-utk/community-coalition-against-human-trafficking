@@ -94,7 +94,9 @@ describe('api/logs/[logId]', () => {
 
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
       expect(response.statusCode).toBe(200)
-      expect(data).toEqual(validLogResponse[0])
+      expect({ ...data, date: new Date(data.date) }).toEqual(
+        validLogResponse[0]
+      )
     })
   })
 

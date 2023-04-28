@@ -86,7 +86,9 @@ describe('api/logs', () => {
       expect(serverAuth).toHaveBeenCalledTimes(1)
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
       expect(response.statusCode).toBe(200)
-      expect(data).toEqual(validLogResponse)
+      expect([{ ...data[0], date: new Date(data[0].date) }]).toEqual(
+        validLogResponse
+      )
     })
 
     test('valid call with no data returns 204', async () => {
