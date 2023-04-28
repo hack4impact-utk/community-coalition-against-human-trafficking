@@ -27,7 +27,6 @@ beforeAll(() => {
 // restore mocked implementations and close db connections
 afterAll(() => {
   jest.restoreAllMocks()
-  
 })
 
 describe('api/itemDefinitions/[itemDefinitionId]', () => {
@@ -108,7 +107,12 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        .mockImplementation(async () => {})
+        .mockImplementation(
+          async () =>
+            validItemDefinitionResponse[0] as ItemDefinitionDocument & {
+              _id: ObjectId
+            }
+        )
       const mockApiItemDefinitionValidation = jest
         .spyOn(apiValidator, 'apiItemDefinitionValidation')
         .mockImplementation()
