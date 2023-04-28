@@ -68,7 +68,7 @@ export default function CheckOutPage({
 
     // TODO better way of coding URLs
     const response = await fetch(
-      `http://localhost:3000/api/inventoryItems/checkOut?quantity=${formData.quantityDelta}`,
+      `http://localhost:3000/api/inventoryItems/checkOut`,
       {
         method: 'POST',
         headers: {

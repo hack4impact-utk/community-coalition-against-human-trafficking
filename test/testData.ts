@@ -17,6 +17,7 @@ import {
   LogPostRequest,
   LogPutRequest,
   LogResponse,
+  CheckInOutRequest,
 } from 'utils/types'
 
 export const mockObjectId = '6408a7156668c5655c25b105'
@@ -150,3 +151,10 @@ export const validLogResponse: LogResponse[] = [
     date: new Date(),
   },
 ]
+
+export const validCheckInOutRequest: CheckInOutRequest = {
+  quantityDelta: 1,
+  date: new Date(),
+  staff: mockObjectId,
+  inventoryItem: validInventoryItemPostRequest,
+}
