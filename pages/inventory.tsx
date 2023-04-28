@@ -51,7 +51,7 @@ export default function InventoryPage({ inventoryItems, categories }: Props) {
           />
         </Grid2>
 
-        <Grid2 xs={12} sx={{ px: isMobileView ? 0 : 2 }}>
+        <Grid2 xs={12}>
           <InventoryItemList
             inventoryItems={inventoryItems}
             search={router.query.search as string}

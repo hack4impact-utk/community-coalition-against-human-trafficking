@@ -10,7 +10,7 @@ import { validCategoryResponse, mockObjectId } from 'test/testData'
 afterAll(() => {
   jest.restoreAllMocks()
   mongoose.connection.close()
-  clientPromise.then((client) => client.close())
+  
 })
 
 describe('MongoDriver', () => {
