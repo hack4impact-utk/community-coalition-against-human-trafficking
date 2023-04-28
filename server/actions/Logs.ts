@@ -157,6 +157,10 @@ export async function getLog(id: string) {
   return await MongoDriver.getEntity(LogSchema, id, requestPipeline)
 }
 
+/**
+ * Creates a log
+ * @logRequest The log to create
+ */
 export async function createLog(logRequest: LogPostRequest) {
   apiLogValidation(logRequest as Partial<LogPostRequest>, 'POST')
 
