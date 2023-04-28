@@ -28,8 +28,7 @@ export default function SettingsPage() {
       <Grid2
         container
         my={2}
-        ml={2}
-        mr= {2}
+        mx={2}
         sx={{ display: 'flex', flexDirection: 'column' }}
       >
         <Grid2 xs={isMobileView ? 12 : 5}>
@@ -43,7 +42,8 @@ export default function SettingsPage() {
           </Typography>
         </Grid2>
         <Grid2 xs={isMobileView ? 12 : 5} sx={{ mb: 4 }}>
-          <MuiChipsInput sx = {{width: '100%'}}
+          <MuiChipsInput
+            sx={{ width: '100%' }}
             validate={(value) => {
               return {
                 isError: !value.match(emailRegex)?.length,
@@ -67,6 +67,7 @@ export default function SettingsPage() {
             <Tooltip
               title="Kiosk Mode enables a field to specify which staff member is checking an item in or out."
               placement="top"
+              enterTouchDelay={0}
             >
               <InfoIcon sx={{ color: theme.palette.grey['500'] }} />
             </Tooltip>
