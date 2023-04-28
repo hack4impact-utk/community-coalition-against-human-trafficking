@@ -19,7 +19,6 @@ export default function App({
   const router = useRouter()
   const dialog = router.query.dialog
   const dialogRoute = dialogRoutes.find((dr) => dr.name === dialog)
-  console.log(dialogRoute)
   return (
     <>
       <Provider store={store}>

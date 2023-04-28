@@ -51,7 +51,7 @@ export default async function logHandler(
       }
     }
   } catch (e) {
-    console.log(e)
+    console.error(e)
     if (e instanceof ApiError) {
       return res.status(e.statusCode).json({
         success: false,
