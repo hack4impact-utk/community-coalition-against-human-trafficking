@@ -15,6 +15,7 @@ import {
   CheckInOutFormData,
   InventoryItemRequest,
   ItemDefinitionResponse,
+  LogRequest,
   UserResponse,
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
@@ -68,7 +69,7 @@ export default function CheckInPage({
       CheckInOutFormDataToInventoryItemRequest(formData)
 
     // TODO better way of coding URLs
-    await fetch(
+    const response = await fetch(
       `http://localhost:3000/api/inventoryItems/checkIn?quantity=${formData.quantityDelta}`,
       {
         method: 'POST',
@@ -84,6 +85,23 @@ export default function CheckInPage({
         date: dayjs(new Date()),
         quantityDelta: 0,
       } as CheckInOutFormData
+    })
+
+    const inventoryItemId = await response.json()
+    const log: LogRequest = {
+      staff: formData.user._id,
+      item: inventoryItemId.payload,
+      quantityDelta: formData.quantityDelta,
+      date: formData.date.toDate(),
+    }
+
+    // TODO better way of coding URLs
+    await fetch(`http://localhost:3000/api/logs`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(log),
     })
   }
 
