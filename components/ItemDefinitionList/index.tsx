@@ -202,19 +202,19 @@ export default function ItemDefinitionList({
     )
 
     if (search) {
-      const _search = search.toLowerCase()
+      const searchLowerCase = search.toLowerCase()
       filteredData = [
         ...filteredData.filter(
           (itemDefinition) =>
-            itemDefinition.name.toLowerCase().includes(_search) ||
+            itemDefinition.name.toLowerCase().includes(searchLowerCase) ||
             (itemDefinition.attributes &&
               itemDefinition.attributes
                 .map((attr) => attr.name.toLowerCase())
                 .join(' ')
-                .includes(_search)) ||
+                .includes(searchLowerCase)) ||
             (itemDefinition.category &&
-              itemDefinition.category.toLowerCase().includes(_search)) ||
-            itemDefinition.internal.toLowerCase().includes(_search)
+              itemDefinition.category.toLowerCase().includes(searchLowerCase)) ||
+            itemDefinition.internal.toLowerCase().includes(searchLowerCase)
         ),
       ]
     }
