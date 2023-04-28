@@ -308,7 +308,7 @@ const renderInternalCheckbox = (router: NextRouter, isMobileView: boolean) => {
           if (checked) updateQuery(router, 'internal', 'true')
           else updateQuery(router, 'internal', undefined)
         }}
-        value={router.query.internal}
+        checked={router.query.internal === 'true' ? true : false}
       />
       <Typography>Internal only</Typography>
     </Grid2>
