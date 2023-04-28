@@ -208,7 +208,10 @@ export default function ItemDefinitionList({
           (itemDefinition) =>
             itemDefinition.name.toLowerCase().includes(_search) ||
             (itemDefinition.attributes &&
-              itemDefinition.attributes.join(' ').includes(_search)) ||
+              itemDefinition.attributes
+                .map((attr) => attr.name.toLowerCase())
+                .join(' ')
+                .includes(_search)) ||
             (itemDefinition.category &&
               itemDefinition.category.toLowerCase().includes(_search)) ||
             itemDefinition.internal.toLowerCase().includes(_search)
