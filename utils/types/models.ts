@@ -1,5 +1,3 @@
-import { InventoryItemResponse, UserResponse } from "./responses"
-
 export interface User {
   _id?: string
   name: string

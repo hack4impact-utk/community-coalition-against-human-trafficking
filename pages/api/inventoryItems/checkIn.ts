@@ -16,11 +16,14 @@ export default async function inventoryItemsCheckInHandler(
       case 'POST': {
         const inventoryItem: Partial<InventoryItem> = req.body
         const { quantity } = req.query
-        await checkInInventoryItem(inventoryItem, Number(quantity))
+        const response = await checkInInventoryItem(
+          inventoryItem,
+          Number(quantity)
+        )
 
         return res.status(200).json({
           success: true,
-          payload: {},
+          payload: response._id,
         })
       }
       default: {
