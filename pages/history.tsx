@@ -38,6 +38,15 @@ interface HistoryPageProps {
   categories: CategoryResponse[]
 }
 
+interface CsvRow {
+  Item: string
+  Attributes: string
+  Category: string
+  Quantity: number
+  Staff: string
+  Date: string
+}
+
 const updateQuery = (router: NextRouter, key: string, val?: string) => {
   if (!val) removeURLQueryParam(router, key)
   else addURLQueryParam(router, key, val)
