@@ -19,7 +19,7 @@ import {
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import React from 'react'
-import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import { checkInOutFormDataToInventoryItemRequest } from 'utils/transformations'
 import { apiWrapper } from 'utils/apiWrappers'
 import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
@@ -65,7 +65,7 @@ export default function CheckInPage({
 
   const onSubmit = async (formData: CheckInOutFormData) => {
     const inventoryItem: Partial<InventoryItemRequest> =
-      CheckInOutFormDataToInventoryItemRequest(formData)
+      checkInOutFormDataToInventoryItemRequest(formData)
 
     // TODO better way of coding URLs
     await fetch(
