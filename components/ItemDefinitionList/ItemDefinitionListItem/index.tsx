@@ -33,11 +33,15 @@ export default function ItemDefinitionListItem({ itemDefinition }: Props) {
       <TableCell>{itemDefinition.name}</TableCell>
       <TableCell>{renderAttributeChips(itemDefinition.attributes)}</TableCell>
       <TableCell>{itemDefinition.category?.name}</TableCell>
-      <TableCell>{itemDefinition.internal ? 'Staff' : 'Client'}</TableCell>
+      <TableCell>{itemDefinition.internal ? 'Staff' : 'Clients'}</TableCell>
       <TableCell>
         <Stack direction="column">
-          <Typography variant='body1'>{itemDefinition.lowStockThreshold}</Typography>
-          <Typography variant='body1'>{itemDefinition.criticalStockThreshold}</Typography>
+          <Typography variant="body1">
+            {itemDefinition.lowStockThreshold}
+          </Typography>
+          <Typography variant="body1">
+            {itemDefinition.criticalStockThreshold}
+          </Typography>
         </Stack>
       </TableCell>
       <TableCell>

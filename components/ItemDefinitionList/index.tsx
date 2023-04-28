@@ -1,82 +1,104 @@
-import { Box, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TableSortLabel, Typography } from "@mui/material"
-import React from "react"
-import { AttributeResponse, ItemDefinitionResponse } from "utils/types"
-import ItemDefinitionListItem from "components/ItemDefinitionList/ItemDefinitionListItem"
-
+import {
+  Box,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TableSortLabel,
+  Typography,
+} from '@mui/material'
+import React from 'react'
+import { AttributeResponse, ItemDefinitionResponse } from 'utils/types'
+import ItemDefinitionListItem from 'components/ItemDefinitionList/ItemDefinitionListItem'
 
 /// HEADER ///
 
 interface ItemDefinitionListHeaderProps {
-  order: Order,
-  orderBy: keyof SearchableData,
+  order: Order
+  orderBy: keyof SearchableData
   handleSort: (newOrderBy: keyof SearchableData) => void
 }
 
 interface HeaderCellData {
-  key: string,
-  labels: string[],
+  key: string
+  labels: string[]
   sortable: boolean
 }
 
-function ItemDefinitionListHeader({ order, orderBy, handleSort }: ItemDefinitionListHeaderProps) {
+function ItemDefinitionListHeader({
+  order,
+  orderBy,
+  handleSort,
+}: ItemDefinitionListHeaderProps) {
   const headerCells: HeaderCellData[] = [
     {
       key: 'name',
       labels: ['Name'],
-      sortable: true
+      sortable: true,
     },
     {
       key: 'attributes',
       labels: ['Item Attributes'],
-      sortable: false
+      sortable: false,
     },
     {
       key: 'category',
       labels: ['Category'],
-      sortable: true
+      sortable: true,
     },
     {
       key: 'internal',
       labels: ['Consumer'],
-      sortable: true
+      sortable: true,
     },
     {
       key: 'threshold',
       labels: ['Low quantity', 'Critically low quantity'],
-      sortable: false
+      sortable: false,
     },
     {
       key: 'kebab',
-      labels:[''],
-      sortable: false
-    }
+      labels: [''],
+      sortable: false,
+    },
   ]
 
-  const createSortHandler = (key: keyof SearchableData) => (event: React.MouseEvent<unknown>) => {
-    handleSort(key)
-  }
+  const createSortHandler =
+    (key: keyof SearchableData) => (event: React.MouseEvent<unknown>) => {
+      handleSort(key)
+    }
 
   return (
     <TableHead>
       <TableRow>
-        {headerCells.map(headerCell => (
+        {headerCells.map((headerCell) => (
           <TableCell key={headerCell.key}>
             {headerCell.sortable ? (
               <TableSortLabel
                 active={orderBy === headerCell.key}
                 direction={order}
-                onClick={createSortHandler(headerCell.key as keyof SearchableData)}
+                onClick={createSortHandler(
+                  headerCell.key as keyof SearchableData
+                )}
               >
-                <Stack direction='column'>
+                <Stack direction="column">
                   {headerCell.labels.map((label, index) => (
-                    <Typography key={index} variant='body2' fontWeight='bold'>{label}</Typography>
+                    <Typography key={index} variant="body2" fontWeight="bold">
+                      {label}
+                    </Typography>
                   ))}
                 </Stack>
               </TableSortLabel>
             ) : (
-              <Stack direction='column'>
+              <Stack direction="column">
                 {headerCell.labels.map((label, index) => (
-                  <Typography key={index} variant='body2' fontWeight='bold'>{label}</Typography>
+                  <Typography key={index} variant="body2" fontWeight="bold">
+                    {label}
+                  </Typography>
                 ))}
               </Stack>
             )}
@@ -87,20 +109,19 @@ function ItemDefinitionListHeader({ order, orderBy, handleSort }: ItemDefinition
   )
 }
 
-
 /// TABLE ///
 
 interface ItemDefinitionListProps {
-  itemDefinitions: ItemDefinitionResponse[],
+  itemDefinitions: ItemDefinitionResponse[]
   search: string
 }
 
 interface SearchableData {
-  id: string,
-  name: string,
-  attributes?: AttributeResponse[],
-  category: string,
-  internal: string,
+  id: string
+  name: string
+  attributes?: AttributeResponse[]
+  category: string
+  internal: string
   itemDefinitionResponse: ItemDefinitionResponse
 }
 
@@ -128,10 +149,7 @@ function getComparator<Key extends keyof any>(
     : (a, b) => -descendingComparator(a, b, orderBy)
 }
 
-function stableSort<T>(
-  array: T[],
-  comparator: (a: T, b: T) => number
-) {
+function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
   const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0])
@@ -151,13 +169,19 @@ const DEFAULT_ORDER: Order = 'asc'
 const DEFAULT_ORDER_BY: keyof SearchableData = 'name'
 const DEFAULT_ROWS_PER_PAGE = 5
 
-export default function ItemDefinitionList({ itemDefinitions, search }: ItemDefinitionListProps) {
+export default function ItemDefinitionList({
+  itemDefinitions,
+  search,
+}: ItemDefinitionListProps) {
   const [tableData, setTableData] = React.useState<SearchableData[]>([])
-  const [visibleRows, setVisibleRows] = React.useState<SearchableData[] | null>(null)
+  const [visibleRows, setVisibleRows] = React.useState<SearchableData[] | null>(
+    null
+  )
 
   // Sorting hooks
   const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] = React.useState<keyof SearchableData>(DEFAULT_ORDER_BY)
+  const [orderBy, setOrderBy] =
+    React.useState<keyof SearchableData>(DEFAULT_ORDER_BY)
 
   // Pagination hooks
   const [page, setPage] = React.useState(0)
@@ -165,28 +189,30 @@ export default function ItemDefinitionList({ itemDefinitions, search }: ItemDefi
 
   // useEffect updates table data whenever search prop changes
   React.useEffect(() => {
-    let filteredData = itemDefinitions.map(itemDefinition => (
-      {
-        id: itemDefinition._id,
-        name: itemDefinition.name,
-        attributes: itemDefinition.attributes,
-        category: itemDefinition.category?.name,
-        internal: itemDefinition.internal ? 'Staff' : 'Client',
-        itemDefinitionResponse: itemDefinition
-      } as SearchableData
-    ))
+    let filteredData = itemDefinitions.map(
+      (itemDefinition) =>
+        ({
+          id: itemDefinition._id,
+          name: itemDefinition.name,
+          attributes: itemDefinition.attributes,
+          category: itemDefinition.category?.name,
+          internal: itemDefinition.internal ? 'Staff' : 'Clients',
+          itemDefinitionResponse: itemDefinition,
+        } as SearchableData)
+    )
 
     if (search) {
       const _search = search.toLowerCase()
       filteredData = [
-        ...filteredData.filter((itemDefinition) => (
-          itemDefinition.name.toLowerCase().includes(_search)
-          || (itemDefinition.attributes 
-            && itemDefinition.attributes.join(' ').includes(_search))
-          || (itemDefinition.category 
-            && itemDefinition.category.toLowerCase().includes(_search))
-          || itemDefinition.internal.toLowerCase().includes(_search)
-        ))
+        ...filteredData.filter(
+          (itemDefinition) =>
+            itemDefinition.name.toLowerCase().includes(_search) ||
+            (itemDefinition.attributes &&
+              itemDefinition.attributes.join(' ').includes(_search)) ||
+            (itemDefinition.category &&
+              itemDefinition.category.toLowerCase().includes(_search)) ||
+            itemDefinition.internal.toLowerCase().includes(_search)
+        ),
       ]
     }
 
@@ -253,14 +279,12 @@ export default function ItemDefinitionList({ itemDefinitions, search }: ItemDefi
             handleSort={handleSort}
           />
           <TableBody>
-            {
-              visibleRows
-              && visibleRows.map(itemDefinition => (
+            {visibleRows &&
+              visibleRows.map((itemDefinition) => (
                 <ItemDefinitionListItem
                   itemDefinition={itemDefinition.itemDefinitionResponse}
                 />
-              ))
-            }
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
