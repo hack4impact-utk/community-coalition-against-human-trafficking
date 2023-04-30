@@ -48,6 +48,33 @@ interface CsvRow {
   Date: string
 }
 
+function createLogsCsvAsString(logs: LogResponse[]) {
+  /* Creates CSV-formatted string by:
+   * 1. creating a CsvRow obj
+   * 2. converted obj to string by separating the object values by with a comma
+   * 3. creating an array of CsvRow obj converted strings
+   * 4. joining each array element with a newline
+   */
+  const csvData: string = logs
+    .map((log) => {
+      const csvRow: CsvRow = {
+        Item: log.item.itemDefinition.name,
+        Attributes:
+          log.item.attributes
+            ?.map((attr) =>
+              `${attr.attribute.name}: ${attr.value}`.toLowerCase()
+            )
+            .join('; ') ?? '',
+        Category: log.item.itemDefinition.category?.name ?? '',
+        Quantity: log.quantityDelta,
+        Staff: log.staff.name,
+        Date: log.date.toISOString(),
+      }
+      return Object.values(csvRow).join(',')
+    })
+    .join('\n')
+}
+
 const updateQuery = (router: NextRouter, key: string, val?: string) => {
   if (!val) removeURLQueryParam(router, key)
   else addURLQueryParam(router, key, val)
