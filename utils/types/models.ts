@@ -64,6 +64,11 @@ export interface Log {
   date: Date
 }
 
+export interface NotificationEmail {
+  _id?: string
+  emails: string[]
+}
+
 export type ServerModel =
   | User
   | ItemDefinition

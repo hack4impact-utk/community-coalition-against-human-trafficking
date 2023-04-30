@@ -6,6 +6,7 @@ import {
   InventoryItemResponse,
   ItemDefinition,
   Log,
+  NotificationEmail,
   User,
   UserResponse,
 } from '.'
@@ -59,6 +60,12 @@ export interface LogRequest extends Log {
 }
 export type LogPostRequest = LogRequest
 export interface LogPutRequest extends LogRequest {
+  _id: string
+}
+
+export type NotificationEmailRequest = NotificationEmail
+export type NotificationEmailPostRequest = NotificationEmailRequest
+export interface NotificationEmailPutRequest extends NotificationEmailRequest {
   _id: string
 }
 
