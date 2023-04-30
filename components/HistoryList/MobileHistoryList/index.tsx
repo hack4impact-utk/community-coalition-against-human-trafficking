@@ -12,6 +12,7 @@ interface Props {
   endDate: string
   startDate: string
   internal: boolean
+  setTableData: React.Dispatch<React.SetStateAction<LogResponse[]>>
 }
 
 function dateComparator(v1: Date, v2: Date) {
@@ -27,9 +28,6 @@ function dateComparator(v1: Date, v2: Date) {
 }
 
 export default function MobileHistoryList(props: Props) {
-  const [filteredData, setFilteredData] = React.useState<LogResponse[]>(
-    [] as LogResponse[]
-  )
   React.useEffect(() => {
     let newTableData: LogResponse[] = deepCopy(props.logs)
 
@@ -85,7 +83,7 @@ export default function MobileHistoryList(props: Props) {
       dateComparator(log2.date, log1.date)
     )
 
-    setFilteredData(newTableData)
+    props.setTableData(newTableData)
   }, [
     props.search,
     props.category,
@@ -95,7 +93,7 @@ export default function MobileHistoryList(props: Props) {
   ])
   return (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-      {filteredData.map((log) => (
+      {props.logs.map((log) => (
         <MobileHistoryListItem log={log} key={log._id} />
       ))}
     </List>

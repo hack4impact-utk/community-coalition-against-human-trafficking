@@ -179,6 +179,7 @@ interface Props {
   endDate: string
   startDate: string
   internal: boolean
+  setTableData: React.Dispatch<React.SetStateAction<LogResponse[]>>
 }
 
 const DEFAULT_ROWS_PER_PAGE = 5
@@ -194,7 +195,6 @@ export default function DesktopHistoryList(props: Props) {
   const [visibleRows, setVisibleRows] = React.useState<LogResponse[]>(
     [] as LogResponse[]
   )
-  const [tableData, setTableData] = React.useState<LogResponse[]>([])
 
   React.useEffect(() => {
     let newTableData: LogResponse[] = deepCopy(props.logs)
@@ -245,7 +245,7 @@ export default function DesktopHistoryList(props: Props) {
         return log.item.itemDefinition.category?.name === props.category
       })
     }
-    setTableData(newTableData)
+    props.setTableData(newTableData)
     var rowsOnMount = sortTable(newTableData, orderBy, order)
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
@@ -265,19 +265,19 @@ export default function DesktopHistoryList(props: Props) {
       setOrder(toggledOrder)
       setOrderBy(newOrderBy)
 
-      const sortedRows = sortTable(tableData, newOrderBy, toggledOrder)
+      const sortedRows = sortTable(props.logs, newOrderBy, toggledOrder)
       const updatedRows = sortedRows.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       )
       setVisibleRows(updatedRows)
     },
-    [order, orderBy, page, rowsPerPage, tableData]
+    [order, orderBy, page, rowsPerPage, props.logs]
   )
 
   const handleChangePage = (_e: unknown, newPage: number) => {
     setPage(newPage)
-    const sortedRows = sortTable(tableData, orderBy, order)
+    const sortedRows = sortTable(props.logs, orderBy, order)
 
     const updatedRows = sortedRows.slice(
       newPage * rowsPerPage,
@@ -292,7 +292,7 @@ export default function DesktopHistoryList(props: Props) {
     const updatedRowsPerPage = parseInt(event.target.value, 10)
     setRowsPerPage(updatedRowsPerPage)
     setPage(0)
-    const sortedRows = sortTable(tableData, orderBy, order)
+    const sortedRows = sortTable(props.logs, orderBy, order)
 
     const updatedRows = sortedRows.slice(
       page * updatedRowsPerPage,
@@ -321,7 +321,7 @@ export default function DesktopHistoryList(props: Props) {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={tableData.length}
+        count={props.logs.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

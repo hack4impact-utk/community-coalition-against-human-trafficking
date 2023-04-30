@@ -23,6 +23,7 @@ import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
 import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
 import LogsHandler from '@api/logs'
+import React from 'react'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -76,6 +77,7 @@ const renderInternalCheckbox = (router: NextRouter, isMobileView: boolean) => {
 }
 
 export default function HistoryPage({ logs, categories }: HistoryPageProps) {
+  const [tableData, setTableData] = React.useState<LogResponse[]>(logs)
   const router = useRouter()
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
@@ -229,6 +231,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
           endDate={router.query.endDate as string}
           startDate={router.query.startDate as string}
           internal={!!router.query.internal}
+          setTableData={setTableData}
         />
       ) : (
         <DesktopHistoryList
@@ -238,6 +241,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
           endDate={router.query.endDate as string}
           startDate={router.query.startDate as string}
           internal={!!router.query.internal}
+          setTableData={setTableData}
         />
       )}
     </Grid2>
