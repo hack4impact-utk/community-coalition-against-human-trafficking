@@ -19,13 +19,15 @@ import {
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import React from 'react'
-import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import { checkInOutFormDataToInventoryItemRequest } from 'utils/transformations'
 import { apiWrapper } from 'utils/apiWrappers'
 import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
 import { useAppSelector } from 'store'
+import { KioskState } from 'store/types'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -47,14 +49,15 @@ export default function CheckInPage({
   itemDefinitions,
   users,
 }: Props) {
-  // console.log(categories, itemDefinitions, users)
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   const router = useRouter()
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
-  const kioskMode = useAppSelector((state) => state.kiosk)
+  const kioskMode = useAppSelector(
+    (state: { kiosk: KioskState }) => state.kiosk
+  )
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
     {} as CheckInOutFormData
@@ -62,7 +65,7 @@ export default function CheckInPage({
 
   const onSubmit = async (formData: CheckInOutFormData) => {
     const inventoryItem: Partial<InventoryItemRequest> =
-      CheckInOutFormDataToInventoryItemRequest(formData)
+      checkInOutFormDataToInventoryItemRequest(formData)
 
     // TODO better way of coding URLs
     await fetch(
@@ -75,6 +78,13 @@ export default function CheckInPage({
         body: JSON.stringify(inventoryItem),
       }
     )
+    setFormData((formData) => {
+      return {
+        user: formData.user,
+        date: dayjs(new Date()),
+        quantityDelta: 0,
+      } as CheckInOutFormData
+    })
   }
 
   return (

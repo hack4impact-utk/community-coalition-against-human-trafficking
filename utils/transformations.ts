@@ -1,4 +1,6 @@
+import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
+  AttributeRequest,
   CheckInOutFormData,
   InventoryItemAttributeRequest,
   InventoryItemRequest,
@@ -9,19 +11,29 @@ import {
  * @param formData The form data to convert
  * @returns A new `Partial<InventoryItemRequest>` object.
  */
-export function CheckInOutFormDataToInventoryItemRequest(
+export function checkInOutFormDataToInventoryItemRequest(
   formData: CheckInOutFormData
 ): Partial<InventoryItemRequest> {
-  return {
+  const transformedData = {
     itemDefinition: formData.itemDefinition._id,
-    attributes: [
+    attributes: [] as InventoryItemAttributeRequest[],
+  }
+  if (formData.attributes) {
+    transformedData.attributes = [
       ...formData.attributes.map(
-        (attributeOption): InventoryItemAttributeRequest => ({
-          attribute: attributeOption.id,
-          value: attributeOption.value,
-        })
+        (attributeOption): InventoryItemAttributeRequest => {
+          return {
+            attribute: attributeOption.id,
+            value: attributeOption.value,
+          }
+        }
       ),
+    ]
+  }
 
+  if (formData.textFieldAttributes) {
+    transformedData.attributes = [
+      ...transformedData.attributes,
       ...Object.keys(formData.textFieldAttributes).reduce(
         (acc, attributeId) => {
           const attribute: InventoryItemAttributeRequest = {
@@ -33,6 +45,40 @@ export function CheckInOutFormDataToInventoryItemRequest(
         },
         [] as InventoryItemAttributeRequest[]
       ),
-    ],
+    ]
   }
+
+  return transformedData
+}
+
+export function attributeFormDataToAttributeRequest(
+  formData: AttributeFormData
+): AttributeRequest {
+  return {
+    name: formData.name,
+    color: formData.color,
+    possibleValues:
+      formData.valueType === 'list'
+        ? formData.listOptions!
+        : formData.valueType,
+  }
+}
+
+/**
+ * Converts a Date object into a readable string
+ * Ex. "2022-02-10T14:47.12.419Z" becomes "February 10, 2022 9:47 AM"
+ * @param date The date to convert
+ * @returns A human-readable date string
+ */
+export function DateToReadableDateString(date: Date) {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }
+
+  return new Date(date).toLocaleString('en-US', dateOptions).replace(' at', '')
 }

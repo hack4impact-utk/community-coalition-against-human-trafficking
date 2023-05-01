@@ -14,30 +14,47 @@ import {
   CategoryResponse,
   CheckInOutFormData,
   InventoryItemRequest,
+  ItemDefinitionResponse,
+  UserResponse,
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
+import usersHandler from '@api/users'
+import itemDefinitionsHandler from '@api/itemDefinitions'
 import { apiWrapper } from 'utils/apiWrappers'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import dayjs from 'dayjs'
 import { useAppSelector } from 'store'
+import { KioskState } from 'store/types'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
-    props: { categories: await apiWrapper(categoriesHandler, context) },
+    props: {
+      categories: await apiWrapper(categoriesHandler, context),
+      itemDefinitions: await apiWrapper(itemDefinitionsHandler, context),
+      users: await apiWrapper(usersHandler, context),
+    },
   }
 }
 interface Props {
   categories: CategoryResponse[]
+  itemDefinitions: ItemDefinitionResponse[]
+  users: UserResponse[]
 }
 
-export default function CheckOutPage({ categories }: Props) {
+export default function CheckOutPage({
+  categories,
+  itemDefinitions,
+  users,
+}: Props) {
   const theme = useTheme()
   const router = useRouter()
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
+  const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
     {} as CheckInOutFormData
@@ -58,9 +75,15 @@ export default function CheckOutPage({ categories }: Props) {
         body: JSON.stringify(inventoryItem),
       }
     )
+    setFormData((formData) => {
+      return {
+        user: formData.user,
+        date: dayjs(new Date()),
+        quantityDelta: 0,
+      } as CheckInOutFormData
+    })
   }
 
-  const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   const kioskMode = useAppSelector((state) => state.kiosk)
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1 }}>
@@ -73,8 +96,8 @@ export default function CheckOutPage({ categories }: Props) {
               </Typography>
               <CheckInOutForm
                 kioskMode={kioskMode.enabled}
-                users={[]}
-                itemDefinitions={[]}
+                users={users}
+                itemDefinitions={itemDefinitions}
                 categories={categories}
                 formData={formData}
                 setFormData={setFormData}

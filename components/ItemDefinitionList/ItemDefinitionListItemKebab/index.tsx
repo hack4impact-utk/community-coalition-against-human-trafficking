@@ -2,22 +2,8 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React from 'react'
 import theme from 'utils/theme'
-import { InventoryItem } from 'utils/types'
-import { useRouter } from 'next/router'
 
-interface InventoryItemListItemKebabOption {
-  name: string
-  onClick: () => void
-}
-
-interface InventoryItemListItemKebabProps {
-  inventoryItem: InventoryItem
-}
-
-export default function InventoryItemListItemKebab({
-  inventoryItem,
-}: InventoryItemListItemKebabProps) {
-  // kebab menu functionality
+export default function ItemDefinitionListItemKebab() {
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
   )
@@ -29,43 +15,23 @@ export default function InventoryItemListItemKebab({
   const handleCloseKebabMenu = () => {
     setAnchorElKebab(null)
   }
-  const router = useRouter()
-  const option: InventoryItemListItemKebabOption[] = [
+
+  interface ItemDefinitionListItemKebabOption {
+    name: string
+    onClick: () => void
+  }
+
+  const options: ItemDefinitionListItemKebabOption[] = [
     {
-      name: 'Check in',
-      onClick: () =>
-        router.push(
-          `/checkIn?inventoryItem=${encodeURIComponent(
-            JSON.stringify(inventoryItem)
-          )}`
-        ),
-    },
-    {
-      name: 'Check out',
-      onClick: () =>
-        router.push(
-          `/checkOut?inventoryItem=${encodeURIComponent(
-            JSON.stringify(inventoryItem)
-          )}`
-        ),
+      name: 'Edit',
+      onClick: () => {},
     },
     {
       name: 'Delete',
-      onClick: () => {
-        if (
-          window.confirm(
-            "Are you sure you want to delete this item? You won't be able to undo this action."
-          )
-        ) {
-          fetch(`/api/inventoryItems/${inventoryItem._id}`, {
-            method: 'DELETE',
-          }).then(() => {
-            window.location.reload()
-          })
-        }
-      },
+      onClick: () => {},
     },
   ]
+
   return (
     <>
       <IconButton onClick={handleOpenKebabMenu}>
@@ -87,7 +53,7 @@ export default function InventoryItemListItemKebab({
         open={Boolean(anchorElKebab)}
         onClose={handleCloseKebabMenu}
       >
-        {option.map((option) => (
+        {options.map((option) => (
           <MenuItem
             key={option.name}
             onClick={() => {

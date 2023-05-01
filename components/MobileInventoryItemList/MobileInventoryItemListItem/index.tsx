@@ -1,17 +1,17 @@
 import {
-  Chip,
   ListItem,
   ListItemSecondaryAction,
   ListItemText,
   Typography,
   Avatar,
+  Box,
 } from '@mui/material'
 import { InventoryItemResponse } from 'utils/types'
 import React from 'react'
 import theme from 'utils/theme'
 import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
 import WarningIcon from '@mui/icons-material/Warning'
-import getContrastYIQ from 'utils/getContrastYIQ'
+import renderAttributeChips from 'utils/renderAttributeChips'
 
 interface MobileInventoryItemListItemProps {
   inventoryItem: InventoryItemResponse
@@ -60,25 +60,7 @@ export default function MobileInventoryItemListItem({
             )}
 
             <br />
-            {inventoryItem.attributes?.map((itemAttribute) => (
-              <Chip
-                label={
-                  typeof itemAttribute.attribute.possibleValues === 'object'
-                    ? `${itemAttribute.value}`
-                    : `${itemAttribute.attribute.name}: ${itemAttribute.value}`
-                }
-                sx={{
-                  backgroundColor: itemAttribute.attribute.color,
-                  '& .MuiChip-label': {
-                    color: getContrastYIQ(itemAttribute.attribute.color),
-                  },
-                  mr: 1,
-                  mt: 1,
-                }}
-                key={`${itemAttribute.attribute.name}-${itemAttribute.value}`}
-                size="small"
-              />
-            ))}
+            <Box ml={-1}>{renderAttributeChips(inventoryItem.attributes)}</Box>
           </Typography>
         }
       />
