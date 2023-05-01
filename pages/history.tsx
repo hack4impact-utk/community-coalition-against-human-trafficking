@@ -57,7 +57,9 @@ function handleExport(logs: LogResponse[]) {
   // to download the file, create an <a> tag, associate the file with it, and click it
   const a = document.createElement('a')
   a.href = URL.createObjectURL(file)
-  a.download = 'fileName'
+
+  // set file name. .slice() to put date in in yyyy-mm-dd format
+  a.download = `Warehouse History ${new Date().toISOString().slice(0, 10)}`
   a.style.display = 'none'
   document.body.appendChild(a)
   a.click()
