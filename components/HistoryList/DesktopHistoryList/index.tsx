@@ -11,8 +11,6 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import { CategoryResponse, LogResponse } from 'utils/types'
 import HistoryListItem from './DesktopHistoryListItem'
-import deepCopy from 'utils/deepCopy'
-import { dateToReadableDateString } from 'utils/transformations'
 
 type Order = 'asc' | 'desc'
 
@@ -38,7 +36,6 @@ function sortTable(
   const orderByHeadCell = headCells.filter(
     (headCell) => headCell.id === sortBy.toString()
   )[0]
-
   return tableData.sort((a: LogResponse, b: LogResponse) =>
     order === 'asc'
       ? orderByHeadCell.sortFn!(a, b)
@@ -66,7 +63,10 @@ const headCells: readonly HeadCell[] = [
     label: 'Staff',
     sortable: true,
     sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return comparator(log1.staff.name, log2.staff.name)
+      return comparator(
+        log1.staff.name.toLowerCase(),
+        log2.staff.name.toLowerCase()
+      )
     },
   },
   {
@@ -77,8 +77,8 @@ const headCells: readonly HeadCell[] = [
     sortable: true,
     sortFn: (log1: LogResponse, log2: LogResponse) => {
       return comparator(
-        log1.item.itemDefinition.name,
-        log2.item.itemDefinition.name
+        log1.item.itemDefinition.name.toLowerCase(),
+        log2.item.itemDefinition.name.toLowerCase()
       )
     },
   },
@@ -90,8 +90,8 @@ const headCells: readonly HeadCell[] = [
     sortable: true,
     sortFn: (log1: LogResponse, log2: LogResponse) => {
       return comparator(
-        log1.item.itemDefinition.category?.name ?? '',
-        log2.item.itemDefinition.category?.name ?? ''
+        log1.item.itemDefinition.category?.name.toLowerCase() ?? '',
+        log2.item.itemDefinition.category?.name.toLowerCase() ?? ''
       )
     },
   },
@@ -197,66 +197,12 @@ export default function DesktopHistoryList(props: Props) {
   )
 
   React.useEffect(() => {
-    let newTableData: LogResponse[] = deepCopy(props.logs)
-
-    if (props.internal) {
-      newTableData = newTableData.filter(
-        (log) => log.item.itemDefinition.internal
-      )
-    }
-
-    if (props.search) {
-      const search = props.search.toLowerCase()
-      newTableData = newTableData.filter((log) => {
-        return (
-          log.staff.name.toLowerCase().includes(search) ||
-          log.item.itemDefinition.name.toLowerCase().includes(search) ||
-          (log.item.attributes &&
-            log.item.attributes
-              .map((attr) =>
-                `${attr.attribute.name}: ${attr.value}`.toLowerCase()
-              )
-              .join(' ')
-              .includes(search)) ||
-          (log.item.itemDefinition.category &&
-            log.item.itemDefinition.category.name
-              .toLowerCase()
-              .includes(search)) ||
-          log.quantityDelta.toString().toLowerCase().includes(search) ||
-          dateToReadableDateString(log.date).toLowerCase().includes(search)
-        )
-      })
-    }
-
-    if (props.startDate || props.endDate) {
-      // if props.startDate or props.endDate are not present, use an arbitrarily far-away date
-      const startDate = new Date(props.startDate ?? '1000-01-01').getTime()
-      const endDate = new Date(props.endDate ?? '9999-01-01').getTime()
-      newTableData = newTableData.filter((log) => {
-        return (
-          new Date(log.date).getTime() >= startDate &&
-          new Date(log.date).getTime() <= endDate
-        )
-      })
-    }
-
-    if (props.category) {
-      newTableData = newTableData.filter((log) => {
-        return log.item.itemDefinition.category?.name === props.category
-      })
-    }
-    props.setTableData(newTableData)
-    var rowsOnMount = sortTable(newTableData, orderBy, order)
+    var rowsOnMount = sortTable(props.logs, orderBy, order)
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
     setVisibleRows(rowsOnMount)
-  }, [
-    props.search,
-    props.category,
-    props.startDate,
-    props.endDate,
-    props.internal,
-  ])
+    setPage(0)
+  }, [props.logs])
 
   const handleRequestSort = React.useCallback(
     (_e: React.MouseEvent<unknown>, newOrderBy: keyof HistoryTableData) => {
@@ -264,12 +210,9 @@ export default function DesktopHistoryList(props: Props) {
       const toggledOrder: Order = isAsc ? 'desc' : 'asc'
       setOrder(toggledOrder)
       setOrderBy(newOrderBy)
-
       const sortedRows = sortTable(props.logs, newOrderBy, toggledOrder)
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
+      setPage(0)
+      const updatedRows = sortedRows.slice(0, rowsPerPage)
       setVisibleRows(updatedRows)
     },
     [order, orderBy, page, rowsPerPage, props.logs]

@@ -24,6 +24,8 @@ import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
 import LogsHandler from '@api/logs'
 import React from 'react'
+import deepCopy from 'utils/deepCopy'
+import { dateToReadableDateString } from 'utils/transformations'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -134,6 +136,69 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
   const router = useRouter()
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
+
+  React.useEffect(() => {
+    let newTableData: LogResponse[] = deepCopy(logs)
+
+    if (router.query.internal) {
+      newTableData = newTableData.filter(
+        (log) => log.item.itemDefinition.internal
+      )
+    }
+
+    if (router.query.search) {
+      const search = (router.query.search as string).toLowerCase()
+      newTableData = newTableData.filter((log) => {
+        return (
+          log.staff.name.toLowerCase().includes(search) ||
+          log.item.itemDefinition.name.toLowerCase().includes(search) ||
+          (log.item.attributes &&
+            log.item.attributes
+              .map((attr) =>
+                `${attr.attribute.name}: ${attr.value}`.toLowerCase()
+              )
+              .join(' ')
+              .includes(search)) ||
+          (log.item.itemDefinition.category &&
+            log.item.itemDefinition.category.name
+              .toLowerCase()
+              .includes(search)) ||
+          log.quantityDelta.toString().toLowerCase().includes(search) ||
+          dateToReadableDateString(log.date).toLowerCase().includes(search)
+        )
+      })
+    }
+
+    if (router.query.startDate || router.query.endDate) {
+      // if props.startDate or props.endDate are not present, use an arbitrarily far-away date
+      const startDate = new Date(
+        (router.query.startDate as string) ?? '1000-01-01'
+      ).getTime()
+      const endDate = new Date(
+        (router.query.endDate as string) ?? '9999-01-01'
+      ).getTime()
+      newTableData = newTableData.filter((log) => {
+        return (
+          new Date(log.date).getTime() >= startDate &&
+          new Date(log.date).getTime() <= endDate
+        )
+      })
+    }
+
+    if (router.query.category) {
+      newTableData = newTableData.filter((log) => {
+        return log.item.itemDefinition.category?.name === router.query.category
+      })
+    }
+    setTableData(newTableData)
+  }, [
+    router.query.search,
+    router.query.category,
+    router.query.startDate,
+    router.query.endDate,
+    router.query.internal,
+  ])
+
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1 }} gap={2}>
       {/* Header -- "History" and "Export To Excel" button*/}
@@ -292,7 +357,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
         />
       ) : (
         <DesktopHistoryList
-          logs={logs}
+          logs={tableData}
           search={router.query.search as string}
           category={router.query.category as string}
           endDate={router.query.endDate as string}
