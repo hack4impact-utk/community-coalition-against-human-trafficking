@@ -61,18 +61,18 @@ function createLogsCsvAsString(logs: LogResponse[]) {
         Item: log.item.itemDefinition.name,
         Attributes:
           log.item.attributes
-            ?.map((attr) =>
-              `${attr.attribute.name}: ${attr.value}`.toLowerCase()
-            )
+            ?.map((attr) => `${attr.attribute.name}: ${attr.value}`)
             .join('; ') ?? '',
         Category: log.item.itemDefinition.category?.name ?? '',
         Quantity: log.quantityDelta,
         Staff: log.staff.name,
-        Date: log.date.toISOString(),
+        Date: new Date(log.date).toISOString(),
       }
       return Object.values(csvRow).join(',')
     })
     .join('\n')
+
+  console.log(csvData)
 }
 
 const updateQuery = (router: NextRouter, key: string, val?: string) => {
@@ -117,7 +117,11 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
         </Typography>
         {!isMobileView && (
           <Grid2 ml="auto" mr={6}>
-            <Button variant="outlined" sx={{ width: '100%' }}>
+            <Button
+              variant="outlined"
+              sx={{ width: '100%' }}
+              onClick={() => createLogsCsvAsString(tableData)}
+            >
               Export To Excel
             </Button>
           </Grid2>
