@@ -48,13 +48,39 @@ interface CsvRow {
   Date: string
 }
 
+function handleExport(logs: LogResponse[]) {
+  const csvString = createLogsCsvAsString(logs)
+  const file: Blob = new Blob([csvString], { type: 'text/csv' })
+
+  // to download the file, create an <a> tag, associate the file with it, and click it
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(file)
+  a.download = 'fileName'
+  a.style.display = 'none'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+}
+
 function createLogsCsvAsString(logs: LogResponse[]) {
   /* Creates CSV-formatted string by:
-   * 1. creating a CsvRow obj
-   * 2. converted obj to string by separating the object values by with a comma
-   * 3. creating an array of CsvRow obj converted strings
-   * 4. joining each array element with a newline
+   * 1. Create the header row
+   * 2. creating a CsvRow obj
+   * 3. converted obj to string by separating the object values by with a comma
+   * 4. creating an array of CsvRow obj converted strings
+   * 5. joining each array element with a newline
    */
+  const csvKeys: (keyof CsvRow)[] = [
+    'Item',
+    'Attributes',
+    'Category',
+    'Quantity',
+    'Staff',
+    'Date',
+  ]
+
+  const csvKeysString: string = csvKeys.join(',')
+
   const csvData: string = logs
     .map((log) => {
       const csvRow: CsvRow = {
@@ -72,7 +98,7 @@ function createLogsCsvAsString(logs: LogResponse[]) {
     })
     .join('\n')
 
-  console.log(csvData)
+  return `${csvKeysString}\n${csvData}`
 }
 
 const updateQuery = (router: NextRouter, key: string, val?: string) => {
@@ -120,7 +146,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
             <Button
               variant="outlined"
               sx={{ width: '100%' }}
-              onClick={() => createLogsCsvAsString(tableData)}
+              onClick={() => handleExport(tableData)}
             >
               Export To Excel
             </Button>
