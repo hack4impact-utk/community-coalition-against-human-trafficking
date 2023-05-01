@@ -197,6 +197,7 @@ export default function DesktopHistoryList(props: Props) {
   )
 
   React.useEffect(() => {
+    // does pagination
     var rowsOnMount = sortTable(props.logs, orderBy, order)
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
@@ -204,6 +205,7 @@ export default function DesktopHistoryList(props: Props) {
     setPage(0)
   }, [props.logs])
 
+  // when a header is clicked
   const handleRequestSort = React.useCallback(
     (_e: React.MouseEvent<unknown>, newOrderBy: keyof HistoryTableData) => {
       const isAsc = orderBy === newOrderBy && order === 'asc'
@@ -218,6 +220,7 @@ export default function DesktopHistoryList(props: Props) {
     [order, orderBy, page, rowsPerPage, props.logs]
   )
 
+  // when the change page buttons are clicked
   const handleChangePage = (_e: unknown, newPage: number) => {
     setPage(newPage)
     const sortedRows = sortTable(props.logs, orderBy, order)

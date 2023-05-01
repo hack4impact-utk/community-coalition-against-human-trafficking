@@ -347,7 +347,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
       </Grid2>
       {isMobileView ? (
         <MobileHistoryList
-          logs={logs}
+          logs={tableData}
           search={router.query.search as string}
           category={router.query.category as string}
           endDate={router.query.endDate as string}
