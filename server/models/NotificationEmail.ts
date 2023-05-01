@@ -3,7 +3,7 @@ import { NotificationEmail } from 'utils/types'
 
 const NotificationEmailSchema = new Schema ({
     emails: {
-        type: 'object',
+        type: [String],
         required: true,
     }
 })
