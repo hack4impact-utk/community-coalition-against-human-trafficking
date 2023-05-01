@@ -62,6 +62,7 @@ export function attributeFormDataToAttributeRequest(
         ? formData.listOptions!
         : formData.valueType,
   }
+}
 
 /**
  * Converts a Date object into a readable string

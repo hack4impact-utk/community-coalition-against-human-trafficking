@@ -20,9 +20,7 @@ export default function SettingsPage() {
   const handleChange = (newValue: MuiChipsInputChip[]) => {
     setValue(newValue)
   }
-  const emailRegex =
-    /^[a-zA-Z0-9.!#$%&'+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:.[a-zA-Z0-9-]+)$/
-
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   return (
     <>
       <Grid2
