@@ -2,6 +2,7 @@ import { ItemDefinitionResponse } from 'utils/types'
 import { useMediaQuery } from '@mui/material'
 import theme from 'utils/theme'
 import DesktopItemDefinitionList from 'components/ItemDefinitionList/DesktopItemDefinitionList'
+import MobileItemDefinitionList from 'components/ItemDefinitionList/MobileItemDefinitionList'
 
 interface Props {
   itemDefinitions: ItemDefinitionResponse[]
@@ -14,7 +15,10 @@ export default function ItemDefinitionList({ itemDefinitions, search }: Props) {
   return (
     <>
       {isMobileView ? (
-        <p>temp</p>
+        <MobileItemDefinitionList
+          itemDefinitions={itemDefinitions}
+          search={search}
+        />
       ) : (
         <DesktopItemDefinitionList
           itemDefinitions={itemDefinitions}
