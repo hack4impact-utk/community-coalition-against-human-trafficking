@@ -1,9 +1,11 @@
 import { AttributeFormData } from 'components/UpsertAttributeForm'
+import { ItemDefinitionFormData } from 'components/UpsertItemForm'
 import {
   AttributeRequest,
   CheckInOutFormData,
   InventoryItemAttributeRequest,
   InventoryItemRequest,
+  ItemDefinitionRequest,
 } from 'utils/types'
 
 /**
@@ -81,4 +83,14 @@ export function DateToReadableDateString(date: Date) {
   }
 
   return new Date(date).toLocaleString('en-US', dateOptions).replace(' at', '')
+}
+
+export function itemDefinitionFormDataToItemDefinitionRequest(
+  formData: ItemDefinitionFormData
+): ItemDefinitionRequest {
+  return {
+    ...formData,
+    category: formData.category._id,
+    attributes: formData.attributes.map((attr) => attr._id),
+  }
 }
