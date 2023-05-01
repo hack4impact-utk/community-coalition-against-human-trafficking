@@ -31,7 +31,7 @@ export default function ItemsPage({ itemDefinitions }: Props) {
           Items
         </Typography>
         <Grid2 ml="auto" mr={6}>
-          <DialogLink href='items/new'>
+          <DialogLink href='/items/new' backHref='/settings/items'>
             <Button
               variant="outlined"
               startIcon={<AddIcon />}
