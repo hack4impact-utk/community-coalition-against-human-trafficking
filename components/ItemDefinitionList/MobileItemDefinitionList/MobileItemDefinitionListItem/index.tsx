@@ -69,8 +69,12 @@ export default function MobileItemDefinitionListItem({
                 divider={<Divider orientation="vertical" flexItem />}
                 spacing={1}
               >
-                <Typography color={theme.palette.warning.main}>{itemDefinition.lowStockThreshold}</Typography>
-                <Typography color={theme.palette.error.main}>{itemDefinition.criticalStockThreshold}</Typography>
+                <Typography color={theme.palette.warning.main}>
+                  {itemDefinition.lowStockThreshold}
+                </Typography>
+                <Typography color={theme.palette.error.main}>
+                  {itemDefinition.criticalStockThreshold}
+                </Typography>
               </Stack>
             </Stack>
           </Typography>

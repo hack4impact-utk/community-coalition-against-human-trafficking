@@ -13,8 +13,8 @@ import theme from 'utils/theme'
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
-      itemDefinitions: await apiWrapper(itemDefinitionsHandler, context)
-    }
+      itemDefinitions: await apiWrapper(itemDefinitionsHandler, context),
+    },
   }
 }
 
