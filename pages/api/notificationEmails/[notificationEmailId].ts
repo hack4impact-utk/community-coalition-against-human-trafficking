@@ -16,7 +16,7 @@ import { errors } from 'utils/constants/errors'
 // @route GET api/notifications/[notificationEmailId] - Returns a single NotificationEmail object given by a notificationEmailId - Private
 // @route PUT api/notifications/[notificationEmailId] - Updates an existing NotificationEmail object (identified by notificationEmailId) with a new NotificationEmail object - Private
 // @route DELETE api/attributes/[notificationEmailId] - Deletes a single NotificationEmail object (identified by notificationEmailId) - Private
-export default async function attributeHandler(
+export default async function notificationEmailHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
