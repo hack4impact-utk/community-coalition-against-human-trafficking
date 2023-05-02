@@ -1,4 +1,6 @@
+import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
+  AttributeRequest,
   CheckInOutFormData,
   InventoryItemAttributeRequest,
   InventoryItemRequest,
@@ -9,7 +11,7 @@ import {
  * @param formData The form data to convert
  * @returns A new `Partial<InventoryItemRequest>` object.
  */
-export function CheckInOutFormDataToInventoryItemRequest(
+export function checkInOutFormDataToInventoryItemRequest(
   formData: CheckInOutFormData
 ): Partial<InventoryItemRequest> {
   const transformedData = {
@@ -47,6 +49,19 @@ export function CheckInOutFormDataToInventoryItemRequest(
   }
 
   return transformedData
+}
+
+export function attributeFormDataToAttributeRequest(
+  formData: AttributeFormData
+): AttributeRequest {
+  return {
+    name: formData.name,
+    color: formData.color,
+    possibleValues:
+      formData.valueType === 'list'
+        ? formData.listOptions!
+        : formData.valueType,
+  }
 }
 
 /**

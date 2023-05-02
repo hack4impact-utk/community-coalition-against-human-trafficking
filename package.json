@@ -25,6 +25,7 @@
     "eslint-config-next": "13.0.2",
     "mongodb": "^4.13.0",
     "mongoose": "^6.7.1",
+    "mui-chips-input": "^2.0.1",
     "next": "13.0.2",
     "next-auth": "^4.18.8",
     "next-redux-wrapper": "^8.1.0",

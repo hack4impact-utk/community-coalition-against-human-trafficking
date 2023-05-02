@@ -19,7 +19,7 @@ import {
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import React from 'react'
-import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import { checkInOutFormDataToInventoryItemRequest } from 'utils/transformations'
 import { apiWrapper } from 'utils/apiWrappers'
 import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
@@ -27,6 +27,7 @@ import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
 import { useAppSelector } from 'store'
+import DialogLink from 'components/DialogLink'
 import { KioskState } from 'store/types'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -65,7 +66,7 @@ export default function CheckInPage({
 
   const onSubmit = async (formData: CheckInOutFormData) => {
     const inventoryItem: Partial<InventoryItemRequest> =
-      CheckInOutFormDataToInventoryItemRequest(formData)
+      checkInOutFormDataToInventoryItemRequest(formData)
 
     // TODO better way of coding URLs
     await fetch(
@@ -98,14 +99,16 @@ export default function CheckInPage({
         smOffset={2}
         lgOffset={3}
       >
-        <Button
-          variant="outlined"
-          fullWidth={isMobileView}
-          size="large"
-          sx={{ my: 2 }}
-        >
-          Create new item
-        </Button>
+        <DialogLink href="/items/new">
+          <Button
+            variant="outlined"
+            fullWidth={isMobileView}
+            size="large"
+            sx={{ my: 2 }}
+          >
+            Create new item
+          </Button>
+        </DialogLink>
       </Grid2>
 
       <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>

@@ -9,7 +9,7 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { useRouter } from 'next/router'
 import { dialogRoutes } from 'utils/constants'
-import { Dialog } from '@mui/material'
+import { Dialog, useMediaQuery, useTheme } from '@mui/material'
 
 export default function App({
   Component,
@@ -19,6 +19,8 @@ export default function App({
   const router = useRouter()
   const dialog = router.query.dialog
   const dialogRoute = dialogRoutes.find((dr) => dr.name === dialog)
+  const theme = useTheme()
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   return (
     <>
       <Provider store={store}>
@@ -31,6 +33,7 @@ export default function App({
                   <Component {...pageProps} />
                 </DefaultLayout>
                 <Dialog
+                  fullScreen={isMobileView}
                   open={!!dialogRoute}
                   onClose={() => {
                     router.back()
