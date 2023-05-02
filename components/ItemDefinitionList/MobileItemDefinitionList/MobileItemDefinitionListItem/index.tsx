@@ -9,6 +9,7 @@ import {
 } from '@mui/material'
 import { AttributeResponse, ItemDefinitionResponse } from 'utils/types'
 import getContrastYIQ from 'utils/getContrastYIQ'
+import theme from 'utils/theme'
 import ItemDefinitionListItemKebab from 'components/ItemDefinitionList/ItemDefinitionListItemKebab'
 
 interface Props {
@@ -38,6 +39,8 @@ const renderAttributeChips = (attributes?: AttributeResponse[]) => {
 export default function MobileItemDefinitionListItem({
   itemDefinition,
 }: Props) {
+  const rowSpacing = 1
+
   return (
     <ListItem alignItems="flex-start" divider>
       <ListItemText
@@ -57,23 +60,18 @@ export default function MobileItemDefinitionListItem({
             component="span"
             variant="body2"
             color="text.secondary"
-            sx={{ display: 'block' }}
+            sx={{ display: 'block', mt: theme.spacing(rowSpacing) }}
           >
-            <Stack direction="column" spacing={1}>
+            <Stack direction="column" spacing={rowSpacing}>
+              {renderAttributeChips(itemDefinition.attributes)}
               <Stack
                 direction="row"
                 divider={<Divider orientation="vertical" flexItem />}
                 spacing={1}
               >
-                <Typography>
-                  Low quantity: {itemDefinition.lowStockThreshold}
-                </Typography>
-                <Typography>
-                  Critically low quantity:{' '}
-                  {itemDefinition.criticalStockThreshold}
-                </Typography>
+                <Typography color={theme.palette.warning.main}>{itemDefinition.lowStockThreshold}</Typography>
+                <Typography color={theme.palette.error.main}>{itemDefinition.criticalStockThreshold}</Typography>
               </Stack>
-              {renderAttributeChips(itemDefinition.attributes)}
             </Stack>
           </Typography>
         }
