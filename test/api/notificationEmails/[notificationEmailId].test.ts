@@ -2,22 +2,18 @@ import { ObjectId } from 'mongodb'
 import NotificationEmailSchema, {
   NotificationEmailDocument,
 } from 'server/models/NotificationEmail'
-import { ApiError, NotificationEmailResponse } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
 import notificationEmailHandler from 'pages/api/notificationEmails/[notificationEmailId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
-import { clientPromise } from '@api/auth/[...nextauth]'
 import { errors } from 'utils/constants/errors'
 import {
   validNotificationEmailResponse,
   mockObjectId,
   validNotificationEmailPutRequest,
 } from 'test/testData'
-
-// TODO: add assertion for GET 'called with' aggregate stuff
-// this may need to have different functionality
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())

@@ -10,9 +10,9 @@ import * as MongoDriver from 'server/actions/MongoDriver'
 import NotificationEmailSchema from 'server/models/NotificationEmail'
 import { errors } from 'utils/constants/errors'
 
-// @route GET api/notifications - Returns a list of all Notifications in the database - Private
-// @route POST /api/notifications - Create a Notification from request body - Private
-export default async function notificationsHandler(
+// @route GET api/notificationEmails - Returns a list of all Notifications in the database - Private
+// @route POST /api/notificationEmails - Create a Notification from request body - Private
+export default async function notificationEmailsHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -22,21 +22,21 @@ export default async function notificationsHandler(
 
     switch (req.method) {
       case 'GET': {
-        const notifications: NotificationEmailResponse[] =
+        const notificationEmails: NotificationEmailResponse[] =
           await MongoDriver.getEntities(NotificationEmailSchema)
-        const resStatus = notifications.length ? 200 : 204
+        const resStatus = notificationEmails.length ? 200 : 204
         return res.status(resStatus).json({
           success: true,
-          payload: notifications,
+          payload: notificationEmails,
         })
       }
       case 'POST': {
         apiNotificationEmailValidation(req.body, 'POST')
-        const notificationemail: NotificationEmailPostRequest = req.body
+        const notificationEmails: NotificationEmailPostRequest = req.body
         const response: NotificationEmailResponse =
           await MongoDriver.createEntity(
             NotificationEmailSchema,
-            notificationemail
+            notificationEmails
           )
 
         return res.status(201).json({
