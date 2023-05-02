@@ -1,4 +1,4 @@
-import { InventoryItemResponse, UserResponse } from "./responses"
+import { InventoryItemResponse, UserResponse } from './responses'
 
 export interface User {
   _id?: string
@@ -64,6 +64,11 @@ export interface Log {
   date: Date
 }
 
+export interface NotificationEmail {
+  _id?: string
+  emails: string[]
+}
+
 export type ServerModel =
   | User
   | ItemDefinition
@@ -71,3 +76,4 @@ export type ServerModel =
   | Category
   | Attribute
   | Log
+  | NotificationEmail
