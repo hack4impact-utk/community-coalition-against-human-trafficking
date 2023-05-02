@@ -13,7 +13,12 @@ export default function DialogLink({ href, children }: Props) {
     [href]
   )
   return (
-    <Link href={`?dialog=${dialogRoute?.name}`} as={href} passHref>
+    <Link
+      href={`?dialog=${dialogRoute?.name}`}
+      as={dialogRoute?.path}
+      passHref
+      style={{ textDecoration: 'none' }}
+    >
       {children}
     </Link>
   )
