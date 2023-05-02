@@ -1,8 +1,12 @@
 import {
+  Button,
+  DialogActions,
   DialogContent,
   DialogTitle,
 } from '@mui/material'
-import AttributeForm, { AttributeFormData } from 'components/AttributeForm'
+import AttributeForm, {
+  AttributeFormData,
+} from 'components/UpsertAttributeForm'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useEffect, useState } from 'react'
@@ -12,6 +16,9 @@ export default function AttributeEditForm() {
   // you have to do this to otherwise the AttributeForm says that
   // attribute is being used before its given a value
   const [attribute, setAttribute] = useState<AttributeResponse>()
+  const [attributeFormData, setAttributeFormData] = useState<AttributeFormData>(
+    {} as AttributeFormData
+  )
   const router = useRouter()
   const { id } = router.query
   useEffect(() => {
@@ -26,10 +33,7 @@ export default function AttributeEditForm() {
     fetchAttribute()
   }, [id])
 
-  const handleSubmit = async (
-    e: React.SyntheticEvent,
-    attributeFormData: AttributeFormData
-  ) => {
+  const handleSubmit = async (attributeFormData: AttributeFormData) => {
     await fetch(`/api/attributes/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
@@ -46,15 +50,33 @@ export default function AttributeEditForm() {
     await router.push('/settings/attributes')
     router.reload()
   }
+
+  const handleClose = () => {
+    router.push('/settings/attributes')
+  }
+
   return (
     <>
       <DialogTitle>Create New Attribute</DialogTitle>
       <DialogContent>
         <AttributeForm
           attribute={attribute}
-          onSubmit={handleSubmit}
-          submitBtnText="Update Attribute"
-        />
+          onChange={(attributeFormData) =>
+            setAttributeFormData(attributeFormData)
+          }
+        >
+          <DialogActions>
+            <Button onClick={handleClose} color="inherit">
+              Cancel
+            </Button>
+            <Button
+              onClick={() => handleSubmit(attributeFormData)}
+              color="primary"
+            >
+              Submit
+            </Button>
+          </DialogActions>
+        </AttributeForm>
       </DialogContent>
     </>
   )
