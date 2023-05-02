@@ -112,7 +112,7 @@ const headCells: readonly HeadCell[] = [
     label: 'Date',
     sortable: true,
     sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return comparator(log2.date, log1.date)
+      return comparator(log1.date, log2.date)
     },
   },
   {
@@ -184,7 +184,7 @@ interface Props {
 
 const DEFAULT_ROWS_PER_PAGE = 5
 const DEFAULT_ORDER_BY = 'date'
-const DEFAULT_ORDER = 'asc'
+const DEFAULT_ORDER = 'desc'
 
 export default function DesktopHistoryList(props: Props) {
   const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)

@@ -34,7 +34,7 @@ export default function MobileHistoryList(props: Props) {
     // sort table by date
     const newVisibleRows = props.logs.sort(
       (log1: LogResponse, log2: LogResponse) =>
-        dateComparator(log2.date, log1.date)
+        dateComparator(log1.date, log2.date)
     )
 
     setVisibleRows(newVisibleRows)
