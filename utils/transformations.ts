@@ -74,6 +74,7 @@ export function itemDefinitionFormDataToItemDefinitionRequest(
     category: formData.category._id,
     attributes: formData.attributes.map((attr) => attr._id),
   }
+}
 
 /**
  * Converts a Date object into a readable string
