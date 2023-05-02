@@ -190,6 +190,29 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
       })
     }
 
+    const startDate = router.query.startDate
+      ? new Date(router.query.startDate as string).getTime()
+      : undefined
+    const endDate = router.query.endDate
+      ? new Date(router.query.endDate as string).getTime()
+      : undefined
+
+    if (router.query.startDate && router.query.endDate) {
+      newTableData = newTableData.filter(
+        (log) =>
+          new Date(log.date).getTime() >= startDate! &&
+          new Date(log.date).getTime() <= endDate!
+      )
+    } else if (router.query.startDate) {
+      newTableData = newTableData.filter(
+        (log) => new Date(log.date).getTime() >= startDate!
+      )
+    } else if (router.query.endDate) {
+      newTableData = newTableData.filter(
+        (log) => new Date(log.date).getTime() <= endDate!
+      )
+    }
+
     if (router.query.startDate || router.query.endDate) {
       // if props.startDate or props.endDate are not present, use an arbitrarily far-away date
       const startDate = new Date(
