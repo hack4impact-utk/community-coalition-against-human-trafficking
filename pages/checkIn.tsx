@@ -13,6 +13,7 @@ import {
 import {
   CategoryResponse,
   CheckInOutFormData,
+  CheckInOutFormSchema,
   CheckInOutRequest,
   InventoryItemRequest,
   ItemDefinitionResponse,
@@ -62,7 +63,7 @@ export default function CheckInPage({
   )
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
-    {} as CheckInOutFormData
+    {} as CheckInOutFormSchema
   )
 
   const onSubmit = async (formData: CheckInOutFormData) => {
