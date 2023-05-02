@@ -15,7 +15,7 @@ import { errors } from 'utils/constants/errors'
 
 // @route GET api/notifications/[notificationEmailId] - Returns a single NotificationEmail object given by a notificationEmailId - Private
 // @route PUT api/notifications/[notificationEmailId] - Updates an existing NotificationEmail object (identified by notificationEmailId) with a new NotificationEmail object - Private
-// @route DELETE api/attributes/[attributeId] - Deletes a single NotificationEmail object (identified by notificationEmailId) - Private
+// @route DELETE api/attributes/[notificationEmailId] - Deletes a single NotificationEmail object (identified by notificationEmailId) - Private
 export default async function attributeHandler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -23,8 +23,8 @@ export default async function attributeHandler(
   try {
     // ensure user is logged in
     await serverAuth(req, res)
-    apiObjectIdValidation(req?.query?.attributeId as string)
-    const notificationEmailId = req.query.attributeId as string
+    apiObjectIdValidation(req?.query?.notificationEmailId as string)
+    const notificationEmailId = req.query.notificationEmailId as string
 
     switch (req.method) {
       case 'GET': {
