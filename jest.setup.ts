@@ -9,3 +9,21 @@ dotenv.config({ path: '.env.test' })
 jest.spyOn(mongoose, 'connect').mockImplementation(async () => {
   return mongoose
 })
+
+jest.mock('@next-auth/mongodb-adapter', () => ({
+  MongoDBAdapter: jest.fn().mockImplementation(() => { return { client: { close: () => {}}}})
+}))
+
+jest.mock('next-auth', () => {
+  return () => {}
+})
+
+jest.mock('mongodb', () => {
+  const origModule = jest.requireActual('mongodb')
+
+  return {
+    __esModule: true,
+    ...origModule,
+    MongoClient: jest.fn().mockImplementation(() => ({ connect: () => {}}))
+  }
+})

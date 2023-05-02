@@ -1,5 +1,5 @@
-import { AttributeFormData } from 'components/AttributeForm'
 import { ItemDefinitionFormData } from 'components/UpsertItemForm'
+import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
   AttributeRequest,
   CheckInOutFormData,
@@ -74,4 +74,22 @@ export function itemDefinitionFormDataToItemDefinitionRequest(
     category: formData.category._id,
     attributes: formData.attributes.map((attr) => attr._id),
   }
+
+/**
+ * Converts a Date object into a readable string
+ * Ex. "2022-02-10T14:47.12.419Z" becomes "February 10, 2022 9:47 AM"
+ * @param date The date to convert
+ * @returns A human-readable date string
+ */
+export function DateToReadableDateString(date: Date) {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }
+
+  return new Date(date).toLocaleString('en-US', dateOptions).replace(' at', '')
 }
