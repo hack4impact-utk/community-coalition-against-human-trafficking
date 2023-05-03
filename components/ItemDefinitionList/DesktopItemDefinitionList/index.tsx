@@ -193,10 +193,10 @@ export default function DesktopItemDefinitionList({
       (itemDefinition) =>
         ({
           id: itemDefinition._id,
-          name: itemDefinition.name,
+          name: itemDefinition.name.toLowerCase(),
           attributes: itemDefinition.attributes,
-          category: itemDefinition.category?.name,
-          internal: itemDefinition.internal ? 'Staff' : 'Clients',
+          category: itemDefinition.category?.name.toLowerCase(),
+          internal: itemDefinition.internal ? 'staff' : 'clients',
           itemDefinitionResponse: itemDefinition,
         } as SearchableData)
     )
@@ -206,17 +206,15 @@ export default function DesktopItemDefinitionList({
       filteredData = [
         ...filteredData.filter(
           (itemDefinition) =>
-            itemDefinition.name.toLowerCase().includes(searchLowerCase) ||
+            itemDefinition.name.includes(searchLowerCase) ||
             (itemDefinition.attributes &&
               itemDefinition.attributes
                 .map((attr) => attr.name.toLowerCase())
                 .join(' ')
                 .includes(searchLowerCase)) ||
             (itemDefinition.category &&
-              itemDefinition.category
-                .toLowerCase()
-                .includes(searchLowerCase)) ||
-            itemDefinition.internal.toLowerCase().includes(searchLowerCase)
+              itemDefinition.category.includes(searchLowerCase)) ||
+            itemDefinition.internal.includes(searchLowerCase)
         ),
       ]
     }
