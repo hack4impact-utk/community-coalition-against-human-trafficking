@@ -12,6 +12,8 @@ import {
 import Grid2 from '@mui/material/Unstable_Grid2'
 import { CheckBox } from '@mui/icons-material'
 import InfoIcon from '@mui/icons-material/Info'
+import { useAppDispatch, useAppSelector } from 'store'
+import { toggleKioskMode } from 'store/kiosk'
 
 export default function SettingsPage() {
   const theme = useTheme()
@@ -21,6 +23,9 @@ export default function SettingsPage() {
     setValue(newValue)
   }
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  const kiosk = useAppSelector((state) => state.kiosk)
+  const dispatch = useAppDispatch()
+
   return (
     <>
       <Grid2
@@ -60,7 +65,11 @@ export default function SettingsPage() {
           <Box
             sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
           >
-            <Checkbox />
+            <Checkbox
+              checked={kiosk.enabled}
+              // @ts-ignore
+              onClick={dispatch(toggleKioskMode())}
+            />
             <Typography mr={1}>Enable Kiosk Mode</Typography>
             <Tooltip
               title="Kiosk Mode enables a field to specify which staff member is checking an item in or out."
