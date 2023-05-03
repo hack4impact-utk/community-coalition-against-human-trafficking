@@ -14,6 +14,9 @@ import {
   InventoryItemPostRequest,
   InventoryItemPutRequest,
   InventoryItemResponse,
+  LogPostRequest,
+  LogPutRequest,
+  LogResponse,
   NotificationEmailPostRequest,
   NotificationEmailPutRequest,
   NotificationEmailResponse,
@@ -129,8 +132,29 @@ export const validInventoryItemResponse: InventoryItemResponse[] = [
   },
 ]
 
+export const validLogPostRequest: LogPostRequest = {
+  staff: validUserResponse[0]._id,
+  item: validInventoryItemResponse[0]._id,
+  quantityDelta: 1,
+  date: new Date(),
+}
+
+export const validLogPutRequest: LogPutRequest = {
+  ...validLogPostRequest,
+  _id: mockObjectId,
+}
+
+export const validLogResponse: LogResponse[] = [
+  {
+    _id: mockObjectId,
+    item: validInventoryItemResponse[0],
+    quantityDelta: 1,
+    staff: validUserResponse[0],
+    date: new Date(),
+  },
+]
 export const validNotificationEmailPostRequest: NotificationEmailPostRequest = {
-  emails: ['test@user.com', 'test2@gmail.com']
+  emails: ['test@user.com', 'test2@gmail.com'],
 }
 
 export const validNotificationEmailPutRequest: NotificationEmailPutRequest = {

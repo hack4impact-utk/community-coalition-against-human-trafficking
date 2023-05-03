@@ -1,3 +1,17 @@
+import { Button } from '@mui/material'
+import { useAppDispatch } from 'store'
+import { showSnackbar } from 'store/snackbar'
+
 export default function DashboardPage() {
-  return <h1>Dashboard</h1>
+  const dispatch = useAppDispatch()
+  return (
+    // @ts-ignore
+    <Button
+      onClick={() =>
+        dispatch(showSnackbar({ message: 'hello!', severity: 'success' }))
+      }
+    >
+      Open snackbar
+    </Button>
+  )
 }
