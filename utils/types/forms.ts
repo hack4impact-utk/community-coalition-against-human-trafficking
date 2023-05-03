@@ -87,14 +87,14 @@ export const checkInOutFormSchema = z
       const itemDefinitionAttributes = schema.itemDefinition.attributes
         .filter((attr) => attr.possibleValues instanceof Array)
         .map((attr) => attr._id)
-      console.log(itemDefinitionAttributes)
+      if (!itemDefinitionAttributes.length) return true
       if (!schema.attributes) return false
       const formAttributes = schema.attributes.map((attr) => attr.id)
       console.log(formAttributes)
       return formAttributes.length === itemDefinitionAttributes.length
     },
     {
-      message: 'All attributes must be defined in item definition',
+      message: 'Must define all attributes',
       path: ['attributes'],
     }
   )
@@ -107,13 +107,14 @@ export const checkInOutFormSchema = z
             attr.possibleValues === 'text' || attr.possibleValues === 'number'
         )
         .map((attr) => attr._id)
-      if (!schema.textFieldAttributes) return true
+      if (!itemDefinitionAttributes.length) return true
+      if (!schema.textFieldAttributes) return false
       const formAttributes = Object.keys(schema.textFieldAttributes)
 
       return formAttributes.length === itemDefinitionAttributes.length
     },
     {
-      message: 'All text field attributes must be defined in item definition',
+      message: 'Must define all attributes',
       path: ['textFieldAttributes'],
     }
   )

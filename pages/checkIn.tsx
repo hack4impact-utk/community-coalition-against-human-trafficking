@@ -14,12 +14,13 @@ import {
   CategoryResponse,
   CheckInOutFormData,
   checkInOutFormSchema,
+  CheckInOutRequest,
   ItemDefinitionResponse,
   UserResponse,
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import React from 'react'
-// import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
+import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
 import { apiWrapper } from 'utils/apiWrappers'
 import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
@@ -81,34 +82,28 @@ export default function CheckInPage({
     if (!res.success) {
       setErrors(transformZodErrors(res.error))
       return
+    } else {
+      setErrors({})
+      const checkInOutRequest: CheckInOutRequest =
+        checkInOutFormDataToCheckInOutRequest(formData)
+
+      // TODO better way of coding URLs
+      await fetch(`http://localhost:3000/api/inventoryItems/checkIn`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(checkInOutRequest),
+      })
+      setFormData((formData) => {
+        return {
+          user: formData.user,
+          date: new Date(),
+          quantityDelta: 0,
+        } as CheckInOutFormData
+      })
     }
-    // const checkInOutRequest: CheckInOutRequest =
-    //   checkInOutFormDataToCheckInOutRequest(formData)
-
-    // // TODO better way of coding URLs
-    // await fetch(`http://localhost:3000/api/inventoryItems/checkIn`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(checkInOutRequest),
-    // })
-    // setFormData((formData) => {
-    //   return {
-    //     user: formData.user,
-    //     date: new Date(),
-    //     quantityDelta: 0,
-    //   } as CheckInOutFormData
-    // })
   }
-
-  // const {
-  //   register,
-  //   formState: { errors },
-  //   handleSubmit,
-  // } = useForm<CheckInOutFormData>({
-  //   resolver: zodResolver(checkInOutFormSchema),
-  // })
 
   React.useEffect(() => {
     console.log(errors)

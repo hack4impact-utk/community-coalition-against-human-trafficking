@@ -31,7 +31,6 @@ function QuantityForm({ quantity, setQuantity, error }: Props) {
           inputProps: { min: 1, style: { textAlign: 'center' } },
         }}
         error={!!error}
-        helperText={error}
       ></TextField>
       <Box
         sx={{
