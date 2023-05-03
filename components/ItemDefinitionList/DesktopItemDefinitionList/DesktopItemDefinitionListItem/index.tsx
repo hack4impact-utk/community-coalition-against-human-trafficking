@@ -27,7 +27,9 @@ const renderAttributeChips = (attributes?: AttributeResponse[]) => {
   )
 }
 
-export default function ItemDefinitionListItem({ itemDefinition }: Props) {
+export default function DesktopItemDefinitionListItem({
+  itemDefinition,
+}: Props) {
   return (
     <TableRow>
       <TableCell>{itemDefinition.name}</TableCell>
