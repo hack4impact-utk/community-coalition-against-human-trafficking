@@ -1,4 +1,4 @@
-import { Button, Typography, Unstable_Grid2 as Grid2 } from '@mui/material'
+import { Button, Typography, Unstable_Grid2 as Grid2, useMediaQuery } from '@mui/material'
 import SearchField from 'components/SearchField'
 import AddIcon from '@mui/icons-material/Add'
 import ItemDefinitionList from 'components/ItemDefinitionList'
@@ -7,6 +7,7 @@ import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import { useRouter } from 'next/router'
+import DialogLink from 'components/DialogLink'
 import { useMediaQuery } from '@mui/material'
 import theme from 'utils/theme'
 
@@ -33,13 +34,15 @@ export default function ItemsPage({ itemDefinitions }: Props) {
           Items
         </Typography>
         <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
-          <Button
-            variant="outlined"
-            startIcon={<AddIcon />}
-            sx={{ width: '100%' }}
-          >
-            Create New Item
-          </Button>
+          <DialogLink href='/items/new' backHref='/settings/items'>
+            <Button
+              variant="outlined"
+              startIcon={<AddIcon />}
+              sx={{ width: '100%' }}
+            >
+              Create New Item
+            </Button>
+          </DialogLink>
         </Grid2>
       </Grid2>
       <Grid2 xs={12} md={5} lg={4} sx={{ px: 2 }}>
