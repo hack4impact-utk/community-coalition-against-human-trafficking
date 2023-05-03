@@ -137,6 +137,8 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0
 }
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key
@@ -213,7 +215,9 @@ export default function ItemDefinitionList({
                 .join(' ')
                 .includes(searchLowerCase)) ||
             (itemDefinition.category &&
-              itemDefinition.category.toLowerCase().includes(searchLowerCase)) ||
+              itemDefinition.category
+                .toLowerCase()
+                .includes(searchLowerCase)) ||
             itemDefinition.internal.toLowerCase().includes(searchLowerCase)
         ),
       ]
@@ -285,6 +289,7 @@ export default function ItemDefinitionList({
             {visibleRows &&
               visibleRows.map((itemDefinition) => (
                 <ItemDefinitionListItem
+                  key={itemDefinition.id}
                   itemDefinition={itemDefinition.itemDefinitionResponse}
                 />
               ))}
