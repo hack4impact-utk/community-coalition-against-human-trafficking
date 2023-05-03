@@ -39,7 +39,9 @@ export default function App({
                     router.back()
                   }}
                 >
-                  {dialogRoute?.component({ backHref: router.query.backHref as string })}
+                  {dialogRoute?.component({
+                    backHref: router.query.backHref as string,
+                  })}
                 </Dialog>
               </>
               <style jsx global>{`
