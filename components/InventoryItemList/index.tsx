@@ -1,6 +1,6 @@
 import { useMediaQuery, useTheme } from '@mui/material'
-import DesktopInventoryItemList from 'components/DesktopInventoryItemList'
-import MobileInventoryItemList from 'components/MobileInventoryItemList'
+import DesktopInventoryItemList from 'components/InventoryItemList/DesktopInventoryItemList'
+import MobileInventoryItemList from 'components/InventoryItemList/MobileInventoryItemList'
 import { InventoryItemResponse } from 'utils/types'
 
 interface InventoryItemListProps {
