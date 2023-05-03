@@ -25,10 +25,11 @@ import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
+import { useAppDispatch, useAppSelector } from 'store'
 import dayjs from 'dayjs'
-import { useAppSelector } from 'store'
 import DialogLink from 'components/DialogLink'
 import { KioskState } from 'store/types'
+import { showSnackbar } from 'store/snackbar'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -53,6 +54,7 @@ export default function CheckInPage({
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   const router = useRouter()
+  const dispatch = useAppDispatch()
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
@@ -78,13 +80,31 @@ export default function CheckInPage({
       checkInOutFormDataToCheckInOutRequest(formData)
 
     // TODO better way of coding URLs
-    await fetch(`http://localhost:3000/api/inventoryItems/checkIn`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(checkInOutRequest),
-    })
+    const response = await fetch(
+      `http://localhost:3000/api/inventoryItems/checkIn`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(checkInOutRequest),
+      }
+    )
+
+    const data = await response.json()
+
+    if (data.success) {
+      // @ts-ignore
+      dispatch(
+        showSnackbar({
+          message: 'Item successfully checked in.',
+          severity: 'success',
+        })
+      )
+    } else {
+      // @ts-ignore
+      dispatch(showSnackbar({ message: data.message, severity: 'error' }))
+    }
     setFormData((formData) => {
       return {
         user: formData.user,
