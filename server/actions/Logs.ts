@@ -3,6 +3,7 @@ import * as MongoDriver from 'server/actions/MongoDriver'
 import { PipelineStage } from 'mongoose'
 import { apiLogValidation } from 'utils/apiValidators'
 import { LogPostRequest } from 'utils/types'
+import { LogResponse } from 'utils/types'
 
 // aggregate pipeline does the following:
 // looks up user _ids in log
@@ -154,7 +155,11 @@ export async function getLogs() {
  * @returns The log with the given _id
  */
 export async function getLog(id: string) {
-  return await MongoDriver.getEntity(LogSchema, id, requestPipeline)
+  return (await MongoDriver.getEntity(
+    LogSchema,
+    id,
+    requestPipeline
+  )) as LogResponse
 }
 
 /**

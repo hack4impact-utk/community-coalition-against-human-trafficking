@@ -18,6 +18,9 @@ import {
   LogPutRequest,
   LogResponse,
   CheckInOutRequest,
+  NotificationEmailPostRequest,
+  NotificationEmailPutRequest,
+  NotificationEmailResponse,
 } from 'utils/types'
 
 export const mockObjectId = '6408a7156668c5655c25b105'
@@ -158,3 +161,19 @@ export const validCheckInOutRequest: CheckInOutRequest = {
   staff: mockObjectId,
   inventoryItem: validInventoryItemPostRequest,
 }
+
+export const validNotificationEmailPostRequest: NotificationEmailPostRequest = {
+  emails: ['test@user.com', 'test2@gmail.com'],
+}
+
+export const validNotificationEmailPutRequest: NotificationEmailPutRequest = {
+  ...validNotificationEmailPostRequest,
+  _id: mockObjectId,
+}
+
+export const validNotificationEmailResponse: NotificationEmailResponse[] = [
+  {
+    ...validNotificationEmailPostRequest,
+    _id: mockObjectId,
+  },
+]

@@ -25,6 +25,7 @@ interface Props {
   itemDefinitions: ItemDefinitionResponse[]
   categories: CategoryResponse[]
   inventoryItem?: InventoryItemResponse
+  itemDefinition?: ItemDefinitionResponse
   formData: CheckInOutFormData
   setFormData: React.Dispatch<React.SetStateAction<CheckInOutFormData>>
   errors: Record<keyof CheckInOutFormData, string>
@@ -58,6 +59,7 @@ function CheckInOutForm({
   itemDefinitions,
   categories,
   inventoryItem,
+  itemDefinition,
   formData,
   setFormData,
   errors,
@@ -89,6 +91,9 @@ function CheckInOutForm({
     ),
   }
 
+
+
+
   const [aaSelected, setAaSelected] = React.useState<
     AutocompleteAttributeOption[]
   >(initialFormData.attributes || [])
@@ -99,6 +104,12 @@ function CheckInOutForm({
       ...initialFormData,
     })
   }, [setFormData])
+  
+  React.useEffect(() => {
+    setFormData((fd) => {
+      return updateFormData(fd, { itemDefinition })
+    })
+  }, [itemDefinition])
 
   const updateTextFieldAttributes = (
     e: string | number,

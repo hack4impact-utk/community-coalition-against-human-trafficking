@@ -5,6 +5,7 @@ import {
   InventoryItemAttribute,
   ItemDefinition,
   Log,
+  NotificationEmail,
   User,
 } from '.'
 
@@ -55,6 +56,9 @@ export interface LogResponse extends Log {
   item: InventoryItemResponse
 }
 
+export interface NotificationEmailResponse extends NotificationEmail {
+  _id: string
+}
 export type ServerResponse =
   | UserResponse
   | ItemDefinitionResponse

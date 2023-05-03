@@ -6,6 +6,7 @@ import {
   InventoryItemResponse,
   ItemDefinition,
   Log,
+  NotificationEmail,
   User,
   UserResponse,
 } from '.'
@@ -69,6 +70,12 @@ export interface CheckInOutRequest {
   inventoryItem: Partial<InventoryItemRequest>
 }
 
+export type NotificationEmailPostRequest = NotificationEmailRequest
+export interface NotificationEmailPutRequest extends NotificationEmailRequest {
+  _id: string
+}
+export type NotificationEmailRequest = NotificationEmail
+
 export type ServerPostRequest =
   | UserPostRequest
   | ItemDefinitionPostRequest
@@ -76,6 +83,7 @@ export type ServerPostRequest =
   | CategoryPostRequest
   | AttributePostRequest
   | LogPostRequest
+  | NotificationEmailPostRequest
 
 export type ServerPutRequest =
   | UserPutRequest
@@ -84,6 +92,7 @@ export type ServerPutRequest =
   | CategoryPutRequest
   | AttributePutRequest
   | LogPutRequest
+  | NotificationEmailPutRequest
 
 export type ServerRequest =
   | UserRequest
@@ -92,3 +101,4 @@ export type ServerRequest =
   | CategoryRequest
   | AttributeRequest
   | LogRequest
+  | NotificationEmailRequest

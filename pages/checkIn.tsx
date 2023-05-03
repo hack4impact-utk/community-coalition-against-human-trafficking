@@ -26,9 +26,11 @@ import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
-import { useAppSelector } from 'store'
-import { KioskState } from 'store/types'
 import transformZodErrors from 'utils/transformZodErrors'
+import { useAppDispatch, useAppSelector } from 'store'
+import DialogLink from 'components/DialogLink'
+import { KioskState } from 'store/types'
+import { showSnackbar } from 'store/snackbar'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -54,12 +56,22 @@ export default function CheckInPage({
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   const router = useRouter()
   const [errors, setErrors] = React.useState<Record<string, string>>({})
+  const dispatch = useAppDispatch()
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
+  const [defaultItemDef, setDefaultItemDef] = React.useState(
+    itemDefinitions.find((id) => id._id === router.query.item)
+  )
   const kioskMode = useAppSelector(
     (state: { kiosk: KioskState }) => state.kiosk
   )
+
+  React.useEffect(() => {
+    setDefaultItemDef(
+      itemDefinitions.find((id) => id._id === router.query.item)
+    )
+  }, [router.query.item, itemDefinitions])
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
     {} as CheckInOutFormData
@@ -83,26 +95,42 @@ export default function CheckInPage({
     if (!res.success) {
       setErrors(transformZodErrors(res.error))
       return
-    } else {
-      setErrors({})
-      const checkInOutRequest: CheckInOutRequest =
-        checkInOutFormDataToCheckInOutRequest(formData)
+    }
+    setErrors({})
+    const checkInOutRequest: CheckInOutRequest =
+      checkInOutFormDataToCheckInOutRequest(formData)
 
-      // TODO better way of coding URLs
-      await fetch(`http://localhost:3000/api/inventoryItems/checkIn`, {
+    // TODO better way of coding URLs
+    const response = await fetch(
+      `http://localhost:3000/api/inventoryItems/checkIn`,
+      {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(checkInOutRequest),
-      })
-      setFormData((formData) => {
-        return {
-          user: formData.user,
-          date: new Date(),
-          quantityDelta: 0,
-        } as CheckInOutFormData
-      })
+      }
+    )
+    setFormData((formData) => {
+      return {
+        user: formData.user,
+        date: new Date(),
+        quantityDelta: 0,
+      } as CheckInOutFormData
+    })
+
+    const data = await response.json()
+    if (data.success) {
+      // @ts-ignore
+      dispatch(
+        showSnackbar({
+          message: 'Item successfully checked in.',
+          severity: 'success',
+        })
+      )
+    } else {
+      // @ts-ignore
+      dispatch(showSnackbar({ message: data.message, severity: 'error' }))
     }
   }
 
@@ -121,14 +149,16 @@ export default function CheckInPage({
         smOffset={2}
         lgOffset={3}
       >
-        <Button
-          variant="outlined"
-          fullWidth={isMobileView}
-          size="large"
-          sx={{ my: 2 }}
-        >
-          Create new item
-        </Button>
+        <DialogLink href="/items/new" backHref="/checkIn">
+          <Button
+            variant="outlined"
+            fullWidth={isMobileView}
+            size="large"
+            sx={{ my: 2 }}
+          >
+            Create new item
+          </Button>
+        </DialogLink>
       </Grid2>
 
       <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
@@ -148,6 +178,7 @@ export default function CheckInPage({
                 inventoryItem={inventoryItem}
                 // register={register}
                 errors={errors}
+                itemDefinition={defaultItemDef}
               />
             </CardContent>
 

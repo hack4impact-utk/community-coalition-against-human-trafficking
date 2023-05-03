@@ -1,14 +1,14 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ApiError, LogRequest } from 'utils/types'
 import { serverAuth } from 'utils/auth'
+import { getLogs } from 'server/actions/Logs'
+import { apiLogValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import LogSchema from 'server/models/Log'
-import { apiLogValidation } from 'utils/apiValidators'
-import { getLogs } from 'server/actions/Logs'
 
 // @route GET api/logs - Returns a list of all logs in the database - Private
 // @route POST /api/logs - Create a logs from request body - Private
-export default async function LogsHandler(
+export default async function logsHandler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {

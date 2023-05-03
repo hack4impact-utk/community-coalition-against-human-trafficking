@@ -22,16 +22,16 @@ import SearchAutocomplete from 'components/SearchAutocomplete'
 import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
 import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
-import LogsHandler from '@api/logs'
 import React from 'react'
 import deepCopy from 'utils/deepCopy'
 import { dateToReadableDateString } from 'utils/transformations'
+import logsHandler from '@api/logs'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       categories: await apiWrapper(categoriesHandler, context),
-      logs: await apiWrapper(LogsHandler, context),
+      logs: await apiWrapper(logsHandler, context),
     },
   }
 }
@@ -188,6 +188,29 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
           dateToReadableDateString(log.date).toLowerCase().includes(search)
         )
       })
+    }
+
+    const startDate = router.query.startDate
+      ? new Date(router.query.startDate as string).getTime()
+      : undefined
+    const endDate = router.query.endDate
+      ? new Date(router.query.endDate as string).getTime()
+      : undefined
+
+    if (router.query.startDate && router.query.endDate) {
+      newTableData = newTableData.filter(
+        (log) =>
+          new Date(log.date).getTime() >= startDate! &&
+          new Date(log.date).getTime() <= endDate!
+      )
+    } else if (router.query.startDate) {
+      newTableData = newTableData.filter(
+        (log) => new Date(log.date).getTime() >= startDate!
+      )
+    } else if (router.query.endDate) {
+      newTableData = newTableData.filter(
+        (log) => new Date(log.date).getTime() <= endDate!
+      )
     }
 
     if (router.query.startDate || router.query.endDate) {

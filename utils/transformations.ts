@@ -1,7 +1,12 @@
+import { ItemDefinitionFormData } from 'components/UpsertItemForm'
+import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
+  AttributeRequest,
   CheckInOutFormData,
   CheckInOutRequest,
   InventoryItemAttributeRequest,
+  InventoryItemRequest,
+  ItemDefinitionRequest,
 } from 'utils/types'
 
 /**
@@ -57,6 +62,29 @@ export function checkInOutFormDataToCheckInOutRequest(
   console.log('keys ', Object.keys(retVal))
 
   return retVal
+}
+
+export function attributeFormDataToAttributeRequest(
+  formData: AttributeFormData
+): AttributeRequest {
+  return {
+    name: formData.name,
+    color: formData.color,
+    possibleValues:
+      formData.valueType === 'list'
+        ? formData.listOptions!
+        : formData.valueType,
+  }
+}
+
+export function itemDefinitionFormDataToItemDefinitionRequest(
+  formData: ItemDefinitionFormData
+): ItemDefinitionRequest {
+  return {
+    ...formData,
+    category: formData.category._id,
+    attributes: formData.attributes.map((attr) => attr._id),
+  }
 }
 
 /**
