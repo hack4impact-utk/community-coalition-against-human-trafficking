@@ -1,22 +1,15 @@
-import { AutocompleteAttributeOption } from 'components/AttributeAutocomplete'
-import { Dayjs } from 'dayjs'
 import mongoose from 'mongoose'
-import {
-  CategoryResponse,
-  ItemDefinitionResponse,
-  UserResponse,
-} from 'utils/types'
 import { z } from 'zod'
 
-export interface CheckInOutFormData {
-  user: UserResponse
-  date: Dayjs
-  category: CategoryResponse
-  itemDefinition: ItemDefinitionResponse
-  attributes: AutocompleteAttributeOption[]
-  textFieldAttributes: TextFieldAttributesInternalRepresentation
-  quantityDelta: number
-}
+// export interface CheckInOutFormData {
+//   user: UserResponse
+//   date: Dayjs
+//   category: CategoryResponse
+//   itemDefinition: ItemDefinitionResponse
+//   attributes: AutocompleteAttributeOption[]
+//   textFieldAttributes: TextFieldAttributesInternalRepresentation
+//   quantityDelta: number
+// }
 
 const objectId = z
   .string()
@@ -24,60 +17,108 @@ const objectId = z
 
 const hexColor = z.string().refine((val) => /^#[0-9A-F]{6}$/i.test(val))
 
-const checkInOutFormSchema = z.object({
-  user: z
-    .object({
-      _id: objectId,
-      name: z.string(),
-      email: z.string().email(),
-      image: z.string().url(),
-    })
-    .required(),
-  date: z.instanceof(Dayjs),
-  category: z
-    .object({
-      _id: objectId,
-      name: z.string(),
-    })
-    .required(),
-  itemDefinition: z
-    .object({
-      _id: objectId,
-      name: z.string(),
-      internal: z.boolean(),
-      lowStockThreshold: z.number().int(),
-      criticalStockThreshold: z.number().int(),
-      category: z.object({
+export const checkInOutFormSchema = z
+  .object({
+    user: z
+      .object({
         _id: objectId,
         name: z.string(),
-      }),
-      attributes: z.array(
-        z.object({
+        email: z.string().email(),
+        image: z.string().url(),
+      })
+      .required(),
+    date: z
+      .date()
+      .refine((val) => val <= new Date(), "Date can't be in the future"),
+    category: z
+      .object({
+        _id: objectId,
+        name: z.string(),
+      })
+      .required(),
+    itemDefinition: z
+      .object({
+        _id: objectId,
+        name: z.string(),
+        internal: z.boolean(),
+        lowStockThreshold: z.number().int(),
+        criticalStockThreshold: z.number().int(),
+        category: z.object({
           _id: objectId,
           name: z.string(),
-          possibleValues: z.union([
-            z.literal('text'),
-            z.literal('number'),
-            z.array(z.string()),
-          ]),
+        }),
+        attributes: z.array(
+          z.object({
+            _id: objectId,
+            name: z.string(),
+            possibleValues: z.union([
+              z.literal('text'),
+              z.literal('number'),
+              z.array(z.string()),
+            ]),
+            color: hexColor,
+          })
+        ),
+      })
+      .required(),
+    attributes: z
+      .array(
+        z.object({
+          id: objectId,
+          label: z.string(),
+          value: z.string(),
           color: hexColor,
         })
-      ),
-    })
-    .required(),
-  attributes: z.array(
-    z.object({
-      id: objectId,
-      label: z.string(),
-      value: z.string(),
-      color: hexColor,
-    })
-  ),
-  textFieldAttributes: z.record(z.string()),
-  quantityDelta: z.number().int(),
-})
+      )
+      .optional(),
+    textFieldAttributes: z
+      .record(z.string(), z.union([z.string(), z.number()]))
+      .optional(),
+    quantityDelta: z
+      .number()
+      .int()
+      .refine((val) => {
+        return val > 0
+      }, 'Quantity must be positive'),
+  })
+  .refine(
+    (schema) => {
+      // assert that all attributes are defined in itemDefinition
+      const itemDefinitionAttributes = schema.itemDefinition.attributes
+        .filter((attr) => attr.possibleValues instanceof Array)
+        .map((attr) => attr._id)
+      console.log(itemDefinitionAttributes)
+      if (!schema.attributes) return false
+      const formAttributes = schema.attributes.map((attr) => attr.id)
+      console.log(formAttributes)
+      return formAttributes.length === itemDefinitionAttributes.length
+    },
+    {
+      message: 'All attributes must be defined in item definition',
+      path: ['attributes'],
+    }
+  )
+  .refine(
+    (schema) => {
+      // assert text field attributes are defined in itemDefinition
+      const itemDefinitionAttributes = schema.itemDefinition.attributes
+        .filter(
+          (attr) =>
+            attr.possibleValues === 'text' || attr.possibleValues === 'number'
+        )
+        .map((attr) => attr._id)
+      if (!schema.textFieldAttributes) return true
+      const formAttributes = Object.keys(schema.textFieldAttributes)
 
-export type CheckInOutFormSchema = z.infer<typeof checkInOutFormSchema>
+      return formAttributes.length === itemDefinitionAttributes.length
+    },
+    {
+      message: 'All text field attributes must be defined in item definition',
+      path: ['textFieldAttributes'],
+    }
+  )
+
+export type CheckInOutFormData = z.infer<typeof checkInOutFormSchema>
 
 export interface TextFieldAttributesInternalRepresentation {
   [key: string]: string | number

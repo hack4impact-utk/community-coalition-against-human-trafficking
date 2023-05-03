@@ -1,10 +1,7 @@
 import { SxProps } from '@mui/material'
 import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
-import {
-  InventoryItemAttributeRequest,
-  ListAttributeResponse,
-} from 'utils/types'
+import { ListAttributeResponse } from 'utils/types'
 
 export interface AutocompleteAttributeOption {
   id: string
@@ -22,6 +19,7 @@ interface Props {
   value?: AutocompleteAttributeOption[]
   setValue?: React.Dispatch<AutocompleteAttributeOption[]>
   sx?: SxProps
+  error: string
 }
 
 function buildAutocompleteOptions(
@@ -49,6 +47,7 @@ export default function AttributeAutocomplete({
   onChange,
   value,
   setValue,
+  error,
 }: Props) {
   const options = buildAutocompleteOptions(attributes)
 
@@ -73,7 +72,14 @@ export default function AttributeAutocomplete({
         ))
       }
       value={value}
-      renderInput={(params) => <TextField {...params} label="Attributes" />}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Attributes"
+          error={!!error}
+          helperText={error}
+        />
+      )}
       onChange={(e, attributes) => {
         if (setValue) setValue(attributes)
         if (!attributes.length) {

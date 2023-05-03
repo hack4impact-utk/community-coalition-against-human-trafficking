@@ -13,24 +13,21 @@ import {
 import {
   CategoryResponse,
   CheckInOutFormData,
-  CheckInOutFormSchema,
-  CheckInOutRequest,
-  InventoryItemRequest,
+  checkInOutFormSchema,
   ItemDefinitionResponse,
-  LogRequest,
   UserResponse,
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import React from 'react'
-import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
+// import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
 import { apiWrapper } from 'utils/apiWrappers'
 import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
-import dayjs from 'dayjs'
 import { useAppSelector } from 'store'
 import { KioskState } from 'store/types'
+import transformZodErrors from 'utils/transformZodErrors'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -55,6 +52,7 @@ export default function CheckInPage({
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   const router = useRouter()
+  const [errors, setErrors] = React.useState<Record<string, string>>({})
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
@@ -63,29 +61,58 @@ export default function CheckInPage({
   )
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
-    {} as CheckInOutFormSchema
+    {} as CheckInOutFormData
   )
 
-  const onSubmit = async (formData: CheckInOutFormData) => {
-    const checkInOutRequest: CheckInOutRequest =
-      checkInOutFormDataToCheckInOutRequest(formData)
-
-    // TODO better way of coding URLs
-    await fetch(`http://localhost:3000/api/inventoryItems/checkIn`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(checkInOutRequest),
-    })
-    setFormData((formData) => {
+  React.useEffect(() => {
+    setErrors((errors) => {
       return {
-        user: formData.user,
-        date: dayjs(new Date()),
-        quantityDelta: 0,
-      } as CheckInOutFormData
+        ...errors,
+        attributes: '',
+      }
     })
+  }, [formData.itemDefinition])
+
+  const onSubmit = async (formData: CheckInOutFormData) => {
+    const res = checkInOutFormSchema.safeParse(formData)
+
+    console.log(res)
+
+    if (!res.success) {
+      setErrors(transformZodErrors(res.error))
+      return
+    }
+    // const checkInOutRequest: CheckInOutRequest =
+    //   checkInOutFormDataToCheckInOutRequest(formData)
+
+    // // TODO better way of coding URLs
+    // await fetch(`http://localhost:3000/api/inventoryItems/checkIn`, {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(checkInOutRequest),
+    // })
+    // setFormData((formData) => {
+    //   return {
+    //     user: formData.user,
+    //     date: new Date(),
+    //     quantityDelta: 0,
+    //   } as CheckInOutFormData
+    // })
   }
+
+  // const {
+  //   register,
+  //   formState: { errors },
+  //   handleSubmit,
+  // } = useForm<CheckInOutFormData>({
+  //   resolver: zodResolver(checkInOutFormSchema),
+  // })
+
+  React.useEffect(() => {
+    console.log(errors)
+  }, [errors])
 
   return (
     <Grid2 container sx={{ flexGrow: 1 }}>
@@ -123,6 +150,8 @@ export default function CheckInPage({
                 formData={formData}
                 setFormData={setFormData}
                 inventoryItem={inventoryItem}
+                // register={register}
+                errors={errors}
               />
             </CardContent>
 
