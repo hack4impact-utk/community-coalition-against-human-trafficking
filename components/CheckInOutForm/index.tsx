@@ -44,6 +44,8 @@ function blankFormData(): CheckInOutFormData {
   }
 }
 
+const defaultSplitAttrs = separateAttributeResponses()
+
 function updateFormData(
   formData: CheckInOutFormData,
   update: Partial<CheckInOutFormData>
@@ -181,6 +183,12 @@ function CheckInOutForm({
       })
     }
   }, [formData.itemDefinition, prevFormData?.itemDefinition, setFormData])
+
+  React.useEffect(() => {
+    if (!formData.itemDefinition) {
+      setSplitAttrs(defaultSplitAttrs)
+    }
+  }, [formData.attributes, formData.textFieldAttributes])
 
   return (
     <FormControl fullWidth>
