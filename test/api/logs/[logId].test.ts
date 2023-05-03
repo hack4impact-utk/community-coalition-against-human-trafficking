@@ -1,19 +1,16 @@
 import { ObjectId } from 'mongodb'
-import ItemDefinitionSchema, {
-  ItemDefinitionDocument,
-} from 'server/models/ItemDefinition'
-import { ApiError, ItemDefinitionResponse } from 'utils/types'
+import LogSchema, { LogDocument } from 'server/models/Log'
+import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import itemDefinitionHandler from 'pages/api/itemDefinitions/[itemDefinitionId]'
+import logHandler from 'pages/api/logs/[logId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
-import { clientPromise } from '@api/auth/[...nextauth]'
 import { errors } from 'utils/constants/errors'
 import {
-  validItemDefinitionResponse,
+  validLogResponse,
   mockObjectId,
-  validItemDefinitionPutRequest,
+  validLogPutRequest,
 } from 'test/testData'
 
 // TODO: add assertion for GET 'called with' aggregate stuff
@@ -29,7 +26,7 @@ afterAll(() => {
   jest.restoreAllMocks()
 })
 
-describe('api/itemDefinitions/[itemDefinitionId]', () => {
+describe('api/logs/[logId]', () => {
   test('thrown error is caught, response is unsuccessful and shows correct error message', async () => {
     jest.spyOn(auth, 'serverAuth').mockImplementationOnce(async () => {
       throw new ApiError(401, errors.unauthorized)
@@ -37,14 +34,14 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: `/api/itemDefinitions/${mockObjectId}`,
+      url: `/api/logs/${mockObjectId}`,
       query: {
-        itemDefinitionId: mockObjectId,
+        logId: mockObjectId,
       },
     })
     const response = createResponse()
 
-    await itemDefinitionHandler(request, response)
+    await logHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -56,14 +53,14 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: `/api/itemDefinitions/${mockObjectId}`,
+      url: `/api/logs/${mockObjectId}`,
       query: {
-        itemDefinitionId: mockObjectId,
+        logId: mockObjectId,
       },
     })
     const response = createResponse()
 
-    await itemDefinitionHandler(request, response)
+    await logHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -77,66 +74,68 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
         .spyOn(MongoDriver, 'getEntity')
         .mockImplementation(
           async () =>
-            validItemDefinitionResponse[0] as ItemDefinitionDocument & {
+            validLogResponse[0] as LogDocument & {
               _id: ObjectId
             }
         )
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/itemDefinitions/${mockObjectId}`,
+        url: `/api/logs/${mockObjectId}`,
         query: {
-          itemDefinitionId: mockObjectId,
+          logId: mockObjectId,
         },
       })
 
       const response = createResponse()
 
-      await itemDefinitionHandler(request, response)
+      await logHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
       expect(response.statusCode).toBe(200)
-      expect(data).toEqual(validItemDefinitionResponse[0])
+      expect({ ...data, date: new Date(data.date) }).toEqual(
+        validLogResponse[0]
+      )
     })
   })
 
   describe('PUT', () => {
-    jest.spyOn(apiValidator, 'apiItemDefinitionValidation').mockImplementation()
+    jest.spyOn(apiValidator, 'apiLogValidation').mockImplementation()
     test('valid call returns correct data', async () => {
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(
           async () =>
-            validItemDefinitionResponse[0] as ItemDefinitionDocument & {
+            validLogResponse[0] as LogDocument & {
               _id: ObjectId
             }
         )
-      const mockApiItemDefinitionValidation = jest
-        .spyOn(apiValidator, 'apiItemDefinitionValidation')
+      const mockApiLogValidation = jest
+        .spyOn(apiValidator, 'apiLogValidation')
         .mockImplementation()
 
       const request = createRequest({
         method: 'PUT',
-        url: `/api/itemDefinitions/${mockObjectId}`,
+        url: `/api/logs/${mockObjectId}`,
         query: {
-          itemDefinitionId: mockObjectId,
+          logId: mockObjectId,
         },
-        body: validItemDefinitionPutRequest,
+        body: validLogPutRequest,
       })
 
       const response = createResponse()
 
-      await itemDefinitionHandler(request, response)
+      await logHandler(request, response)
       const data = response._getJSONData().payload
 
-      expect(mockApiItemDefinitionValidation).toHaveBeenCalledTimes(1)
+      expect(mockApiLogValidation).toHaveBeenCalledTimes(1)
       expect(mockUpdateEntity).toHaveBeenCalledTimes(1)
       expect(mockUpdateEntity).lastCalledWith(
-        ItemDefinitionSchema,
+        LogSchema,
         mockObjectId,
-        validItemDefinitionPutRequest
+        validLogPutRequest
       )
       expect(response.statusCode).toBe(200)
       expect(data).toEqual({})
@@ -151,20 +150,17 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: `/api/itemDefinitions/${mockObjectId}`,
+        url: `/api/logs/${mockObjectId}`,
         query: {
-          itemDefinitionId: mockObjectId,
+          logId: mockObjectId,
         },
       })
       const response = createResponse()
 
-      await itemDefinitionHandler(request, response)
+      await logHandler(request, response)
 
       expect(mockDeleteEntity).toHaveBeenCalledTimes(1)
-      expect(mockDeleteEntity).lastCalledWith(
-        ItemDefinitionSchema,
-        mockObjectId
-      )
+      expect(mockDeleteEntity).lastCalledWith(LogSchema, mockObjectId)
       expect(response.statusCode).toBe(200)
       expect(response._getJSONData().payload).toEqual({})
     })

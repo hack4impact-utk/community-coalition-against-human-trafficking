@@ -4,7 +4,7 @@ import HistoryListItemKebab from '../../HistoryListItemKebab'
 import Grid2 from '@mui/material/Unstable_Grid2'
 import theme from 'utils/theme'
 import renderAttributeChips from 'utils/renderAttributeChips'
-import { DateToReadableDateString } from 'utils/transformations'
+import { dateToReadableDateString } from 'utils/transformations'
 
 interface HistoryListItemProps {
   log: LogResponse
@@ -45,7 +45,7 @@ export default function HistoryListItem({ log }: HistoryListItemProps) {
       <TableCell>
         {`${log.quantityDelta > 0 ? '+' : ''}${log.quantityDelta}`}
       </TableCell>
-      <TableCell>{DateToReadableDateString(log.date)}</TableCell>
+      <TableCell>{dateToReadableDateString(log.date)}</TableCell>
       <TableCell sx={{ width: '10px' }}>
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
           <HistoryListItemKebab log={log} />
