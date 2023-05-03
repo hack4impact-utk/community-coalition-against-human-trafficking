@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, LogRequest } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { getLogs } from 'server/actions/Logs'
 

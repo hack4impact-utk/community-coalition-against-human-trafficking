@@ -246,7 +246,7 @@ export default function DesktopHistoryList(props: Props) {
       })
     }
     setTableData(newTableData)
-    var rowsOnMount = sortTable(newTableData, orderBy, order)
+    let rowsOnMount = sortTable(newTableData, orderBy, order)
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
     setVisibleRows(rowsOnMount)

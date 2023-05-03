@@ -1,10 +1,7 @@
 import { SxProps } from '@mui/material'
 import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
-import {
-  InventoryItemAttributeRequest,
-  ListAttributeResponse,
-} from 'utils/types'
+import { ListAttributeResponse } from 'utils/types'
 
 export interface AutocompleteAttributeOption {
   id: string

@@ -25,6 +25,7 @@ const settings: AttributeListItemKebabOption[] = [
 ]
 
 export default function AttributeListItemKebab({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   attribute,
 }: AttributeListItemKebabProps) {
   // kebab menu functionality

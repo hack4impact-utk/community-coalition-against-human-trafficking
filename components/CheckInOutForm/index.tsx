@@ -53,6 +53,7 @@ function updateFormData(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const defaultSplitAttrs = separateAttributeResponses()
 
 function CheckInOutForm({
@@ -92,9 +93,6 @@ function CheckInOutForm({
     ),
   }
 
-
-
-
   const [aaSelected, setAaSelected] = React.useState<
     AutocompleteAttributeOption[]
   >(initialFormData.attributes || [])
@@ -105,7 +103,7 @@ function CheckInOutForm({
       ...initialFormData,
     })
   }, [setFormData])
-  
+
   React.useEffect(() => {
     setFormData((fd) => {
       return updateFormData(fd, { itemDefinition })

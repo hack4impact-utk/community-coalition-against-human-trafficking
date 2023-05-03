@@ -3,24 +3,26 @@ import { TableRow, TableCell, Tooltip, Box } from '@mui/material'
 import theme from 'utils/theme'
 import * as React from 'react'
 import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
-import { Data } from '../types'
 import renderAttributeChips from 'utils/renderAttributeChips'
+import { InventoryItemResponse } from 'utils/types'
 
 interface InventoryItemListItemProps {
-  inventoryItemData: Data
+  inventoryItem: InventoryItemResponse
 }
 
 export default function DesktopInventoryItemListItem({
-  inventoryItemData: inventoryItemData,
+  inventoryItem,
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
-  const renderWarningIcon = (inventoryItemData: Data) => {
-    if (inventoryItemData.quantity < inventoryItemData.lowStockThreshold) {
+  const renderWarningIcon = (inventoryItem: InventoryItemResponse) => {
+    if (
+      inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
+    ) {
       return (
         <Tooltip
           title={
-            inventoryItemData.quantity <
-            inventoryItemData.criticalStockThreshold
+            inventoryItem.quantity <
+            inventoryItem.itemDefinition.criticalStockThreshold
               ? 'This item has critically low stock.'
               : 'This item has low stock.'
           }
@@ -30,8 +32,8 @@ export default function DesktopInventoryItemListItem({
             sx={{
               ml: 1,
               color:
-                inventoryItemData.quantity <
-                inventoryItemData.criticalStockThreshold
+                inventoryItem.quantity <
+                inventoryItem.itemDefinition.criticalStockThreshold
                   ? theme.palette.error.main
                   : theme.palette.warning.light,
             }}
@@ -50,7 +52,7 @@ export default function DesktopInventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItemData.name}
+        {inventoryItem.itemDefinition.name}
       </TableCell>
       <TableCell
         sx={{
@@ -59,7 +61,7 @@ export default function DesktopInventoryItemListItem({
           gap: '0.25rem',
         }}
       >
-        {renderAttributeChips(inventoryItemData.attributes)}
+        {renderAttributeChips(inventoryItem.attributes)}
       </TableCell>
       <TableCell
         sx={{
@@ -67,7 +69,7 @@ export default function DesktopInventoryItemListItem({
           justifyContent: 'center',
         }}
       >
-        {inventoryItemData.category}
+        {inventoryItem.itemDefinition.category?.name}
       </TableCell>
       <TableCell
         sx={{
@@ -82,8 +84,8 @@ export default function DesktopInventoryItemListItem({
             alignItems: 'flex-end',
           }}
         >
-          {inventoryItemData.quantity.toLocaleString()}
-          {renderWarningIcon(inventoryItemData)}
+          {inventoryItem.quantity.toLocaleString()}
+          {renderWarningIcon(inventoryItem)}
         </span>
       </TableCell>
       <TableCell
@@ -92,13 +94,11 @@ export default function DesktopInventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItemData.assignee ? inventoryItemData.assignee : ''}
+        {inventoryItem.assignee ? inventoryItem.assignee.name : ''}
       </TableCell>
       <TableCell sx={{ width: '10px' }}>
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
-          <InventoryItemListItemKebab
-            inventoryItem={inventoryItemData.inventoryItem}
-          />
+          <InventoryItemListItemKebab inventoryItem={inventoryItem} />
         </Box>
       </TableCell>
     </TableRow>

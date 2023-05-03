@@ -5,9 +5,9 @@ import { showSnackbar } from 'store/snackbar'
 export default function DashboardPage() {
   const dispatch = useAppDispatch()
   return (
-    // @ts-ignore
     <Button
       onClick={() =>
+        // @ts-ignore
         dispatch(showSnackbar({ message: 'hello!', severity: 'success' }))
       }
     >

@@ -25,9 +25,9 @@ import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'store'
 import React from 'react'
-import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
 import dayjs from 'dayjs'
 import { showSnackbar } from 'store/snackbar'
+import { checkInOutFormDataToInventoryItemRequest } from 'utils/transformations'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -64,7 +64,7 @@ export default function CheckOutPage({
 
   const onSubmit = async (formData: CheckInOutFormData) => {
     const inventoryItem: Partial<InventoryItemRequest> =
-      CheckInOutFormDataToInventoryItemRequest(formData)
+      checkInOutFormDataToInventoryItemRequest(formData)
 
     // TODO better way of coding URLs
     const response = await fetch(

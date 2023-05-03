@@ -2,7 +2,7 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React from 'react'
 import theme from 'utils/theme'
-import { AttributeResponse, LogResponse } from 'utils/types'
+import { LogResponse } from 'utils/types'
 
 interface HistoryListItemKebabOption {
   name: string
@@ -21,6 +21,7 @@ const settings: HistoryListItemKebabOption[] = [
 ]
 
 export default function AttributeListItemKebab({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   log,
 }: HistoryListItemKebabProps) {
   // kebab menu functionality

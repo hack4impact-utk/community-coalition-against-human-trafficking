@@ -10,61 +10,55 @@ import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import InventoryItemListItem from 'components/DesktopInventoryItemList/DesktopInventoryItemListItem'
-import {
-  InventoryItemAttributeResponse,
-  InventoryItemResponse,
-} from 'utils/types'
-import { Data } from './types'
+import { InventoryItemResponse } from 'utils/types'
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1
-  }
-  return 0
-}
-
-type Order = 'asc' | 'desc'
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy)
-}
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0])
-    if (order !== 0) {
-      return order
-    }
-    return a[1] - b[1]
-  })
-  return stabilizedThis.map((el) => el[0])
-}
+type HeadId =
+  | 'name'
+  | 'attributes'
+  | 'category'
+  | 'quantity'
+  | 'assignee'
+  | 'kebab'
 
 interface HeadCell {
   disablePadding: boolean
-  id: keyof Data
+  id: HeadId
   label: string
   numeric: boolean
   sortable?: boolean
+  sortFn?(a: InventoryItemResponse, b: InventoryItemResponse): number
+}
+
+function comparator(v1?: string | number, v2?: string | number) {
+  if (!v1 || !v2) {
+    return 0
+  }
+
+  if (v1 < v2) {
+    return -1
+  }
+
+  if (v1 > v2) {
+    return 1
+  }
+
+  return 0
+}
+
+function sortTable(
+  tableData: InventoryItemResponse[],
+  sortBy: HeadId,
+  order: Order
+) {
+  const orderByHeadCell = headCells.filter(
+    (headCell) => headCell.id === sortBy.toString()
+  )[0]
+
+  return tableData.sort((a: InventoryItemResponse, b: InventoryItemResponse) =>
+    order === 'asc'
+      ? orderByHeadCell.sortFn!(a, b)
+      : orderByHeadCell.sortFn!(b, a)
+  )
 }
 
 const headCells: readonly HeadCell[] = [
@@ -74,6 +68,9 @@ const headCells: readonly HeadCell[] = [
     disablePadding: true,
     label: 'Item Name',
     sortable: true,
+    sortFn(a, b) {
+      return comparator(a.itemDefinition.name, b.itemDefinition.name)
+    },
   },
   {
     id: 'attributes',
@@ -87,6 +84,12 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Category',
     sortable: true,
+    sortFn(a, b) {
+      return comparator(
+        a.itemDefinition.category?.name,
+        b.itemDefinition.category?.name
+      )
+    },
   },
   {
     id: 'quantity',
@@ -94,6 +97,9 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Quantity',
     sortable: true,
+    sortFn(a, b) {
+      return comparator(a.quantity, b.quantity)
+    },
   },
   {
     id: 'assignee',
@@ -101,6 +107,9 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Assignee',
     sortable: true,
+    sortFn(a, b) {
+      return comparator(a.assignee?.name, b.assignee?.name)
+    },
   },
   {
     id: 'kebab',
@@ -111,11 +120,10 @@ const headCells: readonly HeadCell[] = [
   },
 ]
 
+type Order = 'asc' | 'desc'
+
 interface EnhancedTableProps {
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data
-  ) => void
+  onRequestSort: (event: React.MouseEvent<unknown>, property: HeadId) => void
   order: Order
   orderBy: string
 }
@@ -123,7 +131,7 @@ interface EnhancedTableProps {
 function InventoryItemListHeader(props: EnhancedTableProps) {
   const { order, orderBy, onRequestSort } = props
   const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
+    (property: HeadId) => (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property)
     }
 
@@ -171,34 +179,23 @@ const DEFAULT_ORDER = 'asc'
 
 export default function DesktopInventoryItemList(props: Props) {
   const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] = React.useState<keyof Data>(DEFAULT_ORDER_BY)
+  const [orderBy, setOrderBy] = React.useState<HeadId>(DEFAULT_ORDER_BY)
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = React.useState<Data[] | null>(null)
-  const [tableData, setTableData] = React.useState<Data[]>([])
+  const [visibleRows, setVisibleRows] = React.useState<
+    InventoryItemResponse[] | null
+  >(null)
+  const [tableData, setTableData] = React.useState<InventoryItemResponse[]>([])
 
   React.useEffect(() => {
-    let newTableData = props.inventoryItems.map((item) => {
-      return {
-        name: item.itemDefinition.name,
-        attributes: item.attributes,
-        category: item.itemDefinition.category?.name,
-        quantity: item.quantity,
-        assignee: item.assignee?.name,
-        kebab: '',
-        _id: item._id,
-        lowStockThreshold: item.itemDefinition.lowStockThreshold,
-        criticalStockThreshold: item.itemDefinition.criticalStockThreshold,
-        inventoryItem: item,
-      }
-    })
+    let newTableData = props.inventoryItems
 
     if (props.search) {
       const search = props.search.toLowerCase()
       newTableData = [
         ...newTableData.filter((item) => {
           return (
-            item.name.toLowerCase().includes(search) ||
+            item.itemDefinition.name.toLowerCase().includes(search) ||
             (item.attributes &&
               item.attributes
                 .map((attr) =>
@@ -206,8 +203,11 @@ export default function DesktopInventoryItemList(props: Props) {
                 )
                 .join(' ')
                 .includes(search)) ||
-            (item.category && item.category.toLowerCase().includes(search)) ||
-            (item.assignee && item.assignee.toLowerCase().includes(search))
+            (item.itemDefinition.category?.name &&
+              item.itemDefinition.category?.name
+                .toLowerCase()
+                .includes(search)) ||
+            (item.assignee && item.assignee.name.toLowerCase().includes(search))
           )
         }),
       ]
@@ -216,15 +216,13 @@ export default function DesktopInventoryItemList(props: Props) {
     if (props.category) {
       newTableData = [
         ...newTableData.filter((item) => {
-          return item.category === props.category
+          return item.itemDefinition.category?.name === props.category
         }),
       ]
     }
     setTableData(newTableData)
-    let rowsOnMount = stableSort(
-      newTableData,
-      getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY)
-    )
+
+    let rowsOnMount = sortTable(newTableData, orderBy, order)
     rowsOnMount = rowsOnMount.slice(
       0 * DEFAULT_ROWS_PER_PAGE,
       0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
@@ -234,16 +232,13 @@ export default function DesktopInventoryItemList(props: Props) {
   }, [props.search, props.category])
 
   const handleRequestSort = React.useCallback(
-    (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => {
+    (event: React.MouseEvent<unknown>, newOrderBy: HeadId) => {
       const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder = isAsc ? 'desc' : 'asc'
+      const toggledOrder: Order = isAsc ? 'desc' : 'asc'
       setOrder(toggledOrder)
       setOrderBy(newOrderBy)
 
-      const sortedRows = stableSort(
-        tableData,
-        getComparator(toggledOrder, newOrderBy)
-      )
+      const sortedRows = sortTable(tableData, newOrderBy, toggledOrder)
       const updatedRows = sortedRows.slice(
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
@@ -255,7 +250,7 @@ export default function DesktopInventoryItemList(props: Props) {
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
-    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
+    const sortedRows = sortTable(tableData, orderBy, order)
     const updatedRows = sortedRows.slice(
       newPage * rowsPerPage,
       newPage * rowsPerPage + rowsPerPage
@@ -270,7 +265,7 @@ export default function DesktopInventoryItemList(props: Props) {
     setRowsPerPage(updatedRowsPerPage)
     setPage(0)
 
-    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
+    const sortedRows = sortTable(tableData, orderBy, order)
     const updatedRows = sortedRows.slice(
       0 * updatedRowsPerPage,
       0 * updatedRowsPerPage + updatedRowsPerPage
@@ -290,10 +285,7 @@ export default function DesktopInventoryItemList(props: Props) {
           <TableBody>
             {visibleRows &&
               visibleRows.map((item) => (
-                <InventoryItemListItem
-                  inventoryItemData={item}
-                  key={item._id}
-                />
+                <InventoryItemListItem inventoryItem={item} key={item._id} />
               ))}
           </TableBody>
         </Table>

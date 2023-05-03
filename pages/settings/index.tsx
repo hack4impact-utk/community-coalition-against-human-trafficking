@@ -3,14 +3,12 @@ import { MuiChipsInput, MuiChipsInputChip } from 'mui-chips-input'
 import {
   Box,
   Checkbox,
-  TextField,
   Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
 import Grid2 from '@mui/material/Unstable_Grid2'
-import { CheckBox } from '@mui/icons-material'
 import InfoIcon from '@mui/icons-material/Info'
 
 export default function SettingsPage() {
