@@ -70,6 +70,7 @@ export default function CheckInPage({
       return {
         ...errors,
         attributes: '',
+        textFieldAttributes: '',
       }
     })
   }, [formData.itemDefinition])

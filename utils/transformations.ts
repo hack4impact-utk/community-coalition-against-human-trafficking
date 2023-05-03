@@ -53,6 +53,9 @@ export function checkInOutFormDataToCheckInOutRequest(
     inventoryItem: partialInventoryItem,
   }
 
+  console.log(retVal)
+  console.log('keys ', Object.keys(retVal))
+
   return retVal
 }
 
