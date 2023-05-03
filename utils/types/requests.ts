@@ -63,12 +63,18 @@ export interface LogPutRequest extends LogRequest {
   _id: string
 }
 
+export interface CheckInOutRequest {
+  quantityDelta: number
+  date: Date
+  staff: string
+  inventoryItem: Partial<InventoryItemRequest>
+}
+
 export type NotificationEmailPostRequest = NotificationEmailRequest
 export interface NotificationEmailPutRequest extends NotificationEmailRequest {
   _id: string
 }
 export type NotificationEmailRequest = NotificationEmail
-
 
 export type ServerPostRequest =
   | UserPostRequest

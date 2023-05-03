@@ -106,7 +106,12 @@ describe('api/logs/[logId]', () => {
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        .mockImplementation(async () => {})
+        .mockImplementation(
+          async () =>
+            validLogResponse[0] as LogDocument & {
+              _id: ObjectId
+            }
+        )
       const mockApiLogValidation = jest
         .spyOn(apiValidator, 'apiLogValidation')
         .mockImplementation()

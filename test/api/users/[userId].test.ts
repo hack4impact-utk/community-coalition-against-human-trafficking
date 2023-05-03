@@ -31,7 +31,6 @@ beforeAll(() => {
 afterAll(() => {
   jest.restoreAllMocks()
   mongoose.connection.close()
-  
 })
 
 beforeEach(() => {
@@ -117,7 +116,12 @@ describe('api/users/[userId]', () => {
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        .mockImplementation(async () => {})
+        .mockImplementation(
+          async () =>
+            validUserResponse[0] as UserDocument & {
+              _id: ObjectId
+            }
+        )
       const mockApiUserValidation = jest
         .spyOn(apiValidator, 'apiUserValidation')
         .mockImplementation()
