@@ -97,10 +97,6 @@ export default function CheckInPage({
     })
   }
 
-  React.useEffect(() => {
-    console.log(formData)
-  }, [formData])
-
   return (
     <Grid2 container sx={{ flexGrow: 1 }}>
       <Grid2
