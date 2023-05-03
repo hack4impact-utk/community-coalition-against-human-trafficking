@@ -17,6 +17,7 @@ import {
   LogPostRequest,
   LogPutRequest,
   LogResponse,
+  CheckInOutRequest,
   NotificationEmailPostRequest,
   NotificationEmailPutRequest,
   NotificationEmailResponse,
@@ -153,6 +154,14 @@ export const validLogResponse: LogResponse[] = [
     date: new Date(),
   },
 ]
+
+export const validCheckInOutRequest: CheckInOutRequest = {
+  quantityDelta: 1,
+  date: new Date(),
+  staff: mockObjectId,
+  inventoryItem: validInventoryItemPostRequest,
+}
+
 export const validNotificationEmailPostRequest: NotificationEmailPostRequest = {
   emails: ['test@user.com', 'test2@gmail.com'],
 }

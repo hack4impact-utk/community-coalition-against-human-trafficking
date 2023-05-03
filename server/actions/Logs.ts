@@ -1,6 +1,8 @@
 import LogSchema from 'server/models/Log'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import { PipelineStage } from 'mongoose'
+import { apiLogValidation } from 'utils/apiValidators'
+import { LogPostRequest } from 'utils/types'
 import { LogResponse } from 'utils/types'
 
 // aggregate pipeline does the following:
@@ -158,4 +160,14 @@ export async function getLog(id: string) {
     id,
     requestPipeline
   )) as LogResponse
+}
+
+/**
+ * Creates a log
+ * @logRequest The log to create
+ */
+export async function createLog(logRequest: LogPostRequest) {
+  apiLogValidation(logRequest as Partial<LogPostRequest>, 'POST')
+
+  await MongoDriver.createEntity(LogSchema, logRequest)
 }

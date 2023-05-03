@@ -149,12 +149,14 @@ export async function checkInInventoryItem(
   }
   item.attributes?.sort((a, b) => (a.attribute > b.attribute ? 1 : -1))
 
+  let res
+
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
   if (itemMatches.length) {
     itemMatches[0].quantity += itemQuantity
     item = deepCopy(itemMatches[0])
     apiInventoryItemValidation(item, 'PUT')
-    MongoDriver.updateEntity(
+    res = await MongoDriver.updateEntity(
       InventoryItemSchema,
       item._id as string,
       item as InventoryItemPutRequest
@@ -162,11 +164,12 @@ export async function checkInInventoryItem(
   } else {
     item.quantity = itemQuantity
     apiInventoryItemValidation(item, 'POST')
-    MongoDriver.createEntity(
+    res = await MongoDriver.createEntity(
       InventoryItemSchema,
       item as InventoryItemPostRequest
     )
   }
+  return res._id
 }
 
 /**
@@ -185,6 +188,9 @@ export async function checkOutInventoryItem(
   if (quantityRemoved < 1) {
     throw new ApiError(400, 'Check out quantity should be greater than 0')
   }
+
+  let res
+
   const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
   if (itemMatches.length) {
     itemMatches[0].quantity -= quantityRemoved
@@ -194,12 +200,13 @@ export async function checkOutInventoryItem(
     } else {
       item = deepCopy(itemMatches[0])
       apiInventoryItemValidation(item, 'PUT')
-      MongoDriver.updateEntity(
+      res = await MongoDriver.updateEntity(
         InventoryItemSchema,
         item._id as string,
         item as InventoryItemPutRequest
       )
     }
+    return res._id
   } else {
     throw new ApiError(404, errors.notFound)
   }
