@@ -55,15 +55,25 @@ export default function InventoryItemListItemKebab({
     {
       name: 'Delete',
       onClick: () => {
-        if(window.confirm("Are you sure you want to delete this from the inventory?")) {
-        fetch(`/api/inventoryItems/${inventoryItem._id}`, {
-          method: 'DELETE',
-        }).then(() => {
-          window.location.reload()
-          // @ts-ignore
-          dispatch(showSnackbar({message: "Item successfully deleted.", severity: "success"}))
-        })
-      }},
+        if (
+          window.confirm(
+            'Are you sure you want to delete this from the inventory?'
+          )
+        ) {
+          fetch(`/api/inventoryItems/${inventoryItem._id}`, {
+            method: 'DELETE',
+          }).then(() => {
+            window.location.reload()
+            // @ts-ignore
+            dispatch(
+              showSnackbar({
+                message: 'Item successfully deleted.',
+                severity: 'success',
+              })
+            )
+          })
+        }
+      },
     },
   ]
   return (

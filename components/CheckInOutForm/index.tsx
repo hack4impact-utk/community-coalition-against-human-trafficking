@@ -26,6 +26,7 @@ interface Props {
   itemDefinitions: ItemDefinitionResponse[]
   categories: CategoryResponse[]
   inventoryItem?: InventoryItemResponse
+  itemDefinition?: ItemDefinitionResponse
   formData: CheckInOutFormData
   setFormData: React.Dispatch<React.SetStateAction<CheckInOutFormData>>
 }
@@ -60,6 +61,7 @@ function CheckInOutForm({
   itemDefinitions,
   categories,
   inventoryItem,
+  itemDefinition,
   formData,
   setFormData,
 }: Props) {
@@ -90,6 +92,9 @@ function CheckInOutForm({
     ),
   }
 
+
+
+
   const [aaSelected, setAaSelected] = React.useState<
     AutocompleteAttributeOption[]
   >(initialFormData.attributes || [])
@@ -100,6 +105,12 @@ function CheckInOutForm({
       ...initialFormData,
     })
   }, [setFormData])
+  
+  React.useEffect(() => {
+    setFormData((fd) => {
+      return updateFormData(fd, { itemDefinition })
+    })
+  }, [itemDefinition])
 
   const updateTextFieldAttributes = (
     e: string | number,
@@ -235,19 +246,22 @@ function CheckInOutForm({
         getOptionLabel={(itemDefinition) => itemDefinition.name}
         value={formData.itemDefinition || null}
       />
-      <AttributeAutocomplete
-        attributes={splitAttrs.list}
-        sx={{ mt: 4 }}
-        onChange={(_e, attributes) => {
-          setFormData((formData) =>
-            updateFormData(formData, {
-              attributes: attributes || undefined,
-            })
-          )
-        }}
-        value={aaSelected}
-        setValue={setAaSelected}
-      />
+      {/* Attribute Autocomplete */}
+      {splitAttrs.list.length > 0 && (
+        <AttributeAutocomplete
+          attributes={splitAttrs.list}
+          sx={{ mt: 4 }}
+          onChange={(_e, attributes) => {
+            setFormData((formData) =>
+              updateFormData(formData, {
+                attributes: attributes || undefined,
+              })
+            )
+          }}
+          value={aaSelected}
+          setValue={setAaSelected}
+        />
+      )}
       {/* Text Fields */}
       {splitAttrs.text.map((textAttr) => (
         <TextField
@@ -276,13 +290,14 @@ function CheckInOutForm({
       ))}
 
       <QuantityForm
-        onChange={(quantity) => {
+        setQuantity={(quantity) => {
           setFormData((formData) =>
             updateFormData(formData, {
               quantityDelta: quantity,
             })
           )
         }}
+        quantity={formData.quantityDelta || 0}
       />
     </FormControl>
   )

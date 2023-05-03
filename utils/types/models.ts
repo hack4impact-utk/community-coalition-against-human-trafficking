@@ -1,3 +1,5 @@
+import { InventoryItemResponse, UserResponse } from './responses'
+
 export interface User {
   _id?: string
   name: string
@@ -54,9 +56,24 @@ export interface NumberAttribute extends Attribute {
   possibleValues: 'number'
 }
 
+export interface Log {
+  _id?: string
+  staff: string | User
+  item: string | InventoryItem
+  quantityDelta: number
+  date: Date
+}
+
+export interface NotificationEmail {
+  _id?: string
+  emails: string[]
+}
+
 export type ServerModel =
   | User
   | ItemDefinition
   | InventoryItem
   | Category
   | Attribute
+  | Log
+  | NotificationEmail

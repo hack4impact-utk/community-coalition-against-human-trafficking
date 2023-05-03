@@ -24,14 +24,10 @@ export default function MobileInventoryItemList({
           return (
             item.itemDefinition.name.toLowerCase().includes(lowerSearch) ||
             (item.attributes &&
-              (item.attributes
-                .map((attr) => String(attr.value).toLowerCase())
+              item.attributes
+                .map((attr) => `${attr.attribute.name}: ${attr.value}`)
                 .join(' ')
-                .includes(lowerSearch) ||
-                item.attributes
-                  .map((attr) => attr.attribute.name.toLowerCase())
-                  .join(' ')
-                  .includes(lowerSearch))) ||
+                .includes(search)) ||
             (item.itemDefinition.category &&
               item.itemDefinition.category.name
                 .toLowerCase()
