@@ -90,8 +90,6 @@ export default function CheckInPage({
   const onSubmit = async (formData: CheckInOutFormData) => {
     const res = checkInOutFormSchema.safeParse(formData)
 
-    console.log(res)
-
     if (!res.success) {
       setErrors(transformZodErrors(res.error))
       return
