@@ -150,4 +150,28 @@ describe('validators', () => {
       )
     })
   })
+
+  describe('validateNotificationEmailRequest', () => {
+    test('PUT should use notificationEmailPutModelProperties', () => {
+      validators.validateNotificationEmailRequest(testObj, 'PUT')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.notificationEmailPutModelProperties,
+        testObj
+      )
+    })
+    test('POST should use notificationEmailPutModelProperties', () => {
+      validators.validateNotificationEmailRequest(testObj, 'POST')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.notificationEmailPostModelProperties,
+        testObj
+      )
+    })
+    test('no requestType should use notificationEmailRequestModelProperties', () => {
+      validators.validateNotificationEmailRequest(testObj)
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.notificationEmailRequestModelProperties,
+        testObj
+      )
+    })
+  })
 })

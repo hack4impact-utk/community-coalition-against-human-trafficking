@@ -13,14 +13,13 @@ import {
 import {
   CategoryResponse,
   CheckInOutFormData,
-  InventoryItemRequest,
+  CheckInOutRequest,
   ItemDefinitionResponse,
-  LogRequest,
   UserResponse,
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import React from 'react'
-import { CheckInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
 import { apiWrapper } from 'utils/apiWrappers'
 import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
@@ -28,6 +27,7 @@ import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
 import { useAppSelector } from 'store'
+import DialogLink from 'components/DialogLink'
 import { KioskState } from 'store/types'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -56,52 +56,41 @@ export default function CheckInPage({
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
+  const [defaultItemDef, setDefaultItemDef] = React.useState(
+    itemDefinitions.find((id) => id._id === router.query.item)
+  )
   const kioskMode = useAppSelector(
     (state: { kiosk: KioskState }) => state.kiosk
   )
+
+  React.useEffect(() => {
+    setDefaultItemDef(
+      itemDefinitions.find((id) => id._id === router.query.item)
+    )
+  }, [router.query.item, itemDefinitions])
 
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
     {} as CheckInOutFormData
   )
 
   const onSubmit = async (formData: CheckInOutFormData) => {
-    const inventoryItem: Partial<InventoryItemRequest> =
-      CheckInOutFormDataToInventoryItemRequest(formData)
+    const checkInOutRequest: CheckInOutRequest =
+      checkInOutFormDataToCheckInOutRequest(formData)
 
     // TODO better way of coding URLs
-    const response = await fetch(
-      `http://localhost:3000/api/inventoryItems/checkIn?quantity=${formData.quantityDelta}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(inventoryItem),
-      }
-    )
+    await fetch(`http://localhost:3000/api/inventoryItems/checkIn`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(checkInOutRequest),
+    })
     setFormData((formData) => {
       return {
         user: formData.user,
         date: dayjs(new Date()),
         quantityDelta: 0,
       } as CheckInOutFormData
-    })
-
-    const inventoryItemId = await response.json()
-    const log: LogRequest = {
-      staff: formData.user._id,
-      item: inventoryItemId.payload,
-      quantityDelta: formData.quantityDelta,
-      date: formData.date.toDate(),
-    }
-
-    // TODO better way of coding URLs
-    await fetch(`http://localhost:3000/api/logs`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(log),
     })
   }
 
@@ -116,14 +105,16 @@ export default function CheckInPage({
         smOffset={2}
         lgOffset={3}
       >
-        <Button
-          variant="outlined"
-          fullWidth={isMobileView}
-          size="large"
-          sx={{ my: 2 }}
-        >
-          Create new item
-        </Button>
+        <DialogLink href="/items/new" backHref="/checkIn">
+          <Button
+            variant="outlined"
+            fullWidth={isMobileView}
+            size="large"
+            sx={{ my: 2 }}
+          >
+            Create new item
+          </Button>
+        </DialogLink>
       </Grid2>
 
       <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
@@ -141,6 +132,7 @@ export default function CheckInPage({
                 formData={formData}
                 setFormData={setFormData}
                 inventoryItem={inventoryItem}
+                itemDefinition={defaultItemDef}
               />
             </CardContent>
 

@@ -12,7 +12,7 @@ import { visuallyHidden } from '@mui/utils'
 import { CategoryResponse, LogResponse } from 'utils/types'
 import HistoryListItem from './DesktopHistoryListItem'
 import deepCopy from 'utils/deepCopy'
-import { DateToReadableDateString } from 'utils/transformations'
+import { dateToReadableDateString } from 'utils/transformations'
 
 type Order = 'asc' | 'desc'
 
@@ -223,7 +223,7 @@ export default function DesktopHistoryList(props: Props) {
               .toLowerCase()
               .includes(search)) ||
           log.quantityDelta.toString().toLowerCase().includes(search) ||
-          DateToReadableDateString(log.date).toLowerCase().includes(search)
+          dateToReadableDateString(log.date).toLowerCase().includes(search)
         )
       })
     }

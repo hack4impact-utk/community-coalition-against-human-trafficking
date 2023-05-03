@@ -22,13 +22,13 @@ import SearchAutocomplete from 'components/SearchAutocomplete'
 import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
 import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
-import LogsHandler from '@api/logs'
+import logsHandler from '@api/logs'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       categories: await apiWrapper(categoriesHandler, context),
-      logs: await apiWrapper(LogsHandler, context),
+      logs: await apiWrapper(logsHandler, context),
     },
   }
 }

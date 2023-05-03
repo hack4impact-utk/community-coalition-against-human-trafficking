@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getLog } from 'server/actions/Logs'
-import { ApiError, LogPutRequest } from 'utils/types'
+import { ApiError, LogPutRequest, LogResponse } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { apiLogValidation, apiObjectIdValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
@@ -21,7 +21,7 @@ export default async function logHandler(
     const logId = req.query.logId as string
     switch (req.method) {
       case 'GET': {
-        const log = await getLog(logId)
+        const log: LogResponse = await getLog(logId)
 
         return res.status(200).json({
           success: true,
