@@ -1,39 +1,44 @@
 import { model, Schema, Document, models, Model } from 'mongoose'
 import { InventoryItem } from 'utils/types'
 
-const InventoryItemSchema = new Schema({
-  itemDefinition: {
-    type: Schema.Types.ObjectId,
-    ref: 'ItemDefinition',
-    required: true,
-  },
-  attributes: [
-    {
-      attribute: {
-        _id: false,
-        type: Schema.Types.ObjectId,
-        required: true,
-        ref: 'Attribute',
-      },
-      // value is either string or number
-      value: { type: Schema.Types.Mixed, required: true },
-      _id: false,
+const InventoryItemSchema = new Schema(
+  {
+    itemDefinition: {
+      type: Schema.Types.ObjectId,
+      ref: 'ItemDefinition',
+      required: true,
     },
-  ],
-  quantity: {
-    type: Number,
-    required: true,
+    attributes: [
+      {
+        attribute: {
+          _id: false,
+          type: Schema.Types.ObjectId,
+          required: true,
+          ref: 'Attribute',
+        },
+        // value is either string or number
+        value: { type: Schema.Types.Mixed, required: true },
+        _id: false,
+      },
+    ],
+    quantity: {
+      type: Number,
+      required: true,
+    },
+    assignee: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: false,
+    },
+    softDelete: {
+      type: Boolean,
+      required: false,
+    },
   },
-  assignee: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: false,
-  },
-  softDelete: {
-    type: Boolean,
-    required: false,
-  },
-})
+  {
+    versionKey: false,
+  }
+)
 
 export interface InventoryItemDocument
   extends Omit<InventoryItem, '_id'>,

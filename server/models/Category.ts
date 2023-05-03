@@ -1,16 +1,21 @@
 import { model, Schema, Document, models, Model } from 'mongoose'
 import { Category } from 'utils/types'
 
-const CategorySchema = new Schema({
-  name: {
-    type: String,
-    required: true,
+const CategorySchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    softDelete: {
+      type: Boolean,
+      required: false,
+    },
   },
-  softDelete: {
-    type: Boolean,
-    required: false,
-  },
-})
+  {
+    versionKey: false,
+  }
+)
 
 export interface CategoryDocument extends Omit<Category, '_id'>, Document {}
 

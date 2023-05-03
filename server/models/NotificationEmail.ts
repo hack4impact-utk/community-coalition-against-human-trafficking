@@ -1,12 +1,21 @@
 import { model, Schema, Document, models, Model } from 'mongoose'
 import { NotificationEmail } from 'utils/types'
 
-const NotificationEmailSchema = new Schema({
-  emails: {
-    type: [String],
-    required: true,
+const NotificationEmailSchema = new Schema(
+  {
+    emails: {
+      type: [String],
+      required: true,
+    },
+    softDelete: {
+      type: Boolean,
+      required: false,
+    },
   },
-})
+  {
+    versionKey: false,
+  }
+)
 
 export interface NotificationEmailDocument
   extends Omit<NotificationEmail, '_id'>,
