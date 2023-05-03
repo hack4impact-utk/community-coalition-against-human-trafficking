@@ -6,10 +6,6 @@ const NotificationEmailSchema = new Schema({
     type: [String],
     required: true,
   },
-  softDelete: {
-    type: Boolean,
-    required: false,
-  },
 })
 
 export interface NotificationEmailDocument
