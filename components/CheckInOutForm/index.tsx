@@ -44,6 +44,8 @@ function blankFormData(): CheckInOutFormData {
   }
 }
 
+const defaultSplitAttrs = separateAttributeResponses()
+
 function updateFormData(
   formData: CheckInOutFormData,
   update: Partial<CheckInOutFormData>
