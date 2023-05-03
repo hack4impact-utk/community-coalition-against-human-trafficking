@@ -25,7 +25,6 @@ beforeAll(() => {
 afterAll(() => {
   jest.restoreAllMocks()
   mongoose.connection.close()
-  clientPromise.then((client) => client.close())
 })
 
 describe('api/attributes/[attributeId]', () => {
@@ -104,7 +103,12 @@ describe('api/attributes/[attributeId]', () => {
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        .mockImplementation(async () => {})
+        .mockImplementation(
+          async () =>
+            validAttributeResponse[0] as AttributeDocument & {
+              _id: ObjectId
+            }
+        )
       const mockApiAttributeValidation = jest
         .spyOn(apiValidator, 'apiAttributeValidation')
         .mockImplementation()

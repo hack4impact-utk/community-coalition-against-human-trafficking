@@ -15,6 +15,7 @@ import {
   validInventoryItemResponse,
   mockObjectId,
   validInventoryItemPostRequest,
+  validCheckInOutRequest,
 } from 'test/testData'
 
 beforeAll(() => {
@@ -24,7 +25,6 @@ beforeAll(() => {
 // restore mocked implementations and close db connections
 afterAll(() => {
   jest.restoreAllMocks()
-  clientPromise.then((client) => client.close())
 })
 
 beforeEach(() => {
@@ -76,14 +76,14 @@ describe('api/inventoryItems/checkIn', () => {
 
       const request = createRequest({
         method: 'POST',
-        url: `/api/inventoryItems/checkIn?quantity=3`,
-        body: validInventoryItemPostRequest,
+        url: `/api/inventoryItems/checkIn`,
+        body: validCheckInOutRequest,
       })
 
       const response = createResponse()
 
       await inventoryItemsCheckInHandler(request, response)
-      expect(mockCheckIn).lastCalledWith(validInventoryItemPostRequest, 3)
+      expect(mockCheckIn).lastCalledWith(validInventoryItemPostRequest, 1)
       expect(response.statusCode).toBe(200)
     })
   })

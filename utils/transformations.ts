@@ -1,23 +1,28 @@
+import { ItemDefinitionFormData } from 'components/UpsertItemForm'
+import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
+  AttributeRequest,
   CheckInOutFormData,
+  CheckInOutRequest,
   InventoryItemAttributeRequest,
   InventoryItemRequest,
+  ItemDefinitionRequest,
 } from 'utils/types'
 
 /**
- * Converts a `CheckInOutFormData` object into a `Partial<InventoryItemRequest>` object
+ * Converts a `CheckInOutFormData` object into a `CheckInOutRequest` object
  * @param formData The form data to convert
- * @returns A new `Partial<InventoryItemRequest>` object.
+ * @returns A new `CheckInOutRequest` object.
  */
-export function CheckInOutFormDataToInventoryItemRequest(
+export function checkInOutFormDataToCheckInOutRequest(
   formData: CheckInOutFormData
-): Partial<InventoryItemRequest> {
-  const transformedData = {
+): CheckInOutRequest {
+  const partialInventoryItem = {
     itemDefinition: formData.itemDefinition._id,
     attributes: [] as InventoryItemAttributeRequest[],
   }
   if (formData.attributes) {
-    transformedData.attributes = [
+    partialInventoryItem.attributes = [
       ...formData.attributes.map(
         (attributeOption): InventoryItemAttributeRequest => {
           return {
@@ -30,8 +35,8 @@ export function CheckInOutFormDataToInventoryItemRequest(
   }
 
   if (formData.textFieldAttributes) {
-    transformedData.attributes = [
-      ...transformedData.attributes,
+    partialInventoryItem.attributes = [
+      ...partialInventoryItem.attributes,
       ...Object.keys(formData.textFieldAttributes).reduce(
         (acc, attributeId) => {
           const attribute: InventoryItemAttributeRequest = {
@@ -46,5 +51,54 @@ export function CheckInOutFormDataToInventoryItemRequest(
     ]
   }
 
-  return transformedData
+  const retVal: CheckInOutRequest = {
+    staff: formData.user._id,
+    quantityDelta: formData.quantityDelta,
+    date: formData.date.toDate(),
+    inventoryItem: partialInventoryItem,
+  }
+
+  return retVal
+}
+
+export function attributeFormDataToAttributeRequest(
+  formData: AttributeFormData
+): AttributeRequest {
+  return {
+    name: formData.name,
+    color: formData.color,
+    possibleValues:
+      formData.valueType === 'list'
+        ? formData.listOptions!
+        : formData.valueType,
+  }
+}
+
+export function itemDefinitionFormDataToItemDefinitionRequest(
+  formData: ItemDefinitionFormData
+): ItemDefinitionRequest {
+  return {
+    ...formData,
+    category: formData.category._id,
+    attributes: formData.attributes.map((attr) => attr._id),
+  }
+}
+
+/**
+ * Converts a Date object into a readable string
+ * Ex. "2022-02-10T14:47.12.419Z" becomes "February 10, 2022 9:47 AM"
+ * @param date The date to convert
+ * @returns A human-readable date string
+ */
+export function dateToReadableDateString(date: Date) {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }
+
+  return new Date(date).toLocaleString('en-US', dateOptions).replace(' at', '')
 }

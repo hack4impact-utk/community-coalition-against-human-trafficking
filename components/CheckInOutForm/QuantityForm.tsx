@@ -5,11 +5,11 @@ import AddOutlinedIcon from '@mui/icons-material/AddOutlined'
 import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined'
 
 interface Props {
-  onChange: (quantity: number) => void
+  quantity: number
+  setQuantity: (q: number) => void
 }
 
-function QuantityForm({ onChange }: Props) {
-  const [quantity, setQuantity] = React.useState(0)
+function QuantityForm({ quantity, setQuantity }: Props) {
   return (
     <Box sx={{ display: 'flex', alignSelf: 'center', marginTop: 3 }}>
       <Typography variant="h5" sx={{ marginRight: 2, alignSelf: 'center' }}>
@@ -24,7 +24,6 @@ function QuantityForm({ onChange }: Props) {
         //                   || 0 Necessary to prevent typing a negative number
         onChange={(event) => {
           setQuantity(Number(event.target.value) || 0)
-          onChange(Number(event.target.value) || 0)
         }}
         type="tel"
         InputProps={{
@@ -49,7 +48,6 @@ function QuantityForm({ onChange }: Props) {
           }}
           onClick={() => {
             setQuantity(quantity + 1)
-            onChange(quantity + 1)
           }}
         >
           <AddOutlinedIcon sx={{ width: 15, height: 15 }} />
@@ -66,7 +64,6 @@ function QuantityForm({ onChange }: Props) {
           onClick={() => {
             if (quantity > 1) {
               setQuantity(quantity - 1)
-              onChange(quantity - 1)
             }
           }}
         >
