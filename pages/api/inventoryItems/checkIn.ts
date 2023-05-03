@@ -1,7 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, InventoryItem } from 'utils/types'
+import {
+  ApiError,
+  CheckInOutRequest,
+  InventoryItem,
+  LogPostRequest,
+  LogRequest,
+} from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { checkInInventoryItem } from 'server/actions/InventoryItems'
+import { apiLogValidation } from 'utils/apiValidators'
+import LogsHandler from '@api/logs'
+import { apiWrapper } from 'utils/apiWrappers'
+import { createLog } from 'server/actions/Logs'
 
 // @route POST /api/inventoryItems/checkIn - Checks in an inventory item - Private
 export default async function inventoryItemsCheckInHandler(
@@ -14,9 +24,20 @@ export default async function inventoryItemsCheckInHandler(
 
     switch (req.method) {
       case 'POST': {
-        const inventoryItem: Partial<InventoryItem> = req.body
-        const { quantity } = req.query
-        await checkInInventoryItem(inventoryItem, Number(quantity))
+        const checkInOutRequest: CheckInOutRequest = req.body
+        const inventoryItem: Partial<InventoryItem> =
+          checkInOutRequest.inventoryItem
+        const quantity: number = Number(checkInOutRequest.quantityDelta)
+        const response = await checkInInventoryItem(inventoryItem, quantity)
+
+        const log: LogPostRequest = {
+          staff: checkInOutRequest.staff,
+          date: checkInOutRequest.date,
+          quantityDelta: checkInOutRequest.quantityDelta,
+          item: response.toString(),
+        }
+
+        await createLog(log)
 
         return res.status(200).json({
           success: true,

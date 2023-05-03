@@ -2,42 +2,32 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React from 'react'
 import theme from 'utils/theme'
-import { LogResponse } from 'utils/types'
+import { AttributeResponse, CategoryResponse } from 'utils/types'
 
-interface HistoryListItemKebabOption {
+interface CategoryListItemKebabOption {
   name: string
   onClick: () => void
 }
 
-interface HistoryListItemKebabProps {
-  log: LogResponse
+interface CategoryListItemKebabProps {
+  category: CategoryResponse
 }
 
+const settings: CategoryListItemKebabOption[] = [
+  {
+    name: 'Edit',
+    onClick: () => console.log('edit'),
+  },
+  {
+    name: 'Delete',
+    onClick: () => console.log('delete'),
+  },
+]
+
 export default function AttributeListItemKebab({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  log,
-}: HistoryListItemKebabProps) {
+  category,
+}: CategoryListItemKebabProps) {
   // kebab menu functionality
-
-  const kebabOptions: HistoryListItemKebabOption[] = [
-    {
-      name: 'Delete',
-      onClick: () => {
-        if (
-          window.confirm(
-            "Are you sure you want to delete this log entry? You won't be able to undo this action."
-          )
-        ) {
-          fetch(`/api/logs/${log._id}`, {
-            method: 'DELETE',
-          }).then(() => {
-            window.location.reload()
-          })
-        }
-      },
-    },
-  ]
-
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
   )
@@ -70,7 +60,7 @@ export default function AttributeListItemKebab({
         open={Boolean(anchorElKebab)}
         onClose={handleCloseKebabMenu}
       >
-        {kebabOptions.map((setting) => (
+        {settings.map((setting) => (
           <MenuItem
             key={setting.name}
             onClick={() => {
