@@ -20,6 +20,10 @@ const LogSchema = new Schema({
     type: Date,
     required: true,
   },
+  softDelete: {
+    type: Boolean,
+    required: false,
+  },
 })
 
 export interface LogDocument extends Omit<Log, '_id'>, Document {}

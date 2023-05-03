@@ -6,6 +6,10 @@ const CategorySchema = new Schema({
     type: String,
     required: true,
   },
+  softDelete: {
+    type: Boolean,
+    required: false,
+  },
 })
 
 export interface CategoryDocument extends Omit<Category, '_id'>, Document {}

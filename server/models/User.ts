@@ -14,6 +14,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  softDelete: {
+    type: Boolean,
+    required: false,
+  },
 })
 
 export interface UserDocument extends Omit<User, '_id'>, Document {}

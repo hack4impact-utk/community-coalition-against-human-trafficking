@@ -15,6 +15,10 @@ const AttributeSchema = new Schema({
     type: String,
     required: true,
   },
+  softDelete: {
+    type: Boolean,
+    required: false,
+  },
 })
 
 export interface AttributeDocument extends Omit<Attribute, '_id'>, Document {}
