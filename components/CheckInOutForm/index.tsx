@@ -54,7 +54,6 @@ function updateFormData(
   }
 }
 
-
 function CheckInOutForm({
   kioskMode,
   users,
@@ -71,7 +70,7 @@ function CheckInOutForm({
     React.useState<SeparatedAttributeResponses>(
       separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
     )
-      const session = useSession()
+  const session = useSession()
 
   const initialFormData: Partial<CheckInOutFormData> = {
     category: inventoryItem?.itemDefinition?.category,
@@ -93,9 +92,6 @@ function CheckInOutForm({
     ),
   }
 
-
-
-
   const [aaSelected, setAaSelected] = React.useState<
     AutocompleteAttributeOption[]
   >(initialFormData.attributes || [])
@@ -106,7 +102,7 @@ function CheckInOutForm({
       ...initialFormData,
     })
   }, [setFormData])
-  
+
   React.useEffect(() => {
     setFormData((fd) => {
       return updateFormData(fd, { itemDefinition })
@@ -115,12 +111,11 @@ function CheckInOutForm({
 
   useEffect(() => {
     // check if kiosk mode
-    if (kioskMode) {
+    if (!kioskMode) {
       setFormData((fd) => {
-        return updateFormData(fd,
-          {
-            user: session.data?.user as UserResponse
-          })
+        return updateFormData(fd, {
+          user: session.data?.user as UserResponse,
+        })
       })
     }
   }, [kioskMode, session, setFormData])
