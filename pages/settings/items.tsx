@@ -1,4 +1,9 @@
-import { Button, Typography, Unstable_Grid2 as Grid2 } from '@mui/material'
+import {
+  Button,
+  Typography,
+  Unstable_Grid2 as Grid2,
+  useMediaQuery,
+} from '@mui/material'
 import SearchField from 'components/SearchField'
 import AddIcon from '@mui/icons-material/Add'
 import ItemDefinitionList from 'components/ItemDefinitionList'
@@ -8,12 +13,13 @@ import { apiWrapper } from 'utils/apiWrappers'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import { useRouter } from 'next/router'
 import DialogLink from 'components/DialogLink'
+import theme from 'utils/theme'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
-      itemDefinitions: await apiWrapper(itemDefinitionsHandler, context)
-    }
+      itemDefinitions: await apiWrapper(itemDefinitionsHandler, context),
+    },
   }
 }
 
@@ -23,6 +29,7 @@ interface Props {
 
 export default function ItemsPage({ itemDefinitions }: Props) {
   const router = useRouter()
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
 
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
@@ -30,8 +37,8 @@ export default function ItemsPage({ itemDefinitions }: Props) {
         <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
           Items
         </Typography>
-        <Grid2 ml="auto" mr={6}>
-          <DialogLink href='/items/new' backHref='/settings/items'>
+        <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
+          <DialogLink href="/items/new" backHref="/settings/items">
             <Button
               variant="outlined"
               startIcon={<AddIcon />}
