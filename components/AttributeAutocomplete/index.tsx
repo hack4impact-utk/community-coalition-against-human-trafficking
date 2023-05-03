@@ -51,7 +51,7 @@ export default function AttributeAutocomplete({
   const [open, setOpen] = React.useState(false)
 
   React.useEffect(() => {
-    if (value?.length && value.length === attributes.length) {
+    if (value?.length === attributes.length) {
       setOpen(false)
     }
   }, [value])
