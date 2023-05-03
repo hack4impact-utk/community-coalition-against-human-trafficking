@@ -5,6 +5,7 @@ import { DialogRoute, dialogRoutes } from 'utils/constants'
 
 interface Props {
   href: string
+  backHref?: string
   children: React.ReactNode
 }
 
@@ -41,35 +42,46 @@ const matchParams = (href: string, definedHref: string): MatchResult => {
   return mr
 }
 
-const constructDialogRoute = (dialogRoute?: DialogRoute, params: { [key: string]: string }) => {
+const constructDialogRoute = (
+  dialogRoute?: DialogRoute,
+  params: { [key: string]: string }
+) => {
   if (!dialogRoute) return ''
-  return `?dialog=${dialogRoute.name}&${Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&')}`
+  return `?dialog=${dialogRoute.name}&${Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&')}`
 }
-
 
 export default function DialogLink({ href, children }: Props) {
   const [params, setParams] = React.useState<{ [key: string]: string }>({})
-  const dialogRoute = useMemo(
-    () => {
-      const attemptedDr = dialogRoutes.find((dr) => dr.path === href)
-      if (!attemptedDr) {
-        // try and find matching result from defined hrefs
-        for (const dr of dialogRoutes) {
-          const mr = matchParams(href, dr.path)
-          if (mr.success) {
-            setParams(mr.params)
-            return dr
-          }
+  const dialogRoute = useMemo(() => {
+    const attemptedDr = dialogRoutes.find((dr) => dr.path === href)
+    if (!attemptedDr) {
+      // try and find matching result from defined hrefs
+      for (const dr of dialogRoutes) {
+        const mr = matchParams(href, dr.path)
+        if (mr.success) {
+          setParams(mr.params)
+          return dr
         }
       }
-      return attemptedDr;
-    }, [href])
-    console.log(dialogRoute)
-  
-    const constructedHref = useMemo(() => constructDialogRoute(dialogRoute, params), [dialogRoute, params])
-    console.log(constructedHref)
+    }
+    return attemptedDr
+  }, [href])
+  console.log(dialogRoute)
+
+  const constructedHref = useMemo(
+    () => constructDialogRoute(dialogRoute, params),
+    [dialogRoute, params]
+  )
+  console.log(constructedHref)
   return (
-    <Link href={`?dialog=${dialogRoute?.name}`} as={href} passHref>
+    <Link
+      href={`?dialog=${dialogRoute?.name}&backHref=${backHref}`}
+      as={dialogRoute?.path}
+      passHref
+      style={{ textDecoration: 'none' }}
+    >
       {children}
     </Link>
   )

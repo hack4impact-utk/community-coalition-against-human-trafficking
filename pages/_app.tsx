@@ -9,16 +9,18 @@ import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { useRouter } from 'next/router'
 import { dialogRoutes } from 'utils/constants'
+<<<<<<< HEAD
 import { Dialog } from '@mui/material'
 import dynamic from 'next/dynamic'
+=======
+import { Dialog, useMediaQuery, useTheme } from '@mui/material'
+>>>>>>> 5c7c16331eb435a54cdab1fce4429731f82b3fb5
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppProps) {
   const { store } = wrapper.useWrappedStore(pageProps)
-  const router = useRouter()
-
   return (
     <>
       <Provider store={store}>

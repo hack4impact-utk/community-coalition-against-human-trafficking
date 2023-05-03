@@ -23,18 +23,30 @@ import getContrastYIQ from 'utils/getContrastYIQ'
 interface Props {
   categories: CategoryResponse[]
   attributes: AttributeResponse[]
+  onChange: (formData: ItemDefinitionFormData) => void
 }
 
-interface ItemDefinitionFormData {
+export interface ItemDefinitionFormData {
+  category: CategoryResponse
+  internal: boolean
+  name: string
   attributes: AttributeResponse[]
+  lowStockThreshold: number
+  criticalStockThreshold: number
 }
 
-export default function UpsertItemForm({ categories, attributes }: Props) {
+export default function UpsertItemForm({
+  categories,
+  attributes,
+  onChange,
+}: Props) {
   const [showAttributeForm, setShowAttributeForm] = React.useState(false)
   const [attrFormData, setAttrFormData] = React.useState(
     {} as AttributeFormData
   )
-  const [formData, setFormData] = React.useState({} as ItemDefinitionFormData)
+  const [formData, setFormData] = React.useState({
+    internal: false,
+  } as ItemDefinitionFormData)
 
   // this is here to support adding newly created attributes to the create new item form attributes list options after they are created
   const [proxyAttributes, setProxyAttributes] = React.useState(attributes)
@@ -68,6 +80,10 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
     })
   }
 
+  React.useEffect(() => {
+    onChange(formData)
+  }, [formData, onChange])
+
   return (
     <FormControl fullWidth>
       <Autocomplete
@@ -75,15 +91,37 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
         getOptionLabel={(option) => option.name}
         renderInput={(params) => <TextField {...params} label="Category" />}
         sx={{ marginTop: 4 }}
+        onChange={(_e, val) => {
+          setFormData((fd) => ({
+            ...fd,
+            category: val as CategoryResponse,
+          }))
+        }}
       />
 
       <FormControlLabel
-        control={<Checkbox defaultChecked />}
+        control={<Checkbox checked={!formData.internal} />}
         label="Check out to clients?"
         sx={{ marginTop: 4 }}
+        onChange={(_e, val) => {
+          setFormData((fd) => ({
+            ...fd,
+            internal: !val,
+          }))
+        }}
       />
 
-      <TextField label="Item Name" variant="outlined" sx={{ marginTop: 4 }} />
+      <TextField
+        label="Item Name"
+        variant="outlined"
+        sx={{ marginTop: 4 }}
+        onChange={(e) => {
+          setFormData((fd) => ({
+            ...fd,
+            name: e.target.value,
+          }))
+        }}
+      />
 
       {/* Attribute Autocomplete and Create Attribute Button */}
       <Box
@@ -186,7 +224,11 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
             marginRight: 1.5,
           }}
           onChange={(e) => {
-            Number(e.target.value) < 0 ? (e.target.value = '0') : e.target.value
+            const num = Number(e.target.value) < 0 ? 0 : Number(e.target.value)
+            setFormData((fd) => ({
+              ...fd,
+              lowStockThreshold: num,
+            }))
           }}
           type="number"
           InputProps={{
@@ -209,7 +251,11 @@ export default function UpsertItemForm({ categories, attributes }: Props) {
             marginRight: 1.5,
           }}
           onChange={(e) => {
-            Number(e.target.value) < 0 ? (e.target.value = '0') : e.target.value
+            const num = Number(e.target.value) < 0 ? 0 : Number(e.target.value)
+            setFormData((fd) => ({
+              ...fd,
+              criticalStockThreshold: num,
+            }))
           }}
           type="number"
           InputProps={{
