@@ -91,11 +91,16 @@ export async function createEntity<
 export async function updateEntity<
   Schema extends Document,
   T extends ServerPutRequest
->(dbSchema: Model<Schema>, id: string, document: T): Promise<void> {
+>(
+  dbSchema: Model<Schema>,
+  id: string,
+  document: T
+): Promise<HydratedDocument<Schema>> {
   await mongoDb()
 
   const response = await dbSchema.findByIdAndUpdate(id, document)
   if (!response) throw new ApiError(404, errors.notFound)
+  return response
 }
 
 /**
