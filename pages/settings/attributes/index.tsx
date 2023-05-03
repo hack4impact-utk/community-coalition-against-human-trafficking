@@ -15,7 +15,7 @@ import AddIcon from '@mui/icons-material/Add'
 import { useRouter } from 'next/router'
 import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
-import AttributeEditForm from './[attributeId]/edit'
+import AttributeEditForm from 'pages/settings/attributes/[attributeId]/edit'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
