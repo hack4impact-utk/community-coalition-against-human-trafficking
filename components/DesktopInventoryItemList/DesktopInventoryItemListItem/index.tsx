@@ -1,5 +1,11 @@
 import WarningIcon from '@mui/icons-material/Warning'
-import { TableRow, TableCell, Tooltip, Box } from '@mui/material'
+import {
+  TableRow,
+  TableCell,
+  Tooltip,
+  Box,
+  Unstable_Grid2 as Grid2,
+} from '@mui/material'
 import theme from 'utils/theme'
 import * as React from 'react'
 import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
@@ -15,30 +21,31 @@ export default function DesktopInventoryItemListItem({
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
   const renderWarningIcon = (inventoryItemData: Data) => {
-    if (inventoryItemData.quantity < inventoryItemData.lowStockThreshold) {
-      return (
-        <Tooltip
-          title={
-            inventoryItemData.quantity <
-            inventoryItemData.criticalStockThreshold
-              ? 'This item has critically low stock.'
-              : 'This item has low stock.'
-          }
-        >
-          <WarningIcon
-            fontSize="small"
-            sx={{
-              ml: 1,
-              color:
-                inventoryItemData.quantity <
-                inventoryItemData.criticalStockThreshold
-                  ? theme.palette.error.main
-                  : theme.palette.warning.light,
-            }}
-          />
-        </Tooltip>
-      )
-    }
+    return (
+      <Tooltip
+        title={
+          inventoryItemData.quantity < inventoryItemData.criticalStockThreshold
+            ? 'This item has critically low stock.'
+            : 'This item has low stock.'
+        }
+      >
+        <WarningIcon
+          fontSize="small"
+          sx={{
+            visibility:
+              inventoryItemData.quantity < inventoryItemData.lowStockThreshold
+                ? 'visible'
+                : 'hidden',
+            float: 'right',
+            color:
+              inventoryItemData.quantity <
+              inventoryItemData.criticalStockThreshold
+                ? theme.palette.error.main
+                : theme.palette.warning.light,
+          }}
+        />
+      </Tooltip>
+    )
   }
 
   return (
@@ -75,16 +82,12 @@ export default function DesktopInventoryItemListItem({
           justifyContent: 'center',
           wordBreak: 'break-word',
         }}
+        align="right"
       >
-        <span
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-          }}
-        >
-          {inventoryItemData.quantity.toLocaleString()}
-          {renderWarningIcon(inventoryItemData)}
-        </span>
+        <Grid2 container gap={1} justifyContent="flex-end">
+          <Grid2 xs={6}>{inventoryItemData.quantity.toLocaleString()}</Grid2>
+          <Grid2 xs="auto">{renderWarningIcon(inventoryItemData)}</Grid2>
+        </Grid2>
       </TableCell>
       <TableCell
         sx={{
