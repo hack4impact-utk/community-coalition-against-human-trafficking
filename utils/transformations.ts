@@ -3,25 +3,26 @@ import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
   AttributeRequest,
   CheckInOutFormData,
+  CheckInOutRequest,
   InventoryItemAttributeRequest,
   InventoryItemRequest,
   ItemDefinitionRequest,
 } from 'utils/types'
 
 /**
- * Converts a `CheckInOutFormData` object into a `Partial<InventoryItemRequest>` object
+ * Converts a `CheckInOutFormData` object into a `CheckInOutRequest` object
  * @param formData The form data to convert
- * @returns A new `Partial<InventoryItemRequest>` object.
+ * @returns A new `CheckInOutRequest` object.
  */
-export function checkInOutFormDataToInventoryItemRequest(
+export function checkInOutFormDataToCheckInOutRequest(
   formData: CheckInOutFormData
-): Partial<InventoryItemRequest> {
-  const transformedData = {
+): CheckInOutRequest {
+  const partialInventoryItem = {
     itemDefinition: formData.itemDefinition._id,
     attributes: [] as InventoryItemAttributeRequest[],
   }
   if (formData.attributes) {
-    transformedData.attributes = [
+    partialInventoryItem.attributes = [
       ...formData.attributes.map(
         (attributeOption): InventoryItemAttributeRequest => {
           return {
@@ -34,8 +35,8 @@ export function checkInOutFormDataToInventoryItemRequest(
   }
 
   if (formData.textFieldAttributes) {
-    transformedData.attributes = [
-      ...transformedData.attributes,
+    partialInventoryItem.attributes = [
+      ...partialInventoryItem.attributes,
       ...Object.keys(formData.textFieldAttributes).reduce(
         (acc, attributeId) => {
           const attribute: InventoryItemAttributeRequest = {
@@ -50,7 +51,14 @@ export function checkInOutFormDataToInventoryItemRequest(
     ]
   }
 
-  return transformedData
+  const retVal: CheckInOutRequest = {
+    staff: formData.user._id,
+    quantityDelta: formData.quantityDelta,
+    date: formData.date.toDate(),
+    inventoryItem: partialInventoryItem,
+  }
+
+  return retVal
 }
 
 export function attributeFormDataToAttributeRequest(
@@ -82,7 +90,7 @@ export function itemDefinitionFormDataToItemDefinitionRequest(
  * @param date The date to convert
  * @returns A human-readable date string
  */
-export function DateToReadableDateString(date: Date) {
+export function dateToReadableDateString(date: Date) {
   const dateOptions: Intl.DateTimeFormatOptions = {
     month: 'long',
     day: 'numeric',

@@ -3,7 +3,7 @@ import React from 'react'
 import deepCopy from 'utils/deepCopy'
 import { LogResponse } from 'utils/types'
 import MobileHistoryListItem from 'components/HistoryList/MobileHistoryList/MobileHistoryListItem'
-import { DateToReadableDateString } from 'utils/transformations'
+import { dateToReadableDateString } from 'utils/transformations'
 
 interface Props {
   logs: LogResponse[]
@@ -57,7 +57,7 @@ export default function MobileHistoryList(props: Props) {
               .toLowerCase()
               .includes(search)) ||
           log.quantityDelta.toString().toLowerCase().includes(search) ||
-          DateToReadableDateString(log.date).toLowerCase().includes(search)
+          dateToReadableDateString(log.date).toLowerCase().includes(search)
         )
       })
     }
