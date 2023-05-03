@@ -10,12 +10,9 @@ export default function DashboardPage() {
       <DialogLink href={'/dialog/test'}>
         <Button>Take me to dialog</Button>
       </DialogLink>
-      <Button
-        onClick={() => {
-          dispatch(toggleKioskMode())
-        }}
-      >
-        Toggle kiosk mode
+      {/* @ts-ignore */}
+      <Button onClick={() => dispatch(toggleKioskMode())}>
+        Toggle Kiosk Mode
       </Button>
     </>
   )
