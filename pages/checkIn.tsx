@@ -30,6 +30,7 @@ import dayjs from 'dayjs'
 import DialogLink from 'components/DialogLink'
 import { KioskState } from 'store/types'
 import { showSnackbar } from 'store/snackbar'
+import AddIcon from '@mui/icons-material/Add'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -130,6 +131,7 @@ export default function CheckInPage({
             variant="outlined"
             fullWidth={isMobileView}
             size="large"
+            startIcon={<AddIcon />}
             sx={{ my: 2 }}
           >
             Create new item
