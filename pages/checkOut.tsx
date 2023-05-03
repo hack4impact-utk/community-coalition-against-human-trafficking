@@ -9,6 +9,7 @@ import {
   Unstable_Grid2 as Grid2,
   useMediaQuery,
   useTheme,
+  CircularProgress,
 } from '@mui/material'
 import {
   CategoryResponse,
@@ -64,7 +65,11 @@ export default function CheckOutPage({
     {} as CheckInOutFormData
   )
 
+  const [loading, setLoading] = React.useState(false)
+
   const onSubmit = async (formData: CheckInOutFormData) => {
+    // when validation is added, must be done before this
+    setLoading(true)
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
@@ -81,6 +86,7 @@ export default function CheckOutPage({
     )
 
     const data = await response.json()
+    setLoading(false)
 
     if (data.success) {
       // @ts-ignore
@@ -127,7 +133,26 @@ export default function CheckOutPage({
             <CardActions
               sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'end' } }}
             >
-              <Button onClick={() => onSubmit(formData)} variant="contained">
+              <Button
+                onClick={() => onSubmit(formData)}
+                variant="contained"
+                disabled={loading}
+                startIcon={
+                  loading && (
+                    <CircularProgress
+                      size={24}
+                      sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        margin: 'auto',
+                      }}
+                    />
+                  )
+                }
+              >
                 Check Out
               </Button>
             </CardActions>

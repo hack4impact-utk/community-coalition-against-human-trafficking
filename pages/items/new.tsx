@@ -2,6 +2,7 @@ import attributesHandler from '@api/attributes'
 import categoriesHandler from '@api/categories'
 import {
   Button,
+  CircularProgress,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -54,6 +55,7 @@ interface Props {
 
 export default function NewItemPage({ backHref }: Props) {
   const router = useRouter()
+  const [loading, setLoading] = React.useState(false)
 
   const redirectBack = (queryStr?: string) => {
     if (backHref) {
@@ -81,10 +83,29 @@ export default function NewItemPage({ backHref }: Props) {
         </Button>
         <Button
           onClick={async () => {
+            setLoading(true)
             const itemId = await createItem(itemDefinitionFormData)
+            setLoading(false)
+
             // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
             redirectBack(`?item=${itemId}`)
           }}
+          disabled={loading}
+          startIcon={
+            loading && (
+              <CircularProgress
+                size={24}
+                sx={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  margin: 'auto',
+                }}
+              />
+            )
+          }
         >
           Submit
         </Button>
