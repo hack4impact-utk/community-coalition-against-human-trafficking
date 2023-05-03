@@ -2,6 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { ApiError, LogRequest } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { getLogs } from 'server/actions/Logs'
+import { apiLogValidation } from 'utils/apiValidators'
+import * as MongoDriver from 'server/actions/MongoDriver'
+import LogSchema from 'server/models/Log'
 
 // @route GET api/logs - Returns a list of all logs in the database - Private
 // @route POST /api/logs - Create a logs from request body - Private
@@ -22,17 +25,16 @@ export default async function logsHandler(
           payload: logs,
         })
       }
-      // there is an issue with this, it will be resolved in CCHAT-145
-      // case 'POST': {
-      //   apiLogValidation(req.body)
-      //   const log: LogRequest = req.body
-      //   const response = await MongoDriver.createEntity(LogSchema, log)
+      case 'POST': {
+        apiLogValidation(req.body)
+        const log: LogRequest = req.body
+        const response = await MongoDriver.createEntity(LogSchema, log)
 
-      //   return res.status(201).json({
-      //     success: true,
-      //     payload: response._id,
-      //   })
-      // }
+        return res.status(201).json({
+          success: true,
+          payload: response._id,
+        })
+      }
       default: {
         throw new ApiError(405, 'Method Not Allowed')
       }

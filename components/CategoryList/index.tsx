@@ -9,44 +9,42 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
-import { CategoryResponse, LogResponse } from 'utils/types'
-import HistoryListItem from './DesktopHistoryListItem'
+import { CategoryResponse } from 'utils/types'
+import CategoryListItem from 'components/CategoryList/CategoryListItem'
 import deepCopy from 'utils/deepCopy'
-import { dateToReadableDateString } from 'utils/transformations'
 
 type Order = 'asc' | 'desc'
 
-interface HistoryTableData extends LogResponse {
+interface CategoryTableData extends CategoryResponse {
   kebab: string
-  category: string | CategoryResponse
 }
 
 interface HeadCell {
   disablePadding: boolean
-  id: keyof HistoryTableData
+  id: keyof CategoryTableData
   label: string
   numeric: boolean
   sortable?: boolean
-  sortFn?(a: LogResponse, b: LogResponse): number
+  sortFn?(a: CategoryResponse, b: CategoryResponse): number
 }
 
 function sortTable(
-  tableData: LogResponse[],
-  sortBy: keyof HistoryTableData,
+  tableData: CategoryResponse[],
+  sortBy: keyof CategoryTableData,
   order: Order
 ) {
   const orderByHeadCell = headCells.filter(
     (headCell) => headCell.id === sortBy.toString()
   )[0]
 
-  return tableData.sort((a: LogResponse, b: LogResponse) =>
+  return tableData.sort((a: CategoryResponse, b: CategoryResponse) =>
     order === 'asc'
       ? orderByHeadCell.sortFn!(a, b)
       : orderByHeadCell.sortFn!(b, a)
   )
 }
 
-function comparator(v1: string | Date, v2: string | Date) {
+function comparator(v1: string, v2: string) {
   if (v1 < v2) {
     return -1
   }
@@ -60,59 +58,13 @@ function comparator(v1: string | Date, v2: string | Date) {
 
 const headCells: readonly HeadCell[] = [
   {
-    id: 'staff',
+    id: 'name',
     numeric: false,
     disablePadding: true,
-    label: 'Staff',
+    label: 'Name',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return comparator(log1.staff.name, log2.staff.name)
-    },
-  },
-  {
-    id: 'item',
-    numeric: false,
-    disablePadding: false,
-    label: 'Item',
-    sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return comparator(
-        log1.item.itemDefinition.name,
-        log2.item.itemDefinition.name
-      )
-    },
-  },
-  {
-    id: 'category',
-    numeric: false,
-    disablePadding: false,
-    label: 'Category',
-    sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return comparator(
-        log1.item.itemDefinition.category?.name ?? '',
-        log2.item.itemDefinition.category?.name ?? ''
-      )
-    },
-  },
-  {
-    id: 'quantityDelta',
-    numeric: false,
-    disablePadding: false,
-    label: 'Quantity',
-    sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return log1.quantityDelta - log2.quantityDelta
-    },
-  },
-  {
-    id: 'date',
-    numeric: false,
-    disablePadding: false,
-    label: 'Date',
-    sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return comparator(log2.date, log1.date)
+    sortFn: (category1: CategoryResponse, category2: CategoryResponse) => {
+      return comparator(category1.name, category2.name)
     },
   },
   {
@@ -127,16 +79,16 @@ const headCells: readonly HeadCell[] = [
 interface EnhancedTableProps {
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof HistoryTableData
+    property: keyof CategoryTableData
   ) => void
   order: Order
   orderBy: string
 }
 
-function HistoryListHeader(props: EnhancedTableProps) {
+function CategoryListHeader(props: EnhancedTableProps) {
   const { order, orderBy, onRequestSort } = props
   const createSortHandler =
-    (property: keyof HistoryTableData) =>
+    (property: keyof CategoryTableData) =>
     (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property)
     }
@@ -173,93 +125,44 @@ function HistoryListHeader(props: EnhancedTableProps) {
 }
 
 interface Props {
-  logs: LogResponse[]
+  categories: CategoryResponse[]
   search: string
-  category: string
-  endDate: string
-  startDate: string
-  internal: boolean
 }
 
 const DEFAULT_ROWS_PER_PAGE = 5
-const DEFAULT_ORDER_BY = 'date'
+const DEFAULT_ORDER_BY = 'name'
 const DEFAULT_ORDER = 'asc'
 
-export default function DesktopHistoryList(props: Props) {
+export default function DesktopCategoryList(props: Props) {
   const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
   const [orderBy, setOrderBy] =
-    React.useState<keyof HistoryTableData>(DEFAULT_ORDER_BY)
+    React.useState<keyof CategoryTableData>(DEFAULT_ORDER_BY)
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = React.useState<LogResponse[]>(
-    [] as LogResponse[]
+  const [visibleRows, setVisibleRows] = React.useState<CategoryResponse[]>(
+    [] as CategoryResponse[]
   )
-  const [tableData, setTableData] = React.useState<LogResponse[]>([])
+  const [tableData, setTableData] = React.useState<CategoryResponse[]>([])
 
   React.useEffect(() => {
-    let newTableData: LogResponse[] = deepCopy(props.logs)
-
-    if (props.internal) {
-      newTableData = newTableData.filter(
-        (log) => log.item.itemDefinition.internal
-      )
-    }
-
+    let newTableData: CategoryResponse[] = deepCopy(props.categories)
     if (props.search) {
       const search = props.search.toLowerCase()
-      newTableData = newTableData.filter((log) => {
-        return (
-          log.staff.name.toLowerCase().includes(search) ||
-          log.item.itemDefinition.name.toLowerCase().includes(search) ||
-          (log.item.attributes &&
-            log.item.attributes
-              .map((attr) =>
-                `${attr.attribute.name}: ${attr.value}`.toLowerCase()
-              )
-              .join(' ')
-              .includes(search)) ||
-          (log.item.itemDefinition.category &&
-            log.item.itemDefinition.category.name
-              .toLowerCase()
-              .includes(search)) ||
-          log.quantityDelta.toString().toLowerCase().includes(search) ||
-          dateToReadableDateString(log.date).toLowerCase().includes(search)
-        )
-      })
-    }
-
-    if (props.startDate || props.endDate) {
-      // if props.startDate or props.endDate are not present, use an arbitrarily far-away date
-      const startDate = new Date(props.startDate ?? '1000-01-01').getTime()
-      const endDate = new Date(props.endDate ?? '9999-01-01').getTime()
-      newTableData = newTableData.filter((log) => {
-        return (
-          new Date(log.date).getTime() >= startDate &&
-          new Date(log.date).getTime() <= endDate
-        )
-      })
-    }
-
-    if (props.category) {
-      newTableData = newTableData.filter((log) => {
-        return log.item.itemDefinition.category?.name === props.category
-      })
+      newTableData = [
+        ...newTableData.filter((category) => {
+          return category.name.toLowerCase().includes(search)
+        }),
+      ]
     }
     setTableData(newTableData)
-    var rowsOnMount = sortTable(newTableData, orderBy, order)
+    let rowsOnMount = sortTable(newTableData, orderBy, order)
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
     setVisibleRows(rowsOnMount)
-  }, [
-    props.search,
-    props.category,
-    props.startDate,
-    props.endDate,
-    props.internal,
-  ])
+  }, [props.search])
 
   const handleRequestSort = React.useCallback(
-    (_e: React.MouseEvent<unknown>, newOrderBy: keyof HistoryTableData) => {
+    (_e: React.MouseEvent<unknown>, newOrderBy: keyof CategoryTableData) => {
       const isAsc = orderBy === newOrderBy && order === 'asc'
       const toggledOrder: Order = isAsc ? 'desc' : 'asc'
       setOrder(toggledOrder)
@@ -305,15 +208,15 @@ export default function DesktopHistoryList(props: Props) {
     <Box sx={{ width: '100%' }}>
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
-          <HistoryListHeader
+          <CategoryListHeader
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
           />
           <TableBody>
             {visibleRows &&
-              visibleRows.map((log) => (
-                <HistoryListItem log={log} key={log._id} />
+              visibleRows.map((category) => (
+                <CategoryListItem category={category} key={category._id} />
               ))}
           </TableBody>
         </Table>
