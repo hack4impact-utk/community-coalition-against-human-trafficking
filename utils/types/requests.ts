@@ -55,8 +55,8 @@ export interface AttributePutRequest extends AttributeRequest {
 export type AttributeRequest = Attribute
 
 export interface LogRequest extends Log {
-  staff: UserResponse
-  item: InventoryItemResponse
+  staff: string
+  item: string
 }
 export type LogPostRequest = LogRequest
 export interface LogPutRequest extends LogRequest {
