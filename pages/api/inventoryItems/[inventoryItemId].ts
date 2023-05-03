@@ -58,7 +58,7 @@ export default async function inventoryItemHandler(
       }
     }
   } catch (e) {
-    console.log(e)
+    console.error(e)
     if (e instanceof ApiError) {
       return res.status(e.statusCode).json({
         success: false,

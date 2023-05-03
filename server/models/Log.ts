@@ -24,5 +24,5 @@ const LogSchema = new Schema({
 
 export interface LogDocument extends Omit<Log, '_id'>, Document {}
 
-export default (models.ItemDefinition as Model<LogDocument>) ||
+export default (models.Log as Model<LogDocument>) ||
   model<LogDocument>('Log', LogSchema, 'logs')
