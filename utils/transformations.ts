@@ -1,7 +1,11 @@
+import { ItemDefinitionFormData } from 'components/UpsertItemForm'
+import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
+  AttributeRequest,
   CheckInOutFormData,
   InventoryItemAttributeRequest,
   InventoryItemRequest,
+  ItemDefinitionRequest,
 } from 'utils/types'
 
 /**
@@ -9,7 +13,7 @@ import {
  * @param formData The form data to convert
  * @returns A new `Partial<InventoryItemRequest>` object.
  */
-export function CheckInOutFormDataToInventoryItemRequest(
+export function checkInOutFormDataToInventoryItemRequest(
   formData: CheckInOutFormData
 ): Partial<InventoryItemRequest> {
   const transformedData = {
@@ -47,4 +51,46 @@ export function CheckInOutFormDataToInventoryItemRequest(
   }
 
   return transformedData
+}
+
+export function attributeFormDataToAttributeRequest(
+  formData: AttributeFormData
+): AttributeRequest {
+  return {
+    name: formData.name,
+    color: formData.color,
+    possibleValues:
+      formData.valueType === 'list'
+        ? formData.listOptions!
+        : formData.valueType,
+  }
+}
+
+export function itemDefinitionFormDataToItemDefinitionRequest(
+  formData: ItemDefinitionFormData
+): ItemDefinitionRequest {
+  return {
+    ...formData,
+    category: formData.category._id,
+    attributes: formData.attributes.map((attr) => attr._id),
+  }
+}
+
+/**
+ * Converts a Date object into a readable string
+ * Ex. "2022-02-10T14:47.12.419Z" becomes "February 10, 2022 9:47 AM"
+ * @param date The date to convert
+ * @returns A human-readable date string
+ */
+export function DateToReadableDateString(date: Date) {
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }
+
+  return new Date(date).toLocaleString('en-US', dateOptions).replace(' at', '')
 }

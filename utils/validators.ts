@@ -106,6 +106,47 @@ export function validateUserRequest(
   return validateProperties(validationModel, user)
 }
 
+/**
+ * Checks the validity of an Log object. Does not validate child objects.
+ * @param log The Log object to test
+ * @returns A ValidationResult object
+ */
+export function validateLogRequest(
+  log: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = logPutModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = logPostModelProperties
+  } else {
+    validationModel = logRequestModelProperties
+  }
+
+  return validateProperties(validationModel, log)
+}
+
+/**
+ * Checks the validity of an notificationEmail object. Does not validate child objects.
+ * @param notificationEmail The NotificationEmail object to test
+ * @returns A ValidationResult object
+ */
+export function validateNotificationEmailRequest(
+  notificationEmail: Record<string, unknown>,
+  requestType?: 'PUT' | 'POST'
+) {
+  let validationModel: Property[]
+  if (requestType === 'PUT') {
+    validationModel = notificationEmailPutModelProperties
+  } else if (requestType === 'POST') {
+    validationModel = notificationEmailPostModelProperties
+  } else {
+    validationModel = notificationEmailRequestModelProperties
+  }
+  return validateProperties(validationModel, notificationEmail)
+}
+
 /*
  * Since typescript is compiled into javascript on runtime, all type information
  * is lost. This makes it exceedingly difficult to have a truly generic object
@@ -285,3 +326,61 @@ export const userPutModelProperties: Property[] = deepCopy(
   userRequestModelProperties
 )
 userPutModelProperties.find((prop) => prop.key === '_id')!.required = true
+
+export const logRequestModelProperties: Property[] = [
+  {
+    key: '_id',
+    types: 'string',
+    required: false,
+  },
+  {
+    key: 'staff',
+    types: 'string',
+    required: true,
+  },
+  {
+    key: 'item',
+    types: 'string',
+    required: true,
+  },
+  {
+    key: 'quantityDelta',
+    types: 'number',
+    required: true,
+  },
+  {
+    key: 'date',
+    types: 'string',
+    required: true,
+  },
+]
+
+export const logPostModelProperties: Property[] = deepCopy(
+  logRequestModelProperties
+)
+
+export const logPutModelProperties: Property[] = deepCopy(
+  logRequestModelProperties
+)
+logPutModelProperties.find((prop) => prop.key === '_id')!.required = true
+
+export const notificationEmailRequestModelProperties: Property[] = [
+  {
+    key:'_id',
+    types: 'string',
+    required: false,
+  },
+  {
+    key: 'emails',
+    types: 'object',
+    required: true,
+  },
+]
+export const notificationEmailPostModelProperties: Property[] = deepCopy(
+  notificationEmailRequestModelProperties
+)
+
+export const notificationEmailPutModelProperties: Property[] = deepCopy(
+  notificationEmailRequestModelProperties
+)
+notificationEmailPutModelProperties.find((prop) => prop.key === '_id')!.required = true

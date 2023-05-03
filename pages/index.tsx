@@ -1,6 +1,6 @@
 import { Button } from '@mui/material'
 import DialogLink from 'components/DialogLink'
-import { useAppDispatch, useAppSelector } from 'store'
+import { useAppDispatch } from 'store'
 import { toggleKioskMode } from 'store/kiosk'
 
 export default function DashboardPage() {

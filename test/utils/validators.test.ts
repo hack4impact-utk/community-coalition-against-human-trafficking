@@ -126,4 +126,52 @@ describe('validators', () => {
       )
     })
   })
+
+  describe('validateLogRequest', () => {
+    test('PUT should use logPutModelProperties', () => {
+      validators.validateLogRequest(testObj, 'PUT')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.logPutModelProperties,
+        testObj
+      )
+    })
+    test('POST should use logPutModelProperties', () => {
+      validators.validateLogRequest(testObj, 'POST')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.logPostModelProperties,
+        testObj
+      )
+    })
+    test('no requestType should use logRequestModelProperties', () => {
+      validators.validateLogRequest(testObj)
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.logRequestModelProperties,
+        testObj
+      )
+    })
+  })
+
+  describe('validateNotificationEmailRequest', () => {
+    test('PUT should use notificationEmailPutModelProperties', () => {
+      validators.validateNotificationEmailRequest(testObj, 'PUT')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.notificationEmailPutModelProperties,
+        testObj
+      )
+    })
+    test('POST should use notificationEmailPutModelProperties', () => {
+      validators.validateNotificationEmailRequest(testObj, 'POST')
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.notificationEmailPostModelProperties,
+        testObj
+      )
+    })
+    test('no requestType should use notificationEmailRequestModelProperties', () => {
+      validators.validateNotificationEmailRequest(testObj)
+      expect(mockValidator).toHaveBeenCalledWith(
+        validators.notificationEmailRequestModelProperties,
+        testObj
+      )
+    })
+  })
 })

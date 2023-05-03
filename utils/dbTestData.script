@@ -6,17 +6,15 @@ if (true) {
    db.categories.deleteMany({}); 
    db.inventoryItems.deleteMany({}); 
    db.itemDefinitions.deleteMany({}); 
+   db.logs.deleteMany({}); 
 }
 
 // CATEGORIES
-const categoryId1 = ObjectId();
-const categoryId2 = ObjectId();
-const categoryId3 = ObjectId();
-const categoryId4 = ObjectId();
-const categoryId5 = ObjectId();
-const categoryId6 = ObjectId();
-const categoryId7 = ObjectId();
-const categoryId8 = ObjectId();
+
+// creates 8 categoryId variables
+for (let i = 1; i <= 8; i++) {
+  this[`categoryId${i}`] = ObjectId();
+}
 
 db.categories.insertMany([
     {
@@ -55,21 +53,12 @@ db.categories.insertMany([
 
 
 // ATTRIBUTES
-const attributeId1 = ObjectId();
-const attributeId2 = ObjectId();
-const attributeId3 = ObjectId();
-const attributeId4 = ObjectId();
-const attributeId5 = ObjectId();
-const attributeId6 = ObjectId();
-const attributeId7 = ObjectId();
-const attributeId8 = ObjectId();
-const attributeId9 = ObjectId();
-const attributeId10 = ObjectId();
-const attributeId11 = ObjectId();
-const attributeId12 = ObjectId();
-const attributeId13 = ObjectId();
-const attributeId14 = ObjectId();
-const attributeId15 = ObjectId();
+
+// creates 15 attributeId variables
+for (let i = 1; i <= 15; i++) {
+  this[`attributeId${i}`] = ObjectId();
+}
+
 const color1 = "#ebebeb";
 const color2 = "#c7dbda";
 const color3 = "#e2f0cb";
@@ -173,38 +162,11 @@ db.attributes.insertMany([
 
 
 // ITEM DEFINITIONS
-const itemDefinitionId1 = ObjectId();
-const itemDefinitionId2 = ObjectId();
-const itemDefinitionId3 = ObjectId();
-const itemDefinitionId4 = ObjectId();
-const itemDefinitionId5 = ObjectId();
-const itemDefinitionId6 = ObjectId();
-const itemDefinitionId7 = ObjectId();
-const itemDefinitionId8 = ObjectId();
-const itemDefinitionId9 = ObjectId();
-const itemDefinitionId10 = ObjectId();
-const itemDefinitionId11 = ObjectId();
-const itemDefinitionId12 = ObjectId();
-const itemDefinitionId13 = ObjectId();
-const itemDefinitionId14 = ObjectId();
-const itemDefinitionId15 = ObjectId();
-const itemDefinitionId16 = ObjectId();
-const itemDefinitionId17 = ObjectId();
-const itemDefinitionId18 = ObjectId();
-const itemDefinitionId19 = ObjectId();
-const itemDefinitionId20 = ObjectId();
-const itemDefinitionId21 = ObjectId();
-const itemDefinitionId22 = ObjectId();
-const itemDefinitionId23 = ObjectId();
-const itemDefinitionId24 = ObjectId();
-const itemDefinitionId25 = ObjectId();
-const itemDefinitionId26 = ObjectId();
-const itemDefinitionId27 = ObjectId();
-const itemDefinitionId28 = ObjectId();
-const itemDefinitionId29 = ObjectId();
-const itemDefinitionId30 = ObjectId();
-const itemDefinitionId31 = ObjectId();
-const itemDefinitionId32 = ObjectId();
+
+// creates 32 itemDefinitionId variables
+for (let i = 1; i <= 32; i++) {
+  this[`itemDefinitionId${i}`] = ObjectId();
+}
 
 db.itemDefinitions.insertMany([
     // clothing
@@ -535,16 +497,24 @@ db.itemDefinitions.insertMany([
 
 
 
-const userId1 = ObjectId("63fcb70862199670ed36177a");
+const userId1 = ObjectId("64244bbc5106b0321493b3db");
 const userId2 = ObjectId("63fa5c9265ada1f23e68b638");
 const userId3 = ObjectId("63f95a8a55d930aa6176f06b");
+const userId4 = ObjectId("63fa71d1d7f7d06fb99723a1");
+const userId5 = ObjectId("63fd09e5b331d31c5c49c09e");
+const userId6 = ObjectId("6408cf9a8c0c0add135da131");
+const userId7 = ObjectId("641b4b00ff3c28b5fe7cd0ae");
 
+// creates 115 inventoryItemId variables
+for (let i = 1; i <= 115; i++) {
+  this[`inventoryItemId${i}`] = ObjectId();
+}
 
 // INVENTORY ITEMS
 db.inventoryItems.insertMany([
     // shirt
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId1,
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
@@ -559,7 +529,7 @@ db.inventoryItems.insertMany([
         "quantity": 24
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId2,
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
@@ -574,7 +544,7 @@ db.inventoryItems.insertMany([
         "quantity": 26
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId3,
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
@@ -589,7 +559,7 @@ db.inventoryItems.insertMany([
         "quantity": 6
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId4,
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
@@ -605,7 +575,7 @@ db.inventoryItems.insertMany([
         "quantity": 15
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId5,
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
@@ -621,7 +591,7 @@ db.inventoryItems.insertMany([
         "quantity": 22
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId6,
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
@@ -636,7 +606,7 @@ db.inventoryItems.insertMany([
         "quantity": 0
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId7,
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
@@ -651,7 +621,7 @@ db.inventoryItems.insertMany([
 
     // pants
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId8,
         "itemDefinition": itemDefinitionId2,
         "attributes": [
             {
@@ -666,7 +636,7 @@ db.inventoryItems.insertMany([
         "quantity": 16
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId9,
         "itemDefinition": itemDefinitionId2,
         "attributes": [
             {
@@ -681,7 +651,7 @@ db.inventoryItems.insertMany([
         "quantity": 21
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId10,
         "itemDefinition": itemDefinitionId2,
         "attributes": [
             {
@@ -696,7 +666,7 @@ db.inventoryItems.insertMany([
         "quantity": 3
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId11,
         "itemDefinition": itemDefinitionId2,
         "attributes": [
             {
@@ -711,7 +681,7 @@ db.inventoryItems.insertMany([
         "quantity": 3
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId12,
         "itemDefinition": itemDefinitionId2,
         "attributes": [
             {
@@ -730,7 +700,7 @@ db.inventoryItems.insertMany([
 
     // shoes
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId13,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -745,7 +715,7 @@ db.inventoryItems.insertMany([
         "quantity": 6
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId14,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -760,7 +730,7 @@ db.inventoryItems.insertMany([
         "quantity": 2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId15,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -775,7 +745,7 @@ db.inventoryItems.insertMany([
         "quantity": 3
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId16,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -790,7 +760,7 @@ db.inventoryItems.insertMany([
         "quantity": 7
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId17,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -805,7 +775,7 @@ db.inventoryItems.insertMany([
         "quantity": 0
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId18,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -820,7 +790,7 @@ db.inventoryItems.insertMany([
         "quantity": 2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId19,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -835,7 +805,7 @@ db.inventoryItems.insertMany([
         "quantity": 0
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId20,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -850,7 +820,7 @@ db.inventoryItems.insertMany([
         "quantity": 6
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId21,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -865,7 +835,7 @@ db.inventoryItems.insertMany([
         "quantity": 2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId22,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -880,7 +850,7 @@ db.inventoryItems.insertMany([
         "quantity": 3
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId23,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -895,7 +865,7 @@ db.inventoryItems.insertMany([
         "quantity": 7
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId24,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -910,7 +880,7 @@ db.inventoryItems.insertMany([
         "quantity": 0
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId25,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -925,7 +895,7 @@ db.inventoryItems.insertMany([
         "quantity": 2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId26,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -940,7 +910,7 @@ db.inventoryItems.insertMany([
         "quantity": 0
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId27,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -955,7 +925,7 @@ db.inventoryItems.insertMany([
         "quantity": 6
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId28,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -970,7 +940,7 @@ db.inventoryItems.insertMany([
         "quantity": 2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId29,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -985,7 +955,7 @@ db.inventoryItems.insertMany([
         "quantity": 3
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId30,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -1000,7 +970,7 @@ db.inventoryItems.insertMany([
         "quantity": 7
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId31,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -1015,7 +985,7 @@ db.inventoryItems.insertMany([
         "quantity": 0
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId32,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -1030,7 +1000,7 @@ db.inventoryItems.insertMany([
         "quantity": 2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId33,
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
@@ -1047,7 +1017,7 @@ db.inventoryItems.insertMany([
 
     // bra
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId34,
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
@@ -1058,7 +1028,7 @@ db.inventoryItems.insertMany([
         "quantity": 3
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId35,
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
@@ -1069,7 +1039,7 @@ db.inventoryItems.insertMany([
         "quantity": 10
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId36,
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
@@ -1080,7 +1050,7 @@ db.inventoryItems.insertMany([
         "quantity": 7
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId37,
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
@@ -1091,7 +1061,7 @@ db.inventoryItems.insertMany([
         "quantity": 2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId38,
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
@@ -1102,7 +1072,7 @@ db.inventoryItems.insertMany([
         "quantity": 0
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId39,
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
@@ -1113,7 +1083,7 @@ db.inventoryItems.insertMany([
         "quantity": 6
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId40,
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
@@ -1124,7 +1094,7 @@ db.inventoryItems.insertMany([
         "quantity": 4
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId41,
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
@@ -1135,7 +1105,7 @@ db.inventoryItems.insertMany([
         "quantity": 0
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId42,
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
@@ -1146,7 +1116,7 @@ db.inventoryItems.insertMany([
         "quantity": 8
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId43,
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
@@ -1159,7 +1129,7 @@ db.inventoryItems.insertMany([
 
     // Underwear
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId44,
         "itemDefinition": itemDefinitionId5,
         "attributes": [],
         "quantity": 20
@@ -1167,7 +1137,7 @@ db.inventoryItems.insertMany([
 
     // socks
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId45,
         "itemDefinition": itemDefinitionId6,
         "attributes": [],
         "quantity": 50
@@ -1183,7 +1153,7 @@ db.inventoryItems.insertMany([
     // Toiletries
     // Shampoo
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId46,
         "itemDefinition": itemDefinitionId7,
         "attributes": [
             {
@@ -1194,7 +1164,7 @@ db.inventoryItems.insertMany([
         "quantity": 20
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId47,
         "itemDefinition": itemDefinitionId7,
         "attributes": [
             {
@@ -1205,7 +1175,7 @@ db.inventoryItems.insertMany([
         "quantity": 12
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId48,
         "itemDefinition": itemDefinitionId7,
         "attributes": [
             {
@@ -1216,7 +1186,7 @@ db.inventoryItems.insertMany([
         "quantity": 5
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId49,
         "itemDefinition": itemDefinitionId7,
         "attributes": [
             {
@@ -1227,7 +1197,7 @@ db.inventoryItems.insertMany([
         "quantity": 8
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId50,
         "itemDefinition": itemDefinitionId7,
         "attributes": [
             {
@@ -1240,7 +1210,7 @@ db.inventoryItems.insertMany([
 
     // conditioner
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId51,
         "itemDefinition": itemDefinitionId8,
         "attributes": [
             {
@@ -1251,7 +1221,7 @@ db.inventoryItems.insertMany([
         "quantity": 20
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId52,
         "itemDefinition": itemDefinitionId8,
         "attributes": [
             {
@@ -1262,7 +1232,7 @@ db.inventoryItems.insertMany([
         "quantity": 12
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId53,
         "itemDefinition": itemDefinitionId8,
         "attributes": [
             {
@@ -1273,7 +1243,7 @@ db.inventoryItems.insertMany([
         "quantity": 5
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId54,
         "itemDefinition": itemDefinitionId8,
         "attributes": [
             {
@@ -1284,7 +1254,7 @@ db.inventoryItems.insertMany([
         "quantity": 8
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId55,
         "itemDefinition": itemDefinitionId8,
         "attributes": [
             {
@@ -1297,14 +1267,14 @@ db.inventoryItems.insertMany([
 
     // Soap
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId56,
         "itemDefinition": itemDefinitionId9,
         "attributes": [],
         "quantity": 75
     },
 
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId57,
         "itemDefinition": itemDefinitionId10,
         "attributes": [
             {
@@ -1315,7 +1285,7 @@ db.inventoryItems.insertMany([
         "quantity": 20
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId58,
         "itemDefinition": itemDefinitionId10,
         "attributes": [
             {
@@ -1326,7 +1296,7 @@ db.inventoryItems.insertMany([
         "quantity": 12
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId59,
         "itemDefinition": itemDefinitionId10,
         "attributes": [
             {
@@ -1337,7 +1307,7 @@ db.inventoryItems.insertMany([
         "quantity": 5
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId60,
         "itemDefinition": itemDefinitionId10,
         "attributes": [
             {
@@ -1348,7 +1318,7 @@ db.inventoryItems.insertMany([
         "quantity": 8
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId61,
         "itemDefinition": itemDefinitionId10,
         "attributes": [
             {
@@ -1361,7 +1331,7 @@ db.inventoryItems.insertMany([
 
     // shaving cream
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId62,
         "itemDefinition": itemDefinitionId11,
         "attributes": [
             {
@@ -1372,7 +1342,7 @@ db.inventoryItems.insertMany([
         "quantity": 0
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId63,
         "itemDefinition": itemDefinitionId11,
         "attributes": [
             {
@@ -1383,7 +1353,7 @@ db.inventoryItems.insertMany([
         "quantity": 40
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId64,
         "itemDefinition": itemDefinitionId11,
         "attributes": [
             {
@@ -1394,7 +1364,7 @@ db.inventoryItems.insertMany([
         "quantity": 5
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId65,
         "itemDefinition": itemDefinitionId11,
         "attributes": [
             {
@@ -1405,7 +1375,7 @@ db.inventoryItems.insertMany([
         "quantity": 15
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId66,
         "itemDefinition": itemDefinitionId11,
         "attributes": [
             {
@@ -1419,7 +1389,7 @@ db.inventoryItems.insertMany([
 
     // Razor
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId67,
         "itemDefinition": itemDefinitionId12,
         "attributes": [],
         "quantity": 50
@@ -1428,7 +1398,7 @@ db.inventoryItems.insertMany([
     // FURNITURE
     // couch
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId68,
         "itemDefinition": itemDefinitionId13,
         "attributes": [
             {
@@ -1443,7 +1413,7 @@ db.inventoryItems.insertMany([
         "quantity": 3
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId69,
         "itemDefinition": itemDefinitionId13,
         "attributes": [
             {
@@ -1460,7 +1430,7 @@ db.inventoryItems.insertMany([
 
     // Table
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId70,
         "itemDefinition": itemDefinitionId14,
         "attributes": [
             {
@@ -1475,7 +1445,7 @@ db.inventoryItems.insertMany([
         "quantity": 3
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId71,
         "itemDefinition": itemDefinitionId14,
         "attributes": [
             {
@@ -1492,7 +1462,7 @@ db.inventoryItems.insertMany([
 
     // Chair
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId72,
         "itemDefinition": itemDefinitionId15,
         "attributes": [
             {
@@ -1507,7 +1477,7 @@ db.inventoryItems.insertMany([
         "quantity": 4
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId73,
         "itemDefinition": itemDefinitionId15,
         "attributes": [
             {
@@ -1524,7 +1494,7 @@ db.inventoryItems.insertMany([
 
     // Oven
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId74,
         "itemDefinition": itemDefinitionId16,
         "attributes": [
             {
@@ -1543,7 +1513,7 @@ db.inventoryItems.insertMany([
         "quantity": 5
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId75,
         "itemDefinition": itemDefinitionId16,
         "attributes": [
             {
@@ -1564,7 +1534,7 @@ db.inventoryItems.insertMany([
 
     // Refrigerator
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId76,
         "itemDefinition": itemDefinitionId17,
         "attributes": [
             {
@@ -1583,7 +1553,7 @@ db.inventoryItems.insertMany([
         "quantity": 2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId77,
         "itemDefinition": itemDefinitionId17,
         "attributes": [
             {
@@ -1604,7 +1574,7 @@ db.inventoryItems.insertMany([
 
     // Dishwasher
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId78,
         "itemDefinition": itemDefinitionId18,
         "attributes": [
             {
@@ -1623,7 +1593,7 @@ db.inventoryItems.insertMany([
         "quantity": 4
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId79,
         "itemDefinition": itemDefinitionId18,
         "attributes": [
             {
@@ -1644,7 +1614,7 @@ db.inventoryItems.insertMany([
 
     // Mini Fridge
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId80,
         "itemDefinition": itemDefinitionId19,
         "attributes": [
             {
@@ -1663,7 +1633,7 @@ db.inventoryItems.insertMany([
         "quantity": 10
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId81,
         "itemDefinition": itemDefinitionId19,
         "attributes": [
             {
@@ -1682,7 +1652,7 @@ db.inventoryItems.insertMany([
         "quantity": 5
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId82,
         "itemDefinition": itemDefinitionId19,
         "attributes": [
             {
@@ -1703,7 +1673,7 @@ db.inventoryItems.insertMany([
 
     // Coffee Maker
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId83,
         "itemDefinition": itemDefinitionId20,
         "attributes": [
             {
@@ -1721,7 +1691,7 @@ db.inventoryItems.insertMany([
         "quantity": 8
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId84,
         "itemDefinition": itemDefinitionId20,
         "attributes": [
             {
@@ -1740,7 +1710,7 @@ db.inventoryItems.insertMany([
         "quantity": 4
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId85,
         "itemDefinition": itemDefinitionId20,
         "attributes": [
             {
@@ -1760,7 +1730,7 @@ db.inventoryItems.insertMany([
 
     // Toaster
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId86,
         "itemDefinition": itemDefinitionId21,
         "attributes": [
             {
@@ -1779,7 +1749,7 @@ db.inventoryItems.insertMany([
         "quantity": 10
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId87,
         "itemDefinition": itemDefinitionId21,
         "attributes": [
             {
@@ -1798,7 +1768,7 @@ db.inventoryItems.insertMany([
         "quantity": 5
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId88,
         "itemDefinition": itemDefinitionId21,
         "attributes": [
             {
@@ -1819,7 +1789,7 @@ db.inventoryItems.insertMany([
 
     // Blender
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId89,
         "itemDefinition": itemDefinitionId22,
         "attributes": [
             {
@@ -1838,7 +1808,7 @@ db.inventoryItems.insertMany([
         "quantity": 8
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId90,
         "itemDefinition": itemDefinitionId22,
         "attributes": [
             {
@@ -1857,7 +1827,7 @@ db.inventoryItems.insertMany([
         "quantity": 4
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId91,
         "itemDefinition": itemDefinitionId22,
         "attributes": [
             {
@@ -1881,7 +1851,7 @@ db.inventoryItems.insertMany([
 
     //Laptop
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId92,
         "itemDefinition": itemDefinitionId23,
         "attributes": [
             {
@@ -1901,7 +1871,7 @@ db.inventoryItems.insertMany([
         "assignee": userId1
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId93,
         "itemDefinition": itemDefinitionId23,
         "attributes": [
             {"attribute": attributeId9, "value": "Lenovo"},
@@ -1912,7 +1882,7 @@ db.inventoryItems.insertMany([
         "assignee": userId2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId94,
         "itemDefinition": itemDefinitionId23,
         "attributes": [
             {"attribute": attributeId9, "value": "HP"},
@@ -1925,7 +1895,7 @@ db.inventoryItems.insertMany([
 
     //Keyboard
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId95,
         "itemDefinition": itemDefinitionId24,
         "attributes": [
             {"attribute": attributeId9, "value": "Dell"},
@@ -1936,7 +1906,7 @@ db.inventoryItems.insertMany([
         "assignee": userId1
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId96,
         "itemDefinition": itemDefinitionId24,
         "attributes": [
             {"attribute": attributeId9, "value": "Lenovo"},
@@ -1947,7 +1917,7 @@ db.inventoryItems.insertMany([
         "assignee": userId2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId97,
         "itemDefinition": itemDefinitionId24,
         "attributes": [
             {"attribute": attributeId9, "value": "HP"},
@@ -1960,7 +1930,7 @@ db.inventoryItems.insertMany([
 
     // Mouse
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId98,
         "itemDefinition": itemDefinitionId25,
         "attributes": [
             {"attribute": attributeId9, "value": "Dell"},
@@ -1971,7 +1941,7 @@ db.inventoryItems.insertMany([
         "assignee": userId1
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId99,
         "itemDefinition": itemDefinitionId25,
         "attributes": [
             {"attribute": attributeId9, "value": "Lenovo"},
@@ -1982,7 +1952,7 @@ db.inventoryItems.insertMany([
         "assignee": userId2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId100,
         "itemDefinition": itemDefinitionId25,
         "attributes": [
             {"attribute": attributeId9, "value": "HP"},
@@ -1995,7 +1965,7 @@ db.inventoryItems.insertMany([
 
     // Monitor
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId101,
         "itemDefinition": itemDefinitionId26,
         "attributes": [
             {"attribute": attributeId9, "value": "Dell"},
@@ -2006,7 +1976,7 @@ db.inventoryItems.insertMany([
         "assignee": userId1
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId102,
         "itemDefinition": itemDefinitionId26,
         "attributes": [
             {"attribute": attributeId9, "value": "Lenovo"},
@@ -2017,7 +1987,7 @@ db.inventoryItems.insertMany([
         "assignee": userId2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId103,
         "itemDefinition": itemDefinitionId26,
         "attributes": [
             {"attribute": attributeId9, "value": "HP"},
@@ -2033,7 +2003,7 @@ db.inventoryItems.insertMany([
 
     // Jumper Cables
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId104,
         "itemDefinition": itemDefinitionId27,
         "attributes": [],
         "quantity": 10
@@ -2041,7 +2011,7 @@ db.inventoryItems.insertMany([
 
     // Vacuum Cleaner
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId105,
         "itemDefinition": itemDefinitionId28,
         "attributes": [
             {
@@ -2052,7 +2022,7 @@ db.inventoryItems.insertMany([
         "quantity": 2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId106,
         "itemDefinition": itemDefinitionId28,
         "attributes": [
             {
@@ -2063,7 +2033,7 @@ db.inventoryItems.insertMany([
         "quantity": 1
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId107,
         "itemDefinition": itemDefinitionId28,
         "attributes": [
             {
@@ -2076,7 +2046,7 @@ db.inventoryItems.insertMany([
 
     // Towel
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId108,
         "itemDefinition": itemDefinitionId29,
         "attributes": [],
         "quantity": 1
@@ -2084,7 +2054,7 @@ db.inventoryItems.insertMany([
 
     // Bedsheet
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId109,
         "itemDefinition": itemDefinitionId30,
         "attributes": [
             {
@@ -2095,7 +2065,7 @@ db.inventoryItems.insertMany([
         "quantity": 3
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId110,
         "itemDefinition": itemDefinitionId30,
         "attributes": [
             {
@@ -2106,7 +2076,7 @@ db.inventoryItems.insertMany([
         "quantity": 7
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId111,
         "itemDefinition": itemDefinitionId30,
         "attributes": [
             {
@@ -2117,7 +2087,7 @@ db.inventoryItems.insertMany([
         "quantity": 2
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId112,
         "itemDefinition": itemDefinitionId30,
         "attributes": [
             {
@@ -2128,7 +2098,7 @@ db.inventoryItems.insertMany([
         "quantity": 0
     },
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId113,
         "itemDefinition": itemDefinitionId30,
         "attributes": [
             {
@@ -2141,7 +2111,7 @@ db.inventoryItems.insertMany([
 
     // Blanket
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId114,
         "itemDefinition": itemDefinitionId31,
         "attributes": [],
         "quantity": 15
@@ -2149,9 +2119,40 @@ db.inventoryItems.insertMany([
 
     // Pillow
     {
-        "_id": ObjectId(),
+        "_id": inventoryItemId115,
         "itemDefinition": itemDefinitionId32,
         "attributes": [],
         "quantity": 2
     }
 ])
+
+
+// LOGS -- this creates 500 randomly generated documents (thanks chatgpt!)
+var userIds = [];
+for (var i = 1; i <= 7; i++) {
+    userIds.push('userId' + i);
+}
+
+var inventoryItemIds = [];
+for (var i = 1; i <= 115; i++) {
+    inventoryItemIds.push('inventoryItemId' + i);
+}
+
+var documents = [];
+for (var i = 0; i < 500; i++) {
+    var staff = userIds[Math.floor(Math.random() * userIds.length)];
+    var item = inventoryItemIds[Math.floor(Math.random() * inventoryItemIds.length)];
+    var quantityDelta = Math.floor(Math.random() * 100) - 50 || 1;
+    var date = new Date(new Date() - Math.floor(Math.random() * 63072000000)); // 2 years in milliseconds
+    var document = {
+        _id: ObjectId(),
+        staff: this[staff],
+        item: this[item],
+        quantityDelta: quantityDelta,
+        date: date
+    };
+    documents.push(document);
+}
+
+db.logs.insertMany(documents);
+

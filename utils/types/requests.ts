@@ -3,8 +3,12 @@ import {
   Category,
   InventoryItem,
   InventoryItemAttribute,
+  InventoryItemResponse,
   ItemDefinition,
+  Log,
+  NotificationEmail,
   User,
+  UserResponse,
 } from '.'
 
 export type UserPostRequest = UserRequest
@@ -50,12 +54,30 @@ export interface AttributePutRequest extends AttributeRequest {
 }
 export type AttributeRequest = Attribute
 
+export interface LogRequest extends Log {
+  staff: string
+  item: string
+}
+export type LogPostRequest = LogRequest
+export interface LogPutRequest extends LogRequest {
+  _id: string
+}
+
+export type NotificationEmailPostRequest = NotificationEmailRequest
+export interface NotificationEmailPutRequest extends NotificationEmailRequest {
+  _id: string
+}
+export type NotificationEmailRequest = NotificationEmail
+
+
 export type ServerPostRequest =
   | UserPostRequest
   | ItemDefinitionPostRequest
   | InventoryItemPostRequest
   | CategoryPostRequest
   | AttributePostRequest
+  | LogPostRequest
+  | NotificationEmailPostRequest
 
 export type ServerPutRequest =
   | UserPutRequest
@@ -63,6 +85,8 @@ export type ServerPutRequest =
   | InventoryItemPutRequest
   | CategoryPutRequest
   | AttributePutRequest
+  | LogPutRequest
+  | NotificationEmailPutRequest
 
 export type ServerRequest =
   | UserRequest
@@ -70,3 +94,5 @@ export type ServerRequest =
   | InventoryItemRequest
   | CategoryRequest
   | AttributeRequest
+  | LogRequest
+  | NotificationEmailRequest
