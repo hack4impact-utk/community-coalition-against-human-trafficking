@@ -92,9 +92,6 @@ function CheckInOutForm({
     ),
   }
 
-
-
-
   const [aaSelected, setAaSelected] = React.useState<
     AutocompleteAttributeOption[]
   >(initialFormData.attributes || [])
@@ -105,7 +102,7 @@ function CheckInOutForm({
       ...initialFormData,
     })
   }, [setFormData])
-  
+
   React.useEffect(() => {
     setFormData((fd) => {
       return updateFormData(fd, { itemDefinition })
@@ -173,6 +170,12 @@ function CheckInOutForm({
       })
     }
   }, [formData.itemDefinition, prevFormData?.itemDefinition, setFormData])
+
+  React.useEffect(() => {
+    if (!formData.itemDefinition) {
+      setSplitAttrs(defaultSplitAttrs)
+    }
+  }, [formData.attributes, formData.textFieldAttributes])
 
   return (
     <FormControl fullWidth>
