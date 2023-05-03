@@ -161,6 +161,7 @@ export const validCheckInOutRequest: CheckInOutRequest = {
   staff: mockObjectId,
   inventoryItem: validInventoryItemPostRequest,
 }
+
 export const validNotificationEmailPostRequest: NotificationEmailPostRequest = {
   emails: ['test@user.com', 'test2@gmail.com'],
 }
