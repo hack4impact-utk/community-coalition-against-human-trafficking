@@ -6,9 +6,12 @@ import {
   DialogContent,
   DialogTitle,
 } from '@mui/material'
-import UpsertItemForm from 'components/UpsertItemForm'
+import UpsertItemForm, {
+  ItemDefinitionFormData,
+} from 'components/UpsertItemForm'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { itemDefinitionFormDataToItemDefinitionRequest } from 'utils/transformations'
 import { AttributeResponse, CategoryResponse } from 'utils/types'
 let categories: CategoryResponse[]
 let attributes: AttributeResponse[] = [] as AttributeResponse[]
@@ -27,20 +30,64 @@ fetch('http://localhost:3000/api/attributes', {
   })
 })
 
-export default function NewItemPage() {
+let itemDefinitionFormData: ItemDefinitionFormData
+
+async function createItem(formData: ItemDefinitionFormData) {
+  const itemDefReq = itemDefinitionFormDataToItemDefinitionRequest(formData)
+
+  const response = await fetch('http://localhost:3000/api/itemDefinitions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(itemDefReq),
+  })
+
+  const data = await response.json()
+
+  return data.payload
+}
+
+interface Props {
+  backHref?: string
+}
+
+export default function NewItemPage({ backHref }: Props) {
   const router = useRouter()
+
+  const redirectBack = (queryStr?: string) => {
+    if (backHref) {
+      router.push(`${backHref}${queryStr}`)
+    } else {
+      router.reload()
+    }
+  }
 
   return (
     <>
       <DialogTitle>Create New Item</DialogTitle>
       <DialogContent>
-        <UpsertItemForm categories={categories} attributes={attributes} />
+        <UpsertItemForm
+          categories={categories}
+          attributes={attributes}
+          onChange={(formData) => {
+            itemDefinitionFormData = formData
+          }}
+        />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => router.back()} color="inherit">
+        <Button onClick={() => redirectBack('')} color="inherit">
           Close
         </Button>
-        <Button onClick={() => router.back()}>Submit</Button>
+        <Button
+          onClick={async () => {
+            const itemId = await createItem(itemDefinitionFormData)
+            // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
+            redirectBack(`?item=${itemId}`)
+          }}
+        >
+          Submit
+        </Button>
       </DialogActions>
     </>
   )
