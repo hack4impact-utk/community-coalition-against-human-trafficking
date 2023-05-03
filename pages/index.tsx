@@ -1,17 +1,18 @@
 import { Button } from '@mui/material'
+import DialogLink from 'components/DialogLink'
 import { useAppDispatch } from 'store'
-import { showSnackbar } from 'store/snackbar'
+import { toggleKioskMode } from 'store/kiosk'
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch()
   return (
-    // @ts-ignore
-    <Button
-      onClick={() =>
-        dispatch(showSnackbar({ message: 'hello!', severity: 'success' }))
-      }
-    >
-      Open snackbar
-    </Button>
+    <>
+      <DialogLink href={'/dialog/test'}>
+        <Button>Take me to dialog</Button>
+      </DialogLink>
+      <Button onClick={() => dispatch(toggleKioskMode())}>
+        Toggle Kiosk Mode
+      </Button>
+    </>
   )
 }
