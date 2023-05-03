@@ -43,13 +43,17 @@ const matchParams = (href: string, definedHref: string): MatchResult => {
 }
 
 const constructDialogRoute = (
-  dialogRoute?: DialogRoute,
-  params: { [key: string]: string }
+  params: { [key: string]: string },
+  dialogRoute?: DialogRoute
 ) => {
   if (!dialogRoute) return ''
-  return `?dialog=${dialogRoute.name}&${Object.entries(params)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')}`
+  return `?showDialog=true${
+    Object.keys(params).length
+      ? `&${Object.entries(params)
+          .map(([key, value]) => `${key}=${value}`)
+          .join('&')}`
+      : ''
+  }`
 }
 
 export default function DialogLink({ href, children }: Props) {
@@ -71,14 +75,13 @@ export default function DialogLink({ href, children }: Props) {
   console.log(dialogRoute)
 
   const constructedHref = useMemo(
-    () => constructDialogRoute(dialogRoute, params),
+    () => constructDialogRoute(params, dialogRoute),
     [dialogRoute, params]
   )
-  console.log(constructedHref)
   return (
     <Link
-      href={`?dialog=${dialogRoute?.name}&backHref=${backHref}`}
-      as={dialogRoute?.path}
+      href={constructedHref}
+      // as={href}
       passHref
       style={{ textDecoration: 'none' }}
     >

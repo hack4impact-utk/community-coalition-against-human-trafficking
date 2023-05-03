@@ -9,7 +9,7 @@ import {
 import UpsertItemForm, {
   ItemDefinitionFormData,
 } from 'components/UpsertItemForm'
-import { useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/router'
 import React from 'react'
 import { itemDefinitionFormDataToItemDefinitionRequest } from 'utils/transformations'
 import { AttributeResponse, CategoryResponse } from 'utils/types'
@@ -49,19 +49,11 @@ async function createItem(formData: ItemDefinitionFormData) {
 }
 
 interface Props {
-  backHref?: string
+  redirectBack: (router: NextRouter, itemId?: string) => void
 }
 
-export default function NewItemPage({ backHref }: Props) {
+export default function NewItemPage({ redirectBack }: Props) {
   const router = useRouter()
-
-  const redirectBack = (queryStr?: string) => {
-    if (backHref) {
-      router.push(`${backHref}${queryStr}`)
-    } else {
-      router.reload()
-    }
-  }
 
   return (
     <>
@@ -76,14 +68,14 @@ export default function NewItemPage({ backHref }: Props) {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => redirectBack('')} color="inherit">
+        <Button onClick={() => redirectBack(router)} color="inherit">
           Close
         </Button>
         <Button
           onClick={async () => {
             const itemId = await createItem(itemDefinitionFormData)
             // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
-            redirectBack(`?item=${itemId}`)
+            redirectBack(router, itemId)
           }}
         >
           Submit

@@ -35,8 +35,8 @@ const matchParams = (href: string, definedHref: string): MatchResult => {
 }
 
 const constructDialogRoute = (
-  dialogRoute?: DialogRoute,
-  params: { [key: string]: string }
+  params: { [key: string]: string },
+  dialogRoute?: DialogRoute
 ) => {
   if (!dialogRoute) return ''
   return `?showDialog=true&${Object.entries(params)
@@ -62,7 +62,7 @@ export const dialogPush = (router: NextRouter, href: string) => {
   }
   const dr = f()
 
-  const actualRoute = constructDialogRoute(dr, mr.params)
+  const actualRoute = constructDialogRoute(mr.params, dr)
 
   router.push(`${actualRoute}`)
 
