@@ -68,7 +68,7 @@ export default function SettingsPage() {
             <Checkbox
               checked={kiosk.enabled}
               // @ts-ignore
-              onClick={dispatch(toggleKioskMode())}
+              onChange={() => dispatch(toggleKioskMode())}
             />
             <Typography mr={1}>Enable Kiosk Mode</Typography>
             <Tooltip
