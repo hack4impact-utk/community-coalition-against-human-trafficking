@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 import theme from 'utils/theme'
 import * as React from 'react'
-import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
+import InventoryItemListItemKebab from 'components/InventoryItemList/InventoryItemListItemKebab'
 import { Data } from '../types'
 import renderAttributeChips from 'utils/renderAttributeChips'
 
