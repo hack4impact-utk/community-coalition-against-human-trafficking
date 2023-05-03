@@ -15,6 +15,7 @@ import {
   InventoryItemResponse,
 } from 'utils/types'
 import { Data } from './types'
+import WarningIcon from '@mui/icons-material/Warning'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -65,6 +66,7 @@ interface HeadCell {
   label: string
   numeric: boolean
   sortable?: boolean
+  showIcon?: boolean
 }
 
 const headCells: readonly HeadCell[] = [
@@ -94,6 +96,7 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Quantity',
     sortable: true,
+    showIcon: true,
   },
   {
     id: 'assignee',
