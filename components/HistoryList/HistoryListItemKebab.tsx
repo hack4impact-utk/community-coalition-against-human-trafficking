@@ -13,17 +13,30 @@ interface HistoryListItemKebabProps {
   log: LogResponse
 }
 
-const settings: HistoryListItemKebabOption[] = [
-  {
-    name: 'Delete',
-    onClick: () => console.log('delete'),
-  },
-]
-
 export default function AttributeListItemKebab({
   log,
 }: HistoryListItemKebabProps) {
   // kebab menu functionality
+
+  const kebabOptions: HistoryListItemKebabOption[] = [
+    {
+      name: 'Delete',
+      onClick: () => {
+        if (
+          window.confirm(
+            "Are you sure you want to delete this log entry? You won't be able to undo this action."
+          )
+        ) {
+          fetch(`/api/logs/${log._id}`, {
+            method: 'DELETE',
+          }).then(() => {
+            window.location.reload()
+          })
+        }
+      },
+    },
+  ]
+
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
   )
@@ -56,7 +69,7 @@ export default function AttributeListItemKebab({
         open={Boolean(anchorElKebab)}
         onClose={handleCloseKebabMenu}
       >
-        {settings.map((setting) => (
+        {kebabOptions.map((setting) => (
           <MenuItem
             key={setting.name}
             onClick={() => {
