@@ -13,6 +13,7 @@ import {
 import {
   CategoryResponse,
   CheckInOutFormData,
+  checkInOutFormSchema,
   CheckInOutRequest,
   InventoryItemRequest,
   ItemDefinitionResponse,
@@ -30,6 +31,7 @@ import React from 'react'
 import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
 import dayjs from 'dayjs'
 import { showSnackbar } from 'store/snackbar'
+import transformZodErrors from 'utils/transformZodErrors'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -53,6 +55,7 @@ export default function CheckOutPage({
 }: Props) {
   const theme = useTheme()
   const router = useRouter()
+  const [errors, setErrors] = React.useState<Record<string, string>>({})
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
@@ -64,7 +67,24 @@ export default function CheckOutPage({
     {} as CheckInOutFormData
   )
 
+  React.useEffect(() => {
+    setErrors((errors) => {
+      return {
+        ...errors,
+        attributes: '',
+        textFieldAttributes: '',
+      }
+    })
+  }, [formData.itemDefinition])
+
   const onSubmit = async (formData: CheckInOutFormData) => {
+    const res = checkInOutFormSchema.safeParse(formData)
+
+    if (!res.success) {
+      setErrors(transformZodErrors(res.error))
+      return
+    }
+    setErrors({})
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
@@ -97,7 +117,7 @@ export default function CheckOutPage({
     setFormData((formData) => {
       return {
         user: formData.user,
-        date: dayjs(new Date()),
+        date: new Date(),
         quantityDelta: 0,
       } as CheckInOutFormData
     })
@@ -121,6 +141,7 @@ export default function CheckOutPage({
                 formData={formData}
                 setFormData={setFormData}
                 inventoryItem={inventoryItem}
+                errors={errors}
               />
             </CardContent>
 
