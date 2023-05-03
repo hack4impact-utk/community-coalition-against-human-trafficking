@@ -23,7 +23,6 @@ beforeAll(() => {
 // restore mocked implementations and close db connections
 afterAll(() => {
   jest.restoreAllMocks()
-  
 })
 
 describe('api/notificationEmails/[notificationEmailId]', () => {
@@ -99,12 +98,18 @@ describe('api/notificationEmails/[notificationEmailId]', () => {
   })
 
   describe('PUT', () => {
-    jest.spyOn(apiValidator, 'apiNotificationEmailValidation').mockImplementation()
+    jest
+      .spyOn(apiValidator, 'apiNotificationEmailValidation')
+      .mockImplementation()
     test('valid call returns correct data', async () => {
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
-        .mockImplementation(async () => {})
+        .mockImplementation(
+          async () =>
+            validNotificationEmailResponse[0] as NotificationEmailDocument & {
+              _id: ObjectId
+            }
+        )
       const mockApiNotificationEmailValidation = jest
         .spyOn(apiValidator, 'apiNotificationEmailValidation')
         .mockImplementation()

@@ -25,7 +25,6 @@ beforeAll(() => {
 afterAll(() => {
   jest.restoreAllMocks()
   mongoose.connection.close()
-  
 })
 
 describe('api/categories/[categoryId]', () => {
@@ -106,7 +105,12 @@ describe('api/categories/[categoryId]', () => {
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        .mockImplementation(async () => {})
+        .mockImplementation(
+          async () =>
+            validCategoryResponse[0] as CategoryDocument & {
+              _id: ObjectId
+            }
+        )
       const mockApiCategoryValidation = jest
         .spyOn(apiValidator, 'apiCategoryValidation')
         .mockImplementation()

@@ -9,7 +9,7 @@ import {
 } from '@mui/material'
 import HistoryListItemKebab from 'components/HistoryList/HistoryListItemKebab'
 import renderAttributeChips from 'utils/renderAttributeChips'
-import { DateToReadableDateString } from 'utils/transformations'
+import { dateToReadableDateString } from 'utils/transformations'
 import { LogResponse } from 'utils/types'
 
 interface Props {
@@ -48,9 +48,11 @@ export default function MobileHistoryListItem({ log }: Props) {
           </Box>
         </ListItemText>
         <ListItemText>
-          {renderAttributeChips(log.item.attributes)}
+          <Box sx={{ maxWidth: '200px' }}>
+            {renderAttributeChips(log.item.attributes)}
+          </Box>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-            {DateToReadableDateString(log.date)}
+            {dateToReadableDateString(log.date)}
           </Typography>
         </ListItemText>
       </Box>
