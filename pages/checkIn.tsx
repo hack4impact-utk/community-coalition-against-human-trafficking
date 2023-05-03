@@ -122,7 +122,7 @@ export default function CheckInPage({
           <Box display="flex" flexDirection="column">
             <CardContent sx={{ p: 2 }}>
               <Grid2 xs={12} container direction={'row'}>
-                  <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
+                  <Typography variant="h5" sx={{ mb: 2 }}>
                     Check in items
                   </Typography>
                   <Grid2 ml="auto">
