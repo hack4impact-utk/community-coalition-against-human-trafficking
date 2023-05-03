@@ -145,3 +145,21 @@ export async function findEntities<
 
   return await dbSchema.find(query)
 }
+
+/**
+ * Gets all Entity objects from the database that match the given filter document
+ * @param dbSchema - The schema of the entity objects to get
+ * @param query - An enttiy object that defines the fields to filter by
+ * @returns All entity objects that match the filter
+ */
+export async function findEntitiesByQuery<
+  T extends ServerModel,
+  Schema extends Omit<T, '_id'> & Document
+>(
+  dbSchema: Model<Schema>,
+  query: FilterQuery<Schema>
+): Promise<HydratedDocument<Schema>[]> {
+  await mongoDb()
+
+  return await dbSchema.find(query)
+}
