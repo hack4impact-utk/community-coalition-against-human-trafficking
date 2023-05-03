@@ -2,6 +2,9 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { ApiError, LogRequest } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { getLogs } from 'server/actions/Logs'
+import { apiLogValidation } from 'utils/apiValidators'
+import LogSchema from 'server/models/Log'
+import * as MongoDriver from 'server/actions/MongoDriver'
 
 // @route GET api/logs - Returns a list of all logs in the database - Private
 // @route POST /api/logs - Create a logs from request body - Private
