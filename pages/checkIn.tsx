@@ -117,27 +117,28 @@ export default function CheckInPage({
   }
 
   return (
-    <Grid2 container sx={{ flexGrow: 1 }}>
-      <Grid2
-        xs={12}
-        sm={8}
-        lg={6}
-        display="flex"
-        justifyContent="flex-end"
-        smOffset={2}
-        lgOffset={3}
-      >
-        <DialogLink href="/items/new" backHref="/checkIn">
-          <Button
-            variant="outlined"
-            fullWidth={isMobileView}
-            size="large"
-            sx={{ my: 2 }}
-          >
-            Create new item
-          </Button>
-        </DialogLink>
-      </Grid2>
+    <>
+      <Grid2 container sx={{ flexGrow: 1 }}>
+        <Grid2
+          xs={12}
+          sm={8}
+          lg={6}
+          display="flex"
+          justifyContent="flex-end"
+          smOffset={2}
+          lgOffset={3}
+        >
+          <DialogLink href="/items/new" backHref="/checkIn">
+            <Button
+              variant="outlined"
+              fullWidth={isMobileView}
+              size="large"
+              sx={{ my: 2 }}
+            >
+              Create new item
+            </Button>
+          </DialogLink>
+        </Grid2>
 
         <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
           <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
