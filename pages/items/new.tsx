@@ -1,5 +1,6 @@
 import attributesHandler from '@api/attributes'
 import categoriesHandler from '@api/categories'
+import { LoadingButton } from '@mui/lab'
 import {
   Button,
   CircularProgress,
@@ -81,7 +82,7 @@ export default function NewItemPage({ backHref }: Props) {
         <Button onClick={() => redirectBack('')} color="inherit">
           Close
         </Button>
-        <Button
+        <LoadingButton
           onClick={async () => {
             setLoading(true)
             const itemId = await createItem(itemDefinitionFormData)
@@ -90,25 +91,10 @@ export default function NewItemPage({ backHref }: Props) {
             // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
             redirectBack(`?item=${itemId}`)
           }}
-          disabled={loading}
-          startIcon={
-            loading && (
-              <CircularProgress
-                size={24}
-                sx={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  margin: 'auto',
-                }}
-              />
-            )
-          }
+          loading={loading}
         >
           Submit
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </>
   )

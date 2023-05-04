@@ -31,6 +31,7 @@ import React from 'react'
 import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
 import dayjs from 'dayjs'
 import { showSnackbar } from 'store/snackbar'
+import { LoadingButton } from '@mui/lab'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -133,28 +134,13 @@ export default function CheckOutPage({
             <CardActions
               sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'end' } }}
             >
-              <Button
+              <LoadingButton
                 onClick={() => onSubmit(formData)}
                 variant="contained"
-                disabled={loading}
-                startIcon={
-                  loading && (
-                    <CircularProgress
-                      size={24}
-                      sx={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        margin: 'auto',
-                      }}
-                    />
-                  )
-                }
+                loading={loading}
               >
                 Check Out
-              </Button>
+              </LoadingButton>
             </CardActions>
           </Box>
         </Card>
