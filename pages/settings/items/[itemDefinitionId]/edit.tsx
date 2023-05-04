@@ -14,42 +14,39 @@ import UpsertItemForm, {
   ItemDefinitionFormData,
 } from 'components/UpsertItemForm'
 import { useRouter } from 'next/router'
-import { apiWrapper } from 'utils/apiWrappers'
-import categoriesHandler from '@api/categories'
-import attributesHandler from '@api/attributes'
-import { GetServerSidePropsContext } from 'next'
 import { LoadingButton } from '@mui/lab'
 
-interface Props {
-  categories: CategoryResponse[]
-  attributes: AttributeResponse[]
-}
+let categories: CategoryResponse[]
+let attributes: AttributeResponse[] = [] as AttributeResponse[]
+fetch('http://localhost:3000/api/categories', {
+  method: 'GET',
+}).then((response) => {
+  response.json().then((data) => {
+    categories = data.payload
+  })
+})
+fetch('http://localhost:3000/api/attributes', {
+  method: 'GET',
+}).then((response) => {
+  response.json().then((data) => {
+    attributes = data.payload
+  })
+})
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  return {
-    props: {
-      categories: await apiWrapper(categoriesHandler, context),
-      attributes: await apiWrapper(attributesHandler, context),
-    },
-  }
-}
-
-export default function ItemDefinitionEditForm({
-  categories,
-  attributes,
-}: Props) {
+export default function ItemDefinitionEditForm() {
   const [itemDefintion, setItemDefinition] = useState<ItemDefinitionResponse>()
   const [itemDefinitionFormData, setItemDefinitionFormData] =
     useState<ItemDefinitionFormData>({} as ItemDefinitionFormData)
 
   const router = useRouter()
-  const id = router.query.id
+  const { id } = router.query
   useEffect(() => {
-    async () => {
+    const fetchItemDefinition = async () => {
       if (!id) return
       const res = await fetch(`/api/itemDefinitions/${id}`, { method: 'GET' })
       res.json().then((data) => setItemDefinition(data.payload))
     }
+    fetchItemDefinition()
   }, [id])
 
   const handleSubmit = async (
