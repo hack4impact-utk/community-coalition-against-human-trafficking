@@ -115,6 +115,7 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
           {dirty && (
             <Grid2 display="flex" justifyContent="flex-end" mt={1}>
               <Button
+                sx={{ mr: 2 }}
                 onClick={() => {
                   setNotificationEmailData(initialNotificationEmailData)
                 }}
