@@ -75,7 +75,6 @@ export async function getPaginatedEntities<Schema extends Document>(
   dbSchema: Model<Schema>,
   page: number,
   limit: number,
-  sort: string,
   aggregate?: PipelineStage[]
 ): Promise<PaginatedResponse<Schema>> {
   await mongoDb()

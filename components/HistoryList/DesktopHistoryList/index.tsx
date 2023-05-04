@@ -12,7 +12,12 @@ import { visuallyHidden } from '@mui/utils'
 import { CategoryResponse, LogResponse } from 'utils/types'
 import HistoryListItem from './DesktopHistoryListItem'
 import { NextRouter, useRouter } from 'next/router'
-import { removeURLQueryParam, addURLQueryParam } from 'utils/queryParams'
+import {
+  removeURLQueryParam,
+  addURLQueryParam,
+  bulkAddURLQueryParams,
+  bulkRemoveURLQueryParams,
+} from 'utils/queryParams'
 import { LinearProgress } from '@mui/material'
 
 type Order = 'asc' | 'desc'
@@ -134,14 +139,25 @@ interface EnhancedTableProps {
   ) => void
   order: Order
   orderBy: string
+  router: NextRouter
 }
 
 function HistoryListHeader(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort } = props
+  const { order, orderBy, router } = props
   const createSortHandler =
     (property: keyof HistoryTableData) =>
-    (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property)
+    async (_event: React.MouseEvent<unknown>) => {
+      const orderBy = router.query.sort
+      const order = router.query.order
+      const isAsc = orderBy === property && order === 'asc'
+      const newOrder = isAsc ? 'desc' : 'asc'
+      // if (order !== newOrder) await updateQuery(router, 'order', newOrder)
+      // if (orderBy !== property) await updateQuery(router, 'sort', property)
+      await bulkAddURLQueryParams(router, {
+        order: newOrder,
+        sort: property,
+      })
+      // updateQuery(router, 'sort', property)
     }
 
   return (
@@ -191,9 +207,9 @@ const DEFAULT_ROWS_PER_PAGE = 5
 const DEFAULT_ORDER_BY = 'date'
 const DEFAULT_ORDER = 'desc'
 
-const updateQuery = (router: NextRouter, key: string, val?: string) => {
-  if (!val) removeURLQueryParam(router, key)
-  else addURLQueryParam(router, key, val)
+const updateQuery = async (router: NextRouter, key: string, val?: string) => {
+  if (!val) await removeURLQueryParam(router, key)
+  else await addURLQueryParam(router, key, val)
 }
 
 export default function DesktopHistoryList(props: Props) {
@@ -216,19 +232,6 @@ export default function DesktopHistoryList(props: Props) {
   }, [props.logs])
 
   // when a header is clicked
-  const handleRequestSort = React.useCallback(
-    (_e: React.MouseEvent<unknown>, newOrderBy: keyof HistoryTableData) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder: Order = isAsc ? 'desc' : 'asc'
-      setOrder(toggledOrder)
-      setOrderBy(newOrderBy)
-      const sortedRows = sortTable(props.logs, newOrderBy, toggledOrder)
-      setPage(0)
-      const updatedRows = sortedRows.slice(0, rowsPerPage)
-      setVisibleRows(updatedRows)
-    },
-    [order, orderBy, page, rowsPerPage, props.logs]
-  )
 
   // when the change page buttons are clicked
   const handleChangePage = (_e: unknown, newPage: number) => {
@@ -255,9 +258,9 @@ export default function DesktopHistoryList(props: Props) {
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <HistoryListHeader
-            order={order}
-            orderBy={orderBy}
-            // onRequestSort={handleRequestSort}
+            order={router.query.order as Order}
+            orderBy={router.query.sort as string}
+            router={router}
           />
           {props.loading && (
             <LinearProgress

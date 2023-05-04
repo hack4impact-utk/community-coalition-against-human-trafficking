@@ -201,6 +201,8 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
     router.query.startDate,
     router.query.endDate,
     router.query.internal,
+    router.query.sort,
+    router.query.order,
   ])
 
   // React.useEffect(() => {

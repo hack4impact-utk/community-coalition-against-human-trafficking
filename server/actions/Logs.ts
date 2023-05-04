@@ -5,7 +5,7 @@ import { apiLogValidation } from 'utils/apiValidators'
 import { LogPostRequest } from 'utils/types'
 import { LogResponse } from 'utils/types'
 
-// aggregate pipeline does the following:
+// aggregate requestPipeline does the following:
 // looks up user _ids in log
 // looks up inventoryItem _id in log
 // looks up itemDefinition _id in inventoryItem
@@ -208,39 +208,43 @@ export async function getPaginatedLogs(
   page: number,
   limit: number,
   sort: string,
+  order: string,
   search?: string,
   categorySearch?: string,
   startDate?: string,
   endDate?: string,
   internal?: boolean
 ) {
-  const pipeline = [...requestPipeline]
   if (search) {
-    pipeline.push(searchAggregate(search))
+    requestPipeline.push(searchAggregate(search))
   }
   if (categorySearch) {
-    pipeline.push(categorySearchAggregate(categorySearch))
+    requestPipeline.push(categorySearchAggregate(categorySearch))
   }
   if (startDate) {
-    pipeline.push(startDateAggregate(startDate))
+    requestPipeline.push(startDateAggregate(startDate))
   }
   if (endDate) {
-    pipeline.push(endDateAggregate(endDate))
+    requestPipeline.push(endDateAggregate(endDate))
   }
   if (internal) {
-    pipeline.push({
+    requestPipeline.push({
       $match: {
         'item.itemDefinition.internal': true,
       },
     })
   }
+  requestPipeline.push({
+    $sort: {
+      [sort]: order === 'asc' ? 1 : -1,
+    },
+  })
 
   return await MongoDriver.getPaginatedEntities(
     LogSchema,
     page,
     limit,
-    sort,
-    pipeline
+    requestPipeline
   )
 }
 
