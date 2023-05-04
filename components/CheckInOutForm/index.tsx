@@ -222,7 +222,7 @@ function CheckInOutForm({
           onChange={(date) => {
             setFormData((formData) =>
               updateFormData(formData, {
-                date: date ? date : undefined,
+                date: date ? new Date(date) : undefined,
               })
             )
           }}
