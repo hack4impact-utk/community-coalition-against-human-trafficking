@@ -18,6 +18,7 @@ import notificationEmailsHandler from '@api/notificationEmails'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import { showSnackbar } from 'store/snackbar'
+import { LoadingButton } from '@mui/lab'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -37,6 +38,7 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
   const [initialNotificationEmailData, setInitialNotificationEmailData] =
     React.useState<NotificationEmailResponse>(emails)
   const [dirty, setDirty] = React.useState(false)
+  const [loading, setLoading] = React.useState(false)
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   const handleChange = (newValue: MuiChipsInputChip[]) => {
@@ -56,6 +58,8 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
   const kiosk = useAppSelector((state) => state.kiosk)
   const dispatch = useAppDispatch()
   async function onSubmit() {
+    setLoading(true)
+
     const response = await fetch(
       `http://localhost:3000/api/notificationEmails/${notificationEmailData._id}`,
       {
@@ -67,6 +71,8 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
       }
     )
     const data = await response.json()
+    setLoading(false)
+
     if (data.success) {
       setInitialNotificationEmailData(notificationEmailData)
       //@ts-ignore
@@ -122,14 +128,11 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
               >
                 Cancel
               </Button>
-              <Button
-                variant="contained"
-                onClick={() => {
-                  onSubmit()
-                }}
-              >
+              <LoadingButton variant='contained' onClick={() => {
+                onSubmit()
+              }} loading={loading}>
                 Save
-              </Button>
+              </LoadingButton>
             </Grid2>
           )}
         </Grid2>
