@@ -5,6 +5,7 @@ import theme from 'utils/theme'
 import { useRouter } from 'next/router'
 import { dialogPush } from 'utils/dialogLink'
 import { ItemDefinitionResponse } from 'utils/types'
+import DialogLink from 'components/DialogLink'
 
 interface Props {
   itemDefinition: ItemDefinitionResponse
@@ -70,17 +71,37 @@ export default function ItemDefinitionListItemKebab({ itemDefinition }: Props) {
         open={Boolean(anchorElKebab)}
         onClose={handleCloseKebabMenu}
       >
-        {options.map((option) => (
-          <MenuItem
-            key={option.name}
-            onClick={() => {
-              option.onClick()
-              handleCloseKebabMenu()
-            }}
-          >
-            <Typography textAlign="center">{option.name}</Typography>
-          </MenuItem>
-        ))}
+        {options.map((option) =>
+          option.name === 'edit' ? (
+            <DialogLink href={`/settings/items/${itemDefinition._id}/edit`}>
+              <MenuItem
+                key={option.name}
+                onClick={() => {
+                  option.onClick()
+                  console.log(
+                    dialogPush(
+                      router,
+                      `/settings/items/${itemDefinition._id}/edit`
+                    )
+                  )
+                  handleCloseKebabMenu()
+                }}
+              >
+                <Typography textAlign="center">{option.name}</Typography>
+              </MenuItem>
+            </DialogLink>
+          ) : (
+            <MenuItem
+              key={option.name}
+              onClick={() => {
+                option.onClick()
+                handleCloseKebabMenu()
+              }}
+            >
+              <Typography textAlign="center">{option.name}</Typography>
+            </MenuItem>
+          )
+        )}
       </Menu>
     </>
   )

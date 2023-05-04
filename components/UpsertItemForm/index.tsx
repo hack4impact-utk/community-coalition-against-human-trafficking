@@ -42,7 +42,7 @@ function transformItemDefintionToFormData(itemDef?: ItemDefinitionResponse): Ite
       category: {} as CategoryResponse,
       internal: false,
       name: '',
-      attributes: [{}] as AttributeResponse[],
+      attributes: [] as AttributeResponse[],
       lowStockThreshold: 0,
       criticalStockThreshold: 0
     }

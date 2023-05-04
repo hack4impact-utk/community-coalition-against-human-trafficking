@@ -45,7 +45,7 @@ export default function ItemDefinitionEditForm({
   const router = useRouter()
   const id = router.query.id
   useEffect(() => {
-    ;async () => {
+    async () => {
       if (!id) return
       const res = await fetch(`/api/itemDefinitions/${id}`, { method: 'GET' })
       res.json().then((data) => setItemDefinition(data.payload))
