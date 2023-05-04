@@ -125,6 +125,7 @@ export default function UpsertItemForm({
             category: val as CategoryResponse,
           }))
         }}
+        value={formData.category}
       />
 
       <FormControlLabel
@@ -137,6 +138,7 @@ export default function UpsertItemForm({
             internal: !val,
           }))
         }}
+        value={formData.internal}
       />
 
       <TextField
@@ -149,6 +151,7 @@ export default function UpsertItemForm({
             name: e.target.value,
           }))
         }}
+        value={formData.name}
       />
 
       {/* Attribute Autocomplete and Create Attribute Button */}
@@ -178,7 +181,7 @@ export default function UpsertItemForm({
               />
             ))
           }
-          value={formData.attributes || []}
+          value={formData.attributes}
           onChange={(_e, val) => {
             setFormData((fd) => ({
               ...fd,
@@ -262,6 +265,7 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
+          value={formData.lowStockThreshold}
         />
       </Box>
 
@@ -289,6 +293,7 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
+          value={formData.criticalStockThreshold}
         />
       </Box>
     </FormControl>
