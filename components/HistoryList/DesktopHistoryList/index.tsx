@@ -36,21 +36,6 @@ interface HeadCell {
   sortFn?(a: LogResponse, b: LogResponse): number
 }
 
-// function sortTable(
-//   tableData: LogResponse[],
-//   sortBy: keyof HistoryTableData,
-//   order: Order
-// ) {
-//   const orderByHeadCell = headCells.filter(
-//     (headCell) => headCell.id === sortBy.toString()
-//   )[0]
-//   return tableData.sort((a: LogResponse, b: LogResponse) =>
-//     order === 'asc'
-//       ? orderByHeadCell.sortFn!(a, b)
-//       : orderByHeadCell.sortFn!(b, a)
-//   )
-// }
-
 function comparator(v1: string | Date, v2: string | Date) {
   if (v1 < v2) {
     return -1
@@ -151,13 +136,10 @@ function HistoryListHeader(props: EnhancedTableProps) {
       const order = router.query.order
       const isAsc = orderBy === property && order === 'asc'
       const newOrder = isAsc ? 'desc' : 'asc'
-      // if (order !== newOrder) await updateQuery(router, 'order', newOrder)
-      // if (orderBy !== property) await updateQuery(router, 'sort', property)
       await bulkAddURLQueryParams(router, {
         order: newOrder,
         sort: property,
       })
-      // updateQuery(router, 'sort', property)
     }
 
   return (
