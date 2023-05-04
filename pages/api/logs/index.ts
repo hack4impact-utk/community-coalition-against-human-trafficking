@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ApiError, LogRequest } from 'utils/types'
 import { serverAuth } from 'utils/auth'
-import { getLogs } from 'server/actions/Logs'
+import { getPaginatedLogs } from 'server/actions/Logs'
 import { apiLogValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import LogSchema from 'server/models/Log'
@@ -15,11 +15,30 @@ export default async function logsHandler(
   try {
     // ensure user is logged in
     await serverAuth(req, res)
+    const {
+      sort,
+      limit,
+      page,
+      search,
+      category,
+      startDate,
+      endDate,
+      internal,
+    } = req.query
 
     switch (req.method) {
       case 'GET': {
-        const logs = await getLogs()
-        const resStatus = logs.length ? 200 : 204
+        const logs = await getPaginatedLogs(
+          Number(page || 0),
+          Number(limit || 10),
+          (sort as string) || '',
+          (search as string) || undefined,
+          (category as string) || undefined,
+          (startDate as string) || undefined,
+          (endDate as string) || undefined,
+          !!internal
+        )
+        const resStatus = 200
         return res.status(resStatus).json({
           success: true,
           payload: logs,

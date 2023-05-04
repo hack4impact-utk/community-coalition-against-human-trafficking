@@ -11,6 +11,9 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import { CategoryResponse, LogResponse } from 'utils/types'
 import HistoryListItem from './DesktopHistoryListItem'
+import { NextRouter, useRouter } from 'next/router'
+import { removeURLQueryParam, addURLQueryParam } from 'utils/queryParams'
+import { LinearProgress } from '@mui/material'
 
 type Order = 'asc' | 'desc'
 
@@ -28,20 +31,20 @@ interface HeadCell {
   sortFn?(a: LogResponse, b: LogResponse): number
 }
 
-function sortTable(
-  tableData: LogResponse[],
-  sortBy: keyof HistoryTableData,
-  order: Order
-) {
-  const orderByHeadCell = headCells.filter(
-    (headCell) => headCell.id === sortBy.toString()
-  )[0]
-  return tableData.sort((a: LogResponse, b: LogResponse) =>
-    order === 'asc'
-      ? orderByHeadCell.sortFn!(a, b)
-      : orderByHeadCell.sortFn!(b, a)
-  )
-}
+// function sortTable(
+//   tableData: LogResponse[],
+//   sortBy: keyof HistoryTableData,
+//   order: Order
+// ) {
+//   const orderByHeadCell = headCells.filter(
+//     (headCell) => headCell.id === sortBy.toString()
+//   )[0]
+//   return tableData.sort((a: LogResponse, b: LogResponse) =>
+//     order === 'asc'
+//       ? orderByHeadCell.sortFn!(a, b)
+//       : orderByHeadCell.sortFn!(b, a)
+//   )
+// }
 
 function comparator(v1: string | Date, v2: string | Date) {
   if (v1 < v2) {
@@ -180,13 +183,21 @@ interface Props {
   startDate: string
   internal: boolean
   setTableData: React.Dispatch<React.SetStateAction<LogResponse[]>>
+  total: number
+  loading: boolean
 }
 
 const DEFAULT_ROWS_PER_PAGE = 5
 const DEFAULT_ORDER_BY = 'date'
 const DEFAULT_ORDER = 'desc'
 
+const updateQuery = (router: NextRouter, key: string, val?: string) => {
+  if (!val) removeURLQueryParam(router, key)
+  else addURLQueryParam(router, key, val)
+}
+
 export default function DesktopHistoryList(props: Props) {
+  const router = useRouter()
   const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
   const [orderBy, setOrderBy] =
     React.useState<keyof HistoryTableData>(DEFAULT_ORDER_BY)
@@ -198,11 +209,10 @@ export default function DesktopHistoryList(props: Props) {
 
   React.useEffect(() => {
     // does pagination
-    var rowsOnMount = sortTable(props.logs, orderBy, order)
-    rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
-
-    setVisibleRows(rowsOnMount)
-    setPage(0)
+    // let rowsOnMount = sortTable(props.logs, orderBy, order)
+    // rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
+    // setVisibleRows(rowsOnMount)
+    // setPage(0)
   }, [props.logs])
 
   // when a header is clicked
@@ -222,29 +232,22 @@ export default function DesktopHistoryList(props: Props) {
 
   // when the change page buttons are clicked
   const handleChangePage = (_e: unknown, newPage: number) => {
-    setPage(newPage)
-    const sortedRows = sortTable(props.logs, orderBy, order)
-
-    const updatedRows = sortedRows.slice(
-      newPage * rowsPerPage,
-      newPage * rowsPerPage + rowsPerPage
-    )
-    setVisibleRows(updatedRows)
+    if (newPage === 0) {
+      updateQuery(router, 'page', '')
+    } else {
+      updateQuery(router, 'page', newPage.toString())
+    }
   }
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(updatedRowsPerPage)
-    setPage(0)
-    const sortedRows = sortTable(props.logs, orderBy, order)
-
-    const updatedRows = sortedRows.slice(
-      page * updatedRowsPerPage,
-      page * updatedRowsPerPage + updatedRowsPerPage
-    )
-    setVisibleRows(updatedRows)
+    updateQuery(router, 'page', '')
+    if (event.target.value === '10') {
+      updateQuery(router, 'limit', '')
+    } else {
+      updateQuery(router, 'limit', event.target.value)
+    }
   }
 
   return (
@@ -254,11 +257,22 @@ export default function DesktopHistoryList(props: Props) {
           <HistoryListHeader
             order={order}
             orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            // onRequestSort={handleRequestSort}
           />
+          {props.loading && (
+            <LinearProgress
+              variant="indeterminate"
+              sx={{
+                display: 'table-header-group',
+                width: 'auto',
+                backgroundColor: 'transparent',
+                height: 3,
+              }}
+            />
+          )}
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((log) => (
+            {props.logs &&
+              props.logs.map((log) => (
                 <HistoryListItem log={log} key={log._id} />
               ))}
           </TableBody>
@@ -267,9 +281,9 @@ export default function DesktopHistoryList(props: Props) {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={props.logs.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
+        count={props.total}
+        rowsPerPage={Number(router.query.limit || '10')}
+        page={Number(router.query.page || '0')}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

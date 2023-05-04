@@ -141,12 +141,107 @@ const requestPipeline: PipelineStage[] = [
   },
 ]
 
+function searchAggregate(search: string): PipelineStage {
+  return {
+    $match: {
+      $or: [
+        { 'item.itemDefinition.name': { $regex: search, $options: 'i' } },
+        {
+          'item.itemDefinition.category.name': {
+            $regex: search,
+            $options: 'i',
+          },
+        },
+        { 'item.assignee.name': { $regex: search, $options: 'i' } },
+        { 'staff.name': { $regex: search, $options: 'i' } },
+        { 'staff.email': { $regex: search, $options: 'i' } },
+      ],
+    },
+  }
+}
+
+function categorySearchAggregate(category: string): PipelineStage {
+  return {
+    $match: {
+      'item.itemDefinition.category.name': category,
+    },
+  }
+}
+
+function startDateAggregate(startAfter: string): PipelineStage {
+  return {
+    $match: {
+      date: {
+        $gte: new Date(startAfter),
+      },
+    },
+  }
+}
+
+function endDateAggregate(endBefore: string): PipelineStage {
+  return {
+    $match: {
+      date: {
+        $lte: new Date(endBefore),
+      },
+    },
+  }
+}
+
 /**
  * Finds all logs
  * @returns All logs
  */
 export async function getLogs() {
   return await MongoDriver.getEntities(LogSchema, requestPipeline)
+}
+
+/**
+ * Finds logs for the current page with the given page size and sorting
+ * @param page The current page to get
+ * @param pageSize The number of logs to get per page
+ * @param sort The string to sort the logs by
+ * @returns The logs for the current page
+ */
+
+export async function getPaginatedLogs(
+  page: number,
+  limit: number,
+  sort: string,
+  search?: string,
+  categorySearch?: string,
+  startDate?: string,
+  endDate?: string,
+  internal?: boolean
+) {
+  const pipeline = [...requestPipeline]
+  if (search) {
+    pipeline.push(searchAggregate(search))
+  }
+  if (categorySearch) {
+    pipeline.push(categorySearchAggregate(categorySearch))
+  }
+  if (startDate) {
+    pipeline.push(startDateAggregate(startDate))
+  }
+  if (endDate) {
+    pipeline.push(endDateAggregate(endDate))
+  }
+  if (internal) {
+    pipeline.push({
+      $match: {
+        'item.itemDefinition.internal': true,
+      },
+    })
+  }
+
+  return await MongoDriver.getPaginatedEntities(
+    LogSchema,
+    page,
+    limit,
+    sort,
+    pipeline
+  )
 }
 
 /**

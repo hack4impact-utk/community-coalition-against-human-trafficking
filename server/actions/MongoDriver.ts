@@ -66,6 +66,42 @@ export async function getEntities<Schema extends Document>(
   return response
 }
 
+type PaginatedResponse<Schema extends Document> = {
+  total: number
+  data: HydratedDocument<Schema>[]
+}
+
+export async function getPaginatedEntities<Schema extends Document>(
+  dbSchema: Model<Schema>,
+  page: number,
+  limit: number,
+  sort: string,
+  aggregate?: PipelineStage[]
+): Promise<PaginatedResponse<Schema>> {
+  await mongoDb()
+
+  const response: PaginatedResponse<Schema> = {
+    total: 0,
+    data: [],
+  }
+
+  // mutating aggregate directly causes issues, so we create a copy
+
+  if (aggregate) {
+    // aggregate.push({ $sort: { [sort]: 1 } })
+    const res = await dbSchema.aggregate(aggregate)
+    response.data = res.slice(page * limit, page * limit + limit)
+    response.total = res.length
+  } else {
+    const res = await dbSchema.find()
+    // .sort({ [sort]: 1 })
+    response.data = res.slice(page * limit, page * limit + limit)
+    response.total = res.length
+  }
+
+  return response
+}
+
 /**
  * Creates a new Entity object in the database
  * @param dbSchema The collection schema to get entities from
