@@ -50,7 +50,7 @@ export default async function notificationEmailHandler(
         )
 
         return res.status(200).json({
-          succcess: true,
+          success: true,
           payload: {},
         })
       }
