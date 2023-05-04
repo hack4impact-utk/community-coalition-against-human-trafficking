@@ -3,7 +3,6 @@ import categoriesHandler from '@api/categories'
 import { LoadingButton } from '@mui/lab'
 import {
   Button,
-  CircularProgress,
   DialogActions,
   DialogContent,
   DialogTitle,

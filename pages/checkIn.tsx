@@ -9,7 +9,6 @@ import {
   Unstable_Grid2 as Grid2,
   useMediaQuery,
   useTheme,
-  CircularProgress,
 } from '@mui/material'
 import {
   CategoryResponse,
