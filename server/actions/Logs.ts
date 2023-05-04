@@ -215,39 +215,61 @@ export async function getPaginatedLogs(
   endDate?: string,
   internal?: boolean
 ) {
+  const filteredLogs = await getFilteredLogs(
+    sort,
+    order,
+    search,
+    categorySearch,
+    startDate,
+    endDate,
+    internal
+  )
+  const startIndex = page * limit
+  const endIndex = page * limit + limit
+  const logs = filteredLogs.slice(startIndex, endIndex)
+  return {
+    data: logs,
+    total: filteredLogs.length,
+  }
+}
+
+export async function getFilteredLogs(
+  sort: string,
+  order: string,
+  search?: string,
+  categorySearch?: string,
+  startDate?: string,
+  endDate?: string,
+  internal?: boolean
+) {
+  const pipeline = [...requestPipeline]
   if (search) {
-    requestPipeline.push(searchAggregate(search))
+    pipeline.push(searchAggregate(search))
   }
   if (categorySearch) {
-    requestPipeline.push(categorySearchAggregate(categorySearch))
+    pipeline.push(categorySearchAggregate(categorySearch))
   }
   if (startDate) {
-    requestPipeline.push(startDateAggregate(startDate))
+    pipeline.push(startDateAggregate(startDate))
   }
   if (endDate) {
-    requestPipeline.push(endDateAggregate(endDate))
+    pipeline.push(endDateAggregate(endDate))
   }
   if (internal) {
-    requestPipeline.push({
+    pipeline.push({
       $match: {
         'item.itemDefinition.internal': true,
       },
     })
   }
-  requestPipeline.push({
+  pipeline.push({
     $sort: {
       [sort]: order === 'asc' ? 1 : -1,
     },
   })
 
-  return await MongoDriver.getPaginatedEntities(
-    LogSchema,
-    page,
-    limit,
-    requestPipeline
-  )
+  return await MongoDriver.getEntities(LogSchema, pipeline)
 }
-
 /**
  * Finds a log by its id
  * @id The id of the log object to find
