@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Checkbox,
-  TextField,
   Tooltip,
   Typography,
   useMediaQuery,
@@ -18,7 +17,6 @@ import { NotificationEmailResponse } from 'utils/types'
 import notificationEmailsHandler from '@api/notificationEmails'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
-import notificationEmails from '@api/notificationEmails'
 import { showSnackbar } from 'store/snackbar'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -33,33 +31,30 @@ interface NotificationEmailProps {
   emails: NotificationEmailResponse
 }
 
-export default function SettingsPage({emails}: NotificationEmailProps) {
-  const [notificationEmailData, setNotificationEmailData] = React.useState<NotificationEmailResponse>(emails)
-  const [initialNotificationEmailData, setinitialNotificationEmailData] = React.useState<NotificationEmailResponse>(emails)
+export default function SettingsPage({ emails }: NotificationEmailProps) {
+  const [notificationEmailData, setNotificationEmailData] =
+    React.useState<NotificationEmailResponse>(emails)
+  const [initialNotificationEmailData, setInitialNotificationEmailData] =
+    React.useState<NotificationEmailResponse>(emails)
   const [dirty, setDirty] = React.useState(false)
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   const handleChange = (newValue: MuiChipsInputChip[]) => {
-    setNotificationEmailData((emailData)=>({...emailData, emails: newValue}))
+    setNotificationEmailData((emailData) => ({
+      ...emailData,
+      emails: newValue,
+    }))
   }
-  React.useEffect(()=>{
-    if (JSON.stringify(initialNotificationEmailData) === JSON.stringify(notificationEmailData)) {
-      setDirty(false)
-     } else {
-      setDirty(true)
-    }
-  },[
-    notificationEmailData,
-    initialNotificationEmailData,
-  ])
+  React.useEffect(() => {
+    setDirty(
+      JSON.stringify(initialNotificationEmailData) !==
+        JSON.stringify(notificationEmailData)
+    )
+  }, [notificationEmailData, initialNotificationEmailData])
+
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   const kiosk = useAppSelector((state) => state.kiosk)
   const dispatch = useAppDispatch()
-
-  //capture initial state of emails using useeffect
-  
-  //in handle change test initial value and new value for deep equality 
-  //if != display save button
   async function onSubmit() {
     const response = await fetch(
       `http://localhost:3000/api/notificationEmails/${notificationEmailData._id}`,
@@ -68,15 +63,12 @@ export default function SettingsPage({emails}: NotificationEmailProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(notificationEmailData)
+        body: JSON.stringify(notificationEmailData),
       }
     )
     const data = await response.json()
-    
-    console.log(data)
-    if(data.success) {
-      console.log('here')
-      setinitialNotificationEmailData(notificationEmailData)
+    if (data.success) {
+      setInitialNotificationEmailData(notificationEmailData)
       //@ts-ignore
       dispatch(
         showSnackbar({
@@ -86,9 +78,8 @@ export default function SettingsPage({emails}: NotificationEmailProps) {
       )
     } else {
       //@ts-ignore
-      dispatch(showSnackbar({message: data.message, severity: 'error'}))
+      dispatch(showSnackbar({ message: data.message, severity: 'error' }))
     }
-
   }
   return (
     <>
@@ -122,7 +113,13 @@ export default function SettingsPage({emails}: NotificationEmailProps) {
             hideClearAll
           />
           {dirty && (
-            <Button onClick= {()=>{onSubmit()}}>Save</Button>
+            <Button
+              onClick={() => {
+                onSubmit()
+              }}
+            >
+              Save
+            </Button>
           )}
         </Grid2>
         <Grid2 xs={isMobileView ? 12 : 5}>
