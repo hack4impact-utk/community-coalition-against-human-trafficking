@@ -12,7 +12,7 @@ import {
   Unstable_Grid2 as Grid2,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-import { AttributeResponse, CategoryResponse } from 'utils/types'
+import { AttributeResponse, CategoryResponse, ItemDefinitionResponse } from 'utils/types'
 import React from 'react'
 import { attributeFormDataToAttributeRequest } from 'utils/transformations'
 import UpsertAttributeForm, {
@@ -24,6 +24,7 @@ interface Props {
   categories: CategoryResponse[]
   attributes: AttributeResponse[]
   onChange: (formData: ItemDefinitionFormData) => void
+  itemDefinition?: ItemDefinitionResponse
 }
 
 export interface ItemDefinitionFormData {
@@ -35,10 +36,33 @@ export interface ItemDefinitionFormData {
   criticalStockThreshold: number
 }
 
+function transformItemDefintionToFormData(itemDef?: ItemDefinitionResponse): ItemDefinitionFormData {
+  if (!itemDef) {
+    return {
+      category: {} as CategoryResponse,
+      internal: false,
+      name: '',
+      attributes: [{}] as AttributeResponse[],
+      lowStockThreshold: 0,
+      criticalStockThreshold: 0
+    }
+  }
+
+  return {
+    category: (itemDef.category) ? itemDef.category : {} as CategoryResponse,
+    internal: itemDef.internal,
+    name: itemDef.name,
+    attributes: (itemDef.attributes) ? itemDef.attributes : [{}] as AttributeResponse[],
+    lowStockThreshold: itemDef.lowStockThreshold,
+    criticalStockThreshold: itemDef.criticalStockThreshold,
+  }
+}
+
 export default function UpsertItemForm({
   categories,
   attributes,
   onChange,
+  itemDefinition
 }: Props) {
   const [showAttributeForm, setShowAttributeForm] = React.useState(false)
   const [attrFormData, setAttrFormData] = React.useState(
@@ -79,6 +103,10 @@ export default function UpsertItemForm({
       return [...pa, newAttr]
     })
   }
+
+  React.useEffect(() => {
+    setFormData(transformItemDefintionToFormData(itemDefinition))
+  }, [itemDefinition])
 
   React.useEffect(() => {
     onChange(formData)

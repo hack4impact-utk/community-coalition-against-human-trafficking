@@ -2,8 +2,15 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React from 'react'
 import theme from 'utils/theme'
+import { useRouter } from 'next/router'
+import { dialogPush } from 'utils/dialogLink'
+import { ItemDefinitionResponse } from 'utils/types'
 
-export default function ItemDefinitionListItemKebab() {
+interface Props {
+  itemDefinition: ItemDefinitionResponse
+}
+
+export default function ItemDefinitionListItemKebab({ itemDefinition }: Props) {
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
   )
@@ -16,6 +23,8 @@ export default function ItemDefinitionListItemKebab() {
     setAnchorElKebab(null)
   }
 
+  const router = useRouter()
+
   interface ItemDefinitionListItemKebabOption {
     name: string
     onClick: () => void
@@ -24,11 +33,19 @@ export default function ItemDefinitionListItemKebab() {
   const options: ItemDefinitionListItemKebabOption[] = [
     {
       name: 'Edit',
-      onClick: () => {},
+      onClick: () => {
+        dialogPush(router, `/settings/items/${itemDefinition._id}/edit`)
+      },
     },
     {
       name: 'Delete',
-      onClick: () => {},
+      onClick: () => {
+        if (window.confirm('Are you sure you want to delete this item?')) {
+          fetch(`/api/itemDefinitions/${itemDefinition._id}`, {
+            method: 'DELETE',
+          }).then(() => window.location.reload())
+        }
+      },
     },
   ]
 

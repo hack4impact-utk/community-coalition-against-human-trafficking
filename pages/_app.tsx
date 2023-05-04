@@ -24,17 +24,6 @@ export default function App({
                 <DefaultLayout>
                   <Component {...pageProps} />
                 </DefaultLayout>
-                <Dialog
-                  fullScreen={isMobileView}
-                  open={!!dialogRoute}
-                  onClose={() => {
-                    router.back()
-                  }}
-                >
-                  {dialogRoute?.component({
-                    backHref: router.query.backHref as string,
-                  })}
-                </Dialog>
               </>
               <style jsx global>{`
                 html,
