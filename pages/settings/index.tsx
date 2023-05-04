@@ -72,7 +72,7 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
       //@ts-ignore
       dispatch(
         showSnackbar({
-          message: 'Email successfully saved.',
+          message: 'Emails successfully saved.',
           severity: 'success',
         })
       )
@@ -113,13 +113,23 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
             hideClearAll
           />
           {dirty && (
-            <Button
-              onClick={() => {
-                onSubmit()
-              }}
-            >
-              Save
-            </Button>
+            <Grid2 display="flex" justifyContent="flex-end" mt={1}>
+              <Button
+                onClick={() => {
+                  setNotificationEmailData(initialNotificationEmailData)
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => {
+                  onSubmit()
+                }}
+              >
+                Save
+              </Button>
+            </Grid2>
           )}
         </Grid2>
         <Grid2 xs={isMobileView ? 12 : 5}>
