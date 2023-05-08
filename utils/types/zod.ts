@@ -1,12 +1,12 @@
 import { z } from 'zod'
-import { validateObjectId } from 'utils/validation'
+import mongoose from 'mongoose'
 
 /*
   HELPER TYPES
 */
 const objectId = z
   .string()
-  .refine((val) => validateObjectId(val), 'Invalid ObjectId')
+  .refine((val) => mongoose.Types.ObjectId.isValid(val), 'Invalid ObjectId')
 
 const hexColor = z.string().refine((val) => /^#[0-9A-F]{6}$/i.test(val))
 
