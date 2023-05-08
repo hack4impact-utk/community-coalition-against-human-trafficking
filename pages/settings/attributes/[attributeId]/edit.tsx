@@ -4,7 +4,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@mui/material'
-import UpdateAttributeForm, {
+import UpsertAttributeForm, {
   AttributeFormData,
 } from 'components/UpsertAttributeForm'
 import { useRouter } from 'next/router'
@@ -57,7 +57,7 @@ export default function AttributeEditForm() {
     <>
       <DialogTitle>Edit Attribute</DialogTitle>
       <DialogContent>
-        <UpdateAttributeForm
+        <UpsertAttributeForm
           attribute={attribute}
           onChange={(attributeFormData) =>
             setAttributeFormData(attributeFormData)
