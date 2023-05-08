@@ -1,12 +1,12 @@
 import { z } from 'zod'
-import mongoose from 'mongoose'
+import { validateObjectId } from 'utils/validation'
 
 /*
   HELPER TYPES
 */
 const objectId = z
   .string()
-  .refine((val) => mongoose.Types.ObjectId.isValid(val))
+  .refine((val) => validateObjectId(val), 'Invalid ObjectId')
 
 const hexColor = z.string().refine((val) => /^#[0-9A-F]{6}$/i.test(val))
 
@@ -38,15 +38,24 @@ export const attributeResponseSchema = z.array(
   })
 )
 
-export const itemDefinitionResponseSchema = z.object({
-  _id: objectId,
-  name: z.string(),
-  internal: z.boolean(),
-  lowStockThreshold: z.number().int(),
-  criticalStockThreshold: z.number().int(),
-  category: categoryResponseSchema,
-  attributes: attributeResponseSchema,
-})
+export const itemDefinitionResponseSchema = z
+  .object({
+    _id: objectId,
+    name: z.string(),
+    internal: z.boolean(),
+    lowStockThreshold: z.number().int(),
+    criticalStockThreshold: z.number().int(),
+    category: categoryResponseSchema,
+    attributes: attributeResponseSchema,
+  })
+  .refine(
+    (idSchema) => idSchema.lowStockThreshold >= idSchema.criticalStockThreshold,
+    {
+      message:
+        'Low stock threshold must be greater than critical stock threshold',
+      path: ['lowStockThreshold'],
+    }
+  )
 
 export const inventoryItemAttributeSchema = z.array(
   z.object({
@@ -67,7 +76,7 @@ export const checkInOutFormSchema = z
       .date()
       .refine((val) => val <= new Date(), "Date can't be in the future"),
     category: categoryResponseSchema.required(),
-    itemDefinition: itemDefinitionResponseSchema.required(),
+    itemDefinition: itemDefinitionResponseSchema,
     attributes: inventoryItemAttributeSchema.optional(),
     textFieldAttributes: z
       .record(z.string(), z.union([z.string(), z.number()]))
@@ -83,9 +92,9 @@ export const checkInOutFormSchema = z
     // assert that all defined attributes are set
     (schema) => {
       // get attr string list attributes from itemDefinition
-      const itemDefinitionAttributes = schema.itemDefinition.attributes
-        .filter((attr) => attr.possibleValues instanceof Array)
-        .map((attr) => attr._id)
+      const itemDefinitionAttributes = schema.itemDefinition.attributes.filter(
+        (attr) => attr.possibleValues instanceof Array
+      )
 
       // if no string list attributes, then we can skip this check
       if (!itemDefinitionAttributes.length) return true
@@ -94,8 +103,7 @@ export const checkInOutFormSchema = z
       if (!schema.attributes) return false
 
       // get list of form attributes and ensure same size as itemDefinitionAttributes
-      const formAttributes = schema.attributes.map((attr) => attr.id)
-      return formAttributes.length === itemDefinitionAttributes.length
+      return schema.attributes.length === itemDefinitionAttributes.length
     },
     {
       message: 'Must define all attributes',
@@ -120,8 +128,10 @@ export const checkInOutFormSchema = z
       if (!schema.textFieldAttributes) return false
 
       // get keys of textFieldAttributes and ensure same size as itemDefinitionAttributes
-      const formAttributes = Object.keys(schema.textFieldAttributes)
-      return formAttributes.length === itemDefinitionAttributes.length
+      return (
+        Object.keys(schema.textFieldAttributes).length ===
+        itemDefinitionAttributes.length
+      )
     },
     {
       message: 'Must define all attributes',
