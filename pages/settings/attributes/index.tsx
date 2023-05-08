@@ -1,6 +1,5 @@
 import attributesHandler from '@api/attributes'
 import {
-  Box,
   Typography,
   Button,
   Unstable_Grid2 as Grid2,
@@ -66,7 +65,7 @@ export default function AttributesPage({ attributes }: AttributesPageProps) {
           />
         </Grid2>
       </Grid2>
-      <RoutableDialog>
+      <RoutableDialog name="editAttribute">
         <AttributeEditForm />
       </RoutableDialog>
     </>
