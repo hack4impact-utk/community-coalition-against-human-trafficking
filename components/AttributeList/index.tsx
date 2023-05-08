@@ -216,7 +216,7 @@ export default function AttributeList({
     )
 
     setVisibleRows(rowsOnMount)
-  }, [search])
+  }, [search, attributes])
 
   const handleRequestSort = useCallback(
     (

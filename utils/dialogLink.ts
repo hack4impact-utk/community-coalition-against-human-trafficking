@@ -1,13 +1,5 @@
-import Link from 'next/link'
-import React from 'react'
-import { useMemo } from 'react'
-import { DialogRoute, dialogRoutes } from 'utils/constants'
-
-interface Props {
-  href: string
-  backHref?: string
-  children: React.ReactNode
-}
+import { NextRouter } from 'next/router'
+import { DialogRoute, dialogRoutes } from './constants'
 
 interface MatchResult {
   success: boolean
@@ -47,46 +39,32 @@ const constructDialogRoute = (
   dialogRoute?: DialogRoute
 ) => {
   if (!dialogRoute) return ''
-  return `?showDialog=true${
-    Object.keys(params).length
-      ? `&${Object.entries(params)
-          .map(([key, value]) => `${key}=${value}`)
-          .join('&')}`
-      : ''
-  }`
+  return `?showDialog=true&${Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&')}`
 }
 
-export default function DialogLink({ href, children }: Props) {
-  const [params, setParams] = React.useState<{ [key: string]: string }>({})
-  const dialogRoute = useMemo(() => {
+export const dialogPush = (router: NextRouter, href: string) => {
+  let mr: MatchResult = { success: false, params: {} }
+  const f = () => {
     const attemptedDr = dialogRoutes.find((dr) => dr.path === href)
+
     if (!attemptedDr) {
       // try and find matching result from defined hrefs
       for (const dr of dialogRoutes) {
-        const mr = matchParams(href, dr.path)
+        mr = matchParams(href, dr.path)
         if (mr.success) {
-          setParams(mr.params)
           return dr
-        } else {
-          setParams({})
         }
       }
     }
     return attemptedDr
-  }, [href])
+  }
+  const dr = f()
 
-  const constructedHref = useMemo(
-    () => constructDialogRoute(params, dialogRoute),
-    [dialogRoute, params]
-  )
-  return (
-    <Link
-      href={constructedHref}
-      // as={href}
-      passHref
-      style={{ textDecoration: 'none' }}
-    >
-      {children}
-    </Link>
-  )
+  const actualRoute = constructDialogRoute(mr.params, dr)
+
+  router.push(`${actualRoute}`)
+
+  // window.history.pushState({}, '', `${window.location.pathname}${actualRoute}`)
 }
