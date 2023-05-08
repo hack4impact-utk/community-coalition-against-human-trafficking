@@ -1,6 +1,5 @@
 import { Button } from '@mui/material'
 import { useAppDispatch } from 'store'
-import { showSnackbar } from 'store/snackbar'
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch()

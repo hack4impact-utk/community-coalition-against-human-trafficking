@@ -30,6 +30,7 @@ import dayjs from 'dayjs'
 import DialogLink from 'components/DialogLink'
 import { KioskState } from 'store/types'
 import { showSnackbar } from 'store/snackbar'
+import { LoadingButton } from '@mui/lab'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -75,7 +76,11 @@ export default function CheckInPage({
     {} as CheckInOutFormData
   )
 
+  const [loading, setLoading] = React.useState(false)
+
   const onSubmit = async (formData: CheckInOutFormData) => {
+    // when validation is added, must be done before this
+    setLoading(true)
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
@@ -92,6 +97,7 @@ export default function CheckInPage({
     )
 
     const data = await response.json()
+    setLoading(false)
 
     if (data.success) {
       // @ts-ignore
@@ -159,9 +165,13 @@ export default function CheckInPage({
             <CardActions
               sx={{ alignSelf: { xs: 'end' }, mt: { xs: 1, sm: 0 } }}
             >
-              <Button onClick={() => onSubmit(formData)} variant="contained">
-                Check in
-              </Button>
+              <LoadingButton
+                onClick={() => onSubmit(formData)}
+                variant="contained"
+                loading={loading}
+              >
+                Check In
+              </LoadingButton>
             </CardActions>
           </Box>
         </Card>

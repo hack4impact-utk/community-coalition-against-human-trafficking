@@ -1,7 +1,7 @@
 import { List } from '@mui/material'
 import React from 'react'
 import { InventoryItemResponse } from 'utils/types'
-import MobileInventoryItemListItem from './MobileInventoryItemListItem'
+import MobileInventoryItemListItem from 'components/InventoryItemList/MobileInventoryItemList/MobileInventoryItemListItem'
 
 interface MobileInventoryItemListProps {
   inventoryItems: InventoryItemResponse[]

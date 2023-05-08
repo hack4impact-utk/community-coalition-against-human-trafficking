@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab'
 import {
   Button,
   DialogActions,
@@ -52,6 +53,7 @@ interface Props {
 
 export default function NewItemPage({ backHref }: Props) {
   const router = useRouter()
+  const [loading, setLoading] = React.useState(false)
 
   const redirectBack = (queryStr?: string) => {
     if (backHref) {
@@ -77,15 +79,19 @@ export default function NewItemPage({ backHref }: Props) {
         <Button onClick={() => redirectBack('')} color="inherit">
           Close
         </Button>
-        <Button
+        <LoadingButton
           onClick={async () => {
+            setLoading(true)
             const itemId = await createItem(itemDefinitionFormData)
+            setLoading(false)
+
             // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
             redirectBack(`?item=${itemId}`)
           }}
+          loading={loading}
         >
           Submit
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </>
   )

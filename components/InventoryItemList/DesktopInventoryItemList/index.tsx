@@ -9,7 +9,7 @@ import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
-import InventoryItemListItem from 'components/DesktopInventoryItemList/DesktopInventoryItemListItem'
+import InventoryItemListItem from 'components/InventoryItemList/DesktopInventoryItemList/DesktopInventoryItemListItem'
 import { InventoryItemResponse } from 'utils/types'
 
 type HeadId =
@@ -27,6 +27,7 @@ interface HeadCell {
   numeric: boolean
   sortable?: boolean
   sortFn?(a: InventoryItemResponse, b: InventoryItemResponse): number
+  showIcon?: boolean
 }
 
 function comparator(v1?: string | number, v2?: string | number) {
@@ -93,13 +94,14 @@ const headCells: readonly HeadCell[] = [
   },
   {
     id: 'quantity',
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: 'Quantity',
     sortable: true,
     sortFn(a, b) {
       return comparator(a.quantity, b.quantity)
     },
+    showIcon: true,
   },
   {
     id: 'assignee',
@@ -243,6 +245,7 @@ export default function DesktopInventoryItemList(props: Props) {
         page * rowsPerPage,
         page * rowsPerPage + rowsPerPage
       )
+      // @ts-ignore
       setVisibleRows(updatedRows)
     },
     [order, orderBy, page, rowsPerPage, tableData]
@@ -255,6 +258,8 @@ export default function DesktopInventoryItemList(props: Props) {
       newPage * rowsPerPage,
       newPage * rowsPerPage + rowsPerPage
     )
+
+    //@ts-ignore
     setVisibleRows(updatedRows)
   }
 
@@ -270,6 +275,8 @@ export default function DesktopInventoryItemList(props: Props) {
       0 * updatedRowsPerPage,
       0 * updatedRowsPerPage + updatedRowsPerPage
     )
+
+    // @ts-ignore
     setVisibleRows(updatedRows)
   }
 

@@ -2,7 +2,7 @@ import WarningIcon from '@mui/icons-material/Warning'
 import { TableRow, TableCell, Tooltip, Box } from '@mui/material'
 import theme from 'utils/theme'
 import * as React from 'react'
-import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
+import InventoryItemListItemKebab from 'components/InventoryItemList/InventoryItemListItemKebab'
 import renderAttributeChips from 'utils/renderAttributeChips'
 import { InventoryItemResponse } from 'utils/types'
 
@@ -77,6 +77,7 @@ export default function DesktopInventoryItemListItem({
           justifyContent: 'center',
           wordBreak: 'break-word',
         }}
+        align="right"
       >
         <span
           style={{
