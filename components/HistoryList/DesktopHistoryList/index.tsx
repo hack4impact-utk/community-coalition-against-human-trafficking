@@ -16,7 +16,6 @@ import {
   removeURLQueryParam,
   addURLQueryParam,
   bulkAddURLQueryParams,
-  bulkRemoveURLQueryParams,
 } from 'utils/queryParams'
 import { LinearProgress } from '@mui/material'
 
@@ -118,10 +117,6 @@ const headCells: readonly HeadCell[] = [
 ]
 
 interface EnhancedTableProps {
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof HistoryTableData
-  ) => void
   order: Order
   orderBy: string
   router: NextRouter
@@ -129,18 +124,16 @@ interface EnhancedTableProps {
 
 function HistoryListHeader(props: EnhancedTableProps) {
   const { order, orderBy, router } = props
-  const createSortHandler =
-    (property: keyof HistoryTableData) =>
-    async (_event: React.MouseEvent<unknown>) => {
-      const orderBy = router.query.sort
-      const order = router.query.order
-      const isAsc = orderBy === property && order === 'asc'
-      const newOrder = isAsc ? 'desc' : 'asc'
-      await bulkAddURLQueryParams(router, {
-        order: newOrder,
-        sort: property,
-      })
-    }
+  const createSortHandler = (property: keyof HistoryTableData) => async () => {
+    const orderBy = router.query.sort
+    const order = router.query.order
+    const isAsc = orderBy === property && order === 'asc'
+    const newOrder = isAsc ? 'desc' : 'asc'
+    await bulkAddURLQueryParams(router, {
+      order: newOrder,
+      sort: property,
+    })
+  }
 
   return (
     <TableHead>
@@ -185,10 +178,6 @@ interface Props {
   loading: boolean
 }
 
-const DEFAULT_ROWS_PER_PAGE = 5
-const DEFAULT_ORDER_BY = 'date'
-const DEFAULT_ORDER = 'desc'
-
 const updateQuery = async (router: NextRouter, key: string, val?: string) => {
   if (!val) await removeURLQueryParam(router, key)
   else await addURLQueryParam(router, key, val)
@@ -196,22 +185,6 @@ const updateQuery = async (router: NextRouter, key: string, val?: string) => {
 
 export default function DesktopHistoryList(props: Props) {
   const router = useRouter()
-  const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] =
-    React.useState<keyof HistoryTableData>(DEFAULT_ORDER_BY)
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = React.useState<LogResponse[]>(
-    [] as LogResponse[]
-  )
-
-  React.useEffect(() => {
-    // does pagination
-    // let rowsOnMount = sortTable(props.logs, orderBy, order)
-    // rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
-    // setVisibleRows(rowsOnMount)
-    // setPage(0)
-  }, [props.logs])
 
   // when a header is clicked
 

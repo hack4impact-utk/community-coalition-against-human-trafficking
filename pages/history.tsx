@@ -23,8 +23,6 @@ import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
 import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
 import React from 'react'
-// import deepCopy from 'utils/deepCopy'
-// import { dateToReadableDateString } from 'utils/transformations'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -36,21 +34,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
 interface HistoryPageProps {
   categories: CategoryResponse[]
-}
-export function oldExport(logs: LogResponse[]) {
-  const csvString = createLogsCsvAsString(logs)
-  const file: Blob = new Blob([csvString], { type: 'text/csv' })
-
-  // to download the file, create an <a> tag, associate the file with it, and click it
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(file)
-
-  // set file name. .slice() to put date in in yyyy-mm-dd format
-  a.download = `Warehouse History ${new Date().toISOString().slice(0, 10)}`
-  a.style.display = 'none'
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
 }
 
 const updateQuery = (router: NextRouter, key: string, val?: string) => {
