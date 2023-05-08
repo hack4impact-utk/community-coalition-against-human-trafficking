@@ -13,24 +13,26 @@ import {
 import {
   CategoryResponse,
   CheckInOutFormData,
-  InventoryItemRequest,
+  CheckInOutRequest,
   ItemDefinitionResponse,
   UserResponse,
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import React from 'react'
-import { checkInOutFormDataToInventoryItemRequest } from 'utils/transformations'
+import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
 import { apiWrapper } from 'utils/apiWrappers'
 import usersHandler from '@api/users'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
+import { useAppDispatch, useAppSelector } from 'store'
 import dayjs from 'dayjs'
-import { useAppSelector } from 'store'
 import DialogLink from 'components/DialogLink'
 import { KioskState } from 'store/types'
 import RoutableDialog from 'components/RoutableDialog'
 import NewItemPage from './items/new'
+import { showSnackbar } from 'store/snackbar'
+import { LoadingButton } from '@mui/lab'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -55,6 +57,7 @@ export default function CheckInPage({
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
   const router = useRouter()
+  const dispatch = useAppDispatch()
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
@@ -75,21 +78,41 @@ export default function CheckInPage({
     {} as CheckInOutFormData
   )
 
+  const [loading, setLoading] = React.useState(false)
+
   const onSubmit = async (formData: CheckInOutFormData) => {
-    const inventoryItem: Partial<InventoryItemRequest> =
-      checkInOutFormDataToInventoryItemRequest(formData)
+    // when validation is added, must be done before this
+    setLoading(true)
+    const checkInOutRequest: CheckInOutRequest =
+      checkInOutFormDataToCheckInOutRequest(formData)
 
     // TODO better way of coding URLs
-    await fetch(
-      `http://localhost:3000/api/inventoryItems/checkIn?quantity=${formData.quantityDelta}`,
+    const response = await fetch(
+      `http://localhost:3000/api/inventoryItems/checkIn`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(inventoryItem),
+        body: JSON.stringify(checkInOutRequest),
       }
     )
+
+    const data = await response.json()
+    setLoading(false)
+
+    if (data.success) {
+      // @ts-ignore
+      dispatch(
+        showSnackbar({
+          message: 'Item successfully checked in.',
+          severity: 'success',
+        })
+      )
+    } else {
+      // @ts-ignore
+      dispatch(showSnackbar({ message: data.message, severity: 'error' }))
+    }
     setFormData((formData) => {
       return {
         user: formData.user,
@@ -145,9 +168,13 @@ export default function CheckInPage({
               <CardActions
                 sx={{ alignSelf: { xs: 'end' }, mt: { xs: 1, sm: 0 } }}
               >
-                <Button onClick={() => onSubmit(formData)} variant="contained">
-                  Check in
-                </Button>
+                <LoadingButton
+                  onClick={() => onSubmit(formData)}
+                  variant="contained"
+                  loading={loading}
+                >
+                  Check In
+                </LoadingButton>
               </CardActions>
             </Box>
           </Card>

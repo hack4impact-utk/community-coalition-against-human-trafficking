@@ -350,7 +350,7 @@ export const logRequestModelProperties: Property[] = [
   },
   {
     key: 'date',
-    types: 'object',
+    types: 'string',
     required: true,
   },
 ]

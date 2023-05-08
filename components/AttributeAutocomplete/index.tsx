@@ -1,10 +1,7 @@
 import { SxProps } from '@mui/material'
 import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
-import {
-  InventoryItemAttributeRequest,
-  ListAttributeResponse,
-} from 'utils/types'
+import { ListAttributeResponse } from 'utils/types'
 
 export interface AutocompleteAttributeOption {
   id: string
@@ -51,12 +48,20 @@ export default function AttributeAutocomplete({
   setValue,
 }: Props) {
   const options = buildAutocompleteOptions(attributes)
+  const [open, setOpen] = React.useState(false)
+
+  React.useEffect(() => {
+    if (value?.length === attributes.length) {
+      setOpen(false)
+    }
+  }, [value])
 
   return (
     <Autocomplete
       multiple
-      disableCloseOnSelect
+      open={open}
       options={options}
+      disableCloseOnSelect
       groupBy={(option) => option.label}
       getOptionLabel={(option) => option.value}
       isOptionEqualToValue={(option, value) =>
@@ -73,6 +78,8 @@ export default function AttributeAutocomplete({
         ))
       }
       value={value}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
       renderInput={(params) => <TextField {...params} label="Attributes" />}
       onChange={(e, attributes) => {
         if (setValue) setValue(attributes)

@@ -4,6 +4,8 @@ import React from 'react'
 import theme from 'utils/theme'
 import { InventoryItem } from 'utils/types'
 import { useRouter } from 'next/router'
+import { showSnackbar } from 'store/snackbar'
+import { useAppDispatch } from 'store'
 
 interface InventoryItemListItemKebabOption {
   name: string
@@ -30,6 +32,7 @@ export default function InventoryItemListItemKebab({
     setAnchorElKebab(null)
   }
   const router = useRouter()
+  const dispatch = useAppDispatch()
   const option: InventoryItemListItemKebabOption[] = [
     {
       name: 'Check in',
@@ -54,13 +57,20 @@ export default function InventoryItemListItemKebab({
       onClick: () => {
         if (
           window.confirm(
-            "Are you sure you want to delete this item? You won't be able to undo this action."
+            'Are you sure you want to delete this from the inventory?'
           )
         ) {
           fetch(`/api/inventoryItems/${inventoryItem._id}`, {
             method: 'DELETE',
           }).then(() => {
             window.location.reload()
+            // @ts-ignore
+            dispatch(
+              showSnackbar({
+                message: 'Item successfully deleted.',
+                severity: 'success',
+              })
+            )
           })
         }
       },

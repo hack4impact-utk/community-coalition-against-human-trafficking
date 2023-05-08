@@ -19,6 +19,7 @@ import {
   SeparatedAttributeResponses,
 } from 'utils/attribute'
 import { usePrevious } from 'utils/hooks/usePrevious'
+import { useSession } from 'next-auth/react'
 
 interface Props {
   kioskMode: boolean
@@ -43,6 +44,8 @@ function blankFormData(): CheckInOutFormData {
   }
 }
 
+const defaultSplitAttrs = separateAttributeResponses()
+
 function updateFormData(
   formData: CheckInOutFormData,
   update: Partial<CheckInOutFormData>
@@ -52,8 +55,6 @@ function updateFormData(
     ...update,
   }
 }
-
-const defaultSplitAttrs = separateAttributeResponses()
 
 function CheckInOutForm({
   kioskMode,
@@ -71,6 +72,7 @@ function CheckInOutForm({
     React.useState<SeparatedAttributeResponses>(
       separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
     )
+  const session = useSession()
 
   const initialFormData: Partial<CheckInOutFormData> = {
     category: inventoryItem?.itemDefinition?.category,
@@ -92,9 +94,6 @@ function CheckInOutForm({
     ),
   }
 
-
-
-
   const [aaSelected, setAaSelected] = React.useState<
     AutocompleteAttributeOption[]
   >(initialFormData.attributes || [])
@@ -105,12 +104,23 @@ function CheckInOutForm({
       ...initialFormData,
     })
   }, [setFormData])
-  
+
   React.useEffect(() => {
     setFormData((fd) => {
       return updateFormData(fd, { itemDefinition })
     })
   }, [itemDefinition])
+
+  useEffect(() => {
+    // check if kiosk mode
+    if (!kioskMode) {
+      setFormData((fd) => {
+        return updateFormData(fd, {
+          user: session.data?.user as UserResponse,
+        })
+      })
+    }
+  }, [kioskMode, session, setFormData])
 
   const updateTextFieldAttributes = (
     e: string | number,
@@ -173,6 +183,12 @@ function CheckInOutForm({
       })
     }
   }, [formData.itemDefinition, prevFormData?.itemDefinition, setFormData])
+
+  React.useEffect(() => {
+    if (!formData.itemDefinition) {
+      setSplitAttrs(defaultSplitAttrs)
+    }
+  }, [formData.attributes, formData.textFieldAttributes])
 
   return (
     <FormControl fullWidth>

@@ -1,5 +1,6 @@
 import attributesHandler from '@api/attributes'
 import categoriesHandler from '@api/categories'
+import { LoadingButton } from '@mui/lab'
 import {
   Button,
   DialogActions,
@@ -54,6 +55,7 @@ interface Props {
 
 export default function NewItemPage({ redirectBack }: Props) {
   const router = useRouter()
+  const [loading, setLoading] = React.useState(false)
 
   return (
     <>
@@ -71,15 +73,19 @@ export default function NewItemPage({ redirectBack }: Props) {
         <Button onClick={() => redirectBack(router)} color="inherit">
           Close
         </Button>
-        <Button
+        <LoadingButton
           onClick={async () => {
+            setLoading(true)
             const itemId = await createItem(itemDefinitionFormData)
+            setLoading(false)
+
             // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
             redirectBack(router, itemId)
           }}
+          loading={loading}
         >
           Submit
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </>
   )

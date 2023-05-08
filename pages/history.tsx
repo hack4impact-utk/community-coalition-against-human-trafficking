@@ -4,7 +4,6 @@ import {
   Button,
   Unstable_Grid2 as Grid2,
   useMediaQuery,
-  Autocomplete,
   TextField,
   Checkbox,
   useTheme,
@@ -23,265 +22,106 @@ import SearchAutocomplete from 'components/SearchAutocomplete'
 import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
 import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
+import React from 'react'
+import deepCopy from 'utils/deepCopy'
+import { dateToReadableDateString } from 'utils/transformations'
+import logsHandler from '@api/logs'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
-    props: { categories: await apiWrapper(categoriesHandler, context) },
+    props: {
+      categories: await apiWrapper(categoriesHandler, context),
+      logs: await apiWrapper(logsHandler, context),
+    },
   }
 }
-
-// this test data is sponsored by chatgpt
-const testData: LogResponse[] = [
-  {
-    _id: '643cbb7bb2e624416a1dee44',
-
-    staff: {
-      _id: '63f95a8a55d930aa6176f06b',
-      name: 'ZAndrew Rutter',
-      email: 'andrewrules.rutter@gmail.com',
-      image:
-        'https://lh3.googleusercontent.com/a/AGNmyxax1wXEfj2xEQpfs0BR87d2cmvj1VrI1-h7l_ut=s96-c',
-    },
-    item: {
-      _id: '643cbb7bb2e624416a1dedd1',
-      itemDefinition: {
-        _id: '643cbb7bb2e624416a1dedb1',
-        name: 'Shirt',
-        category: {
-          _id: '643cbb7bb2e624416a1ded9a',
-          name: 'Clothing',
-        },
-        attributes: [
-          {
-            _id: '643cbb7bb2e624416a1deda2',
-            name: 'Top Size',
-            possibleValues: ['Small', 'Medium', 'Large', 'Extra-Large'],
-            color: '#ebebeb',
-          },
-          {
-            _id: '643cbb7bb2e624416a1deda3',
-            name: 'Shirt Type',
-            possibleValues: ['Short-Sleeve', 'Long-Sleeve'],
-            color: '#c7dbda',
-          },
-        ],
-        internal: false,
-        lowStockThreshold: 20,
-        criticalStockThreshold: 10,
-      },
-      attributes: [
-        {
-          attribute: {
-            _id: '643cbb7bb2e624416a1deda2',
-            name: 'Top Size',
-            possibleValues: ['Small', 'Medium', 'Large', 'Extra-Large'],
-            color: '#ebebeb',
-          },
-          value: 'Small',
-        },
-        {
-          attribute: {
-            _id: '643cbb7bb2e624416a1deda3',
-            name: 'Shirt Type',
-            possibleValues: ['Short-Sleeve', 'Long-Sleeve'],
-            color: '#c7dbda',
-          },
-          value: 'Short-Sleeve',
-        },
-      ],
-      quantity: 23,
-    },
-    quantityDelta: -5,
-    date: new Date('2022-02-10T14:47:12.419Z'),
-  },
-  {
-    _id: '743cbb7bb2e624416a1dee44',
-    staff: {
-      _id: '73f95a8a55d930aa6176f06b',
-      name: 'John Doe',
-      email: 'johndoe@gmail.com',
-      image:
-        'https://lh3.googleusercontent.com/a/AGNmyxax1wXEfj2xEQpfs0BR87d2cmvj1VrI1-h7l_ut=s96-c',
-    },
-    item: {
-      _id: '743cbb7bb2e624416a1dedd1',
-      itemDefinition: {
-        _id: '743cbb7bb2e624416a1dedb1',
-        name: 'Jeans',
-        category: {
-          _id: '743cbb7bb2e624416a1ded9a',
-          name: 'Clothing',
-        },
-        attributes: [
-          {
-            _id: '743cbb7bb2e624416a1deda2',
-            name: 'Waist Size',
-            possibleValues: 'number',
-            color: '#ebebeb',
-          },
-          {
-            _id: '743cbb7bb2e624416a1deda3',
-            name: 'Length',
-            possibleValues: ['Short', 'Regular', 'Long'],
-            color: '#c7dbda',
-          },
-        ],
-        internal: false,
-        lowStockThreshold: 15,
-        criticalStockThreshold: 5,
-      },
-      attributes: [
-        {
-          attribute: {
-            _id: '743cbb7bb2e624416a1deda2',
-            name: 'Waist Size',
-            possibleValues: 'number',
-            color: '#ebebeb',
-          },
-          value: '32',
-        },
-        {
-          attribute: {
-            _id: '743cbb7bb2e624416a1deda3',
-            name: 'Length',
-            possibleValues: ['Short', 'Regular', 'Long'],
-            color: '#c7dbda',
-          },
-          value: 'Long',
-        },
-      ],
-      quantity: 17,
-    },
-    quantityDelta: 3,
-    date: new Date('2022-05-12T10:30:42.419Z'),
-  },
-  {
-    _id: '843cbb7bb2e624416a1dee44',
-    staff: {
-      _id: '83f95a8a55d930aa6176f06b',
-      name: 'Jane Doe',
-      email: 'janedoe@gmail.com',
-      image:
-        'https://lh3.googleusercontent.com/a/AGNmyxax1wXEfj2xEQpfs0BR87d2cmvj1VrI1-h7l_ut=s96-c',
-    },
-    item: {
-      _id: '843cbb7bb2e624416a1dedd1',
-      itemDefinition: {
-        _id: '843cbb7bb2e624416a1dedb1',
-        name: 'Sneakers',
-        category: {
-          _id: '843cbb7bb2e624416a1ded9a',
-          name: 'Footwear',
-        },
-        attributes: [
-          {
-            _id: '843cbb7bb2e624416a1deda2',
-            name: 'Shoe Size',
-            possibleValues: ['6', '7', '8', '9'],
-            color: '#ebebeb',
-          },
-          {
-            _id: '843cbb7bb2e624416a1deda3',
-            name: 'Color',
-            possibleValues: ['Black', 'White', 'Red'],
-            color: '#c7dbda',
-          },
-        ],
-        internal: false,
-        lowStockThreshold: 25,
-        criticalStockThreshold: 15,
-      },
-      attributes: [
-        {
-          attribute: {
-            _id: '843cbb7bb2e624416a1deda2',
-            name: 'Shoe Size',
-            possibleValues: ['6', '7', '8', '9'],
-            color: '#ebebeb',
-          },
-          value: '8',
-        },
-        {
-          attribute: {
-            _id: '843cbb7bb2e624416a1deda3',
-            name: 'Color',
-            possibleValues: ['Black', 'White', 'Red'],
-            color: '#c7dbda',
-          },
-          value: 'Black',
-        },
-      ],
-      quantity: 35,
-    },
-    quantityDelta: 8,
-    date: new Date('2022-07-15T15:20:12.419Z'),
-  },
-  {
-    _id: '943cbb7bb2e624416a1dee44',
-    staff: {
-      _id: '93f95a8a55d930aa6176f06b',
-      name: 'Michael Smith',
-      email: 'michaelsmith@gmail.com',
-      image:
-        'https://lh3.googleusercontent.com/a/AGNmyxax1wXEfj2xEQpfs0BR87d2cmvj1VrI1-h7l_ut=s96-c',
-    },
-    item: {
-      _id: '943cbb7bb2e624416a1dedd1',
-      itemDefinition: {
-        _id: '943cbb7bb2e624416a1dedb1',
-        name: 'Laptop',
-        category: {
-          _id: '943cbb7bb2e624416a1ded9a',
-          name: 'Electronics',
-        },
-        attributes: [
-          {
-            _id: '943cbb7bb2e624416a1deda2',
-            name: 'Brand',
-            possibleValues: ['Apple', 'Dell', 'HP', 'Lenovo'],
-            color: '#ebebeb',
-          },
-          {
-            _id: '943cbb7bb2e624416a1deda3',
-            name: 'Screen Size',
-            possibleValues: 'text',
-            color: '#c7dbda',
-          },
-        ],
-        internal: false,
-        lowStockThreshold: 20,
-        criticalStockThreshold: 10,
-      },
-      attributes: [
-        {
-          attribute: {
-            _id: '943cbb7bb2e624416a1deda2',
-            name: 'Brand',
-            possibleValues: ['Apple', 'Dell', 'HP', 'Lenovo'],
-            color: '#ebebeb',
-          },
-          value: 'Dell',
-        },
-        {
-          attribute: {
-            _id: '943cbb7bb2e624416a1deda3',
-            name: 'Screen Size',
-            possibleValues: 'text',
-            color: '#c7dbda',
-          },
-          value: '15"',
-        },
-      ],
-      quantity: 30,
-    },
-    quantityDelta: 5,
-    date: new Date('2022-08-20T11:45:12.419Z'),
-  },
-]
 
 interface HistoryPageProps {
   logs: LogResponse[]
   categories: CategoryResponse[]
+}
+
+interface CsvRow {
+  Item: string
+  Attributes: string
+  Category: string
+  Quantity: number
+  Staff: string
+  Date: string
+}
+
+function handleExport(logs: LogResponse[]) {
+  const csvString = createLogsCsvAsString(logs)
+  const file: Blob = new Blob([csvString], { type: 'text/csv' })
+
+  // to download the file, create an <a> tag, associate the file with it, and click it
+  const a = document.createElement('a')
+  a.href = URL.createObjectURL(file)
+
+  // set file name. .slice() to put date in in yyyy-mm-dd format
+  a.download = `Warehouse History ${new Date().toISOString().slice(0, 10)}`
+  a.style.display = 'none'
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+}
+
+function createLogsCsvAsString(logs: LogResponse[]) {
+  /* Creates CSV-formatted string by:
+   * 1. Create the header row
+   * 2. creating a CsvRow obj
+   * 3. converted obj to string by separating the object values by with a comma
+   * 4. creating an array of CsvRow obj converted strings
+   * 5. joining each array element with a newline
+   */
+  const csvKeys: (keyof CsvRow)[] = [
+    'Item',
+    'Attributes',
+    'Category',
+    'Quantity',
+    'Staff',
+    'Date',
+  ]
+
+  const csvKeysString: string = csvKeys.join(',')
+
+  const csvData: CsvRow[] = logs.map((log) => {
+    const csvRow: CsvRow = {
+      Item: log.item.itemDefinition.name,
+      Attributes:
+        log.item.attributes
+          ?.map((attr) => `${attr.attribute.name}: ${attr.value}`)
+          .join('; ') ?? '',
+      Category: log.item.itemDefinition.category?.name ?? '',
+      Quantity: log.quantityDelta,
+      Staff: log.staff.name,
+      Date: new Date(log.date).toISOString(),
+    }
+    return csvRow
+  })
+
+  // sort rows by date
+  const compareFn = (d1: Date, d2: Date) => {
+    if (d1 < d2) {
+      return -1
+    }
+
+    if (d1 > d2) {
+      return 1
+    }
+
+    return 0
+  }
+
+  csvData.sort((row1: CsvRow, row2: CsvRow) =>
+    compareFn(new Date(row2.Date), new Date(row1.Date))
+  )
+
+  const csvDataString: string = csvData
+    .map((data) => Object.values(data).join(','))
+    .join('\n')
+
+  return `${csvKeysString}\n${csvDataString}`
 }
 
 const updateQuery = (router: NextRouter, key: string, val?: string) => {
@@ -313,9 +153,96 @@ const renderInternalCheckbox = (router: NextRouter, isMobileView: boolean) => {
 }
 
 export default function HistoryPage({ logs, categories }: HistoryPageProps) {
+  const [tableData, setTableData] = React.useState<LogResponse[]>(logs)
   const router = useRouter()
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
+
+  React.useEffect(() => {
+    let newTableData: LogResponse[] = deepCopy(logs)
+
+    if (router.query.internal) {
+      newTableData = newTableData.filter(
+        (log) => log.item.itemDefinition.internal
+      )
+    }
+
+    if (router.query.search) {
+      const search = (router.query.search as string).toLowerCase()
+      newTableData = newTableData.filter((log) => {
+        return (
+          log.staff.name.toLowerCase().includes(search) ||
+          log.item.itemDefinition.name.toLowerCase().includes(search) ||
+          (log.item.attributes &&
+            log.item.attributes
+              .map((attr) =>
+                `${attr.attribute.name}: ${attr.value}`.toLowerCase()
+              )
+              .join(' ')
+              .includes(search)) ||
+          (log.item.itemDefinition.category &&
+            log.item.itemDefinition.category.name
+              .toLowerCase()
+              .includes(search)) ||
+          log.quantityDelta.toString().toLowerCase().includes(search) ||
+          dateToReadableDateString(log.date).toLowerCase().includes(search)
+        )
+      })
+    }
+
+    const startDate = router.query.startDate
+      ? new Date(router.query.startDate as string).getTime()
+      : undefined
+    const endDate = router.query.endDate
+      ? new Date(router.query.endDate as string).getTime()
+      : undefined
+
+    if (router.query.startDate && router.query.endDate) {
+      newTableData = newTableData.filter(
+        (log) =>
+          new Date(log.date).getTime() >= startDate! &&
+          new Date(log.date).getTime() <= endDate!
+      )
+    } else if (router.query.startDate) {
+      newTableData = newTableData.filter(
+        (log) => new Date(log.date).getTime() >= startDate!
+      )
+    } else if (router.query.endDate) {
+      newTableData = newTableData.filter(
+        (log) => new Date(log.date).getTime() <= endDate!
+      )
+    }
+
+    if (router.query.startDate || router.query.endDate) {
+      // if props.startDate or props.endDate are not present, use an arbitrarily far-away date
+      const startDate = new Date(
+        (router.query.startDate as string) ?? '1000-01-01'
+      ).getTime()
+      const endDate = new Date(
+        (router.query.endDate as string) ?? '9999-01-01'
+      ).getTime()
+      newTableData = newTableData.filter((log) => {
+        return (
+          new Date(log.date).getTime() >= startDate &&
+          new Date(log.date).getTime() <= endDate
+        )
+      })
+    }
+
+    if (router.query.category) {
+      newTableData = newTableData.filter((log) => {
+        return log.item.itemDefinition.category?.name === router.query.category
+      })
+    }
+    setTableData(newTableData)
+  }, [
+    router.query.search,
+    router.query.category,
+    router.query.startDate,
+    router.query.endDate,
+    router.query.internal,
+  ])
+
   return (
     <Grid2 container my={2} sx={{ flexGrow: 1 }} gap={2}>
       {/* Header -- "History" and "Export To Excel" button*/}
@@ -325,7 +252,11 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
         </Typography>
         {!isMobileView && (
           <Grid2 ml="auto" mr={6}>
-            <Button variant="outlined" sx={{ width: '100%' }}>
+            <Button
+              variant="outlined"
+              sx={{ width: '100%' }}
+              onClick={() => handleExport(tableData)}
+            >
               Export To Excel
             </Button>
           </Grid2>
@@ -391,7 +322,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
                         position: 'absolute',
                         top: '.5rem',
                         margin: 'auto',
-                        right: '2rem',
+                        right: !isMobileView ? '2rem' : '0.5rem',
                       }}
                       onClick={() => removeURLQueryParam(router, 'startDate')}
                     >
@@ -435,7 +366,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
                         position: 'absolute',
                         top: '.5rem',
                         margin: 'auto',
-                        right: '2rem',
+                        right: !isMobileView ? '2rem' : '0.5rem',
                       }}
                       onClick={() => removeURLQueryParam(router, 'endDate')}
                     >
@@ -460,21 +391,23 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
       </Grid2>
       {isMobileView ? (
         <MobileHistoryList
-          logs={testData}
-          search={''}
-          category={''}
-          endDate={new Date()}
-          startDate={new Date()}
-          internal={false}
+          logs={tableData}
+          search={router.query.search as string}
+          category={router.query.category as string}
+          endDate={router.query.endDate as string}
+          startDate={router.query.startDate as string}
+          internal={!!router.query.internal}
+          setTableData={setTableData}
         />
       ) : (
         <DesktopHistoryList
-          logs={testData}
-          search={''}
-          category={''}
-          endDate={new Date()}
-          startDate={new Date()}
-          internal={false}
+          logs={tableData}
+          search={router.query.search as string}
+          category={router.query.category as string}
+          endDate={router.query.endDate as string}
+          startDate={router.query.startDate as string}
+          internal={!!router.query.internal}
+          setTableData={setTableData}
         />
       )}
     </Grid2>
