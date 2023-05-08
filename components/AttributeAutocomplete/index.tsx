@@ -50,12 +50,20 @@ export default function AttributeAutocomplete({
   error,
 }: Props) {
   const options = buildAutocompleteOptions(attributes)
+  const [open, setOpen] = React.useState(false)
+
+  React.useEffect(() => {
+    if (value?.length === attributes.length) {
+      setOpen(false)
+    }
+  }, [value])
 
   return (
     <Autocomplete
       multiple
-      disableCloseOnSelect
+      open={open}
       options={options}
+      disableCloseOnSelect
       groupBy={(option) => option.label}
       getOptionLabel={(option) => option.value}
       isOptionEqualToValue={(option, value) =>
@@ -80,6 +88,8 @@ export default function AttributeAutocomplete({
           helperText={error}
         />
       )}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
       onChange={(e, attributes) => {
         if (setValue) setValue(attributes)
         if (!attributes.length) {

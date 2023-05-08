@@ -1,7 +1,6 @@
 import CheckInOutForm from 'components/CheckInOutForm'
 import {
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -15,9 +14,7 @@ import {
   CheckInOutFormData,
   checkInOutFormSchema,
   CheckInOutRequest,
-  InventoryItemRequest,
   ItemDefinitionResponse,
-  LogRequest,
   UserResponse,
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
@@ -29,9 +26,9 @@ import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'store'
 import React from 'react'
 import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
-import dayjs from 'dayjs'
 import { showSnackbar } from 'store/snackbar'
 import transformZodErrors from 'utils/transformZodErrors'
+import { LoadingButton } from '@mui/lab'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -66,6 +63,7 @@ export default function CheckOutPage({
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
     {} as CheckInOutFormData
   )
+  const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
     setErrors((errors) => {
@@ -85,6 +83,9 @@ export default function CheckOutPage({
       return
     }
     setErrors({})
+
+    // when validation is added, must be done before this
+    setLoading(true)
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
@@ -101,6 +102,7 @@ export default function CheckOutPage({
     )
 
     const data = await response.json()
+    setLoading(false)
 
     if (data.success) {
       // @ts-ignore
@@ -148,9 +150,13 @@ export default function CheckOutPage({
             <CardActions
               sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'end' } }}
             >
-              <Button onClick={() => onSubmit(formData)} variant="contained">
+              <LoadingButton
+                onClick={() => onSubmit(formData)}
+                variant="contained"
+                loading={loading}
+              >
                 Check Out
-              </Button>
+              </LoadingButton>
             </CardActions>
           </Box>
         </Card>
