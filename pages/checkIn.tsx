@@ -111,7 +111,7 @@ export default function CheckInPage({
           smOffset={2}
           lgOffset={3}
         >
-          <DialogLink href="/items/new" backHref="/checkIn">
+          <DialogLink href="/items/new">
             <Button
               variant="outlined"
               fullWidth={isMobileView}

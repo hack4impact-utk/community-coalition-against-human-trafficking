@@ -1,6 +1,5 @@
 import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
-import DialogLink from 'components/DialogLink'
 import { useRouter } from 'next/router'
 import React from 'react'
 import { dialogPush } from 'utils/dialogLink'
@@ -74,37 +73,17 @@ export default function AttributeListItemKebab({
         open={Boolean(anchorElKebab)}
         onClose={handleCloseKebabMenu}
       >
-        {settings.map((setting) =>
-          setting.name === 'edit' ? (
-            <DialogLink href={`/settings/attributes/${attribute._id}/edit`}>
-              <MenuItem
-                key={setting.name}
-                onClick={() => {
-                  setting.onClick()
-                  console.log(
-                    dialogPush(
-                      router,
-                      `/settings/attributes/${attribute._id}/edit`
-                    )
-                  )
-                  handleCloseKebabMenu()
-                }}
-              >
-                <Typography textAlign="center">{setting.name}</Typography>
-              </MenuItem>
-            </DialogLink>
-          ) : (
-            <MenuItem
-              key={setting.name}
-              onClick={() => {
-                setting.onClick()
-                handleCloseKebabMenu()
-              }}
-            >
-              <Typography textAlign="center">{setting.name}</Typography>
-            </MenuItem>
-          )
-        )}
+        {settings.map((setting) => (
+          <MenuItem
+            key={setting.name}
+            onClick={() => {
+              setting.onClick()
+              handleCloseKebabMenu()
+            }}
+          >
+            <Typography textAlign="center">{setting.name}</Typography>
+          </MenuItem>
+        ))}
       </Menu>
     </>
   )

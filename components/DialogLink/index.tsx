@@ -67,12 +67,13 @@ export default function DialogLink({ href, children }: Props) {
         if (mr.success) {
           setParams(mr.params)
           return dr
+        } else {
+          setParams({})
         }
       }
     }
     return attemptedDr
   }, [href])
-  console.log(dialogRoute)
 
   const constructedHref = useMemo(
     () => constructDialogRoute(params, dialogRoute),

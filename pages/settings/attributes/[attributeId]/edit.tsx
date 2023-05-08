@@ -24,11 +24,9 @@ export default function AttributeEditForm() {
   useEffect(() => {
     const fetchAttribute = async () => {
       if (!id) return // on page load, id is undefined, resulting in bad requests
-      fetch(`/api/attributes/${id}`, { method: 'GET' }).then((response) => {
-        response.json().then((data) => {
-          setAttribute(data.payload)
-        })
-      })
+      const response = await fetch(`/api/attributes/${id}`, { method: 'GET' })
+      const data = await response.json()
+      setAttribute(data.payload)
     }
     fetchAttribute()
   }, [id])
@@ -48,7 +46,7 @@ export default function AttributeEditForm() {
       }),
     })
     await router.push('/settings/attributes')
-    router.reload()
+    // router.reload()
   }
 
   const handleClose = () => {
@@ -57,27 +55,23 @@ export default function AttributeEditForm() {
 
   return (
     <>
-      <DialogTitle>Create New Attribute</DialogTitle>
+      <DialogTitle>Edit Attribute</DialogTitle>
       <DialogContent>
         <AttributeForm
           attribute={attribute}
           onChange={(attributeFormData) =>
             setAttributeFormData(attributeFormData)
           }
-        >
-          <DialogActions>
-            <Button onClick={handleClose} color="inherit">
-              Cancel
-            </Button>
-            <Button
-              onClick={() => handleSubmit(attributeFormData)}
-              color="primary"
-            >
-              Submit
-            </Button>
-          </DialogActions>
-        </AttributeForm>
+        />
       </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="inherit">
+          Cancel
+        </Button>
+        <Button onClick={() => handleSubmit(attributeFormData)} color="primary">
+          Submit
+        </Button>
+      </DialogActions>
     </>
   )
 }

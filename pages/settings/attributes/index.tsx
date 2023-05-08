@@ -16,6 +16,7 @@ import { useRouter } from 'next/router'
 import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
 import AttributeEditForm from 'pages/settings/attributes/[attributeId]/edit'
+import React from 'react'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
