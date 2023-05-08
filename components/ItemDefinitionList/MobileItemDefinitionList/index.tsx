@@ -63,6 +63,7 @@ export default function MobileItemDefinitionList({
     <List sx={{ width: '100%' }}>
       {tableData.map((itemDefinition) => (
         <MobileItemDefinitionListItem
+          key={itemDefinition.id}
           itemDefinition={itemDefinition.itemDefinitionResponse}
         />
       ))}

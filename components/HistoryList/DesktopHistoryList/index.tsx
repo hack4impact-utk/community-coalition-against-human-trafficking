@@ -197,61 +197,8 @@ export default function DesktopHistoryList(props: Props) {
   )
 
   React.useEffect(() => {
-<<<<<<< HEAD
-    let newTableData: LogResponse[] = deepCopy(props.logs)
-
-    if (props.internal) {
-      newTableData = newTableData.filter(
-        (log) => log.item.itemDefinition.internal
-      )
-    }
-
-    if (props.search) {
-      const search = props.search.toLowerCase()
-      newTableData = newTableData.filter((log) => {
-        return (
-          log.staff.name.toLowerCase().includes(search) ||
-          log.item.itemDefinition.name.toLowerCase().includes(search) ||
-          (log.item.attributes &&
-            log.item.attributes
-              .map((attr) =>
-                `${attr.attribute.name}: ${attr.value}`.toLowerCase()
-              )
-              .join(' ')
-              .includes(search)) ||
-          (log.item.itemDefinition.category &&
-            log.item.itemDefinition.category.name
-              .toLowerCase()
-              .includes(search)) ||
-          log.quantityDelta.toString().toLowerCase().includes(search) ||
-          DateToReadableDateString(log.date).toLowerCase().includes(search)
-        )
-      })
-    }
-
-    if (props.startDate || props.endDate) {
-      // if props.startDate or props.endDate are not present, use an arbitrarily far-away date
-      const startDate = new Date(props.startDate ?? '1000-01-01').getTime()
-      const endDate = new Date(props.endDate ?? '9999-01-01').getTime()
-      newTableData = newTableData.filter((log) => {
-        return (
-          new Date(log.date).getTime() >= startDate &&
-          new Date(log.date).getTime() <= endDate
-        )
-      })
-    }
-
-    if (props.category) {
-      newTableData = newTableData.filter((log) => {
-        return log.item.itemDefinition.category?.name === props.category
-      })
-    }
-    setTableData(newTableData)
-    let rowsOnMount = sortTable(newTableData, orderBy, order)
-=======
     // does pagination
-    var rowsOnMount = sortTable(props.logs, orderBy, order)
->>>>>>> 9ce2b710c08e2f3b4a5c6cfbd4c074b8e9ce0c7e
+    let rowsOnMount = sortTable(props.logs, orderBy, order)
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
     setVisibleRows(rowsOnMount)
