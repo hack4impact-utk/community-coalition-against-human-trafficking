@@ -15,7 +15,7 @@ export interface UserResponse extends User {
 
 export interface ItemDefinitionResponse extends ItemDefinition {
   _id: string
-  category: CategoryResponse
+  category?: CategoryResponse
   attributes: AttributeResponse[]
 }
 

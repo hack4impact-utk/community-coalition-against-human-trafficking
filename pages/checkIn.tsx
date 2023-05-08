@@ -139,10 +139,6 @@ export default function CheckInPage({
     }
   }
 
-  React.useEffect(() => {
-    console.log(errors)
-  }, [errors])
-
   return (
     <Grid2 container sx={{ flexGrow: 1 }}>
       <Grid2
@@ -181,7 +177,6 @@ export default function CheckInPage({
                 formData={formData}
                 setFormData={setFormData}
                 inventoryItem={inventoryItem}
-                // register={register}
                 errors={errors}
                 itemDefinition={defaultItemDef}
               />

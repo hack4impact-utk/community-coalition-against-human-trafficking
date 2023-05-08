@@ -5,7 +5,6 @@ import {
   CheckInOutFormData,
   CheckInOutRequest,
   InventoryItemAttributeRequest,
-  InventoryItemRequest,
   ItemDefinitionRequest,
 } from 'utils/types'
 
@@ -57,10 +56,6 @@ export function checkInOutFormDataToCheckInOutRequest(
     date: formData.date,
     inventoryItem: partialInventoryItem,
   }
-
-  console.log(retVal)
-  console.log('keys ', Object.keys(retVal))
-
   return retVal
 }
 
