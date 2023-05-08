@@ -16,6 +16,7 @@ import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
 import AttributeEditForm from 'pages/settings/attributes/[attributeId]/edit'
 import React from 'react'
+import DialogLink from 'components/DialogLink'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -49,13 +50,15 @@ export default function AttributesPage({ attributes }: AttributesPageProps) {
             <SearchField />
           </Grid2>
           <Grid2 ml={isMobileView ? '' : 'auto'}>
-            <Button
-              variant="outlined"
-              startIcon={<AddIcon />}
-              sx={{ width: '100%' }}
-            >
-              Create New Attribute
-            </Button>
+            <DialogLink href="/settings/attributes/create">
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                sx={{ width: '100%' }}
+              >
+                Create New Attribute
+              </Button>
+            </DialogLink>
           </Grid2>
         </Grid2>
         <Grid2 xs={12} sx={{ px: isMobileView ? 0 : 2 }}>
