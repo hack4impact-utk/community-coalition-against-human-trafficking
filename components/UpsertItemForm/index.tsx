@@ -275,9 +275,16 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
-          error={!!errors['lowStockThreshold']}
+          error={
+            !!errors['criticalStockThreshold'] || !!errors['lowStockThreshold']
+          }
         />
       </Box>
+      {errors['criticalStockThreshold'] && (
+        <Typography variant="caption" color={theme.palette.error.main}>
+          {errors['criticalStockThreshold']}
+        </Typography>
+      )}
     </FormControl>
   )
 }
