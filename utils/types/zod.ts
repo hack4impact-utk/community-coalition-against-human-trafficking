@@ -38,24 +38,15 @@ export const attributeResponseSchema = z.array(
   })
 )
 
-export const itemDefinitionResponseSchema = z
-  .object({
-    _id: objectId,
-    name: z.string(),
-    internal: z.boolean(),
-    lowStockThreshold: z.number().int(),
-    criticalStockThreshold: z.number().int(),
-    category: categoryResponseSchema,
-    attributes: attributeResponseSchema,
-  })
-  .refine(
-    (idSchema) => idSchema.lowStockThreshold >= idSchema.criticalStockThreshold,
-    {
-      message:
-        'Low stock threshold must be greater than critical stock threshold',
-      path: ['lowStockThreshold'],
-    }
-  )
+export const itemDefinitionResponseSchema = z.object({
+  _id: objectId,
+  name: z.string(),
+  internal: z.boolean(),
+  lowStockThreshold: z.number().int(),
+  criticalStockThreshold: z.number().int(),
+  category: categoryResponseSchema.optional(),
+  attributes: attributeResponseSchema,
+})
 
 export const inventoryItemAttributeSchema = z.array(
   z.object({
@@ -75,7 +66,7 @@ export const checkInOutFormSchema = z
     date: z
       .date()
       .refine((val) => val <= new Date(), "Date can't be in the future"),
-    category: categoryResponseSchema.required(),
+    category: categoryResponseSchema.optional(),
     itemDefinition: itemDefinitionResponseSchema,
     attributes: inventoryItemAttributeSchema.optional(),
     textFieldAttributes: z
@@ -136,5 +127,20 @@ export const checkInOutFormSchema = z
     {
       message: 'Must define all attributes',
       path: ['textFieldAttributes'],
+    }
+  )
+
+export const newItemFormSchema = itemDefinitionResponseSchema
+  .extend({
+    _id: objectId.optional(),
+    attributes: attributeResponseSchema.optional(),
+    category: categoryResponseSchema.nullable().optional(),
+  })
+  .refine(
+    (idSchema) => idSchema.lowStockThreshold >= idSchema.criticalStockThreshold,
+    {
+      message:
+        'Low stock threshold must be greater than critical stock threshold',
+      path: ['lowStockThreshold'],
     }
   )
