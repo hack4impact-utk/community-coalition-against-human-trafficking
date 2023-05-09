@@ -144,3 +144,39 @@ export const newItemFormSchema = itemDefinitionResponseSchema
       path: ['lowStockThreshold'],
     }
   )
+
+export const attributeFormSchema = z
+  .object({
+    name: z.string(),
+    color: hexColor,
+    valueType: z.union([
+      z.literal('text'),
+      z.literal('number'),
+      z.literal('list'),
+    ]),
+    listOptions: z.array(z.string()).optional(),
+  })
+  .refine(
+    (schema) => {
+      if (schema.valueType === 'list' && !schema.listOptions?.length) {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'Must define list options for list attributes',
+      path: ['listOptions'],
+    }
+  )
+  .refine(
+    (schema) => {
+      if (schema.name === '') {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'Required',
+      path: ['name'],
+    }
+  )
