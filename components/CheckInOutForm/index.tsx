@@ -153,7 +153,7 @@ function CheckInOutForm({
       setFilteredItemDefinitions(
         itemDefinitions.filter((itemDefinition) => {
           if (itemDefinition.category) {
-            return itemDefinition.category._id === formData.category._id
+            return itemDefinition.category._id === formData.category?._id
           }
         })
       )

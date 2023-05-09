@@ -15,7 +15,7 @@ import AddIcon from '@mui/icons-material/Add'
 import {
   AttributeResponse,
   CategoryResponse,
-  NewItemFormData,
+  ItemDefinitionFormData,
 } from 'utils/types'
 import React from 'react'
 import { attributeFormDataToAttributeRequest } from 'utils/transformations'
@@ -28,8 +28,8 @@ import theme from 'utils/theme'
 interface Props {
   categories: CategoryResponse[]
   attributes: AttributeResponse[]
-  onChange: (formData: NewItemFormData) => void
-  errors: Record<keyof NewItemFormData, string>
+  onChange: (formData: ItemDefinitionFormData) => void
+  errors: Record<keyof ItemDefinitionFormData, string>
 }
 
 export default function UpsertItemForm({
@@ -44,7 +44,7 @@ export default function UpsertItemForm({
   )
   const [formData, setFormData] = React.useState({
     internal: false,
-  } as NewItemFormData)
+  } as ItemDefinitionFormData)
 
   // this is here to support adding newly created attributes to the create new item form attributes list options after they are created
   const [proxyAttributes, setProxyAttributes] = React.useState(attributes)

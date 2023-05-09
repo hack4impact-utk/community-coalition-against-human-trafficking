@@ -5,7 +5,7 @@ import {
   CheckInOutRequest,
   InventoryItemAttributeRequest,
   ItemDefinitionRequest,
-  NewItemFormData,
+  ItemDefinitionFormData,
 } from 'utils/types'
 
 /**
@@ -73,7 +73,7 @@ export function attributeFormDataToAttributeRequest(
 }
 
 export function itemDefinitionFormDataToItemDefinitionRequest(
-  formData: NewItemFormData
+  formData: ItemDefinitionFormData
 ): ItemDefinitionRequest {
   return {
     ...formData,

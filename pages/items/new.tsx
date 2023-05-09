@@ -15,11 +15,11 @@ import transformZodErrors from 'utils/transformZodErrors'
 import {
   AttributeResponse,
   CategoryResponse,
-  NewItemFormData,
+  ItemDefinitionFormData,
   newItemFormSchema,
 } from 'utils/types'
 
-let itemDefinitionFormData: NewItemFormData
+let itemDefinitionFormData: ItemDefinitionFormData
 
 interface Props {
   redirectBack: (router: NextRouter, itemId?: string) => Promise<void>
@@ -54,7 +54,7 @@ export default function NewItemPage({ redirectBack }: Props) {
   }, [])
 
   const createItem = React.useCallback(
-    async (formData: NewItemFormData) => {
+    async (formData: ItemDefinitionFormData) => {
       const zodResult = newItemFormSchema.safeParse(formData)
       if (!zodResult.success) {
         setErrors(transformZodErrors(zodResult.error))
