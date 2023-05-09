@@ -17,6 +17,7 @@ import RoutableDialog from 'components/RoutableDialog'
 import AttributeEditForm from 'pages/settings/attributes/[attributeId]/edit'
 import React from 'react'
 import DialogLink from 'components/DialogLink'
+import AttributeCreateForm from 'pages/settings/attributes/create'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -68,8 +69,13 @@ export default function AttributesPage({ attributes }: AttributesPageProps) {
           />
         </Grid2>
       </Grid2>
+
+      {/* These RoutableDialogs provide functionality to buttons that open dialogs */}
       <RoutableDialog name="editAttribute">
         <AttributeEditForm />
+      </RoutableDialog>
+      <RoutableDialog name="createAttribute">
+        <AttributeCreateForm />
       </RoutableDialog>
     </>
   )

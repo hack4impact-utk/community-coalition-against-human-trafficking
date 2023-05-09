@@ -8,8 +8,10 @@ import UpsertAttributeForm from 'components/UpsertAttributeForm'
 import { AttributeFormData } from 'components/UpsertAttributeForm'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { LoadingButton } from '@mui/lab'
 
-export default function CreateNewAttributePage() {
+export default function AttributeCreateForm() {
+  const [loading, setLoading] = useState(false)
   const [attributeFormData, setAttributeFormData] = useState<AttributeFormData>(
     {} as AttributeFormData
   )
@@ -21,7 +23,19 @@ export default function CreateNewAttributePage() {
   }
 
   const handleSubmit = async (attributeFormData: AttributeFormData) => {
-    // TODO: create post request with form data
+    await fetch('/api/attributes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: attributeFormData.name,
+        color: attributeFormData.color,
+        possibleValues:
+          attributeFormData.valueType === 'list'
+            ? attributeFormData.listOptions
+            : attributeFormData.valueType,
+      }),
+    })
+    await router.push('/settings/attributes')
   }
 
   return (
@@ -38,9 +52,16 @@ export default function CreateNewAttributePage() {
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <Button onClick={() => handleSubmit(attributeFormData)} color="primary">
+        <LoadingButton
+          loading={loading}
+          onClick={async () => {
+            setLoading(true)
+            await handleSubmit(attributeFormData)
+            setLoading(false)
+          }}
+        >
           Submit
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </>
   )
