@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab'
 import {
   Button,
   DialogActions,
@@ -19,6 +20,7 @@ export default function AttributeEditForm() {
   const [attributeFormData, setAttributeFormData] = useState<AttributeFormData>(
     {} as AttributeFormData
   )
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const { id } = router.query
   useEffect(() => {
@@ -45,8 +47,8 @@ export default function AttributeEditForm() {
             : attributeFormData.valueType,
       }),
     })
+
     await router.push('/settings/attributes')
-    // router.reload()
   }
 
   const handleClose = () => {
@@ -68,9 +70,16 @@ export default function AttributeEditForm() {
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <Button onClick={() => handleSubmit(attributeFormData)} color="primary">
+        <LoadingButton
+          loading={loading}
+          onClick={async () => {
+            setLoading(true)
+            await handleSubmit(attributeFormData)
+            setLoading(false)
+          }}
+        >
           Submit
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </>
   )
