@@ -23,6 +23,9 @@ export default function AttributeCreateForm() {
   }
 
   const handleSubmit = async (attributeFormData: AttributeFormData) => {
+    // form validation
+    if (!attributeFormData.name) return
+
     await fetch('/api/attributes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -35,6 +38,7 @@ export default function AttributeCreateForm() {
             : attributeFormData.valueType,
       }),
     })
+    
     await router.push('/settings/attributes')
   }
 
