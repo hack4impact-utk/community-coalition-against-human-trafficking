@@ -11,6 +11,8 @@ import UpsertAttributeForm, {
 import { useRouter } from 'next/router'
 import React from 'react'
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { showSnackbar } from 'store/snackbar'
 import { AttributeResponse } from 'utils/types'
 
 export default function AttributeEditForm() {
@@ -20,8 +22,12 @@ export default function AttributeEditForm() {
   const [attributeFormData, setAttributeFormData] = useState<AttributeFormData>(
     {} as AttributeFormData
   )
+
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const dispatch = useDispatch()
+
+  // get id from URL and get attributes
   const { id } = router.query
   useEffect(() => {
     const fetchAttribute = async () => {
@@ -34,7 +40,19 @@ export default function AttributeEditForm() {
   }, [id])
 
   const handleSubmit = async (attributeFormData: AttributeFormData) => {
-    await fetch(`/api/attributes/${id}`, {
+    // form validation
+    if (!attributeFormData.name) {
+      dispatch(
+        showSnackbar({
+          message: 'You must give the attribute a name.',
+          severity: 'error',
+        })
+      )
+      return
+    }
+    
+    // update attribute
+    const response = await fetch(`/api/attributes/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -48,6 +66,25 @@ export default function AttributeEditForm() {
       }),
     })
 
+    // handle snackbar logic
+    const data = await response.json()
+    if (data.success) {
+      dispatch(
+        showSnackbar({
+          message: 'Attribute successfully edited',
+          severity: 'success',
+        })
+      )
+    } else {
+      dispatch(
+        showSnackbar({
+          message: data.message,
+          severity: 'error',
+        })
+      )
+    }
+
+    // close dialog
     await router.push('/settings/attributes')
   }
 

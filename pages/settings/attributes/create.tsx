@@ -9,6 +9,8 @@ import { AttributeFormData } from 'components/UpsertAttributeForm'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { LoadingButton } from '@mui/lab'
+import { useDispatch } from 'react-redux'
+import { showSnackbar } from 'store/snackbar'
 
 export default function AttributeCreateForm() {
   const [loading, setLoading] = useState(false)
@@ -17,6 +19,7 @@ export default function AttributeCreateForm() {
   )
 
   const router = useRouter()
+  const dispatch = useDispatch()
 
   const handleClose = () => {
     router.push('/settings/attributes')
@@ -24,9 +27,18 @@ export default function AttributeCreateForm() {
 
   const handleSubmit = async (attributeFormData: AttributeFormData) => {
     // form validation
-    if (!attributeFormData.name) return
+    if (!attributeFormData.name) {
+      dispatch(
+        showSnackbar({
+          message: 'You must give the attribute a name.',
+          severity: 'error',
+        })
+      )
+      return
+    }
 
-    await fetch('/api/attributes', {
+    // add attribute to database
+    const response = await fetch('/api/attributes', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -38,7 +50,26 @@ export default function AttributeCreateForm() {
             : attributeFormData.valueType,
       }),
     })
-    
+
+    // handle snackbar logic
+    const data = await response.json()
+    if (data.success) {
+      dispatch(
+        showSnackbar({
+          message: 'Attribute successfully added',
+          severity: 'success',
+        })
+      )
+    } else {
+      dispatch(
+        showSnackbar({
+          message: data.message,
+          severity: 'error',
+        })
+      )
+    }
+
+    // close dialog
     await router.push('/settings/attributes')
   }
 
