@@ -5,6 +5,7 @@ import * as React from 'react'
 import InventoryItemListItemKebab from 'components/InventoryItemList/InventoryItemListItemKebab'
 import renderAttributeChips from 'utils/renderAttributeChips'
 import { InventoryItemResponse } from 'utils/types'
+import Grid2 from '@mui/material/Unstable_Grid2'
 
 interface InventoryItemListItemProps {
   inventoryItem: InventoryItemResponse
@@ -15,32 +16,33 @@ export default function DesktopInventoryItemListItem({
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
   const renderWarningIcon = (inventoryItem: InventoryItemResponse) => {
-    if (
-      inventoryItem.quantity < inventoryItem.itemDefinition.lowStockThreshold
-    ) {
-      return (
-        <Tooltip
-          title={
-            inventoryItem.quantity <
-            inventoryItem.itemDefinition.criticalStockThreshold
-              ? 'This item has critically low stock.'
-              : 'This item has low stock.'
-          }
-        >
-          <WarningIcon
-            fontSize="small"
-            sx={{
-              ml: 1,
-              color:
-                inventoryItem.quantity <
-                inventoryItem.itemDefinition.criticalStockThreshold
-                  ? theme.palette.error.main
-                  : theme.palette.warning.light,
-            }}
-          />
-        </Tooltip>
-      )
-    }
+    return (
+      <Tooltip
+        title={
+          inventoryItem.quantity <
+          inventoryItem.itemDefinition.criticalStockThreshold
+            ? 'This item has critically low stock.'
+            : 'This item has low stock.'
+        }
+      >
+        <WarningIcon
+          fontSize="small"
+          sx={{
+            visibility:
+              inventoryItem.quantity <
+              inventoryItem.itemDefinition.lowStockThreshold
+                ? 'visible'
+                : 'hidden',
+            float: 'right',
+            color:
+              inventoryItem.quantity <
+              inventoryItem.itemDefinition.criticalStockThreshold
+                ? theme.palette.error.main
+                : theme.palette.warning.light,
+          }}
+        />
+      </Tooltip>
+    )
   }
 
   return (
@@ -79,15 +81,10 @@ export default function DesktopInventoryItemListItem({
         }}
         align="right"
       >
-        <span
-          style={{
-            display: 'flex',
-            alignItems: 'flex-end',
-          }}
-        >
-          {inventoryItem.quantity.toLocaleString()}
-          {renderWarningIcon(inventoryItem)}
-        </span>
+        <Grid2 container gap={1} justifyContent="flex-end">
+          <Grid2 xs={6}>{inventoryItem.quantity.toLocaleString()}</Grid2>
+          <Grid2 xs="auto">{renderWarningIcon(inventoryItem)}</Grid2>
+        </Grid2>
       </TableCell>
       <TableCell
         sx={{
