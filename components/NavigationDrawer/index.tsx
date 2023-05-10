@@ -3,10 +3,6 @@ import Image from 'next/image'
 // MUI //
 import Drawer from '@mui/material/Drawer'
 import { Box } from '@mui/system'
-import Collapse from '@mui/material/Collapse'
-// other mui dependencies
-import ExpandLess from '@mui/icons-material/ExpandLess'
-import ExpandMore from '@mui/icons-material/ExpandMore'
 import { useMediaQuery, useTheme } from '@mui/material'
 // icons and text
 // import Typography from '@mui/material/Typography'
@@ -18,11 +14,64 @@ import AssignmentLateOutlinedIcon from '@mui/icons-material/AssignmentLateOutlin
 import AssignmentOutlinedIcon from '@mui/icons-material/AssignmentOutlined'
 // List component
 import NavigationDrawerListItem from 'components/NavigationDrawer/NavigationDrawerListItem'
-// List components from MUI
-import List from '@mui/material/List'
-import ListItemText from '@mui/material/ListItemText'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemButton from '@mui/material/ListItemButton'
+
+interface NavigationDrawerItem {
+  text: string
+  icon: React.ReactNode
+  route: string
+  subItems?: Omit<NavigationDrawerItem, 'icon' | 'subItems'>[]
+}
+
+const navigationDrawerItems: NavigationDrawerItem[] = [
+  {
+    text: 'Dashboard',
+    icon: <AssignmentLateOutlinedIcon />,
+    route: '/',
+  },
+  {
+    text: 'Check In',
+    icon: <ArchiveOutlinedIcon />,
+    route: '/checkIn',
+  },
+  {
+    text: 'Check Out',
+    icon: <UnarchiveOutlinedIcon />,
+    route: '/checkOut',
+  },
+  {
+    text: 'Inventory',
+    icon: <AssignmentOutlinedIcon />,
+    route: '/inventory',
+  },
+  {
+    text: 'History',
+    icon: <AccessTimeIcon />,
+    route: '/history',
+  },
+  {
+    text: 'Settings',
+    route: '',
+    icon: <SettingsIcon />,
+    subItems: [
+      {
+        text: 'General',
+        route: '/settings',
+      },
+      {
+        text: 'Categories',
+        route: '/settings/categories',
+      },
+      {
+        text: 'Items',
+        route: '/settings/items',
+      },
+      {
+        text: 'Item Attributes',
+        route: '/settings/attributes',
+      },
+    ],
+  },
+]
 
 interface NavigationDrawerProps {
   open: boolean
@@ -47,11 +96,7 @@ export default function NavigationDrawer({
       priority
     />
   )
-  // state handlers for expandable lists in drawer
-  const [collapseOpen, setOpen] = React.useState(false)
-  const handleClick = () => {
-    setOpen(!collapseOpen)
-  }
+
   // Drawer setup
   return (
     <Drawer
@@ -80,64 +125,15 @@ export default function NavigationDrawer({
         </Box>
         <br />
         {/* Drawer using ListItem functional component*/}
-        <NavigationDrawerListItem
-          icon={<AssignmentLateOutlinedIcon />}
-          text="Dashboard"
-          route="/"
-        />
-        <NavigationDrawerListItem
-          icon={<ArchiveOutlinedIcon />}
-          text="Check In"
-          route="/checkIn"
-        />
-        <NavigationDrawerListItem
-          icon={<UnarchiveOutlinedIcon />}
-          text="Check Out"
-          route="/checkOut"
-        />
-        <NavigationDrawerListItem
-          icon={<AssignmentOutlinedIcon />}
-          text="Inventory"
-          route="/inventory"
-        />
-        <NavigationDrawerListItem
-          icon={<AccessTimeIcon />}
-          text="History"
-          route="/history"
-        />
-
-        {/* Collapsable Drawer using ListItem functional component*/}
-        <ListItemButton onClick={handleClick}>
-          <ListItemIcon>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText primary="Settings" />
-          {collapseOpen ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={collapseOpen} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding sx={{ pl: 0.8 }}>
-            <NavigationDrawerListItem
-              text="General"
-              collapsable
-              route="/settings"
-            />
-            <NavigationDrawerListItem
-              text="Categories"
-              collapsable
-              route="/settings/categories"
-            />
-            <NavigationDrawerListItem
-              text="Items"
-              collapsable
-              route="/settings/items"
-            />
-            <NavigationDrawerListItem
-              text="Item Attributes"
-              collapsable
-              route="/settings/attributes"
-            />
-          </List>
-        </Collapse>
+        {navigationDrawerItems.map((item) => (
+          <NavigationDrawerListItem
+            key={item.text}
+            icon={item.icon}
+            text={item.text}
+            route={item.route}
+            subItems={item.subItems}
+          />
+        ))}
       </Box>
     </Drawer>
   )

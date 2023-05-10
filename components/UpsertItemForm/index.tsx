@@ -11,7 +11,6 @@ import {
   Typography,
   Unstable_Grid2 as Grid2,
 } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
 import { AttributeResponse, CategoryResponse } from 'utils/types'
 import React from 'react'
 import { attributeFormDataToAttributeRequest } from 'utils/transformations'
@@ -19,6 +18,7 @@ import UpsertAttributeForm, {
   AttributeFormData,
 } from 'components/UpsertAttributeForm'
 import getContrastYIQ from 'utils/getContrastYIQ'
+import { Close as CloseIcon, Add as AddIcon } from '@mui/icons-material'
 
 interface Props {
   categories: CategoryResponse[]
@@ -162,11 +162,17 @@ export default function UpsertItemForm({
         />
         <IconButton
           onClick={() => {
-            setShowAttributeForm(true)
+            setShowAttributeForm((showAttributeForm) => {
+              return !showAttributeForm
+            })
           }}
           size="large"
         >
-          <AddIcon fontSize="large" />
+          {showAttributeForm ? (
+            <CloseIcon fontSize="large" />
+          ) : (
+            <AddIcon fontSize="large" />
+          )}
         </IconButton>
       </Box>
 

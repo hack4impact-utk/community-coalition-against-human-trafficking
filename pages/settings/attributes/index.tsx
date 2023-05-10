@@ -14,10 +14,9 @@ import AddIcon from '@mui/icons-material/Add'
 import { useRouter } from 'next/router'
 import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
-import AttributeEditForm from 'pages/settings/attributes/[attributeId]/edit'
 import React from 'react'
 import DialogLink from 'components/DialogLink'
-import AttributeCreateForm from 'pages/settings/attributes/create'
+import dynamic from 'next/dynamic'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -32,6 +31,12 @@ interface AttributesPageProps {
 export default function AttributesPage({ attributes }: AttributesPageProps) {
   const router = useRouter()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
+  const NewAttributeDialog = dynamic(
+    () => import('pages/settings/attributes/create')
+  )
+  const EditAttributeDialog = dynamic(
+    () => import('pages/settings/attributes/[attributeId]/edit')
+  )
   return (
     <>
       <Grid2 container my={2} sx={{ flexGrow: 1 }} gap={2}>
@@ -72,10 +77,10 @@ export default function AttributesPage({ attributes }: AttributesPageProps) {
 
       {/* These RoutableDialogs provide functionality to buttons that open dialogs */}
       <RoutableDialog name="editAttribute">
-        <AttributeEditForm />
+        <EditAttributeDialog />
       </RoutableDialog>
       <RoutableDialog name="createAttribute">
-        <AttributeCreateForm />
+        <NewAttributeDialog />
       </RoutableDialog>
     </>
   )

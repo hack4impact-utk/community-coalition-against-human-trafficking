@@ -11,15 +11,14 @@ import {
   TextFieldAttributesInternalRepresentation,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
-import AttributeAutocomplete, {
-  AutocompleteAttributeOption,
-} from 'components/AttributeAutocomplete'
+import { AutocompleteAttributeOption } from 'components/AttributeAutocomplete'
 import {
   separateAttributeResponses,
   SeparatedAttributeResponses,
 } from 'utils/attribute'
 import { usePrevious } from 'utils/hooks/usePrevious'
 import { useSession } from 'next-auth/react'
+import dynamic from 'next/dynamic'
 
 interface Props {
   kioskMode: boolean
@@ -74,6 +73,9 @@ function CheckInOutForm({
       separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
     )
   const session = useSession()
+  const AttributeAutocomplete = dynamic(
+    () => import('components/AttributeAutocomplete')
+  )
 
   const initialFormData: Partial<CheckInOutFormData> = {
     category: inventoryItem?.itemDefinition?.category,

@@ -3,6 +3,7 @@ import {
   Typography,
   Unstable_Grid2 as Grid2,
   useMediaQuery,
+  useTheme,
 } from '@mui/material'
 import SearchField from 'components/SearchField'
 import AddIcon from '@mui/icons-material/Add'
@@ -13,9 +14,8 @@ import { apiWrapper } from 'utils/apiWrappers'
 import itemDefinitionsHandler from '@api/itemDefinitions'
 import { useRouter } from 'next/router'
 import DialogLink from 'components/DialogLink'
-import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
-import NewItemPage from 'pages/items/new'
+import dynamic from 'next/dynamic'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -31,7 +31,9 @@ interface Props {
 
 export default function ItemsPage({ itemDefinitions }: Props) {
   const router = useRouter()
+  const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
+  const NewItemDialog = dynamic(() => import('pages/items/new'))
 
   return (
     <>
@@ -61,8 +63,8 @@ export default function ItemsPage({ itemDefinitions }: Props) {
         />
       </Grid2>
       <RoutableDialog>
-        <NewItemPage
-          redirectBack={(router, itemId) => {
+        <NewItemDialog
+          redirectBack={(router) => {
             router.push(`/settings/items`)
           }}
         />
