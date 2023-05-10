@@ -50,7 +50,7 @@ export default function AttributeEditForm() {
       )
       return
     }
-    
+
     // update attribute
     const response = await fetch(`/api/attributes/${id}`, {
       method: 'PUT',
@@ -65,6 +65,9 @@ export default function AttributeEditForm() {
             : attributeFormData.valueType,
       }),
     })
+
+    // close dialog
+    await router.push('/settings/attributes')
 
     // handle snackbar logic
     const data = await response.json()
@@ -83,9 +86,6 @@ export default function AttributeEditForm() {
         })
       )
     }
-
-    // close dialog
-    await router.push('/settings/attributes')
   }
 
   const handleClose = () => {

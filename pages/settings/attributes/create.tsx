@@ -51,6 +51,9 @@ export default function AttributeCreateForm() {
       }),
     })
 
+    // close dialog
+    await router.push('/settings/attributes')
+
     // handle snackbar logic
     const data = await response.json()
     if (data.success) {
@@ -68,9 +71,6 @@ export default function AttributeCreateForm() {
         })
       )
     }
-
-    // close dialog
-    await router.push('/settings/attributes')
   }
 
   return (
