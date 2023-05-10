@@ -4,7 +4,7 @@ import ItemDefinitionSchema, {
 } from 'server/models/ItemDefinition'
 import { ApiError, ItemDefinitionResponse } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import itemDefinitionHandler from 'pages/api/itemDefinitions/[itemDefinitionId]'
+import itemDefinitionHandler from '@api/itemDefinitions/[itemDefinitionId]/[itemDefinitionId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
