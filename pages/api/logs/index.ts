@@ -5,6 +5,7 @@ import { getPaginatedLogs } from 'server/actions/Logs'
 import { apiLogValidation } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import LogSchema from 'server/models/Log'
+import { historyPaginationDefaults } from 'utils/constants'
 
 const sortPathMap = {
   date: 'date',
@@ -25,7 +26,7 @@ export default async function logsHandler(
     // ensure user is logged in
     await serverAuth(req, res)
     const {
-      sort,
+      orderBy,
       order,
       limit,
       page,
@@ -39,18 +40,18 @@ export default async function logsHandler(
     switch (req.method) {
       case 'GET': {
         const logs = await getPaginatedLogs(
-          Number(page || 0),
-          Number(limit || 10),
-          sortPathMap[sort as keyof typeof sortPathMap] || 'date',
-          (order as string) || 'desc',
-          (search as string) || undefined,
-          (category as string) || undefined,
-          (startDate as string) || undefined,
-          (endDate as string) || undefined,
+          Number(page || historyPaginationDefaults.page),
+          Number(limit || historyPaginationDefaults.limit),
+          sortPathMap[orderBy as keyof typeof sortPathMap] ||
+            historyPaginationDefaults.sort,
+          (order as string) || historyPaginationDefaults.order,
+          search as string,
+          category as string,
+          startDate as string,
+          endDate as string,
           !!internal
         )
-        const resStatus = 200
-        return res.status(resStatus).json({
+        return res.status(200).json({
           success: true,
           payload: logs,
         })

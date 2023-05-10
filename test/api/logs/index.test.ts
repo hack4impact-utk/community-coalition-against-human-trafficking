@@ -78,8 +78,6 @@ describe('api/logs', () => {
       await logsHandler(request, response)
       const data = response._getJSONData().payload
 
-      console.log(data)
-
       expect(serverAuth).toHaveBeenCalledTimes(1)
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
       expect(response.statusCode).toBe(200)

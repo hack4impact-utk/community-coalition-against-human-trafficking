@@ -23,6 +23,7 @@ import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
 import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
 import React from 'react'
+import { historyPaginationDefaults } from 'utils/constants'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -73,48 +74,61 @@ const constructQueryString = (params: { [key: string]: string }) => {
 
 export default function HistoryPage({ categories }: HistoryPageProps) {
   const [tableData, setTableData] = React.useState<LogResponse[]>([])
-  const [totalLogs, setTotalLogs] = React.useState<number>(0)
+  const [totalLogs, setTotalLogs] = React.useState<number>(
+    historyPaginationDefaults.page
+  )
   const [loading, setLoading] = React.useState<boolean>(true)
   const [search, setSearch] = React.useState<string>('')
   const [category, setCategory] = React.useState<string>('')
+  const [startDate, setStartDate] = React.useState<string>('')
+  const [endDate, setEndDate] = React.useState<string>('')
+  const [internal, setInternal] = React.useState<boolean>(false)
 
   const router = useRouter()
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
 
-  const handleExport = () => {
+  const handleExport = async () => {
     const requestStr = `http://localhost:3000/api/logs/export${constructQueryString(
       router.query as { [key: string]: string }
     )}`
 
-    fetch(requestStr, {
+    const response = await fetch(requestStr, {
       method: 'GET',
-    }).then((response) => {
-      response.blob().then((blob) => {
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `Warehouse History ${new Date()
-          .toISOString()
-          .slice(0, 10)}`
-        a.style.display = 'none'
-        document.body.appendChild(a)
-        a.click()
-        document.body.removeChild(a)
-      })
     })
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `Warehouse History ${new Date().toISOString().slice(0, 10)}`
+    a.style.display = 'none'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
   }
 
   React.useEffect(() => {
     const fetchLogs = async () => {
       setLoading(true)
       if (router.query.search !== search) {
-        updateQuery(router, 'page', '')
+        removeURLQueryParam(router, 'page')
         setSearch(router.query.search as string)
       }
       if (router.query.category !== category) {
-        updateQuery(router, 'page', '')
+        removeURLQueryParam(router, 'page')
         setCategory(router.query.category as string)
+      }
+      if (router.query.startDate !== startDate) {
+        removeURLQueryParam(router, 'page')
+        setStartDate(router.query.startDate as string)
+      }
+      if (router.query.endDate !== endDate) {
+        removeURLQueryParam(router, 'page')
+        setEndDate(router.query.endDate as string)
+      }
+      if ((router.query.internal === 'true') !== internal) {
+        removeURLQueryParam(router, 'page')
+        setInternal(router.query.internal === 'true')
       }
 
       const response = await fetch(

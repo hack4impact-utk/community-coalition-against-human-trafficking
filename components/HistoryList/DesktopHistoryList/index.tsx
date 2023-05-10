@@ -18,6 +18,7 @@ import {
   bulkAddURLQueryParams,
 } from 'utils/queryParams'
 import { LinearProgress } from '@mui/material'
+import { historyPaginationDefaults } from 'utils/constants'
 
 type Order = 'asc' | 'desc'
 
@@ -32,19 +33,6 @@ interface HeadCell {
   label: string
   numeric: boolean
   sortable?: boolean
-  sortFn?(a: LogResponse, b: LogResponse): number
-}
-
-function comparator(v1: string | Date, v2: string | Date) {
-  if (v1 < v2) {
-    return -1
-  }
-
-  if (v1 > v2) {
-    return 1
-  }
-
-  return 0
 }
 
 const headCells: readonly HeadCell[] = [
@@ -54,12 +42,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: true,
     label: 'Staff',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return comparator(
-        log1.staff.name.toLowerCase(),
-        log2.staff.name.toLowerCase()
-      )
-    },
   },
   {
     id: 'item',
@@ -67,12 +49,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Item',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return comparator(
-        log1.item.itemDefinition.name.toLowerCase(),
-        log2.item.itemDefinition.name.toLowerCase()
-      )
-    },
   },
   {
     id: 'category',
@@ -80,12 +56,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Category',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return comparator(
-        log1.item.itemDefinition.category?.name.toLowerCase() ?? '',
-        log2.item.itemDefinition.category?.name.toLowerCase() ?? ''
-      )
-    },
   },
   {
     id: 'quantityDelta',
@@ -93,9 +63,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Quantity',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return log1.quantityDelta - log2.quantityDelta
-    },
   },
   {
     id: 'date',
@@ -103,9 +70,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Date',
     sortable: true,
-    sortFn: (log1: LogResponse, log2: LogResponse) => {
-      return comparator(log1.date, log2.date)
-    },
   },
   {
     id: 'kebab',
@@ -125,13 +89,13 @@ interface EnhancedTableProps {
 function HistoryListHeader(props: EnhancedTableProps) {
   const { order, orderBy, router } = props
   const createSortHandler = (property: keyof HistoryTableData) => async () => {
-    const orderBy = router.query.sort
+    const orderBy = router.query.orderBy
     const order = router.query.order
     const isAsc = orderBy === property && order === 'asc'
     const newOrder = isAsc ? 'desc' : 'asc'
     await bulkAddURLQueryParams(router, {
       order: newOrder,
-      sort: property,
+      orderBy: property,
     })
   }
 
@@ -190,8 +154,8 @@ export default function DesktopHistoryList(props: Props) {
 
   // when the change page buttons are clicked
   const handleChangePage = (_e: unknown, newPage: number) => {
-    if (newPage === 0) {
-      updateQuery(router, 'page', '')
+    if (newPage === historyPaginationDefaults.page) {
+      removeURLQueryParam(router, 'page')
     } else {
       updateQuery(router, 'page', newPage.toString())
     }
@@ -200,21 +164,21 @@ export default function DesktopHistoryList(props: Props) {
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    updateQuery(router, 'page', '')
-    if (event.target.value === '10') {
-      updateQuery(router, 'limit', '')
+    removeURLQueryParam(router, 'page')
+    if (Number(event.target.value) === historyPaginationDefaults.limit) {
+      removeURLQueryParam(router, 'limit')
     } else {
       updateQuery(router, 'limit', event.target.value)
     }
   }
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', overflowX: 'hidden' }}>
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <HistoryListHeader
             order={router.query.order as Order}
-            orderBy={router.query.sort as string}
+            orderBy={router.query.orderBy as string}
             router={router}
           />
           {props.loading && (
@@ -229,10 +193,9 @@ export default function DesktopHistoryList(props: Props) {
             />
           )}
           <TableBody>
-            {props.logs &&
-              props.logs.map((log) => (
-                <HistoryListItem log={log} key={log._id} />
-              ))}
+            {props.logs.map((log) => (
+              <HistoryListItem log={log} key={log._id} />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -240,8 +203,12 @@ export default function DesktopHistoryList(props: Props) {
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={props.total}
-        rowsPerPage={Number(router.query.limit || '10')}
-        page={Number(router.query.page || '0')}
+        rowsPerPage={Number(
+          router.query.limit || historyPaginationDefaults.limit.toString()
+        )}
+        page={Number(
+          router.query.page || historyPaginationDefaults.page.toString()
+        )}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

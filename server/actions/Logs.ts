@@ -5,7 +5,7 @@ import { apiLogValidation } from 'utils/apiValidators'
 import { LogPostRequest } from 'utils/types'
 import { LogResponse } from 'utils/types'
 
-// aggregate requestPipeline does the following:
+// aggregate pipeline does the following:
 // looks up user _ids in log
 // looks up inventoryItem _id in log
 // looks up itemDefinition _id in inventoryItem
@@ -203,7 +203,6 @@ export async function getLogs() {
  * @param sort The string to sort the logs by
  * @returns The logs for the current page
  */
-
 export async function getPaginatedLogs(
   page: number,
   limit: number,
@@ -233,6 +232,17 @@ export async function getPaginatedLogs(
   }
 }
 
+/**
+ * Filter and sort logs by params and return the filtered logs
+ * @param sort The string to sort the logs by
+ * @param order The order to sort the logs by
+ * @param search The string to search the logs by
+ * @param categorySearch The string to search the logs by category
+ * @param startDate The start date to filter the logs by
+ * @param endDate The end date to filter the logs by
+ * @param internal Only show internal logs
+ * @returns Filtered logs
+ */
 export async function getFilteredLogs(
   sort: string,
   order: string,

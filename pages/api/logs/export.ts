@@ -4,7 +4,7 @@ import { serverAuth } from 'utils/auth'
 import { getFilteredLogs } from 'server/actions/Logs'
 import { createLogsCsvAsString } from 'utils/csv'
 
-// @route GET api/logs/csv - Returns a list of all logs in the database - Private
+// @route GET api/logs/csv - Returns a CSV of the logs filtered and sorted by the query parameters - Private
 export default async function logsHandler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -22,10 +22,10 @@ export default async function logsHandler(
         const logs = await getFilteredLogs(
           sort as string,
           order as string,
-          (search as string) || undefined,
-          (category as string) || undefined,
-          (startDate as string) || undefined,
-          (endDate as string) || undefined,
+          search as string,
+          category as string,
+          startDate as string,
+          endDate as string,
           !!internal
         )
         const csvString = createLogsCsvAsString(logs as LogResponse[])
