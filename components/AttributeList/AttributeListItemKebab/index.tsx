@@ -1,6 +1,8 @@
 import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import { useRouter } from 'next/router'
 import React from 'react'
+import { dialogPush } from 'utils/dialogLink'
 import theme from 'utils/theme'
 import { AttributeResponse } from 'utils/types'
 
@@ -13,20 +15,10 @@ interface AttributeListItemKebabProps {
   attribute: AttributeResponse
 }
 
-const settings: AttributeListItemKebabOption[] = [
-  {
-    name: 'Edit',
-    onClick: () => console.log('Edit'),
-  },
-  {
-    name: 'Delete',
-    onClick: () => console.log('delete'),
-  },
-]
-
 export default function AttributeListItemKebab({
   attribute,
 }: AttributeListItemKebabProps) {
+  const router = useRouter()
   // kebab menu functionality
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
@@ -39,6 +31,27 @@ export default function AttributeListItemKebab({
   const handleCloseKebabMenu = () => {
     setAnchorElKebab(null)
   }
+
+  // kebab menu actions
+  const settings: AttributeListItemKebabOption[] = [
+    {
+      name: 'Edit',
+      onClick: () => {
+        dialogPush(router, `/settings/attributes/${attribute._id}/edit`)
+      },
+    },
+    {
+      name: 'Delete',
+      onClick: () => {
+        if (window.confirm('Are you sure you want to delete this attribute?')) {
+          fetch(`/api/attributes/${attribute._id}`, { method: 'DELETE' }).then(
+            () => window.location.reload()
+          )
+        }
+      },
+    },
+  ]
+
   return (
     <>
       <IconButton onClick={handleOpenKebabMenu}>
