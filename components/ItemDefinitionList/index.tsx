@@ -1,7 +1,8 @@
 import { ItemDefinitionResponse } from 'utils/types'
 import { useMediaQuery } from '@mui/material'
 import theme from 'utils/theme'
-import dynamic from 'next/dynamic'
+import DesktopItemDefinitionList from 'components/ItemDefinitionList/DesktopItemDefinitionList'
+import MobileItemDefinitionList from 'components/ItemDefinitionList/MobileItemDefinitionList'
 
 interface Props {
   itemDefinitions: ItemDefinitionResponse[]
@@ -10,19 +11,19 @@ interface Props {
 
 export default function ItemDefinitionList({ itemDefinitions, search }: Props) {
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
-  const Mobile = dynamic(
-    () => import('components/ItemDefinitionList/MobileItemDefinitionList')
-  )
-  const Desktop = dynamic(
-    () => import('components/ItemDefinitionList/DesktopItemDefinitionList')
-  )
 
   return (
     <>
       {isMobileView ? (
-        <Mobile itemDefinitions={itemDefinitions} search={search} />
+        <MobileItemDefinitionList
+          itemDefinitions={itemDefinitions}
+          search={search}
+        />
       ) : (
-        <Desktop itemDefinitions={itemDefinitions} search={search} />
+        <DesktopItemDefinitionList
+          itemDefinitions={itemDefinitions}
+          search={search}
+        />
       )}
     </>
   )
