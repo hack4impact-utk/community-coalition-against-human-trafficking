@@ -1,15 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getItemDefinition } from 'server/actions/ItemDefinition'
-import {
-  ApiError,
-  ItemDefinitionPutRequest,
-  ItemDefinitionResponse,
-} from 'utils/types'
+import { getItemDefinitionAttributeValues } from 'server/actions/ItemDefinition'
+import { ApiError } from 'utils/types'
 import { serverAuth } from 'utils/auth'
-import {
-  apiItemDefinitionValidation,
-  apiObjectIdValidation,
-} from 'utils/apiValidators'
+import { apiObjectIdValidation } from 'utils/apiValidators'
 import { errors } from 'utils/constants/errors'
 
 // @route GET api/itemDefintions/[itemDefinitionId]/attributeValues - Returns an array of text/number attribute values of existing inventoryItems of the given itemDefinition - Private
@@ -25,13 +18,13 @@ export default async function itemDefinitionAttributeValuesHandler(
     const itemDefinitionId = req.query.itemDefinitionId as string
     switch (req.method) {
       case 'GET': {
-        const itemDefinition: ItemDefinitionResponse = await getItemDefinition(
+        const response = await getItemDefinitionAttributeValues(
           itemDefinitionId
         )
 
         return res.status(200).json({
           success: true,
-          payload: itemDefinition,
+          payload: response,
         })
       }
       default: {
