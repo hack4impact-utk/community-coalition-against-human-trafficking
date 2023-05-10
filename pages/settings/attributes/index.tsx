@@ -65,7 +65,7 @@ export default function AttributesPage({ attributes }: AttributesPageProps) {
           />
         </Grid2>
       </Grid2>
-      <RoutableDialog>
+      <RoutableDialog name="editAttribute">
         <AttributeEditForm />
       </RoutableDialog>
     </>

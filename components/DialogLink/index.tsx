@@ -47,7 +47,7 @@ const constructDialogRoute = (
   dialogRoute?: DialogRoute
 ) => {
   if (!dialogRoute) return ''
-  return `?showDialog=true${
+  return `?showDialog=${dialogRoute.name || 'true'}${
     Object.keys(params).length
       ? `&${Object.entries(params)
           .map(([key, value]) => `${key}=${value}`)
