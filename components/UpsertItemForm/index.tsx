@@ -12,7 +12,11 @@ import {
   Unstable_Grid2 as Grid2,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-import { AttributeResponse, CategoryResponse } from 'utils/types'
+import {
+  AttributeResponse,
+  CategoryResponse,
+  ItemDefinitionResponse,
+} from 'utils/types'
 import React from 'react'
 import { attributeFormDataToAttributeRequest } from 'utils/transformations'
 import UpsertAttributeForm, {
@@ -21,6 +25,7 @@ import UpsertAttributeForm, {
 import getContrastYIQ from 'utils/getContrastYIQ'
 
 interface Props {
+  itemDefinition?: ItemDefinitionResponse
   categories: CategoryResponse[]
   attributes: AttributeResponse[]
   onChange: (formData: ItemDefinitionFormData) => void
@@ -35,7 +40,30 @@ export interface ItemDefinitionFormData {
   criticalStockThreshold: number
 }
 
+function transformItemDefinitionToFormData(
+  item?: ItemDefinitionResponse
+): ItemDefinitionFormData {
+  return item
+    ? ({
+        name: item.name,
+        category: item.category ? item.category : undefined,
+        attributes: item.attributes ? item.attributes : undefined,
+        internal: item.internal,
+        lowStockThreshold: item.lowStockThreshold,
+        criticalStockThreshold: item.criticalStockThreshold,
+      } as ItemDefinitionFormData)
+    : ({
+        name: '',
+        category: {} as CategoryResponse,
+        attributes: [{} as AttributeResponse],
+        internal: false,
+        lowStockThreshold: 0,
+        criticalStockThreshold: 0,
+      } as ItemDefinitionFormData)
+}
+
 export default function UpsertItemForm({
+  itemDefinition,
   categories,
   attributes,
   onChange,
@@ -44,9 +72,9 @@ export default function UpsertItemForm({
   const [attrFormData, setAttrFormData] = React.useState(
     {} as AttributeFormData
   )
-  const [formData, setFormData] = React.useState({
-    internal: false,
-  } as ItemDefinitionFormData)
+  const [formData, setFormData] = React.useState<ItemDefinitionFormData>(
+    transformItemDefinitionToFormData(itemDefinition)
+  )
 
   // this is here to support adding newly created attributes to the create new item form attributes list options after they are created
   const [proxyAttributes, setProxyAttributes] = React.useState(attributes)
@@ -97,6 +125,7 @@ export default function UpsertItemForm({
             category: val as CategoryResponse,
           }))
         }}
+        value={formData.category}
       />
 
       <FormControlLabel
@@ -109,6 +138,7 @@ export default function UpsertItemForm({
             internal: !val,
           }))
         }}
+        value={formData.internal}
       />
 
       <TextField
@@ -121,6 +151,7 @@ export default function UpsertItemForm({
             name: e.target.value,
           }))
         }}
+        value={formData.name}
       />
 
       {/* Attribute Autocomplete and Create Attribute Button */}
@@ -150,6 +181,7 @@ export default function UpsertItemForm({
               />
             ))
           }
+          // TODO: check this
           value={formData.attributes || []}
           onChange={(_e, val) => {
             setFormData((fd) => ({
@@ -234,6 +266,7 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
+          value={formData.lowStockThreshold}
         />
       </Box>
 
@@ -261,6 +294,7 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
+          value={formData.criticalStockThreshold}
         />
       </Box>
     </FormControl>
