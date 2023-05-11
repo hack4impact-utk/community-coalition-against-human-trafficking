@@ -11,9 +11,10 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
+import { CategoryResponse } from 'utils/types'
 
 export default function CategoryEditForm() {
-  const [category, setCategory] = useState<string>()
+  const [category, setCategory] = useState<CategoryResponse>()
   const [categoryFormData, setCategoryFormData] = useState<string>('')
 
   const [loading, setLoading] = useState(false)
@@ -25,7 +26,7 @@ export default function CategoryEditForm() {
   useEffect(() => {
     const fetchCategory = async () => {
       if (!id) return // on page load, id is undefined, resulting in bad requests
-      const response = await fetch(`/api/category/${id}`, { method: 'GET' })
+      const response = await fetch(`/api/categries/${id}`, { method: 'GET' })
       const data = await response.json()
       setCategory(data.payload)
     }
@@ -34,7 +35,7 @@ export default function CategoryEditForm() {
 
   const handleSubmit = async (categoryFormData: string) => {
     // update category
-    const response = await fetch(`/api/category/${id}`, {
+    const response = await fetch(`/api/categories/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'category/json' },
       body: JSON.stringify({
@@ -74,6 +75,7 @@ export default function CategoryEditForm() {
       <DialogTitle>Edit Category</DialogTitle>
       <DialogContent>
         <UpsertCategoryForm
+          category={category}
           onChange={(categoryFormData) => setCategoryFormData(categoryFormData)}
         />
       </DialogContent>

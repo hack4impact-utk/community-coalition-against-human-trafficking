@@ -13,6 +13,10 @@ export default function UpsertCategoryForm({
   const [formData, setFormData] = React.useState<string>(category?.name || '')
 
   React.useEffect(() => {
+    setFormData(category?.name || '')
+  }, [category?.name])
+
+  React.useEffect(() => {
     onChange(formData)
   }, [onChange, formData])
 
