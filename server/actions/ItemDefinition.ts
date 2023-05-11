@@ -72,9 +72,19 @@ const existingAttributeValuesPipeline: PipelineStage[] = [
     },
   },
 
-  // group each inventoryItem[i].attributes[j] by unique attribute Id
+  // change format from "inventoryItemAttrArr": [inventoryItem[0].attributes, inventoryItem[1].attributes, ...]
+  // to [{inventoryItemAttrArr: {attribute: ..., value: ...}}, ...]
+  { $unwind: '$inventoryItemAttrArr' },
+  { $unwind: '$inventoryItemAttrArr' },
 
-  // { $unwind: '$inventoryItemAttributes' },
+  // group each inventoryItem[i].attributes[j] by unique attribute Id
+  // format is now [ { _id: ID, values: [ARRAY_OF_VALUES] }, ... ]
+  {
+    $group: {
+      _id: '$inventoryItemAttrArr.attribute',
+      values: { $push: '$inventoryItemAttrArr.value' },
+    },
+  },
 ]
 
 /**
