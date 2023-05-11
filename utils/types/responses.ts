@@ -56,6 +56,11 @@ export interface LogResponse extends Log {
   item: InventoryItemResponse
 }
 
+export interface PaginatedResponse<T> {
+  total: number
+  data: T[]
+}
+
 export interface NotificationEmailResponse extends NotificationEmail {
   _id: string
 }
