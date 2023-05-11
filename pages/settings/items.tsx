@@ -14,6 +14,8 @@ import itemDefinitionsHandler from '@api/itemDefinitions'
 import { useRouter } from 'next/router'
 import DialogLink from 'components/DialogLink'
 import theme from 'utils/theme'
+import RoutableDialog from 'components/RoutableDialog'
+import NewItemPage from 'pages/items/new'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -32,30 +34,39 @@ export default function ItemsPage({ itemDefinitions }: Props) {
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
 
   return (
-    <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
-      <Grid2 xs={12} container direction={'row'}>
-        <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
-          Items
-        </Typography>
-        <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
-          <DialogLink href="/items/new" backHref="/settings/items">
-            <Button
-              variant="outlined"
-              startIcon={<AddIcon />}
-              sx={{ width: '100%' }}
-            >
-              Create New Item
-            </Button>
-          </DialogLink>
+    <>
+      <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
+        <Grid2 xs={12} container direction={'row'}>
+          <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
+            Items
+          </Typography>
+          <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
+            <DialogLink href="/items/new" backHref="/settings/items">
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon />}
+                sx={{ width: '100%' }}
+              >
+                Create New Item
+              </Button>
+            </DialogLink>
+          </Grid2>
         </Grid2>
+        <Grid2 xs={12} md={5} lg={4} sx={{ px: 2 }}>
+          <SearchField />
+        </Grid2>
+        <ItemDefinitionList
+          itemDefinitions={itemDefinitions}
+          search={router.query.search as string}
+        />
       </Grid2>
-      <Grid2 xs={12} md={5} lg={4} sx={{ px: 2 }}>
-        <SearchField />
-      </Grid2>
-      <ItemDefinitionList
-        itemDefinitions={itemDefinitions}
-        search={router.query.search as string}
-      />
-    </Grid2>
+      <RoutableDialog>
+        <NewItemPage
+          redirectBack={(router) => {
+            router.push(`/settings/items`)
+          }}
+        />
+      </RoutableDialog>
+    </>
   )
 }
