@@ -9,6 +9,10 @@ export const dialogRoutes: DialogRoute[] = [
     path: '/settings/attributes/:id/edit',
   },
   {
+    name: 'createAttribute',
+    path: '/settings/attributes/create',
+  },
+  {
     name: 'createItem',
     path: '/items/new',
   },

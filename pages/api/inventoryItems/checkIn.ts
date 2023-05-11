@@ -4,13 +4,9 @@ import {
   CheckInOutRequest,
   InventoryItem,
   LogPostRequest,
-  LogRequest,
 } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { checkInInventoryItem } from 'server/actions/InventoryItems'
-import { apiLogValidation } from 'utils/apiValidators'
-import LogsHandler from '@api/logs'
-import { apiWrapper } from 'utils/apiWrappers'
 import { createLog } from 'server/actions/Logs'
 
 // @route POST /api/inventoryItems/checkIn - Checks in an inventory item - Private
@@ -27,7 +23,7 @@ export default async function inventoryItemsCheckInHandler(
         const checkInOutRequest: CheckInOutRequest = req.body
         const inventoryItem: Partial<InventoryItem> =
           checkInOutRequest.inventoryItem
-        const quantity: number = Number(checkInOutRequest.quantityDelta)
+        const quantity = Number(checkInOutRequest.quantityDelta)
         const response = await checkInInventoryItem(inventoryItem, quantity)
 
         const log: LogPostRequest = {

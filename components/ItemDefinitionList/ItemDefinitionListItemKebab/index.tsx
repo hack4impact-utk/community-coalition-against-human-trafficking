@@ -24,11 +24,15 @@ export default function ItemDefinitionListItemKebab() {
   const options: ItemDefinitionListItemKebabOption[] = [
     {
       name: 'Edit',
-      onClick: () => {},
+      onClick: () => {
+        console.log('edit')
+      },
     },
     {
       name: 'Delete',
-      onClick: () => {},
+      onClick: () => {
+        console.log('delete')
+      },
     },
   ]
 
