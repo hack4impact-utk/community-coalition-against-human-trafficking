@@ -1,43 +1,29 @@
-import { LoadingButton } from '@mui/lab'
 import {
-  Button,
-  DialogActions,
-  DialogContent,
   DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
 } from '@mui/material'
-import UpsertAttributeForm, {
-  AttributeFormData,
-} from 'components/UpsertAttributeForm'
+import UpsertAttributeForm from 'components/UpsertAttributeForm'
+import { AttributeFormData } from 'components/UpsertAttributeForm'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
-import React from 'react'
-import { useEffect, useState } from 'react'
+import { LoadingButton } from '@mui/lab'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
-import { AttributeResponse } from 'utils/types'
 
-export default function AttributeEditForm() {
-  // you have to do this to otherwise the AttributeForm says that
-  // attribute is being used before its given a value
-  const [attribute, setAttribute] = useState<AttributeResponse>()
+export default function AttributeCreateForm() {
+  const [loading, setLoading] = useState(false)
   const [attributeFormData, setAttributeFormData] = useState<AttributeFormData>(
     {} as AttributeFormData
   )
 
-  const [loading, setLoading] = useState(false)
   const router = useRouter()
   const dispatch = useDispatch()
 
-  // get id from URL and get attributes
-  const { id } = router.query
-  useEffect(() => {
-    const fetchAttribute = async () => {
-      if (!id) return // on page load, id is undefined, resulting in bad requests
-      const response = await fetch(`/api/attributes/${id}`, { method: 'GET' })
-      const data = await response.json()
-      setAttribute(data.payload)
-    }
-    fetchAttribute()
-  }, [id])
+  const handleClose = () => {
+    router.push('/settings/attributes')
+  }
 
   const handleSubmit = async (attributeFormData: AttributeFormData) => {
     // form validation
@@ -51,12 +37,11 @@ export default function AttributeEditForm() {
       return
     }
 
-    // update attribute
-    const response = await fetch(`/api/attributes/${id}`, {
-      method: 'PUT',
+    // add attribute to database
+    const response = await fetch('/api/attributes', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        _id: id,
         name: attributeFormData.name,
         color: attributeFormData.color,
         possibleValues:
@@ -74,7 +59,7 @@ export default function AttributeEditForm() {
     if (data.success) {
       dispatch(
         showSnackbar({
-          message: 'Attribute successfully edited',
+          message: 'Attribute successfully added',
           severity: 'success',
         })
       )
@@ -88,16 +73,11 @@ export default function AttributeEditForm() {
     }
   }
 
-  const handleClose = () => {
-    router.push('/settings/attributes')
-  }
-
   return (
     <>
-      <DialogTitle>Edit Attribute</DialogTitle>
+      <DialogTitle>Create Attribute</DialogTitle>
       <DialogContent>
         <UpsertAttributeForm
-          attribute={attribute}
           onChange={(attributeFormData) =>
             setAttributeFormData(attributeFormData)
           }

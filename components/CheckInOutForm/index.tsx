@@ -44,8 +44,6 @@ function blankFormData(): CheckInOutFormData {
   }
 }
 
-const defaultSplitAttrs = separateAttributeResponses()
-
 function updateFormData(
   formData: CheckInOutFormData,
   update: Partial<CheckInOutFormData>
@@ -55,6 +53,9 @@ function updateFormData(
     ...update,
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const defaultSplitAttrs = separateAttributeResponses()
 
 function CheckInOutForm({
   kioskMode,

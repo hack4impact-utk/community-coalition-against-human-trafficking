@@ -31,6 +31,7 @@ interface Props {
 
 export default function InventoryPage({ inventoryItems, categories }: Props) {
   const router = useRouter()
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   return (
     <>

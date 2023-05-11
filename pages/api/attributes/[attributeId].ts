@@ -45,7 +45,7 @@ export default async function attributeHandler(
         )
 
         return res.status(200).json({
-          succcess: true,
+          success: true,
           payload: {},
         })
       }

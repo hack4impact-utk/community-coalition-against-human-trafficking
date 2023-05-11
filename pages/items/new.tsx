@@ -1,5 +1,3 @@
-import attributesHandler from '@api/attributes'
-import categoriesHandler from '@api/categories'
 import { LoadingButton } from '@mui/lab'
 import {
   Button,
