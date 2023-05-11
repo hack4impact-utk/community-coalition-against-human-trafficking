@@ -14,14 +14,14 @@ import { itemDefinitionFormDataToItemDefinitionRequest } from 'utils/transformat
 import { AttributeResponse, CategoryResponse } from 'utils/types'
 let categories: CategoryResponse[]
 let attributes: AttributeResponse[] = [] as AttributeResponse[]
-fetch('http://localhost:3000/api/categories', {
+fetch('/api/categories', {
   method: 'GET',
 }).then((response) => {
   response.json().then((data) => {
     categories = data.payload
   })
 })
-fetch('http://localhost:3000/api/attributes', {
+fetch('/api/attributes', {
   method: 'GET',
 }).then((response) => {
   response.json().then((data) => {
