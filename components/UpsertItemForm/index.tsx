@@ -11,34 +11,32 @@ import {
   Typography,
   Unstable_Grid2 as Grid2,
 } from '@mui/material'
-import { AttributeResponse, CategoryResponse } from 'utils/types'
+import AddIcon from '@mui/icons-material/Add'
+import {
+  AttributeResponse,
+  CategoryResponse,
+  ItemDefinitionFormData,
+} from 'utils/types'
 import React from 'react'
 import { attributeFormDataToAttributeRequest } from 'utils/transformations'
 import UpsertAttributeForm, {
   AttributeFormData,
 } from 'components/UpsertAttributeForm'
 import getContrastYIQ from 'utils/getContrastYIQ'
-import { Close as CloseIcon, Add as AddIcon } from '@mui/icons-material'
+import theme from 'utils/theme'
 
 interface Props {
   categories: CategoryResponse[]
   attributes: AttributeResponse[]
   onChange: (formData: ItemDefinitionFormData) => void
-}
-
-export interface ItemDefinitionFormData {
-  category: CategoryResponse
-  internal: boolean
-  name: string
-  attributes: AttributeResponse[]
-  lowStockThreshold: number
-  criticalStockThreshold: number
+  errors: Record<keyof ItemDefinitionFormData, string>
 }
 
 export default function UpsertItemForm({
   categories,
   attributes,
   onChange,
+  errors,
 }: Props) {
   const [showAttributeForm, setShowAttributeForm] = React.useState(false)
   const [attrFormData, setAttrFormData] = React.useState(
@@ -50,6 +48,10 @@ export default function UpsertItemForm({
 
   // this is here to support adding newly created attributes to the create new item form attributes list options after they are created
   const [proxyAttributes, setProxyAttributes] = React.useState(attributes)
+
+  React.useEffect(() => {
+    setProxyAttributes(attributes)
+  }, [attributes])
 
   const createNewAttribute = async (fd: AttributeFormData) => {
     // TODO better way of coding URLs
@@ -121,6 +123,8 @@ export default function UpsertItemForm({
             name: e.target.value,
           }))
         }}
+        error={!!errors.name}
+        helperText={errors.name}
       />
 
       {/* Attribute Autocomplete and Create Attribute Button */}
@@ -162,17 +166,11 @@ export default function UpsertItemForm({
         />
         <IconButton
           onClick={() => {
-            setShowAttributeForm((showAttributeForm) => {
-              return !showAttributeForm
-            })
+            setShowAttributeForm(true)
           }}
           size="large"
         >
-          {showAttributeForm ? (
-            <CloseIcon fontSize="large" />
-          ) : (
-            <AddIcon fontSize="large" />
-          )}
+          <AddIcon fontSize="large" />
         </IconButton>
       </Box>
 
@@ -240,8 +238,14 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
+          error={!!errors['lowStockThreshold']}
         />
       </Box>
+      {errors['lowStockThreshold'] && (
+        <Typography variant="caption" color={theme.palette.error.main}>
+          {errors['lowStockThreshold']}
+        </Typography>
+      )}
 
       {/* Critical Stock Threshold Prompt */}
       <Box sx={{ display: 'flex', alignSelf: 'flex-start', marginTop: 4 }}>
@@ -267,8 +271,16 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
+          error={
+            !!errors['criticalStockThreshold'] || !!errors['lowStockThreshold']
+          }
         />
       </Box>
+      {errors['criticalStockThreshold'] && (
+        <Typography variant="caption" color={theme.palette.error.main}>
+          {errors['criticalStockThreshold']}
+        </Typography>
+      )}
     </FormControl>
   )
 }

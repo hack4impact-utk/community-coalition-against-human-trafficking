@@ -19,12 +19,13 @@ import { DatePicker } from '@mui/x-date-pickers'
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule'
 import { addURLQueryParam, removeURLQueryParam } from 'utils/queryParams'
 import SearchAutocomplete from 'components/SearchAutocomplete'
+import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
+import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
 import React from 'react'
 import deepCopy from 'utils/deepCopy'
 import { dateToReadableDateString } from 'utils/transformations'
 import logsHandler from '@api/logs'
-import HistoryList from 'components/HistoryList'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -388,15 +389,27 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
         </Grid2>
         {!isMobileView && renderInternalCheckbox(router, isMobileView)}
       </Grid2>
-      <HistoryList
-        logs={tableData}
-        search={router.query.search as string}
-        category={router.query.category as string}
-        endDate={router.query.endDate as string}
-        startDate={router.query.startDate as string}
-        internal={!!router.query.internal}
-        setTableData={setTableData}
-      />
+      {isMobileView ? (
+        <MobileHistoryList
+          logs={tableData}
+          search={router.query.search as string}
+          category={router.query.category as string}
+          endDate={router.query.endDate as string}
+          startDate={router.query.startDate as string}
+          internal={!!router.query.internal}
+          setTableData={setTableData}
+        />
+      ) : (
+        <DesktopHistoryList
+          logs={tableData}
+          search={router.query.search as string}
+          category={router.query.category as string}
+          endDate={router.query.endDate as string}
+          startDate={router.query.startDate as string}
+          internal={!!router.query.internal}
+          setTableData={setTableData}
+        />
+      )}
     </Grid2>
   )
 }

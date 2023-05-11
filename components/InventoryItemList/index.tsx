@@ -1,5 +1,6 @@
 import { useMediaQuery, useTheme } from '@mui/material'
-import dynamic from 'next/dynamic'
+import DesktopInventoryItemList from 'components/InventoryItemList/DesktopInventoryItemList'
+import MobileInventoryItemList from 'components/InventoryItemList/MobileInventoryItemList'
 import { InventoryItemResponse } from 'utils/types'
 
 interface InventoryItemListProps {
@@ -15,23 +16,17 @@ export default function InventoryItemList({
 }: InventoryItemListProps) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
-  const Mobile = dynamic(
-    () => import('components/InventoryItemList/MobileInventoryItemList')
-  )
-  const Desktop = dynamic(
-    () => import('components/InventoryItemList/DesktopInventoryItemList')
-  )
 
   return (
     <>
       {isMobileView ? (
-        <Mobile
+        <MobileInventoryItemList
           inventoryItems={inventoryItems}
           search={search}
           category={category}
         />
       ) : (
-        <Desktop
+        <DesktopInventoryItemList
           inventoryItems={inventoryItems}
           search={search}
           category={category}
