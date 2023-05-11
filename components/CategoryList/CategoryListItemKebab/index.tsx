@@ -1,8 +1,10 @@
 import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import router from 'next/router'
 import React from 'react'
+import { dialogPush } from 'utils/dialogLink'
 import theme from 'utils/theme'
-import { AttributeResponse, CategoryResponse } from 'utils/types'
+import { CategoryResponse } from 'utils/types'
 
 interface CategoryListItemKebabOption {
   name: string
@@ -12,17 +14,6 @@ interface CategoryListItemKebabOption {
 interface CategoryListItemKebabProps {
   category: CategoryResponse
 }
-
-const settings: CategoryListItemKebabOption[] = [
-  {
-    name: 'Edit',
-    onClick: () => console.log('edit'),
-  },
-  {
-    name: 'Delete',
-    onClick: () => console.log('delete'),
-  },
-]
 
 export default function AttributeListItemKebab({
   category,
@@ -39,6 +30,26 @@ export default function AttributeListItemKebab({
   const handleCloseKebabMenu = () => {
     setAnchorElKebab(null)
   }
+  // kebab menu actions
+  const settings: CategoryListItemKebabOption[] = [
+    {
+      name: 'Edit',
+      onClick: () => {
+        dialogPush(router, `/settings/categories/${category._id}/edit`)
+      },
+    },
+    {
+      name: 'Delete',
+      onClick: () => {
+        if (window.confirm('Are you sure you want to delete this category?')) {
+          fetch(`/api/categories/${category._id}`, { method: 'DELETE' }).then(
+            () => window.location.reload()
+          )
+        }
+      },
+    },
+  ]
+
   return (
     <>
       <IconButton onClick={handleOpenKebabMenu}>
