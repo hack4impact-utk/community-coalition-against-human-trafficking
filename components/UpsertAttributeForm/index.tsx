@@ -1,6 +1,5 @@
 import {
   Autocomplete,
-  Button,
   Chip,
   FormControl,
   FormControlLabel,
@@ -64,7 +63,7 @@ export default function UpsertAttributeForm({
   const [formData, setFormData] = React.useState<AttributeFormData>(
     transformAttributeToFormData(attribute)
   )
-  
+
   // the attribute passed into this form is sometimes undefined as it is still being fetched
   // Thus, make sure to fill out the form when the attribute gets fetched
   useEffect(() => {

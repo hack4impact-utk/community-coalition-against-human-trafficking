@@ -1,4 +1,4 @@
-import { Dialog } from '@mui/material'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 
 interface RoutableDialogProps {
@@ -15,9 +15,11 @@ export default function RoutableDialog({
 
   const shouldShowDialog: boolean =
     (!name && !!showDialog) || (!!name && !!showDialog && name === showDialog)
+
+  const DynamicDialog = dynamic(() => import('@mui/material/Dialog'))
   return (
-    <Dialog open={shouldShowDialog} onClose={() => router.back()}>
+    <DynamicDialog open={shouldShowDialog} onClose={() => router.back()}>
       {children}
-    </Dialog>
+    </DynamicDialog>
   )
 }

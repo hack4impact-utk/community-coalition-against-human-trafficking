@@ -180,6 +180,7 @@ export default function CheckInPage({
       <RoutableDialog>
         <NewItemPage
           redirectBack={(router, itemId) => {
+            if (!itemId) return router.push('/checkIn')
             router.push(`/checkIn?item=${itemId}`)
           }}
         />

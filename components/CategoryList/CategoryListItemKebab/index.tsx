@@ -2,7 +2,7 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React from 'react'
 import theme from 'utils/theme'
-import { AttributeResponse, CategoryResponse } from 'utils/types'
+import { CategoryResponse } from 'utils/types'
 
 interface CategoryListItemKebabOption {
   name: string
@@ -24,9 +24,8 @@ const settings: CategoryListItemKebabOption[] = [
   },
 ]
 
-export default function AttributeListItemKebab({
-  category,
-}: CategoryListItemKebabProps) {
+export default function AttributeListItemKebab({}: // category,
+CategoryListItemKebabProps) {
   // kebab menu functionality
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null

@@ -1,7 +1,6 @@
 import CheckInOutForm from 'components/CheckInOutForm'
 import {
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -14,9 +13,7 @@ import {
   CategoryResponse,
   CheckInOutFormData,
   CheckInOutRequest,
-  InventoryItemRequest,
   ItemDefinitionResponse,
-  LogRequest,
   UserResponse,
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
