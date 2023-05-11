@@ -1,3 +1,4 @@
+import { LoadingButton } from '@mui/lab'
 import {
   Button,
   DialogActions,
@@ -14,8 +15,10 @@ import {
   attributeFormSchema,
   AttributeResponse,
 } from 'utils/types'
+import { useDispatch } from 'react-redux'
+import { showSnackbar } from 'store/snackbar'
 
-export default function AttributeEditForm() {
+export default function AttributeEditDialog() {
   // you have to do this to otherwise the AttributeForm says that
   // attribute is being used before its given a value
   const [attribute, setAttribute] = useState<AttributeResponse>()
@@ -25,7 +28,12 @@ export default function AttributeEditForm() {
   const [attributeFormData, setAttributeFormData] = useState<AttributeFormData>(
     {} as AttributeFormData
   )
+
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const dispatch = useDispatch()
+
+  // get id from URL and get attributes
   const { id } = router.query
   useEffect(() => {
     const fetchAttribute = async () => {
@@ -44,7 +52,8 @@ export default function AttributeEditForm() {
         setErrors(transformZodErrors(zodResponse.error))
         return
       }
-      await fetch(`/api/attributes/${id}`, {
+      // update attribute
+      const response = await fetch(`/api/attributes/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -57,7 +66,27 @@ export default function AttributeEditForm() {
               : attributeFormData.valueType,
         }),
       })
+      // handle snackbar logic
+      const data = await response.json()
+
+      // close dialog
       await router.push('/settings/attributes')
+
+      if (data.success) {
+        dispatch(
+          showSnackbar({
+            message: 'Attribute successfully edited',
+            severity: 'success',
+          })
+        )
+      } else {
+        dispatch(
+          showSnackbar({
+            message: data.message,
+            severity: 'error',
+          })
+        )
+      }
     },
     [id, router]
   )
@@ -69,7 +98,7 @@ export default function AttributeEditForm() {
   return (
     <>
       <DialogTitle>Edit Attribute</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ overflowY: 'visible' }}>
         <UpsertAttributeForm
           attribute={attribute}
           onChange={(attributeFormData) =>
@@ -82,9 +111,16 @@ export default function AttributeEditForm() {
         <Button onClick={handleClose} color="inherit">
           Cancel
         </Button>
-        <Button onClick={() => handleSubmit(attributeFormData)} color="primary">
+        <LoadingButton
+          loading={loading}
+          onClick={async () => {
+            setLoading(true)
+            await handleSubmit(attributeFormData)
+            setLoading(false)
+          }}
+        >
           Submit
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </>
   )

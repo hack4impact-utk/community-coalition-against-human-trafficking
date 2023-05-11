@@ -97,10 +97,6 @@ export default function UpsertItemForm({
     onChange(formData)
   }, [formData, onChange])
 
-  React.useEffect(() => {
-    console.log(errors)
-  }, [errors])
-
   return (
     <FormControl fullWidth>
       <Autocomplete

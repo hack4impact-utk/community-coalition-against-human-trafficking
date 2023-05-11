@@ -16,6 +16,10 @@ const AttributeSchema = new Schema(
       type: String,
       required: true,
     },
+    softDelete: {
+      type: Boolean,
+      required: false,
+    },
   },
   {
     versionKey: false,

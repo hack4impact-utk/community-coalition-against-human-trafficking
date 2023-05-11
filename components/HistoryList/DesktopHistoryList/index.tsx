@@ -198,7 +198,7 @@ export default function DesktopHistoryList(props: Props) {
 
   React.useEffect(() => {
     // does pagination
-    var rowsOnMount = sortTable(props.logs, orderBy, order)
+    let rowsOnMount = sortTable(props.logs, orderBy, order)
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
     setVisibleRows(rowsOnMount)
