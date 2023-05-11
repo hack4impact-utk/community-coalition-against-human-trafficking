@@ -5,7 +5,6 @@ import {
   CheckInOutFormData,
   CheckInOutRequest,
   InventoryItemAttributeRequest,
-  InventoryItemRequest,
   ItemDefinitionRequest,
 } from 'utils/types'
 
@@ -41,7 +40,7 @@ export function checkInOutFormDataToCheckInOutRequest(
         (acc, attributeId) => {
           const attribute: InventoryItemAttributeRequest = {
             attribute: attributeId,
-            value: formData.textFieldAttributes[attributeId],
+            value: formData.textFieldAttributes![attributeId],
           }
 
           return [...acc, attribute]
@@ -54,10 +53,9 @@ export function checkInOutFormDataToCheckInOutRequest(
   const retVal: CheckInOutRequest = {
     staff: formData.user._id,
     quantityDelta: formData.quantityDelta,
-    date: formData.date.toDate(),
+    date: formData.date,
     inventoryItem: partialInventoryItem,
   }
-
   return retVal
 }
 

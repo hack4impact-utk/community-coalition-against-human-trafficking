@@ -4,13 +4,14 @@ import { useAppDispatch } from 'store'
 export default function DashboardPage() {
   const dispatch = useAppDispatch()
   return (
-    <Button
-      onClick={() =>
-        // @ts-ignore
-        dispatch(showSnackbar({ message: 'hello!', severity: 'success' }))
-      }
-    >
-      Open snackbar
-    </Button>
+    <>
+      <DialogLink href={'/dialog/test'}>
+        <Button>Take me to dialog</Button>
+      </DialogLink>
+      {/* @ts-ignore */}
+      <Button onClick={() => dispatch(toggleKioskMode())}>
+        Toggle Kiosk Mode
+      </Button>
+    </>
   )
 }
