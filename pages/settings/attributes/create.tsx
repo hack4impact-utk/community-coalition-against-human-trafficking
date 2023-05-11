@@ -12,7 +12,7 @@ import { LoadingButton } from '@mui/lab'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
 
-export default function AttributeCreateForm() {
+export default function AttributeCreateDialog() {
   const [loading, setLoading] = useState(false)
   const [attributeFormData, setAttributeFormData] = useState<AttributeFormData>(
     {} as AttributeFormData
