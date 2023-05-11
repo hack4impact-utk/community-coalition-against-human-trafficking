@@ -1,17 +1,7 @@
 import {
-  Autocomplete,
-  Chip,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
   TextField,
-  Unstable_Grid2 as Grid2,
 } from '@mui/material'
 import React, { useEffect } from 'react'
-import { TwitterPicker } from 'react-color'
-import getContrastYIQ from 'utils/getContrastYIQ'
 import { CategoryResponse } from 'utils/types'
 
 interface CategoryFormProps {
