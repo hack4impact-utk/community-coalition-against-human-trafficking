@@ -1,7 +1,5 @@
-import {
-  TextField,
-} from '@mui/material'
-import React, { useEffect } from 'react'
+import { TextField } from '@mui/material'
+import React from 'react'
 import { CategoryResponse } from 'utils/types'
 
 interface CategoryFormProps {

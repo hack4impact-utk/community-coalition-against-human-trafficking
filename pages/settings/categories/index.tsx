@@ -8,6 +8,10 @@ import SearchField from 'components/SearchField'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import { CategoryResponse } from 'utils/types'
+import RoutableDialog from 'components/RoutableDialog'
+import CategoryEditForm from './[categoryId]/edit'
+import CategoryCreateForm from './create'
+import { useRouter } from 'next/router'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -20,6 +24,7 @@ interface CategoriesPageProps {
 }
 
 export default function CategoriesPage({ categories }: CategoriesPageProps) {
+  const router = useRouter()
   return (
     <>
       <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
@@ -28,7 +33,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
             Categories
           </Typography>
           <Grid2 ml="auto" mr={6}>
-            <DialogLink href="/items/new" backHref="/settings/items">
+            <DialogLink href="/settings/categories/create">
               <Button
                 variant="outlined"
                 startIcon={<AddIcon />}
@@ -42,8 +47,18 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
         <Grid2 xs={12} md={5} lg={4} sx={{ px: 2 }}>
           <SearchField />
         </Grid2>
-        <CategoryList categories={categories} search={''} />
+        <CategoryList
+          categories={categories}
+          search={router.query.search as string}
+        />
       </Grid2>
+
+      <RoutableDialog name="editCategory">
+        <CategoryEditForm />
+      </RoutableDialog>
+      <RoutableDialog name="createCategory">
+        <CategoryCreateForm />
+      </RoutableDialog>
     </>
   )
 }
