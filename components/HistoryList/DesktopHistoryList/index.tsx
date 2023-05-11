@@ -173,25 +173,26 @@ export default function DesktopHistoryList(props: Props) {
   }
 
   return (
-    <Box sx={{ width: '100%', overflowX: 'hidden' }}>
+    <Box sx={{ width: '100%' }}>
+      {props.loading && (
+        <LinearProgress
+          variant="indeterminate"
+          sx={{
+            height: 3,
+          }}
+        />
+      )}
       <TableContainer>
-        <Table aria-labelledby="tableTitle" size="medium">
+        <Table
+          aria-labelledby="tableTitle"
+          size="medium"
+          sx={{ mt: props.loading ? '0' : '3px' }} // lets us have the page not shift when loading
+        >
           <HistoryListHeader
             order={router.query.order as Order}
             orderBy={router.query.orderBy as string}
             router={router}
           />
-          {props.loading && (
-            <LinearProgress
-              variant="indeterminate"
-              sx={{
-                display: 'table-header-group',
-                width: 'auto',
-                backgroundColor: 'transparent',
-                height: 3,
-              }}
-            />
-          )}
           <TableBody>
             {props.logs.map((log) => (
               <HistoryListItem log={log} key={log._id} />
