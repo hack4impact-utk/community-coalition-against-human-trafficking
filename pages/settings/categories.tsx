@@ -29,10 +29,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
             Categories
           </Typography>
           <Grid2 ml={isMobileView ? '0' : 'auto'}>
-            <Button
-              variant="outlined"
-              sx={{ width: '100%' }}
-            >
+            <Button variant="outlined" sx={{ width: '100%', px: 1 }}>
               Create New Category
             </Button>
           </Grid2>
