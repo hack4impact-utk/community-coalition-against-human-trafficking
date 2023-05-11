@@ -1,4 +1,3 @@
-import { ItemDefinitionFormData } from 'components/UpsertItemForm'
 import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
   AttributeRequest,
@@ -6,6 +5,7 @@ import {
   CheckInOutRequest,
   InventoryItemAttributeRequest,
   ItemDefinitionRequest,
+  ItemDefinitionFormData,
 } from 'utils/types'
 
 /**
@@ -77,8 +77,8 @@ export function itemDefinitionFormDataToItemDefinitionRequest(
 ): ItemDefinitionRequest {
   return {
     ...formData,
-    category: formData.category._id,
-    attributes: formData.attributes.map((attr) => attr._id),
+    category: formData.category?._id,
+    attributes: formData.attributes?.map((attr) => attr._id) || [],
   }
 }
 
