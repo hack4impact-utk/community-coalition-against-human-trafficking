@@ -31,7 +31,6 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
           <Grid2 ml={isMobileView ? '0' : 'auto'}>
             <Button
               variant="outlined"
-              startIcon={<AddIcon />}
               sx={{ width: '100%' }}
             >
               Create New Category
