@@ -41,7 +41,6 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
               >
                 Create New Category
               </Button>
-            </DialogLink>
           </Grid2>
         </Grid2>
         <Grid2 xs={12} md={5} lg={4} sx={{ px: 2 }}>
