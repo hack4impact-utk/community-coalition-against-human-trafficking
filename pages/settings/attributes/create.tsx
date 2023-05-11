@@ -76,7 +76,7 @@ export default function AttributeCreateForm() {
   return (
     <>
       <DialogTitle>Create Attribute</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ overflowY: 'visible' }}>
         <UpsertAttributeForm
           onChange={(attributeFormData) =>
             setAttributeFormData(attributeFormData)
