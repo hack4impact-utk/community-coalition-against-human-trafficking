@@ -16,7 +16,7 @@ export default async function inventoryItemsCheckOutHandler(
     switch (req.method) {
       case 'POST': {
         const checkInOutRequest: CheckInOutRequest = req.body
-        const quantity: number = Number(checkInOutRequest.quantityDelta)
+        const quantity = Number(checkInOutRequest.quantityDelta)
         const response = await checkOutInventoryItem(
           checkInOutRequest.inventoryItem,
           quantity

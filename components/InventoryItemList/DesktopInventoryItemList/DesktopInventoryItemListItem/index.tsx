@@ -1,30 +1,26 @@
 import WarningIcon from '@mui/icons-material/Warning'
-import {
-  TableRow,
-  TableCell,
-  Tooltip,
-  Box,
-  Unstable_Grid2 as Grid2,
-} from '@mui/material'
+import { TableRow, TableCell, Tooltip, Box } from '@mui/material'
 import theme from 'utils/theme'
 import * as React from 'react'
 import InventoryItemListItemKebab from 'components/InventoryItemList/InventoryItemListItemKebab'
-import { Data } from '../types'
 import renderAttributeChips from 'utils/renderAttributeChips'
+import { InventoryItemResponse } from 'utils/types'
+import Grid2 from '@mui/material/Unstable_Grid2'
 
 interface InventoryItemListItemProps {
-  inventoryItemData: Data
+  inventoryItem: InventoryItemResponse
 }
 
 export default function DesktopInventoryItemListItem({
-  inventoryItemData: inventoryItemData,
+  inventoryItem,
 }: InventoryItemListItemProps) {
   // renders the red or yellow warning symbol if necesary
-  const renderWarningIcon = (inventoryItemData: Data) => {
+  const renderWarningIcon = (inventoryItem: InventoryItemResponse) => {
     return (
       <Tooltip
         title={
-          inventoryItemData.quantity < inventoryItemData.criticalStockThreshold
+          inventoryItem.quantity <
+          inventoryItem.itemDefinition.criticalStockThreshold
             ? 'This item has critically low stock.'
             : 'This item has low stock.'
         }
@@ -33,13 +29,14 @@ export default function DesktopInventoryItemListItem({
           fontSize="small"
           sx={{
             visibility:
-              inventoryItemData.quantity < inventoryItemData.lowStockThreshold
+              inventoryItem.quantity <
+              inventoryItem.itemDefinition.lowStockThreshold
                 ? 'visible'
                 : 'hidden',
             float: 'right',
             color:
-              inventoryItemData.quantity <
-              inventoryItemData.criticalStockThreshold
+              inventoryItem.quantity <
+              inventoryItem.itemDefinition.criticalStockThreshold
                 ? theme.palette.error.main
                 : theme.palette.warning.light,
           }}
@@ -57,7 +54,7 @@ export default function DesktopInventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItemData.name}
+        {inventoryItem.itemDefinition.name}
       </TableCell>
       <TableCell
         sx={{
@@ -66,7 +63,7 @@ export default function DesktopInventoryItemListItem({
           gap: '0.25rem',
         }}
       >
-        {renderAttributeChips(inventoryItemData.attributes)}
+        {renderAttributeChips(inventoryItem.attributes)}
       </TableCell>
       <TableCell
         sx={{
@@ -74,7 +71,7 @@ export default function DesktopInventoryItemListItem({
           justifyContent: 'center',
         }}
       >
-        {inventoryItemData.category}
+        {inventoryItem.itemDefinition.category?.name}
       </TableCell>
       <TableCell
         sx={{
@@ -85,8 +82,8 @@ export default function DesktopInventoryItemListItem({
         align="right"
       >
         <Grid2 container gap={1} justifyContent="flex-end">
-          <Grid2 xs={6}>{inventoryItemData.quantity.toLocaleString()}</Grid2>
-          <Grid2 xs="auto">{renderWarningIcon(inventoryItemData)}</Grid2>
+          <Grid2 xs={6}>{inventoryItem.quantity.toLocaleString()}</Grid2>
+          <Grid2 xs="auto">{renderWarningIcon(inventoryItem)}</Grid2>
         </Grid2>
       </TableCell>
       <TableCell
@@ -95,13 +92,11 @@ export default function DesktopInventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItemData.assignee ? inventoryItemData.assignee : ''}
+        {inventoryItem.assignee ? inventoryItem.assignee.name : ''}
       </TableCell>
       <TableCell sx={{ width: '10px' }}>
         <Box sx={{ flexGrow: 0, ml: 'auto' }}>
-          <InventoryItemListItemKebab
-            inventoryItem={inventoryItemData.inventoryItem}
-          />
+          <InventoryItemListItemKebab inventoryItem={inventoryItem} />
         </Box>
       </TableCell>
     </TableRow>

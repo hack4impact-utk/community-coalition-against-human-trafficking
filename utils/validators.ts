@@ -228,7 +228,7 @@ export const itemDefinitionRequestModelProperties: Property[] = [
   {
     key: 'attributes',
     types: 'object',
-    required: false,
+    required: true,
   },
   {
     key: 'internal',
@@ -366,7 +366,7 @@ logPutModelProperties.find((prop) => prop.key === '_id')!.required = true
 
 export const notificationEmailRequestModelProperties: Property[] = [
   {
-    key:'_id',
+    key: '_id',
     types: 'string',
     required: false,
   },
@@ -383,4 +383,6 @@ export const notificationEmailPostModelProperties: Property[] = deepCopy(
 export const notificationEmailPutModelProperties: Property[] = deepCopy(
   notificationEmailRequestModelProperties
 )
-notificationEmailPutModelProperties.find((prop) => prop.key === '_id')!.required = true
+notificationEmailPutModelProperties.find(
+  (prop) => prop.key === '_id'
+)!.required = true

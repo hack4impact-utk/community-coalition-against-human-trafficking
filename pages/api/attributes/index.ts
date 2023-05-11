@@ -18,9 +18,10 @@ export default async function attributesHandler(
 
     switch (req.method) {
       case 'GET': {
-        const attributes: AttributeResponse[] = await MongoDriver.getEntities(
-          AttributeSchema
-        )
+        const attributes: AttributeResponse[] =
+          await MongoDriver.findEntitiesByQuery(AttributeSchema, {
+            softDelete: { $exists: false },
+          })
         const resStatus = attributes.length ? 200 : 204
         return res.status(resStatus).json({
           succcess: true,

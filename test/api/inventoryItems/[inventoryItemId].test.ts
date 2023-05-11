@@ -147,7 +147,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
   describe('DELETE', () => {
     test('valid id returns correct data', async () => {
       const mockDeleteEntity = jest
-        .spyOn(MongoDriver, 'deleteEntity')
+        .spyOn(MongoDriver, 'softDeleteEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {})
       const request = createRequest({

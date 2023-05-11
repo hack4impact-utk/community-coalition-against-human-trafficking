@@ -61,6 +61,7 @@ export default function NavigationDrawer({
         flexShrink: 0,
         '& .MuiDrawer-paper': {
           width: drawerWidth,
+          overflowX: 'hidden',
           boxSizing: 'border-box',
         },
       }}

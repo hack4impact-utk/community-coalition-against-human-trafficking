@@ -32,6 +32,10 @@ const ItemDefinitionSchema = new Schema(
       required: false,
       default: -1,
     },
+    softDelete: {
+      type: Boolean,
+      required: false,
+    },
   },
   {
     versionKey: false,

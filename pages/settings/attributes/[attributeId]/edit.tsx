@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
 import { AttributeResponse } from 'utils/types'
 
-export default function AttributeEditForm() {
+export default function AttributeEditDialog() {
   // you have to do this to otherwise the AttributeForm says that
   // attribute is being used before its given a value
   const [attribute, setAttribute] = useState<AttributeResponse>()
@@ -95,7 +95,7 @@ export default function AttributeEditForm() {
   return (
     <>
       <DialogTitle>Edit Attribute</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ overflowY: 'visible' }}>
         <UpsertAttributeForm
           attribute={attribute}
           onChange={(attributeFormData) =>

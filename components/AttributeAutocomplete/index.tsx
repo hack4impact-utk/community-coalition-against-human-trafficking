@@ -19,6 +19,7 @@ interface Props {
   value?: AutocompleteAttributeOption[]
   setValue?: React.Dispatch<AutocompleteAttributeOption[]>
   sx?: SxProps
+  error: string
 }
 
 function buildAutocompleteOptions(
@@ -46,6 +47,7 @@ export default function AttributeAutocomplete({
   onChange,
   value,
   setValue,
+  error,
 }: Props) {
   const options = buildAutocompleteOptions(attributes)
   const [open, setOpen] = React.useState(false)
@@ -78,9 +80,16 @@ export default function AttributeAutocomplete({
         ))
       }
       value={value}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Attributes"
+          error={!!error}
+          helperText={error}
+        />
+      )}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
-      renderInput={(params) => <TextField {...params} label="Attributes" />}
       onChange={(e, attributes) => {
         if (setValue) setValue(attributes)
         if (!attributes.length) {
