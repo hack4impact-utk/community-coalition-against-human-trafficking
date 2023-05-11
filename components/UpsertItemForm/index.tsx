@@ -54,7 +54,7 @@ export default function UpsertItemForm({
   const createNewAttribute = async (fd: AttributeFormData) => {
     // TODO better way of coding URLs
     const attrReq = attributeFormDataToAttributeRequest(fd)
-    const response = await fetch(`http://localhost:3000/api/attributes`, {
+    const response = await fetch(`/api/attributes`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

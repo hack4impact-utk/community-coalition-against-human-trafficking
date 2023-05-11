@@ -36,7 +36,7 @@ let itemDefinitionFormData: ItemDefinitionFormData
 async function createItem(formData: ItemDefinitionFormData) {
   const itemDefReq = itemDefinitionFormDataToItemDefinitionRequest(formData)
 
-  const response = await fetch('http://localhost:3000/api/itemDefinitions', {
+  const response = await fetch('/api/itemDefinitions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

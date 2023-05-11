@@ -4,6 +4,7 @@ import {
   InventoryItem,
   InventoryItemPostRequest,
   InventoryItemPutRequest,
+  InventoryItemRequest,
 } from 'utils/types'
 import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
