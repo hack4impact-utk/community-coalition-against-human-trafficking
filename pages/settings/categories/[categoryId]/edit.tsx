@@ -26,7 +26,7 @@ export default function CategoryEditForm() {
   useEffect(() => {
     const fetchCategory = async () => {
       if (!id) return // on page load, id is undefined, resulting in bad requests
-      const response = await fetch(`/api/categries/${id}`, { method: 'GET' })
+      const response = await fetch(`/api/categories/${id}`, { method: 'GET' })
       const data = await response.json()
       setCategory(data.payload)
     }
@@ -37,7 +37,7 @@ export default function CategoryEditForm() {
     // update category
     const response = await fetch(`/api/categories/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'category/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         _id: id,
         name: categoryFormData,
@@ -45,7 +45,7 @@ export default function CategoryEditForm() {
     })
 
     // close dialog
-    await router.push('/settings/category')
+    await router.push('/settings/categories')
 
     // handle snackbar logic
     const data = await response.json()
