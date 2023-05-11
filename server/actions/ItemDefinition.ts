@@ -32,6 +32,7 @@ const getRequestPipeline: PipelineStage[] = [
 // for each of those, get the attribute value of each of them
 // somehow return those in an array??
 const existingAttributeValuesPipeline: PipelineStage[] = [
+  // find all inventory items with the given itemDefinition
   {
     $lookup: {
       from: 'inventoryItems',
@@ -40,33 +41,40 @@ const existingAttributeValuesPipeline: PipelineStage[] = [
       as: 'inventoryItems',
     },
   },
-  // gets ONLY an array of inventoryItems
+
+  // only get the array of inventory items, nothing else with the item definition
   {
     $project: {
+      _id: 0,
       inventoryItems: 1,
     },
   },
-  // {
-  //   $unwind: '$inventoryItems',
-  // },
-  // {
-  //   $project: {
-  //     'inventoryItems._id': 0,
-  //   },
-  // },
-  // gets an array of arrays of inventoryItemAttribute objects (one array element per inventoryItem). stored as 'attributes'
+
+  // puts each inventoryItem.attributes array into a new array
+  // structure is now "inventoryItemAttrArr": [inventoryItem[0].attributes, inventoryItem[1].attributes, ...]
   {
-    $project: {
-      attributes: '$inventoryItems.attributes',
+    $group: {
+      _id: null,
+      inventoryItemAttrArr: { $push: '$inventoryItems.attributes' },
     },
   },
-  // creates an single array of inventoryItemAttribute objects
+
   {
-    $unwind: '$attributes',
+    $set: {
+      inventoryItemAttrArr: { $arrayElemAt: ['$inventoryItemAttrArr', 0] },
+    },
   },
-  // {
-  //   $unwind: '$attributes',
-  // },
+
+  // removes _id field from above array
+  {
+    $project: {
+      _id: 0,
+    },
+  },
+
+  // group each inventoryItem[i].attributes[j] by unique attribute Id
+
+  // { $unwind: '$inventoryItemAttributes' },
 ]
 
 /**
@@ -94,13 +102,10 @@ export async function getItemDefinitions() {
 }
 
 export async function getItemDefinitionAttributeValues(id: string) {
-  const objectId = new Types.ObjectId(id)
-  // existingAttributeValuesPipeline.push({ $match: { _id: objectId } })
+  // only look at the target itemDefinition
+  existingAttributeValuesPipeline.unshift({
+    $match: { _id: new Types.ObjectId(id) },
+  })
 
-  // return await ItemDefinitionSchema.aggregate(existingAttributeValuesPipeline)
-  let outputArray = []
-  const itemDefinition = await ItemDefinitionSchema.findById(objectId)
-  const inventoryItems = (await InventoryItemSchema.find()).filter(
-    (item) => (item.itemDefinition as string) === objectId
-  )
+  return await ItemDefinitionSchema.aggregate(existingAttributeValuesPipeline)
 }
