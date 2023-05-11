@@ -106,16 +106,13 @@ export default function CheckInPage({
       checkInOutFormDataToCheckInOutRequest(formData)
 
     // TODO better way of coding URLs
-    const response = await fetch(
-      `http://localhost:3000/api/inventoryItems/checkIn`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(checkInOutRequest),
-      }
-    )
+    const response = await fetch(`/api/inventoryItems/checkIn`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(checkInOutRequest),
+    })
     setFormData((formData) => {
       return {
         user: formData.user,

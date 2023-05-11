@@ -35,14 +35,14 @@ export default function NewItemPage({ redirectBack }: Props) {
 
   React.useEffect(() => {
     const getCategories = async () => {
-      const response = await fetch('http://localhost:3000/api/categories', {
+      const response = await fetch('/api/categories', {
         method: 'GET',
       })
       const data = await response.json()
       setCategories(data.payload)
     }
     const getAttributes = async () => {
-      const response = await fetch('http://localhost:3000/api/attributes', {
+      const response = await fetch('/api/attributes', {
         method: 'GET',
       })
       const data = await response.json()
