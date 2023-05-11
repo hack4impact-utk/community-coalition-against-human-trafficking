@@ -1,4 +1,3 @@
-import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
   AttributeRequest,
   CheckInOutFormData,
@@ -6,6 +5,7 @@ import {
   InventoryItemAttributeRequest,
   ItemDefinitionRequest,
   ItemDefinitionFormData,
+  AttributeFormData,
 } from 'utils/types'
 
 /**

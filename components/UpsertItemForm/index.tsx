@@ -13,17 +13,18 @@ import {
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import {
+  attributeFormSchema,
   AttributeResponse,
   CategoryResponse,
   ItemDefinitionFormData,
+  AttributeFormData,
 } from 'utils/types'
 import React from 'react'
 import { attributeFormDataToAttributeRequest } from 'utils/transformations'
-import UpsertAttributeForm, {
-  AttributeFormData,
-} from 'components/UpsertAttributeForm'
+import UpsertAttributeForm from 'components/UpsertAttributeForm'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import theme from 'utils/theme'
+import transformZodErrors from 'utils/transformZodErrors'
 
 interface Props {
   categories: CategoryResponse[]
@@ -39,6 +40,9 @@ export default function UpsertItemForm({
   errors,
 }: Props) {
   const [showAttributeForm, setShowAttributeForm] = React.useState(false)
+  const [attributeErrors, setAttributeErrors] = React.useState<
+    Record<keyof AttributeFormData, string>
+  >({} as Record<keyof AttributeFormData, string>)
   const [attrFormData, setAttrFormData] = React.useState(
     {} as AttributeFormData
   )
@@ -55,6 +59,12 @@ export default function UpsertItemForm({
 
   const createNewAttribute = async (fd: AttributeFormData) => {
     // TODO better way of coding URLs
+    const zodResult = attributeFormSchema.safeParse(fd)
+    if (!zodResult.success) {
+      setAttributeErrors(transformZodErrors(zodResult.error))
+      return
+    }
+
     const attrReq = attributeFormDataToAttributeRequest(fd)
     const response = await fetch(`http://localhost:3000/api/attributes`, {
       method: 'POST',
@@ -80,6 +90,7 @@ export default function UpsertItemForm({
     setProxyAttributes((pa) => {
       return [...pa, newAttr]
     })
+    setShowAttributeForm(false)
   }
 
   React.useEffect(() => {
@@ -185,6 +196,7 @@ export default function UpsertItemForm({
             onChange={(attrFD) => {
               setAttrFormData(attrFD)
             }}
+            errors={attributeErrors}
           >
             <Grid2
               xs={12}
@@ -204,7 +216,6 @@ export default function UpsertItemForm({
                 size="large"
                 onClick={() => {
                   createNewAttribute(attrFormData)
-                  setShowAttributeForm(false)
                 }}
               >
                 Add Attribute
