@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, InventoryItem, InventoryItemPostRequest } from 'utils/types'
+import { ApiError, InventoryItemPostRequest } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { getInventoryItems } from 'server/actions/InventoryItems'
 import * as MongoDriver from 'server/actions/MongoDriver'
