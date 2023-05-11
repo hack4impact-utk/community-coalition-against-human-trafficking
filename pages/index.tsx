@@ -1,4 +1,5 @@
 import { Button } from '@mui/material'
+import DialogLink from 'components/DialogLink'
 import { useAppDispatch } from 'store'
 
 export default function DashboardPage() {
