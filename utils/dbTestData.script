@@ -55,7 +55,7 @@ db.categories.insertMany([
 // ATTRIBUTES
 
 // creates 15 attributeId variables
-for (let i = 1; i <= 16; i++) {
+for (let i = 0; i <= 15; i++) {
   this[`attributeId${i}`] = ObjectId();
 }
 
@@ -158,7 +158,7 @@ db.attributes.insertMany([
         "color": color3
     },
     {
-        "_id": attributeId16,
+        "_id": attributeId0,
         "name": "Location",
         "possibleValues": "text",
         "color": color1
@@ -180,7 +180,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId1,
         "name": "Shirt",
         "category": categoryId1,
-        "attributes": [attributeId16, attributeId1, attributeId2],
+        "attributes": [attributeId0, attributeId1, attributeId2],
         "internal": false,
         "lowStockThreshold": 20,
         "criticalStockThreshold": 10
@@ -189,7 +189,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId2,
         "name": "Pants",
         "category": categoryId1,
-        "attributes": [attributeId16, attributeId3, attributeId4],
+        "attributes": [attributeId0, attributeId3, attributeId4],
         "internal": false,
         "lowStockThreshold": 15,
         "criticalStockThreshold": 10
@@ -198,7 +198,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId3,
         "name": "Shoes",
         "category": categoryId1,
-        "attributes": [attributeId16, attributeId5, attributeId6],
+        "attributes": [attributeId0, attributeId5, attributeId6],
         "internal": false,
         "lowStockThreshold": 5,
         "criticalStockThreshold": 2
@@ -207,7 +207,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId4,
         "name": "Bra",
         "category": categoryId1,
-        "attributes": [attributeId16, attributeId7],
+        "attributes": [attributeId0, attributeId7],
         "internal": false,
         "lowStockThreshold": 5,
         "criticalStockThreshold": 0
@@ -225,7 +225,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId6,
         "name": "Socks",
         "category": categoryId1,
-        "attributes": [attributeId16],
+        "attributes": [attributeId0],
         "internal": false,
         "lowStockThreshold": 30,
         "criticalStockThreshold": 10
@@ -238,7 +238,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId7,
         "name": "Shampoo",
         "category": categoryId2,
-        "attributes": [attributeId16, attributeId8],
+        "attributes": [attributeId0, attributeId8],
         "internal": false,
         "lowStockThreshold": 30,
         "criticalStockThreshold": 10
@@ -247,7 +247,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId8,
         "name": "Conditioner",
         "category": categoryId2,
-        "attributes": [attributeId16, attributeId8],
+        "attributes": [attributeId0, attributeId8],
         "internal": false,
         "lowStockThreshold": 30,
         "criticalStockThreshold": 10
@@ -256,7 +256,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId9,
         "name": "Soap",
         "category": categoryId2,
-        "attributes": [attributeId16],
+        "attributes": [attributeId0],
         "internal": false,
         "lowStockThreshold": 50,
         "criticalStockThreshold": 20
@@ -265,7 +265,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId10,
         "name": "Body Wash",
         "category": categoryId2,
-        "attributes": [attributeId16, attributeId8],
+        "attributes": [attributeId0, attributeId8],
         "internal": false,
         "lowStockThreshold": 30,
         "criticalStockThreshold": 10
@@ -274,7 +274,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId11,
         "name": "Shaving Cream",
         "category": categoryId2,
-        "attributes": [attributeId16, attributeId8],
+        "attributes": [attributeId0, attributeId8],
         "internal": false,
         "lowStockThreshold": 30,
         "criticalStockThreshold": 10
@@ -283,7 +283,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId12,
         "name": "Razor",
         "category": categoryId2,
-        "attributes": [attributeId16],
+        "attributes": [attributeId0],
         "internal": false,
         "lowStockThreshold": 30,
         "criticalStockThreshold": 10
@@ -297,7 +297,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId13,
         "name": "Couch",
         "category": categoryId3,
-        "attributes": [attributeId16, attributeId10, attributeId14],
+        "attributes": [attributeId0, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -306,7 +306,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId14,
         "name": "Table",
         "category": categoryId3,
-        "attributes": [attributeId16, attributeId10, attributeId14],
+        "attributes": [attributeId0, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -315,7 +315,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId15,
         "name": "Chair",
         "category": categoryId3,
-        "attributes": [attributeId16, attributeId10, attributeId14],
+        "attributes": [attributeId0, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -328,7 +328,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId16,
         "name": "Oven",
         "category": categoryId4,
-        "attributes": [attributeId16, attributeId9, attributeId11, attributeId14],
+        "attributes": [attributeId0, attributeId9, attributeId11, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -337,7 +337,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId17,
         "name": "Refrigerator",
         "category": categoryId4,
-        "attributes": [attributeId16, attributeId9, attributeId10, attributeId14],
+        "attributes": [attributeId0, attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -346,7 +346,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId18,
         "name": "Dishwasher",
         "category": categoryId4,
-        "attributes": [attributeId16, attributeId9, attributeId10, attributeId14],
+        "attributes": [attributeId0, attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -361,7 +361,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId19,
         "name": "Mini Fridge",
         "category": categoryId5,
-        "attributes": [attributeId16, attributeId9, attributeId10, attributeId14],
+        "attributes": [attributeId0, attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -370,7 +370,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId20,
         "name": "Coffee Maker",
         "category": categoryId5,
-        "attributes": [attributeId16, attributeId9, attributeId10, attributeId14],
+        "attributes": [attributeId0, attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -379,7 +379,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId21,
         "name": "Toaster",
         "category": categoryId5,
-        "attributes": [attributeId16, attributeId9, attributeId10, attributeId14],
+        "attributes": [attributeId0, attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -388,7 +388,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId22,
         "name": "Blender",
         "category": categoryId5,
-        "attributes": [attributeId16, attributeId9, attributeId10, attributeId14],
+        "attributes": [attributeId0, attributeId9, attributeId10, attributeId14],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -403,7 +403,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId23,
         "name": "Laptop",
         "category": categoryId6,
-        "attributes": [attributeId16, attributeId9, attributeId12, attributeId15],
+        "attributes": [attributeId0, attributeId9, attributeId12, attributeId15],
         "internal": true,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -412,7 +412,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId24,
         "name": "Keyboard",
         "category": categoryId6,
-        "attributes": [attributeId16, attributeId9, attributeId12, attributeId15],
+        "attributes": [attributeId0, attributeId9, attributeId12, attributeId15],
         "internal": true,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -421,7 +421,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId25,
         "name": "Mouse",
         "category": categoryId6,
-        "attributes": [attributeId16, attributeId9, attributeId12, attributeId15],
+        "attributes": [attributeId0, attributeId9, attributeId12, attributeId15],
         "internal": true,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -430,7 +430,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId26,
         "name": "Monitor",
         "category": categoryId6,
-        "attributes": [attributeId16, attributeId9, attributeId12, attributeId15],
+        "attributes": [attributeId0, attributeId9, attributeId12, attributeId15],
         "internal": true,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -445,7 +445,7 @@ db.itemDefinitions.insertMany([
     {
         "_id": itemDefinitionId27,
         "name": "Jumper Cables",
-        "attributes": [attributeId16],
+        "attributes": [attributeId0],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -453,7 +453,7 @@ db.itemDefinitions.insertMany([
     {
         "_id": itemDefinitionId28,
         "name": "Vacuum Cleaner",
-        "attributes": [attributeId16, attributeId9],
+        "attributes": [attributeId0, attributeId9],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -466,7 +466,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId29,
         "name": "Towel",
         "category": categoryId7,
-        "attributes": [attributeId16],
+        "attributes": [attributeId0],
         "internal": false,
         "lowStockThreshold": 5,
         "criticalStockThreshold": 0
@@ -475,7 +475,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId30,
         "name": "Bedsheet",
         "category": categoryId7,
-        "attributes": [attributeId16, attributeId13],
+        "attributes": [attributeId0, attributeId13],
         "internal": false,
         "lowStockThreshold": 0,
         "criticalStockThreshold": 0
@@ -484,7 +484,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId31,
         "name": "Blanket",
         "category": categoryId7,
-        "attributes": [attributeId16],
+        "attributes": [attributeId0],
         "internal": false,
         "lowStockThreshold": 10,
         "criticalStockThreshold": 5
@@ -493,7 +493,7 @@ db.itemDefinitions.insertMany([
         "_id": itemDefinitionId32,
         "name": "Pillow",
         "category": categoryId7,
-        "attributes": [attributeId16],
+        "attributes": [attributeId0],
         "internal": false,
         "lowStockThreshold": 10,
         "criticalStockThreshold": 5
@@ -531,7 +531,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -550,7 +550,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -569,7 +569,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -588,7 +588,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -608,7 +608,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -628,7 +628,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -647,7 +647,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId1,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -666,7 +666,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId2,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -685,7 +685,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId2,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -704,7 +704,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId2,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -723,7 +723,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId2,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -742,7 +742,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId2,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -765,7 +765,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -784,7 +784,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -803,7 +803,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -822,7 +822,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -841,7 +841,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -860,7 +860,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -879,7 +879,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -898,7 +898,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -917,7 +917,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -936,7 +936,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -955,7 +955,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -974,7 +974,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -993,7 +993,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1012,7 +1012,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1031,7 +1031,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1050,7 +1050,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1069,7 +1069,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1088,7 +1088,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1107,7 +1107,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1126,7 +1126,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1145,7 +1145,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId3,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1166,7 +1166,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1181,7 +1181,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1196,7 +1196,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1211,7 +1211,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1226,7 +1226,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1241,7 +1241,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1256,7 +1256,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1271,7 +1271,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1286,7 +1286,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1301,7 +1301,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId4,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, 
             {
@@ -1318,7 +1318,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId5,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, ],
         "quantity": 20
@@ -1330,7 +1330,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId6,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             }, ],
         "quantity": 50
@@ -1350,7 +1350,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId7,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1365,7 +1365,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId7,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1380,7 +1380,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId7,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1395,7 +1395,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId7,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1410,7 +1410,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId7,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1427,7 +1427,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId8,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1442,7 +1442,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId8,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1457,7 +1457,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId8,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1472,7 +1472,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId8,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1487,7 +1487,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId8,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1504,7 +1504,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId9,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },],
         "quantity": 75
@@ -1515,7 +1515,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId10,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1530,7 +1530,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId10,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1545,7 +1545,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId10,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1560,7 +1560,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId10,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1575,7 +1575,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId10,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1592,7 +1592,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId11,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1607,7 +1607,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId11,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1622,7 +1622,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId11,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1637,7 +1637,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId11,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1652,7 +1652,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId11,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1670,7 +1670,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId12,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },],
         "quantity": 50
@@ -1683,7 +1683,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId13,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1702,7 +1702,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId13,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1723,7 +1723,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId14,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1742,7 +1742,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId14,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1763,7 +1763,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId15,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1782,7 +1782,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId15,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1803,7 +1803,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId16,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1826,7 +1826,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId16,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1851,7 +1851,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId17,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1874,7 +1874,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId17,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1899,7 +1899,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId18,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1922,7 +1922,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId18,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1947,7 +1947,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId19,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1970,7 +1970,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId19,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -1993,7 +1993,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId19,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2018,7 +2018,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId20,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2040,7 +2040,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId20,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2063,7 +2063,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId20,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2087,7 +2087,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId21,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2110,7 +2110,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId21,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2133,7 +2133,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId21,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2158,7 +2158,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId22,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2181,7 +2181,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId22,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2204,7 +2204,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId22,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2232,7 +2232,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId23,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2256,7 +2256,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId23,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {"attribute": attributeId9, "value": "Lenovo"},
@@ -2271,7 +2271,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId23,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {"attribute": attributeId9, "value": "HP"},
@@ -2288,7 +2288,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId24,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {"attribute": attributeId9, "value": "Dell"},
@@ -2303,7 +2303,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId24,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {"attribute": attributeId9, "value": "Lenovo"},
@@ -2318,7 +2318,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId24,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {"attribute": attributeId9, "value": "HP"},
@@ -2335,7 +2335,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId25,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {"attribute": attributeId9, "value": "Dell"},
@@ -2350,7 +2350,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId25,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {"attribute": attributeId9, "value": "Lenovo"},
@@ -2365,7 +2365,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId25,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {"attribute": attributeId9, "value": "HP"},
@@ -2393,7 +2393,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId26,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {"attribute": attributeId9, "value": "Lenovo"},
@@ -2408,7 +2408,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId26,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {"attribute": attributeId9, "value": "HP"},
@@ -2428,7 +2428,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId27,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },],
         "quantity": 10
@@ -2440,7 +2440,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId28,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2466,7 +2466,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId28,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2483,7 +2483,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId29,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },],
         "quantity": 1
@@ -2495,7 +2495,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId30,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2510,7 +2510,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId30,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2525,7 +2525,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId30,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2540,7 +2540,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId30,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2555,7 +2555,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId30,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },
             {
@@ -2572,7 +2572,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId31,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },],
         "quantity": 15
@@ -2584,7 +2584,7 @@ db.inventoryItems.insertMany([
         "itemDefinition": itemDefinitionId32,
         "attributes": [
             {
-                "attribute": attributeId16,
+                "attribute": attributeId0,
                 "value": newLocation()
             },],
         "quantity": 2
