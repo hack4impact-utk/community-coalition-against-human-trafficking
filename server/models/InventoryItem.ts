@@ -30,6 +30,10 @@ const InventoryItemSchema = new Schema(
       ref: 'User',
       required: false,
     },
+    softDelete: {
+      type: Boolean,
+      required: false,
+    },
   },
   {
     versionKey: false,

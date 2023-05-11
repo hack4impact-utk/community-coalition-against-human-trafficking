@@ -10,7 +10,6 @@ import { validCategoryResponse, mockObjectId } from 'test/testData'
 afterAll(() => {
   jest.restoreAllMocks()
   mongoose.connection.close()
-  
 })
 
 describe('MongoDriver', () => {
@@ -193,6 +192,52 @@ describe('MongoDriver', () => {
 
       const categories = await MongoDriver.findEntities(CategorySchema, {
         name: 'test',
+      })
+
+      expect(mockFind).toHaveBeenCalledTimes(1)
+      expect(categories).toEqual([validCategoryResponse])
+    })
+  })
+
+  describe('softDeleteEntity', () => {
+    test('valid call returns correct data', async () => {
+      const mockUpdate = (CategorySchema.findByIdAndUpdate = jest
+        .fn()
+        .mockImplementation(async () => [validCategoryResponse]))
+
+      const categories = await MongoDriver.softDeleteEntity(
+        CategorySchema,
+        mockObjectId
+      )
+
+      expect(mockUpdate).toHaveBeenCalledTimes(1)
+    })
+
+    test('invalid id returns 404', async () => {
+      const mockUpdate = (CategorySchema.findByIdAndUpdate = jest
+        .fn()
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        .mockImplementation(async () => {}))
+
+      try {
+        await MongoDriver.softDeleteEntity(CategorySchema, mockObjectId)
+      } catch (error) {
+        expect(mockUpdate).toHaveBeenCalledTimes(1)
+        expect(error).toBeInstanceOf(ApiError)
+        expect(error.message).toBe(errors.notFound)
+        expect(error.statusCode).toBe(404)
+      }
+    })
+  })
+
+  describe('findEntitiesByQuery', () => {
+    test('valid call returns correct data', async () => {
+      const mockFind = (CategorySchema.find = jest
+        .fn()
+        .mockImplementation(async () => [validCategoryResponse]))
+
+      const categories = await MongoDriver.findEntitiesByQuery(CategorySchema, {
+        softDelete: { $exists: false },
       })
 
       expect(mockFind).toHaveBeenCalledTimes(1)
