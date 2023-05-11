@@ -62,8 +62,8 @@ export default function ItemsPage({ itemDefinitions }: Props) {
       </Grid2>
       <RoutableDialog>
         <NewItemPage
-          redirectBack={(router) => {
-            router.push(`/settings/items`)
+          redirectBack={async (router) => {
+            await router.push(`/settings/items`)
           }}
         />
       </RoutableDialog>
