@@ -1,5 +1,6 @@
 import attributesHandler from '@api/attributes'
 import categoriesHandler from '@api/categories'
+import { LoadingButton } from '@mui/lab'
 import {
   Button,
   DialogActions,
@@ -9,7 +10,7 @@ import {
 import UpsertItemForm, {
   ItemDefinitionFormData,
 } from 'components/UpsertItemForm'
-import { useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/router'
 import React from 'react'
 import { itemDefinitionFormDataToItemDefinitionRequest } from 'utils/transformations'
 import { AttributeResponse, CategoryResponse } from 'utils/types'
@@ -49,19 +50,12 @@ async function createItem(formData: ItemDefinitionFormData) {
 }
 
 interface Props {
-  backHref?: string
+  redirectBack: (router: NextRouter, itemId?: string) => void
 }
 
-export default function NewItemPage({ backHref }: Props) {
+export default function NewItemPage({ redirectBack }: Props) {
   const router = useRouter()
-
-  const redirectBack = (queryStr?: string) => {
-    if (backHref) {
-      router.push(`${backHref}${queryStr}`)
-    } else {
-      router.reload()
-    }
-  }
+  const [loading, setLoading] = React.useState(false)
 
   return (
     <>
@@ -76,18 +70,22 @@ export default function NewItemPage({ backHref }: Props) {
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => redirectBack('')} color="inherit">
+        <Button onClick={() => redirectBack(router)} color="inherit">
           Close
         </Button>
-        <Button
+        <LoadingButton
           onClick={async () => {
+            setLoading(true)
             const itemId = await createItem(itemDefinitionFormData)
+            setLoading(false)
+
             // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
-            redirectBack(`?item=${itemId}`)
+            redirectBack(router, itemId)
           }}
+          loading={loading}
         >
           Submit
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </>
   )

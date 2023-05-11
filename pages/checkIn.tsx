@@ -29,8 +29,11 @@ import { useAppDispatch, useAppSelector } from 'store'
 import dayjs from 'dayjs'
 import DialogLink from 'components/DialogLink'
 import { KioskState } from 'store/types'
+import RoutableDialog from 'components/RoutableDialog'
+import NewItemPage from './items/new'
 import { showSnackbar } from 'store/snackbar'
 import AddIcon from '@mui/icons-material/Add'
+import { LoadingButton } from '@mui/lab'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -76,7 +79,11 @@ export default function CheckInPage({
     {} as CheckInOutFormData
   )
 
+  const [loading, setLoading] = React.useState(false)
+
   const onSubmit = async (formData: CheckInOutFormData) => {
+    // when validation is added, must be done before this
+    setLoading(true)
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
@@ -93,6 +100,7 @@ export default function CheckInPage({
     )
 
     const data = await response.json()
+    setLoading(false)
 
     if (data.success) {
       // @ts-ignore
@@ -116,49 +124,70 @@ export default function CheckInPage({
   }
 
   return (
-    <Grid2 container my={2} sx={{ flexGrow: 1 }}>
-      <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
-        <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
-          <Box display="flex" flexDirection="column">
-            <CardContent sx={{ p: 2 }}>
-              <Grid2 xs={12} container direction={'row'}>
-                  <Typography variant="h5" sx={{ mb: 2 }}>
-                    Check in items
-                  </Typography>
-                  <Grid2 ml="auto">
-                    <DialogLink href="/items/new" backHref="/checkIn">
-                      <Button
-                        variant="outlined"
-                        startIcon={<AddIcon />}
-                        sx={{ width: '100%' }}
-                      >
-                        Create New Item
-                      </Button>
-                    </DialogLink>
-                  </Grid2>
-                </Grid2>
-              <CheckInOutForm
-                kioskMode={kioskMode.enabled}
-                users={users}
-                itemDefinitions={itemDefinitions}
-                categories={categories}
-                formData={formData}
-                setFormData={setFormData}
-                inventoryItem={inventoryItem}
-                itemDefinition={defaultItemDef}
-              />
-            </CardContent>
-
-            <CardActions
-              sx={{ alignSelf: { xs: 'end' }, mt: { xs: 1, sm: 0 } }}
+    <>
+      <Grid2 container sx={{ flexGrow: 1 }}>
+        <Grid2
+          xs={12}
+          sm={8}
+          lg={6}
+          display="flex"
+          justifyContent="flex-end"
+          smOffset={2}
+          lgOffset={3}
+        >
+          <DialogLink href="/items/new">
+            <Button
+              variant="outlined"
+              fullWidth={isMobileView}
+              size="large"
+              sx={{ my: 2 }}
             >
-              <Button onClick={() => onSubmit(formData)} variant="contained">
-                Check in
-              </Button>
-            </CardActions>
-          </Box>
-        </Card>
+              Create new item
+            </Button>
+          </DialogLink>
+        </Grid2>
+
+        <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
+          <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
+            <Box display="flex" flexDirection="column">
+              <CardContent sx={{ p: isMobileView ? 0 : 2 }}>
+                <Typography variant="h5" sx={{ mb: 2 }}>
+                  Check in items
+                </Typography>
+                <CheckInOutForm
+                  kioskMode={kioskMode.enabled}
+                  users={users}
+                  itemDefinitions={itemDefinitions}
+                  categories={categories}
+                  formData={formData}
+                  setFormData={setFormData}
+                  inventoryItem={inventoryItem}
+                  itemDefinition={defaultItemDef}
+                />
+              </CardContent>
+
+              <CardActions
+                sx={{ alignSelf: { xs: 'end' }, mt: { xs: 1, sm: 0 } }}
+              >
+                <LoadingButton
+                  onClick={() => onSubmit(formData)}
+                  variant="contained"
+                  loading={loading}
+                >
+                  Check In
+                </LoadingButton>
+              </CardActions>
+            </Box>
+          </Card>
+        </Grid2>
       </Grid2>
-    </Grid2>
+      <RoutableDialog>
+        <NewItemPage
+          redirectBack={(router, itemId) => {
+            router.push(`/checkIn?item=${itemId}`)
+          }}
+        />
+      </RoutableDialog>
+    </>
   )
 }

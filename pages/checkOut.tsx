@@ -30,6 +30,7 @@ import React from 'react'
 import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
 import dayjs from 'dayjs'
 import { showSnackbar } from 'store/snackbar'
+import { LoadingButton } from '@mui/lab'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -64,7 +65,11 @@ export default function CheckOutPage({
     {} as CheckInOutFormData
   )
 
+  const [loading, setLoading] = React.useState(false)
+
   const onSubmit = async (formData: CheckInOutFormData) => {
+    // when validation is added, must be done before this
+    setLoading(true)
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
@@ -81,6 +86,7 @@ export default function CheckOutPage({
     )
 
     const data = await response.json()
+    setLoading(false)
 
     if (data.success) {
       // @ts-ignore
@@ -127,9 +133,13 @@ export default function CheckOutPage({
             <CardActions
               sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'end' } }}
             >
-              <Button onClick={() => onSubmit(formData)} variant="contained">
+              <LoadingButton
+                onClick={() => onSubmit(formData)}
+                variant="contained"
+                loading={loading}
+              >
                 Check Out
-              </Button>
+              </LoadingButton>
             </CardActions>
           </Box>
         </Card>

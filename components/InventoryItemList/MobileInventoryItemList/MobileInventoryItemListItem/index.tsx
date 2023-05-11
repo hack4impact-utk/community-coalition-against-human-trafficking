@@ -9,7 +9,7 @@ import {
 import { InventoryItemResponse } from 'utils/types'
 import React from 'react'
 import theme from 'utils/theme'
-import InventoryItemListItemKebab from 'components/InventoryItemListItemKebab'
+import InventoryItemListItemKebab from 'components/InventoryItemList/InventoryItemListItemKebab'
 import WarningIcon from '@mui/icons-material/Warning'
 import renderAttributeChips from 'utils/renderAttributeChips'
 
