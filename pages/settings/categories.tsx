@@ -28,7 +28,6 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
             Categories
           </Typography>
           <Grid2 ml="auto" mr={6}>
-            <DialogLink href="/items/new" backHref="/settings/items">
               <Button
                 variant="outlined"
                 startIcon={<AddIcon />}
