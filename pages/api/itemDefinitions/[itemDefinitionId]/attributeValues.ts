@@ -24,7 +24,8 @@ export default async function itemDefinitionAttributeValuesHandler(
         const response: InventoryItemExistingAttributeValuesResponse[] =
           await getItemDefinitionAttributeValues(itemDefinitionId)
 
-        return res.status(200).json({
+        const resStatus = response.length ? 200 : 204
+        return res.status(resStatus).json({
           success: true,
           payload: response,
         })

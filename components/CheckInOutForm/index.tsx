@@ -9,6 +9,7 @@ import {
   InventoryItemResponse,
   CheckInOutFormData,
   TextFieldAttributesInternalRepresentation,
+  InventoryItemExistingAttributeValuesResponse,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete, {
@@ -72,6 +73,10 @@ function CheckInOutForm({
     React.useState<SeparatedAttributeResponses>(
       separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
     )
+  const [existingNumAttrVals, setExistingNumAttrVals] =
+    React.useState<InventoryItemExistingAttributeValuesResponse[]>()
+  const [existingTextAttrVals, setExistingTextAttrVals] =
+    React.useState<InventoryItemExistingAttributeValuesResponse[]>()
   const session = useSession()
 
   const initialFormData: Partial<CheckInOutFormData> = {
@@ -141,9 +146,39 @@ function CheckInOutForm({
 
   // if you select an item definition without selecting a category, infer the category
   React.useEffect(() => {
-    setFormData((formData) =>
-      updateFormData(formData, { category: formData.itemDefinition?.category })
-    )
+    const onItemDefinitionUpdate = async () => {
+      if (formData.itemDefinition) {
+        const res = await fetch(
+          `/api/itemDefinitions/${formData.itemDefinition!._id}/attributeValues`
+        )
+        const resJson = await res.json()
+        const existingInventoryItemAttributeValues: InventoryItemExistingAttributeValuesResponse[] =
+          resJson.payload
+
+        var numAttrVals: InventoryItemExistingAttributeValuesResponse[] = []
+        var textAttrVals: InventoryItemExistingAttributeValuesResponse[] = []
+
+        existingInventoryItemAttributeValues.forEach((attrVal) => {
+          if (attrVal.values.length) {
+            if (typeof attrVal.values[0] === 'number') {
+              numAttrVals.push(attrVal)
+            } else {
+              textAttrVals.push(attrVal)
+            }
+          }
+        })
+
+        setExistingNumAttrVals(numAttrVals)
+        setExistingTextAttrVals(textAttrVals)
+      }
+
+      setFormData((formData) =>
+        updateFormData(formData, {
+          category: formData.itemDefinition?.category,
+        })
+      )
+    }
+    onItemDefinitionUpdate()
   }, [formData.itemDefinition, setFormData])
 
   // Update filtered item defs when category changes
@@ -280,28 +315,47 @@ function CheckInOutForm({
       )}
       {/* Text Fields */}
       {splitAttrs.text.map((textAttr) => (
-        <TextField
+        <Autocomplete
           key={textAttr._id}
-          label={textAttr.name}
-          onChange={(e) =>
-            updateTextFieldAttributes(e.target.value, textAttr._id)
+          options={
+            existingTextAttrVals
+              ?.find((val) => val._id === textAttr._id)
+              ?.values.sort() || []
           }
           sx={{ marginTop: 4 }}
+          renderInput={(params) => (
+            <TextField {...params} label={textAttr.name} />
+          )}
+          isOptionEqualToValue={(option, value) => option === value}
+          onChange={(_e, textAttrVal) => {
+            updateTextFieldAttributes(textAttrVal as string, textAttr._id)
+          }}
+          getOptionLabel={(attrValue) => attrValue as string}
           value={formData.textFieldAttributes?.[textAttr._id] || ''}
+          freeSolo
         />
       ))}
 
       {/* Number Fields */}
       {splitAttrs.number.map((numAttr) => (
-        <TextField
+        <Autocomplete
           key={numAttr._id}
-          label={numAttr.name}
-          type="number"
-          onChange={(e) =>
-            updateTextFieldAttributes(Number(e.target.value), numAttr._id)
+          options={
+            existingNumAttrVals
+              ?.find((val) => val._id === numAttr._id)
+              ?.values.sort((v1, v2) => Number(v1) - Number(v2)) || []
           }
           sx={{ marginTop: 4 }}
+          renderInput={(params) => (
+            <TextField {...params} label={numAttr.name} />
+          )}
+          isOptionEqualToValue={(option, value) => option === value}
+          onChange={(_e, numAttrVal) => {
+            updateTextFieldAttributes(numAttrVal as string, numAttr._id)
+          }}
+          getOptionLabel={(attrValue) => String(attrValue)}
           value={formData.textFieldAttributes?.[numAttr._id] || ''}
+          freeSolo
         />
       ))}
 
