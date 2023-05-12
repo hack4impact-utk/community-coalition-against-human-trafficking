@@ -114,11 +114,14 @@ export async function getItemDefinitions() {
 
 export async function getItemDefinitionAttributeValues(id: string) {
   // only look at the target itemDefinition
-  existingAttributeValuesPipeline.unshift({
-    $match: { _id: new Types.ObjectId(id) },
-  })
+  const pipeline = [
+    {
+      $match: { _id: new Types.ObjectId(id) },
+    },
+    ...existingAttributeValuesPipeline,
+  ]
 
   return (await ItemDefinitionSchema.aggregate(
-    existingAttributeValuesPipeline
+    pipeline
   )) as InventoryItemExistingAttributeValuesResponse[]
 }
