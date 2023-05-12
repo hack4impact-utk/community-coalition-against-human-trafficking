@@ -89,7 +89,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
 
   const handleExport = async () => {
-    const requestStr = `http://localhost:3000/api/logs/export${constructQueryString(
+    const requestStr = `/api/logs/export${constructQueryString(
       router.query as { [key: string]: string }
     )}`
 
@@ -132,7 +132,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
       }
 
       const response = await fetch(
-        `http://localhost:3000/api/logs${constructQueryString(
+        `/api/logs${constructQueryString(
           router.query as { [key: string]: string }
         )}`,
         {
@@ -311,6 +311,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
           endDate={router.query.endDate as string}
           startDate={router.query.startDate as string}
           internal={!!router.query.internal}
+          total={totalLogs}
           setTableData={setTableData}
         />
       ) : (

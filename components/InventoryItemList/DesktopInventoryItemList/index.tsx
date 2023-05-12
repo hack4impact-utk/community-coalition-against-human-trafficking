@@ -162,10 +162,6 @@ export default function DesktopInventoryItemList(props: Props) {
   const [tableData, setTableData] = React.useState<InventoryItemResponse[]>([])
   const router = useRouter()
 
-  React.useEffect(() => {
-    console.log('test: ', props.inventoryItems)
-  }, [props.inventoryItems])
-
   // when the change page buttons are clicked
   const handleChangePage = (_e: unknown, newPage: number) => {
     if (newPage === inventoryPaginationDefaults.page) {
