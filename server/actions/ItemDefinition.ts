@@ -1,7 +1,10 @@
 import ItemDefinitionSchema from 'server/models/ItemDefinition'
 import InventoryItemSchema from 'server/models/InventoryItem'
 import { getEntities, getEntity } from 'server/actions/MongoDriver'
-import { ItemDefinitionResponse } from 'utils/types'
+import {
+  InventoryItemExistingAttributeValuesResponse,
+  ItemDefinitionResponse,
+} from 'utils/types'
 import { PipelineStage, Types } from 'mongoose'
 
 const getRequestPipeline: PipelineStage[] = [
@@ -115,5 +118,7 @@ export async function getItemDefinitionAttributeValues(id: string) {
     $match: { _id: new Types.ObjectId(id) },
   })
 
-  return await ItemDefinitionSchema.aggregate(existingAttributeValuesPipeline)
+  return (await ItemDefinitionSchema.aggregate(
+    existingAttributeValuesPipeline
+  )) as InventoryItemExistingAttributeValuesResponse[]
 }

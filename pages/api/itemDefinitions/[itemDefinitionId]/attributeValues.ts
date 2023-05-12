@@ -1,6 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getItemDefinitionAttributeValues } from 'server/actions/ItemDefinition'
-import { ApiError } from 'utils/types'
+import {
+  ApiError,
+  InventoryItemExistingAttributeValuesResponse,
+} from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { apiObjectIdValidation } from 'utils/apiValidators'
 import { errors } from 'utils/constants/errors'
@@ -18,9 +21,8 @@ export default async function itemDefinitionAttributeValuesHandler(
     const itemDefinitionId = req.query.itemDefinitionId as string
     switch (req.method) {
       case 'GET': {
-        const response = await getItemDefinitionAttributeValues(
-          itemDefinitionId
-        )
+        const response: InventoryItemExistingAttributeValuesResponse[] =
+          await getItemDefinitionAttributeValues(itemDefinitionId)
 
         return res.status(200).json({
           success: true,
