@@ -128,7 +128,7 @@ export default function CheckOutPage({
       <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
         <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
           <Box display="flex" flexDirection="column">
-            <CardContent sx={{ p: isMobileView ? 0 : 2 }}>
+            <CardContent sx={{ p: 2 }}>
               <Typography variant="h5" sx={{ mb: 2 }}>
                 Check out items
               </Typography>
