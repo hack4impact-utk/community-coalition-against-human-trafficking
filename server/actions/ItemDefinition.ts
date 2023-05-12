@@ -29,8 +29,7 @@ const getRequestPipeline: PipelineStage[] = [
 ]
 
 // find all inventory items with the matching itemDefinitionId
-// for each of those, get the attribute value of each of them
-// somehow return those in an array??
+// for each of those, get the unique attribute values of each
 const existingAttributeValuesPipeline: PipelineStage[] = [
   // find all inventory items with the given itemDefinition
   {
@@ -58,7 +57,6 @@ const existingAttributeValuesPipeline: PipelineStage[] = [
       inventoryItemAttrArr: { $push: '$inventoryItems.attributes' },
     },
   },
-
   {
     $set: {
       inventoryItemAttrArr: { $arrayElemAt: ['$inventoryItemAttrArr', 0] },
@@ -82,7 +80,7 @@ const existingAttributeValuesPipeline: PipelineStage[] = [
   {
     $group: {
       _id: '$inventoryItemAttrArr.attribute',
-      values: { $push: '$inventoryItemAttrArr.value' },
+      values: { $addToSet: '$inventoryItemAttrArr.value' }, // $addToSet creates the array and removes duplicates
     },
   },
 ]
