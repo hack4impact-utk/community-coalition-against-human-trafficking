@@ -4,3 +4,10 @@ export const historyPaginationDefaults = {
   sort: 'date',
   order: 'desc',
 }
+
+export const inventoryPaginationDefaults = {
+  page: 0,
+  limit: 5,
+  sort: 'name',
+  order: 'asc',
+}
