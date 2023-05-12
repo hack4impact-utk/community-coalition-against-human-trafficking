@@ -1,6 +1,5 @@
 import { Autocomplete, Box, FormControl, TextField } from '@mui/material'
 import { DateTimePicker } from '@mui/x-date-pickers'
-import dayjs, { Dayjs } from 'dayjs'
 import React, { useEffect } from 'react'
 import {
   ItemDefinitionResponse,
@@ -30,12 +29,13 @@ interface Props {
   itemDefinition?: ItemDefinitionResponse
   formData: CheckInOutFormData
   setFormData: React.Dispatch<React.SetStateAction<CheckInOutFormData>>
+  errors: Record<keyof CheckInOutFormData, string>
 }
 
 function blankFormData(): CheckInOutFormData {
   return {
     user: {} as UserResponse,
-    date: dayjs(new Date()),
+    date: new Date(),
     category: {} as CategoryResponse,
     itemDefinition: {} as ItemDefinitionResponse,
     attributes: [],
@@ -43,8 +43,6 @@ function blankFormData(): CheckInOutFormData {
     quantityDelta: 0,
   }
 }
-
-const defaultSplitAttrs = separateAttributeResponses()
 
 function updateFormData(
   formData: CheckInOutFormData,
@@ -56,6 +54,9 @@ function updateFormData(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const defaultSplitAttrs = separateAttributeResponses()
+
 function CheckInOutForm({
   kioskMode,
   users,
@@ -65,6 +66,7 @@ function CheckInOutForm({
   itemDefinition,
   formData,
   setFormData,
+  errors,
 }: Props) {
   const [filteredItemDefinitions, setFilteredItemDefinitions] =
     React.useState<ItemDefinitionResponse[]>(itemDefinitions)
@@ -152,7 +154,7 @@ function CheckInOutForm({
       setFilteredItemDefinitions(
         itemDefinitions.filter((itemDefinition) => {
           if (itemDefinition.category) {
-            return itemDefinition.category._id === formData.category._id
+            return itemDefinition.category._id === formData.category?._id
           }
         })
       )
@@ -198,7 +200,12 @@ function CheckInOutForm({
           options={users}
           isOptionEqualToValue={(option, value) => option._id === value._id}
           renderInput={(params) => (
-            <TextField {...params} label="Staff Member" />
+            <TextField
+              {...params}
+              label="Staff Member"
+              error={!!errors['user']}
+              helperText={errors['user'] ? errors['user'] : ''}
+            />
           )}
           getOptionLabel={(user) => user.name}
           renderOption={(props, option) => {
@@ -224,17 +231,25 @@ function CheckInOutForm({
           onChange={(date) => {
             setFormData((formData) =>
               updateFormData(formData, {
-                date: date as Dayjs,
+                date: date ? new Date(date) : undefined,
               })
             )
           }}
+          disableFuture
           renderInput={(params) => <TextField {...params} fullWidth />}
         />
       </Box>
       <Autocomplete
         options={categories}
         sx={{ marginTop: 4 }}
-        renderInput={(params) => <TextField {...params} label="Category" />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Category"
+            error={!!errors['category']}
+            helperText={errors['category'] ? errors['category'] : ''}
+          />
+        )}
         isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, category) => {
           setFormData((formData) =>
@@ -250,7 +265,16 @@ function CheckInOutForm({
       <Autocomplete
         options={filteredItemDefinitions}
         sx={{ marginTop: 4 }}
-        renderInput={(params) => <TextField {...params} label="Item" />}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label="Item"
+            error={!!errors['itemDefinition']}
+            helperText={
+              errors['itemDefinition'] ? errors['itemDefinition'] : ''
+            }
+          />
+        )}
         isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, itemDefinition) => {
           setFormData((formData) =>
@@ -276,6 +300,7 @@ function CheckInOutForm({
           }}
           value={aaSelected}
           setValue={setAaSelected}
+          error={errors['attributes']}
         />
       )}
       {/* Text Fields */}
@@ -288,6 +313,8 @@ function CheckInOutForm({
           }
           sx={{ marginTop: 4 }}
           value={formData.textFieldAttributes?.[textAttr._id] || ''}
+          error={!!errors['textFieldAttributes']}
+          helperText={errors['textFieldAttributes']}
         />
       ))}
 
@@ -302,6 +329,8 @@ function CheckInOutForm({
           }
           sx={{ marginTop: 4 }}
           value={formData.textFieldAttributes?.[numAttr._id] || ''}
+          error={!!errors['textFieldAttributes']}
+          helperText={errors['textFieldAttributes']}
         />
       ))}
 
@@ -314,6 +343,7 @@ function CheckInOutForm({
           )
         }}
         quantity={formData.quantityDelta || 0}
+        error={errors['quantityDelta']}
       />
     </FormControl>
   )

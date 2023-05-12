@@ -29,14 +29,14 @@ function preloadState(): RootState {
     },
     snackbar: {
       open: false,
-      message: ""
-    }
+      message: '',
+    },
   }
 }
 
 const rootReducer = combineReducers({
   [kioskSlice.name]: kioskSlice.reducer,
-  [snackbarSlice.name]: snackbarSlice.reducer
+  [snackbarSlice.name]: snackbarSlice.reducer,
 })
 
 const makeConfiguredStore = () =>
@@ -61,9 +61,8 @@ const makeStore = () => {
     }
 
     const persistedReducer = persistReducer(persistConfig, rootReducer)
-    const store: ReturnType<typeof configureStore> & {
-      __persistor: ReturnType<typeof persistStore>
-    } = configureStore({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const store: any = configureStore({
       reducer: persistedReducer,
       preloadedState: preloadState(),
       middleware: (getDefaultMiddleware) =>

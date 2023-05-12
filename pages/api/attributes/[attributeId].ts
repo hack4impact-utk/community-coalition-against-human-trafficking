@@ -50,7 +50,7 @@ export default async function attributeHandler(
         })
       }
       case 'DELETE': {
-        await MongoDriver.deleteEntity(AttributeSchema, attributeId)
+        await MongoDriver.softDeleteEntity(AttributeSchema, attributeId)
 
         return res.status(200).json({
           success: true,

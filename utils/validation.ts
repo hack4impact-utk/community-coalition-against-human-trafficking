@@ -1,5 +1,5 @@
-import { ObjectId } from 'mongodb'
 import { errors } from 'utils/constants/errors'
+import mongoose from 'mongoose'
 
 export interface Property {
   key: string
@@ -24,8 +24,8 @@ interface ValidationErrorList {
  */
 export function validateObjectId(id: string) {
   if (!id) return false
-  if (ObjectId.isValid(id)) {
-    if (String(new ObjectId(id)) !== id) return false
+  if (mongoose.Types.ObjectId.isValid(id)) {
+    if (String(new mongoose.Types.ObjectId(id)) !== id) return false
     return true
   }
   return false

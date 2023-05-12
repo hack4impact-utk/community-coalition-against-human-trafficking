@@ -61,7 +61,7 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
     setLoading(true)
 
     const response = await fetch(
-      `http://localhost:3000/api/notificationEmails/${notificationEmailData._id}`,
+      `/api/notificationEmails/${notificationEmailData._id}`,
       {
         method: 'PUT',
         headers: {
@@ -128,9 +128,13 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
               >
                 Cancel
               </Button>
-              <LoadingButton variant='contained' onClick={() => {
-                onSubmit()
-              }} loading={loading}>
+              <LoadingButton
+                variant="contained"
+                onClick={() => {
+                  onSubmit()
+                }}
+                loading={loading}
+              >
                 Save
               </LoadingButton>
             </Grid2>

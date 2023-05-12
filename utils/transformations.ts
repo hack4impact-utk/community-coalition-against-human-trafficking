@@ -1,12 +1,11 @@
-import { ItemDefinitionFormData } from 'components/UpsertItemForm'
-import { AttributeFormData } from 'components/UpsertAttributeForm'
 import {
   AttributeRequest,
   CheckInOutFormData,
   CheckInOutRequest,
   InventoryItemAttributeRequest,
-  InventoryItemRequest,
   ItemDefinitionRequest,
+  ItemDefinitionFormData,
+  AttributeFormData,
 } from 'utils/types'
 
 /**
@@ -41,7 +40,7 @@ export function checkInOutFormDataToCheckInOutRequest(
         (acc, attributeId) => {
           const attribute: InventoryItemAttributeRequest = {
             attribute: attributeId,
-            value: formData.textFieldAttributes[attributeId],
+            value: formData.textFieldAttributes![attributeId],
           }
 
           return [...acc, attribute]
@@ -54,10 +53,9 @@ export function checkInOutFormDataToCheckInOutRequest(
   const retVal: CheckInOutRequest = {
     staff: formData.user._id,
     quantityDelta: formData.quantityDelta,
-    date: formData.date.toDate(),
+    date: formData.date,
     inventoryItem: partialInventoryItem,
   }
-
   return retVal
 }
 
@@ -79,8 +77,8 @@ export function itemDefinitionFormDataToItemDefinitionRequest(
 ): ItemDefinitionRequest {
   return {
     ...formData,
-    category: formData.category._id,
-    attributes: formData.attributes.map((attr) => attr._id),
+    category: formData.category?._id,
+    attributes: formData.attributes?.map((attr) => attr._id) || [],
   }
 }
 
