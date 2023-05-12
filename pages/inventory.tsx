@@ -1,6 +1,5 @@
 import InventoryItemList from 'components/InventoryItemList'
 import { CategoryResponse, InventoryItemResponse } from 'utils/types'
-import inventoryItemsHandler from 'pages/api/inventoryItems'
 import categoriesHandler from 'pages/api/categories'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
@@ -11,13 +10,13 @@ import {
 } from '@mui/material'
 import SearchField from 'components/SearchField'
 import SearchAutocomplete from 'components/SearchAutocomplete'
-import { useRouter } from 'next/router'
+import { NextRouter, useRouter } from 'next/router'
 import theme from 'utils/theme'
+import React from 'react'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
-      inventoryItems: await apiWrapper(inventoryItemsHandler, context),
       categories: (await apiWrapper(categoriesHandler, context)).map(
         (c: CategoryResponse) => c.name
       ),
@@ -29,8 +28,48 @@ interface Props {
   categories: string[]
 }
 
-export default function InventoryPage({ inventoryItems, categories }: Props) {
+const constructQueryString = (params: { [key: string]: string }) => {
+  if (Object.keys(params).length === 0) return ''
+  return `?${Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&')}`
+}
+
+const fetchInventoryItems = async (router: NextRouter) => {
+  const response = await fetch(
+    `/api/inventoryItems${constructQueryString(
+      router.query as { [key: string]: string }
+    )}`,
+    {
+      method: 'GET',
+    }
+  )
+  const data = await response.json()
+
+  return data.payload
+}
+
+export default function InventoryPage({ categories }: Props) {
   const router = useRouter()
+  const [inventoryItems, setInventoryItems] = React.useState<
+    InventoryItemResponse[]
+  >([])
+  const [total, setTotal] = React.useState<number>(0)
+
+  React.useEffect(() => {
+    fetchInventoryItems(router).then((items) => {
+      setInventoryItems(items.data)
+      setTotal(items.total)
+    })
+  }, [
+    router.query.search,
+    router.query.category,
+    router.query.page,
+    router.query.limit,
+    router.query.sort,
+    router.query.order,
+  ])
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   return (
@@ -57,6 +96,7 @@ export default function InventoryPage({ inventoryItems, categories }: Props) {
             inventoryItems={inventoryItems}
             search={router.query.search as string}
             category={router.query.category as string}
+            total={total}
           />
         </Grid2>
       </Grid2>
