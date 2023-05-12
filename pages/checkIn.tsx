@@ -32,7 +32,6 @@ import { KioskState } from 'store/types'
 import RoutableDialog from 'components/RoutableDialog'
 import NewItemPage from './items/new'
 import { showSnackbar } from 'store/snackbar'
-import AddIcon from '@mui/icons-material/Add'
 import { LoadingButton } from '@mui/lab'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -138,7 +137,6 @@ export default function CheckInPage({
                     <DialogLink href="/items/new">
                       <Button
                         variant="outlined"
-                        startIcon={<AddIcon />}
                         sx={{ width: '100%' }}
                       >
                         Create New Item

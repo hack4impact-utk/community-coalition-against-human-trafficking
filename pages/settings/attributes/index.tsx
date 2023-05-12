@@ -10,7 +10,6 @@ import SearchField from 'components/SearchField'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import { AttributeResponse } from 'utils/types'
-import AddIcon from '@mui/icons-material/Add'
 import { useRouter } from 'next/router'
 import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
@@ -43,7 +42,6 @@ export default function AttributesPage({ attributes }: AttributesPageProps) {
             <DialogLink href="/settings/attributes/create">
               <Button
                 variant="outlined"
-                startIcon={<AddIcon />}
                 sx={{ width: '100%' }}
               >
                 Create New Attribute
