@@ -333,6 +333,7 @@ function CheckInOutForm({
           getOptionLabel={(attrValue) => attrValue as string}
           value={formData.textFieldAttributes?.[textAttr._id] || ''}
           freeSolo
+          autoSelect
         />
       ))}
 
@@ -356,6 +357,7 @@ function CheckInOutForm({
           getOptionLabel={(attrValue) => String(attrValue)}
           value={formData.textFieldAttributes?.[numAttr._id] || ''}
           freeSolo
+          autoSelect
         />
       ))}
 
