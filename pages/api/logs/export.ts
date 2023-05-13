@@ -3,8 +3,9 @@ import { ApiError, LogResponse } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { getFilteredLogs } from 'server/actions/Logs'
 import { createLogsCsvAsString } from 'utils/csv'
+import { historyPaginationDefaults } from 'utils/constants'
 
-// @route GET api/logs/csv - Returns a CSV of the logs filtered and sorted by the query parameters - Private
+// @route GET api/logs/export - Returns a CSV of the logs filtered and sorted by the query parameters - Private
 export default async function logsHandler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -12,16 +13,15 @@ export default async function logsHandler(
   try {
     // ensure user is logged in
     await serverAuth(req, res)
-    const { search, category, startDate, endDate, internal, sort, order } =
-      req.query
+    const { search, category, startDate, endDate, internal } = req.query
 
     switch (req.method) {
       case 'GET': {
         res.setHeader('Content-Type', 'text/csv')
         res.setHeader('Content-Disposition', 'attachment; filename="logs.csv"')
         const logs = await getFilteredLogs(
-          sort as string,
-          order as string,
+          historyPaginationDefaults.orderBy,
+          historyPaginationDefaults.order,
           search as string,
           category as string,
           startDate as string,

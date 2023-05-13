@@ -64,7 +64,10 @@ const headCells: readonly HeadCell[] = [
     label: 'Name',
     sortable: true,
     sortFn: (category1: CategoryResponse, category2: CategoryResponse) => {
-      return comparator(category1.name, category2.name)
+      return comparator(
+        category1.name.toLowerCase(),
+        category2.name.toLowerCase()
+      )
     },
   },
   {
@@ -159,7 +162,7 @@ export default function DesktopCategoryList(props: Props) {
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
     setVisibleRows(rowsOnMount)
-  }, [props.search])
+  }, [props.search, props.categories])
 
   const handleRequestSort = React.useCallback(
     (_e: React.MouseEvent<unknown>, newOrderBy: keyof CategoryTableData) => {

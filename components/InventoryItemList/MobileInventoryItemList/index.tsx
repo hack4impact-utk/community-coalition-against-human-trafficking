@@ -2,61 +2,69 @@ import { List } from '@mui/material'
 import React from 'react'
 import { InventoryItemResponse } from 'utils/types'
 import MobileInventoryItemListItem from 'components/InventoryItemList/MobileInventoryItemList/MobileInventoryItemListItem'
+import InfiniteScroll from 'components/InfiniteScroll'
+import { inventoryPaginationDefaults } from 'utils/constants'
+import { useRouter } from 'next/router'
+import urls from 'utils/urls'
+import { constructQueryString } from 'utils/constructQueryString'
 
 interface MobileInventoryItemListProps {
   inventoryItems: InventoryItemResponse[]
   search: string
   category: string
+  total: number
 }
+
 export default function MobileInventoryItemList({
   inventoryItems,
-  search,
-  category,
+  total,
 }: MobileInventoryItemListProps) {
-  const [filteredData, setFilteredData] = React.useState(inventoryItems)
+  const [visibleRows, setVisibleRows] =
+    React.useState<InventoryItemResponse[]>(inventoryItems)
+  const [page, setPage] = React.useState<number>(0)
+  const { limit } = inventoryPaginationDefaults
+  const router = useRouter()
+
+  const nextFn = React.useCallback(async () => {
+    const newPage = page + 1
+    setPage((prev) => {
+      return prev + 1
+    })
+    const response = await fetch(
+      `${
+        urls.api.inventoryItems.inventoryItems
+      }?page=${newPage}${constructQueryString(
+        router.query as { [key: string]: string }
+      )}`
+    )
+    const { payload } = await response.json()
+
+    setVisibleRows((prev) => {
+      const t = [...prev, ...payload.data]
+      return t
+    })
+  }, [page, setVisibleRows, setPage, router.query])
 
   React.useEffect(() => {
-    let newTableData = inventoryItems
-    if (search) {
-      const lowerSearch = search.toLowerCase()
-      newTableData = [
-        ...newTableData.filter((item) => {
-          return (
-            item.itemDefinition.name.toLowerCase().includes(lowerSearch) ||
-            (item.attributes &&
-              item.attributes
-                .map((attr) => `${attr.attribute.name}: ${attr.value}`)
-                .join(' ')
-                .includes(search)) ||
-            (item.itemDefinition.category &&
-              item.itemDefinition.category.name
-                .toLowerCase()
-                .includes(lowerSearch)) ||
-            (item.assignee &&
-              item.assignee.name.toLowerCase().includes(lowerSearch))
-          )
-        }),
-      ]
-    }
+    setPage(0)
+  }, [router.query])
 
-    if (category) {
-      newTableData = [
-        ...newTableData.filter((item) => {
-          return item.itemDefinition.category?.name === category
-        }),
-      ]
-    }
-
-    setFilteredData(newTableData)
-  }, [inventoryItems, search, category])
+  React.useEffect(() => {
+    setVisibleRows(inventoryItems)
+  }, [inventoryItems])
   return (
-    <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-      {filteredData.map((inventoryItem) => (
-        <MobileInventoryItemListItem
-          inventoryItem={inventoryItem}
-          key={inventoryItem._id}
-        />
-      ))}
-    </List>
+    <InfiniteScroll
+      next={nextFn}
+      hasMore={Number(page) * limit + limit < total}
+    >
+      <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+        {visibleRows.map((inventoryItem) => (
+          <MobileInventoryItemListItem
+            inventoryItem={inventoryItem}
+            key={inventoryItem._id}
+          />
+        ))}
+      </List>
+    </InfiniteScroll>
   )
 }

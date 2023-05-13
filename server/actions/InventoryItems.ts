@@ -4,7 +4,6 @@ import {
   InventoryItem,
   InventoryItemPostRequest,
   InventoryItemPutRequest,
-  InventoryItemRequest,
 } from 'utils/types'
 import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
@@ -127,6 +126,31 @@ const softDeleteRequestPipeline: PipelineStage[] = [
   },
 ]
 
+function searchAggregate(search: string): PipelineStage {
+  return {
+    $match: {
+      $or: [
+        { 'itemDefinition.name': { $regex: search, $options: 'i' } },
+        {
+          'itemDefinition.category.name': {
+            $regex: search,
+            $options: 'i',
+          },
+        },
+        { 'assignee.name': { $regex: search, $options: 'i' } },
+      ],
+    },
+  }
+}
+
+function categorySearchAggregate(category: string): PipelineStage {
+  return {
+    $match: {
+      'itemDefinition.category.name': category,
+    },
+  }
+}
+
 /**
  * Finds all inventoryItems that do not have the softDelete flag
  * @returns All inventoryItems that do not have the softDelete flag
@@ -136,6 +160,69 @@ export async function getInventoryItems() {
     InventoryItemSchema,
     softDeleteRequestPipeline
   )
+}
+
+/**
+ * Filter and sort inventory items by params and return the filtered inventory items
+ * @param orderBy The string to sort the inventory item by
+ * @param order The order to sort the inventory items by
+ * @param search The string to search the inventory items by
+ * @param categorySearch The string to search the inventory items by category
+ * @returns Filtered inventory items
+ */
+export async function getFilteredInventoryItems(
+  orderBy: string,
+  order: string,
+  search?: string,
+  categorySearch?: string
+) {
+  const pipeline = [...requestPipeline]
+  if (search) {
+    pipeline.push(searchAggregate(search))
+  }
+  if (categorySearch) {
+    pipeline.push(categorySearchAggregate(categorySearch))
+  }
+  pipeline.push({
+    $sort: {
+      [orderBy]: order === 'asc' ? 1 : -1,
+    },
+  })
+
+  return await MongoDriver.getEntities(InventoryItemSchema, pipeline)
+}
+
+/**
+ * Finds inventory items for the current page with the given page size and sorting
+ * @param page The current page to get
+ * @param pageSize The number of inventory items to get per page
+ * @param orderBy The string to sort the inventory items by
+ * @param order The order to sort the inventory items by
+ * @param search The string to search the inventory items by
+ * @param categorySearch The string to search the inventory items by category
+ * @returns The inventory items for the current page
+ */
+export async function getPaginatedInventoryItems(
+  page: number,
+  limit: number,
+  orderBy: string,
+  order: string,
+  search?: string,
+  categorySearch?: string
+) {
+  const filteredLogs = await getFilteredInventoryItems(
+    orderBy,
+    order,
+    search,
+    categorySearch
+  )
+  const startIndex = page * limit
+  const endIndex = page * limit + limit
+  const logs = filteredLogs.slice(startIndex, endIndex)
+  return {
+    data: logs,
+    total: filteredLogs.length,
+  }
 }
 
 /**

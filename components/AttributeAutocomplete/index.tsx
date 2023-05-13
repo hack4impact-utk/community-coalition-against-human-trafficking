@@ -61,6 +61,7 @@ export default function AttributeAutocomplete({
   return (
     <Autocomplete
       multiple
+      autoHighlight
       open={open}
       options={options}
       disableCloseOnSelect
