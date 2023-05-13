@@ -289,6 +289,38 @@ function CheckInOutForm({
         getOptionLabel={(itemDefinition) => itemDefinition.name}
         value={formData.itemDefinition || null}
       />
+
+      {/* Assignee Autocomplete */}
+      {formData.itemDefinition.internal && (
+        <Autocomplete
+          options={users}
+          sx={{ mt: 4 }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Assignee"
+              error={!!errors['assignee']}
+              helperText={errors['assignee'] || ''}
+            />
+          )}
+          getOptionLabel={(user) => user.name}
+          renderOption={(props, option) => {
+            return (
+              <li {...props} key={option._id}>
+                {option.name}
+              </li>
+            )
+          }}
+          onChange={(_e, user) => {
+            setFormData((formData) =>
+              updateFormData(formData, {
+                assignee: user || undefined,
+              })
+            )
+          }}
+        />
+      )}
+
       {/* Attribute Autocomplete */}
       {splitAttrs.list.length > 0 && (
         <AttributeAutocomplete
