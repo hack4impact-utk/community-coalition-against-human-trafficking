@@ -33,13 +33,13 @@ export default function InfiniteScroll({
   return (
     <>
       {children}
-      {hasMore && (
+      {
         <CircularProgress
           variant="indeterminate"
           color="inherit"
           sx={{ margin: 'auto' }}
         />
-      )}
+      }
     </>
   )
 }

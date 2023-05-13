@@ -28,6 +28,7 @@ export default function InventoryItemList({
           inventoryItems={inventoryItems}
           search={search}
           category={category}
+          total={total}
         />
       ) : (
         <DesktopInventoryItemList

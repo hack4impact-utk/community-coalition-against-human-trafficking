@@ -4,6 +4,7 @@ import { InventoryItemResponse } from 'utils/types'
 import MobileInventoryItemListItem from 'components/InventoryItemList/MobileInventoryItemList/MobileInventoryItemListItem'
 import InfiniteScroll from 'components/InfiniteScroll'
 import { inventoryPaginationDefaults } from 'utils/constants'
+import { useRouter } from 'next/router'
 
 interface MobileInventoryItemListProps {
   inventoryItems: InventoryItemResponse[]
@@ -11,12 +12,20 @@ interface MobileInventoryItemListProps {
   category: string
   total: number
 }
+
+const constructQueryString = (params: { [key: string]: string }) => {
+  if (Object.keys(params).length === 0) return ''
+  return `&${Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&')}`
+}
+
 export default function MobileInventoryItemList({
   inventoryItems,
+  total,
 }: MobileInventoryItemListProps) {
-  const [visibleRows, setVisibleRows] = React.useState<InventoryItemResponse[]>(
-    props.logs
-  )
+  const [visibleRows, setVisibleRows] =
+    React.useState<InventoryItemResponse[]>(inventoryItems)
   const [page, setPage] = React.useState<number>(0)
   const { limit } = inventoryPaginationDefaults
   const router = useRouter()
@@ -27,7 +36,7 @@ export default function MobileInventoryItemList({
       return prev + 1
     })
     const response = await fetch(
-      `/api/logs?page=${newPage}${constructQueryString(
+      `/api/inventoryItems?page=${newPage}${constructQueryString(
         router.query as { [key: string]: string }
       )}`
     )
@@ -42,13 +51,17 @@ export default function MobileInventoryItemList({
   React.useEffect(() => {
     setPage(1)
   }, [router.query])
+
+  React.useEffect(() => {
+    setVisibleRows(inventoryItems)
+  }, [inventoryItems])
   return (
     <InfiniteScroll
       next={nextFn}
-      hasMore={Number(page) * limit + limit < props.total}
+      hasMore={Number(page) * limit + limit < total}
     >
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {inventoryItems.map((inventoryItem) => (
+        {visibleRows.map((inventoryItem) => (
           <MobileInventoryItemListItem
             inventoryItem={inventoryItem}
             key={inventoryItem._id}
