@@ -6,19 +6,13 @@ import InfiniteScroll from 'components/InfiniteScroll'
 import { inventoryPaginationDefaults } from 'utils/constants'
 import { useRouter } from 'next/router'
 import urls from 'utils/urls'
+import { constructQueryString } from 'utils/constructQueryString'
 
 interface MobileInventoryItemListProps {
   inventoryItems: InventoryItemResponse[]
   search: string
   category: string
   total: number
-}
-
-const constructQueryString = (params: { [key: string]: string }) => {
-  if (Object.keys(params).length === 0) return ''
-  return `&${Object.entries(params)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')}`
 }
 
 export default function MobileInventoryItemList({
@@ -52,7 +46,7 @@ export default function MobileInventoryItemList({
   }, [page, setVisibleRows, setPage, router.query])
 
   React.useEffect(() => {
-    setPage(1)
+    setPage(0)
   }, [router.query])
 
   React.useEffect(() => {

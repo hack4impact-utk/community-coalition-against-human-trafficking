@@ -6,6 +6,7 @@ import InfiniteScroll from 'components/InfiniteScroll'
 import { useRouter } from 'next/router'
 import { historyPaginationDefaults } from 'utils/constants'
 import urls from 'utils/urls'
+import { constructQueryString } from 'utils/constructQueryString'
 
 interface Props {
   logs: LogResponse[]
@@ -28,13 +29,6 @@ function dateComparator(v1: Date, v2: Date) {
   }
 
   return 0
-}
-
-const constructQueryString = (params: { [key: string]: string }) => {
-  if (Object.keys(params).length === 0) return ''
-  return `&${Object.entries(params)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')}`
 }
 
 export default function MobileHistoryList(props: Props) {
@@ -64,7 +58,7 @@ export default function MobileHistoryList(props: Props) {
   }, [page, setVisibleRows, setPage, router.query])
 
   React.useEffect(() => {
-    setPage(1)
+    setPage(0)
   }, [router.query])
 
   React.useEffect(() => {
