@@ -5,7 +5,6 @@ import {
   useMediaQuery,
 } from '@mui/material'
 import SearchField from 'components/SearchField'
-import AddIcon from '@mui/icons-material/Add'
 import ItemDefinitionList from 'components/ItemDefinitionList'
 import { ItemDefinitionResponse } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
@@ -44,7 +43,6 @@ export default function ItemsPage({ itemDefinitions }: Props) {
             <DialogLink href="/items/new" backHref="/settings/items">
               <Button
                 variant="outlined"
-                startIcon={<AddIcon />}
                 sx={{ width: '100%' }}
               >
                 Create New Item
@@ -62,8 +60,8 @@ export default function ItemsPage({ itemDefinitions }: Props) {
       </Grid2>
       <RoutableDialog>
         <NewItemPage
-          redirectBack={(router, itemId) => {
-            router.push(`/settings/items`)
+          redirectBack={async (router) => {
+            await router.push(`/settings/items`)
           }}
         />
       </RoutableDialog>

@@ -29,8 +29,12 @@ export function useRouterQuery() {
  * change your url to localhost:3000/authenticationTest/?test=hi
  * - See file for more details on keeping track of path.
  */
-export function addURLQueryParam(router: NextRouter, key: string, val: string) {
-  router.replace({
+export async function addURLQueryParam(
+  router: NextRouter,
+  key: string,
+  val: string
+) {
+  await router.replace({
     query: { ...router.query, [key]: val },
   })
 }
@@ -45,10 +49,33 @@ export function addURLQueryParam(router: NextRouter, key: string, val: string) {
  * change your url to localhost:3000/authenticationTest
  * - See file for more details on keeping track of path.
  */
-export function removeURLQueryParam(router: NextRouter, key: string) {
+export async function removeURLQueryParam(router: NextRouter, key: string) {
   delete router.query[key]
 
-  router.replace({
+  await router.replace({
+    query: { ...router.query },
+  })
+}
+
+export async function bulkAddURLQueryParams(
+  router: NextRouter,
+  params: Record<string, string>
+) {
+  const nonEmptyParams = Object.fromEntries(
+    Object.entries(params).filter(([_, v]) => v != null)
+  )
+  await router.replace({
+    query: { ...router.query, ...nonEmptyParams },
+  })
+}
+
+export async function bulkRemoveURLQueryParams(
+  router: NextRouter,
+  params: string[]
+) {
+  params.forEach((param) => delete router.query[param])
+
+  await router.replace({
     query: { ...router.query },
   })
 }

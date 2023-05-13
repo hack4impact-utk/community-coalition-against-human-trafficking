@@ -50,7 +50,7 @@ export default async function categoryHandler(
         })
       }
       case 'DELETE': {
-        await MongoDriver.deleteEntity(CategorySchema, categoryId)
+        await MongoDriver.softDeleteEntity(CategorySchema, categoryId)
 
         return res.status(200).json({
           success: true,
