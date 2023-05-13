@@ -118,15 +118,13 @@ export default function InventoryPage({ categories }: Props) {
           />
         </Grid2>
 
-        <Grid2 xs={12}>
-          <InventoryItemList
-            inventoryItems={inventoryItems}
-            search={router.query.search as string}
-            category={router.query.category as string}
-            total={total}
-            loading={loading}
-          />
-        </Grid2>
+        <InventoryItemList
+          inventoryItems={inventoryItems}
+          search={router.query.search as string}
+          category={router.query.category as string}
+          total={total}
+          loading={loading}
+        />
       </Grid2>
     </>
   )
