@@ -85,7 +85,8 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
 
   const handleExport = async () => {
     const requestStr = `${urls.api.logs.export}${constructQueryString(
-      router.query as { [key: string]: string }
+      router.query as { [key: string]: string },
+      true
     )}`
 
     const response = await fetch(requestStr, {
@@ -128,7 +129,8 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
 
       const response = await fetch(
         `${urls.api.logs.logs}${constructQueryString(
-          router.query as { [key: string]: string }
+          router.query as { [key: string]: string },
+          true
         )}`,
         {
           method: 'GET',
