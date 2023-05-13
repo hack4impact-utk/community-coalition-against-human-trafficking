@@ -20,6 +20,7 @@ import {
 } from 'utils/attribute'
 import { usePrevious } from 'utils/hooks/usePrevious'
 import { useSession } from 'next-auth/react'
+import urls from 'utils/urls'
 
 interface Props {
   kioskMode: boolean
@@ -151,7 +152,7 @@ function CheckInOutForm({
     const onItemDefinitionUpdate = async () => {
       if (formData.itemDefinition) {
         const res = await fetch(
-          `/api/itemDefinitions/${formData.itemDefinition!._id}/attributeValues`
+          urls.api.itemDefinitions.attributeValues(itemDefinition!._id)
         )
         const resJson = await res.json()
         const existingInventoryItemAttributeValues: InventoryItemExistingAttributeValuesResponse[] =
