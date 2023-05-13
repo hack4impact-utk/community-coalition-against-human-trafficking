@@ -5,6 +5,7 @@ import MobileInventoryItemListItem from 'components/InventoryItemList/MobileInve
 import InfiniteScroll from 'components/InfiniteScroll'
 import { inventoryPaginationDefaults } from 'utils/constants'
 import { useRouter } from 'next/router'
+import urls from 'utils/urls'
 
 interface MobileInventoryItemListProps {
   inventoryItems: InventoryItemResponse[]
@@ -36,7 +37,9 @@ export default function MobileInventoryItemList({
       return prev + 1
     })
     const response = await fetch(
-      `/api/inventoryItems?page=${newPage}${constructQueryString(
+      `${
+        urls.api.inventoryItems.inventoryItems
+      }?page=${newPage}${constructQueryString(
         router.query as { [key: string]: string }
       )}`
     )
