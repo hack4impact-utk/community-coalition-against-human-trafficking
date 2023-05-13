@@ -12,6 +12,7 @@ import { showSnackbar } from 'store/snackbar'
 import UpsertCategoryForm from 'components/UpsertCategoryForm'
 import transformZodErrors from 'utils/transformZodErrors'
 import { categoryFormSchema } from 'utils/types'
+import urls from 'utils/urls'
 
 export default function CategoryCreateForm() {
   const [loading, setLoading] = useState(false)
@@ -21,7 +22,7 @@ export default function CategoryCreateForm() {
   const dispatch = useDispatch()
 
   const handleClose = async () => {
-    await router.push('/settings/categories')
+    await router.push(urls.pages.settings.categories)
   }
   const [errors, setErrors] = useState<Record<string, string>>(
     {} as Record<string, string>
@@ -34,7 +35,7 @@ export default function CategoryCreateForm() {
       return
     }
     // add category
-    const response = await fetch('/api/categories', {
+    const response = await fetch(urls.api.categories.categories, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

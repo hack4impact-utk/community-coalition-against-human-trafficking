@@ -5,6 +5,7 @@ import React from 'react'
 import { dialogPush } from 'utils/dialogLink'
 import theme from 'utils/theme'
 import { CategoryResponse } from 'utils/types'
+import urls from 'utils/urls'
 
 interface CategoryListItemKebabOption {
   name: string
@@ -35,16 +36,17 @@ export default function CategoryListItemKebab({
     {
       name: 'Edit',
       onClick: () => {
-        dialogPush(router, `/settings/categories/${category._id}/edit`)
+        dialogPush(router, urls.pages.dialogs.editCategory(category._id))
       },
     },
     {
       name: 'Delete',
-      onClick: () => {
+      onClick: async () => {
         if (window.confirm('Are you sure you want to delete this category?')) {
-          fetch(`/api/categories/${category._id}`, { method: 'DELETE' }).then(
-            () => window.location.reload()
-          )
+          await fetch(urls.api.categories.category(category._id), {
+            method: 'DELETE',
+          })
+          window.location.reload()
         }
       },
     },

@@ -13,6 +13,7 @@ import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
 import transformZodErrors from 'utils/transformZodErrors'
 import { CategoryResponse, categoryFormSchema } from 'utils/types'
+import urls from 'utils/urls'
 
 export default function CategoryEditForm() {
   const [categoryFormData, setCategoryFormData] = useState<CategoryResponse>(
@@ -26,7 +27,7 @@ export default function CategoryEditForm() {
   const dispatch = useDispatch()
 
   const handleClose = async () => {
-    await router.push('/settings/categories')
+    await router.push(urls.pages.settings.categories)
   }
 
   // get id from URL and get categories
@@ -34,7 +35,9 @@ export default function CategoryEditForm() {
   useEffect(() => {
     const fetchCategory = async () => {
       if (!id) return // on page load, id is undefined, resulting in bad requests
-      const response = await fetch(`/api/categories/${id}`, { method: 'GET' })
+      const response = await fetch(urls.api.categories.category(id as string), {
+        method: 'GET',
+      })
       const data = await response.json()
       setCategoryFormData(data.payload)
     }
@@ -50,7 +53,7 @@ export default function CategoryEditForm() {
     }
 
     // update category
-    const response = await fetch(`/api/categories/${id}`, {
+    const response = await fetch(urls.api.categories.category(id as string), {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(categoryFormData),
