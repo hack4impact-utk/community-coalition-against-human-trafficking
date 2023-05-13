@@ -150,7 +150,7 @@ export default function CheckInPage({
                     Check in items
                   </Typography>
                   <Grid2 ml="auto">
-                    <DialogLink href="/items/new">
+                    <DialogLink href={urls.pages.dialogs.createItemDefinition}>
                       <Button variant="outlined" sx={{ width: '100%' }}>
                         Create New Item
                       </Button>

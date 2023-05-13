@@ -7,17 +7,17 @@ export default {
     dashboard: '/',
     settings: {
       general: '/settings',
-      categories: 'settings/categories',
-      itemDefinitions: 'settings/items',
-      attributes: 'settings/attributes',
+      categories: '/settings/categories',
+      itemDefinitions: '/settings/items',
+      attributes: '/settings/attributes',
     },
 
     dialogs: {
-      editAttribute: '/settings/attributes/:id/edit',
+      editAttribute: (id: string) => `/settings/attributes/${id}/edit`,
       createAttribute: '/settings/attributes/create',
       editCategory: (id: string) => `/settings/categories/${id}/edit`,
       createCategory: '/settings/categories/create',
-      createItem: '/items/new',
+      createItemDefinition: '/items/new',
     },
   },
 
@@ -50,7 +50,7 @@ export default {
     logs: {
       logs: '/api/logs',
       log: (logId: string) => `/api/logs/${logId}`,
-      export: (query: string) => `/api/logs/export${query}`,
+      export: `/api/logs/export`,
     },
 
     notificationEmails: {
