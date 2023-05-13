@@ -20,7 +20,7 @@ export default async function logsHandler(
         res.setHeader('Content-Type', 'text/csv')
         res.setHeader('Content-Disposition', 'attachment; filename="logs.csv"')
         const logs = await getFilteredLogs(
-          historyPaginationDefaults.sort,
+          historyPaginationDefaults.orderBy,
           historyPaginationDefaults.order,
           search as string,
           category as string,

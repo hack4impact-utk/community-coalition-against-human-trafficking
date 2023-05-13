@@ -9,7 +9,6 @@ import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import { useMediaQuery, useTheme } from '@mui/material'
 // icons and text
-// import Typography from '@mui/material/Typography'
 import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import SettingsIcon from '@mui/icons-material/SettingsOutlined'
 import ArchiveOutlinedIcon from '@mui/icons-material/ArchiveOutlined'
@@ -23,6 +22,7 @@ import List from '@mui/material/List'
 import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemButton from '@mui/material/ListItemButton'
+import urls from 'utils/urls'
 
 interface NavigationDrawerProps {
   open: boolean
@@ -84,27 +84,27 @@ export default function NavigationDrawer({
         <NavigationDrawerListItem
           icon={<AssignmentLateOutlinedIcon />}
           text="Dashboard"
-          route="/"
+          route={urls.pages.dashboard}
         />
         <NavigationDrawerListItem
           icon={<ArchiveOutlinedIcon />}
           text="Check In"
-          route="/checkIn"
+          route={urls.pages.checkIn}
         />
         <NavigationDrawerListItem
           icon={<UnarchiveOutlinedIcon />}
           text="Check Out"
-          route="/checkOut"
+          route={urls.pages.checkOut}
         />
         <NavigationDrawerListItem
           icon={<AssignmentOutlinedIcon />}
           text="Inventory"
-          route="/inventory"
+          route={urls.pages.inventory}
         />
         <NavigationDrawerListItem
           icon={<AccessTimeIcon />}
           text="History"
-          route="/history"
+          route={urls.pages.history}
         />
 
         {/* Collapsable Drawer using ListItem functional component*/}
@@ -120,22 +120,22 @@ export default function NavigationDrawer({
             <NavigationDrawerListItem
               text="General"
               collapsable
-              route="/settings"
+              route={urls.pages.settings.general}
             />
             <NavigationDrawerListItem
               text="Categories"
               collapsable
-              route="/settings/categories"
+              route={urls.pages.settings.categories}
             />
             <NavigationDrawerListItem
               text="Items"
               collapsable
-              route="/settings/items"
+              route={urls.pages.settings.itemDefinitions}
             />
             <NavigationDrawerListItem
               text="Item Attributes"
               collapsable
-              route="/settings/attributes"
+              route={urls.pages.settings.attributes}
             />
           </List>
         </Collapse>
