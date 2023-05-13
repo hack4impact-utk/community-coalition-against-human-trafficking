@@ -13,7 +13,6 @@ import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
 
 export default function CategoryEditForm() {
-  const [category, setCategory] = useState<string>()
   const [categoryFormData, setCategoryFormData] = useState<string>('')
 
   const [loading, setLoading] = useState(false)
@@ -27,7 +26,7 @@ export default function CategoryEditForm() {
       if (!id) return // on page load, id is undefined, resulting in bad requests
       const response = await fetch(`/api/category/${id}`, { method: 'GET' })
       const data = await response.json()
-      setCategory(data.payload)
+      setCategoryFormData(data.payload)
     }
     fetchCategory()
   }, [id])
