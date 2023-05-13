@@ -8,7 +8,7 @@ export interface DialogRoute {
 export const dialogRoutes: DialogRoute[] = [
   {
     name: 'editAttribute',
-    path: urls.pages.dialogs.editAttribute,
+    path: urls.pages.dialogs.editAttribute(':id'),
   },
   {
     name: 'createAttribute',
@@ -16,14 +16,14 @@ export const dialogRoutes: DialogRoute[] = [
   },
   {
     name: 'editCategory',
-    path: '/settings/categories/:id/edit',
+    path: urls.pages.dialogs.editCategory(':id'),
   },
   {
     name: 'createCategory',
-    path: '/settings/categories/create',
+    path: urls.pages.dialogs.createCategory,
   },
   {
     name: 'createItem',
-    path: urls.pages.dialogs.createItem,
+    path: urls.pages.dialogs.createItemDefinition,
   },
 ]
