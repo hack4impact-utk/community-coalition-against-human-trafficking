@@ -5,18 +5,22 @@ import {
   Button,
 } from '@mui/material'
 import UpsertAttributeForm from 'components/UpsertAttributeForm'
-import { AttributeFormData } from 'components/UpsertAttributeForm'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { LoadingButton } from '@mui/lab'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
+import { AttributeFormData, attributeFormSchema } from 'utils/types'
+import transformZodErrors from 'utils/transformZodErrors'
 import urls from 'utils/urls'
 
 export default function AttributeCreateDialog() {
   const [loading, setLoading] = useState(false)
   const [attributeFormData, setAttributeFormData] = useState<AttributeFormData>(
     {} as AttributeFormData
+  )
+  const [errors, setErrors] = useState<Record<keyof AttributeFormData, string>>(
+    {} as Record<keyof AttributeFormData, string>
   )
 
   const router = useRouter()
@@ -28,13 +32,9 @@ export default function AttributeCreateDialog() {
 
   const handleSubmit = async (attributeFormData: AttributeFormData) => {
     // form validation
-    if (!attributeFormData.name) {
-      dispatch(
-        showSnackbar({
-          message: 'You must give the attribute a name.',
-          severity: 'error',
-        })
-      )
+    const zodResponse = attributeFormSchema.safeParse(attributeFormData)
+    if (!zodResponse.success) {
+      setErrors(transformZodErrors(zodResponse.error))
       return
     }
 
@@ -82,6 +82,7 @@ export default function AttributeCreateDialog() {
           onChange={(attributeFormData) =>
             setAttributeFormData(attributeFormData)
           }
+          errors={errors}
         />
       </DialogContent>
       <DialogActions>

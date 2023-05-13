@@ -5,6 +5,7 @@ import React from 'react'
 import { dialogPush } from 'utils/dialogLink'
 import theme from 'utils/theme'
 import { AttributeResponse } from 'utils/types'
+import urls from 'utils/urls'
 
 interface AttributeListItemKebabOption {
   name: string
@@ -38,16 +39,17 @@ export default function AttributeListItemKebab({
     {
       name: 'Edit',
       onClick: () => {
-        dialogPush(router, `/settings/attributes/${attribute._id}/edit`)
+        dialogPush(router, urls.pages.dialogs.editAttribute(attribute._id))
       },
     },
     {
       name: 'Delete',
-      onClick: () => {
+      onClick: async () => {
         if (window.confirm('Are you sure you want to delete this attribute?')) {
-          fetch(`/api/attributes/${attribute._id}`, { method: 'DELETE' }).then(
-            () => window.location.reload()
-          )
+          await fetch(urls.api.attributes.attribute(attribute._id), {
+            method: 'DELETE',
+          })
+          window.location.reload()
         }
       },
     },

@@ -41,7 +41,7 @@ export default function ItemsPage({ itemDefinitions }: Props) {
             Items
           </Typography>
           <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
-            <DialogLink href="/items/new" backHref="/settings/items">
+            <DialogLink href={urls.pages.dialogs.createItemDefinition}>
               <Button variant="outlined" sx={{ width: '100%' }}>
                 Create New Item
               </Button>

@@ -90,7 +90,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
 
   const handleExport = async () => {
-    const requestStr = `${urls.api.logs.export('')}${constructQueryString(
+    const requestStr = `${urls.api.logs.export}${constructQueryString(
       router.query as { [key: string]: string }
     )}`
 
