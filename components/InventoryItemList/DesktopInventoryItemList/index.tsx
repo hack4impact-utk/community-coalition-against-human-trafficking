@@ -98,10 +98,10 @@ function InventoryItemListHeader(props: EnhancedTableProps) {
     const newOrder = isAsc ? 'desc' : 'asc'
     if (
       newOrder === inventoryPaginationDefaults.order &&
-      property === inventoryPaginationDefaults.sort
+      property === inventoryPaginationDefaults.orderBy
     ) {
       await bulkRemoveURLQueryParams(router, ['order', 'orderBy'])
-    } else if (property === inventoryPaginationDefaults.sort) {
+    } else if (property === inventoryPaginationDefaults.orderBy) {
       await removeURLQueryParam(router, 'orderBy')
       await addURLQueryParam(router, 'order', newOrder)
     } else if (newOrder === inventoryPaginationDefaults.order) {
@@ -185,17 +185,6 @@ export default function DesktopInventoryItemList(props: Props) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={props.total}
-        rowsPerPage={Number(
-          router.query.limit || inventoryPaginationDefaults.limit
-        )}
-        page={Number(router.query.page || inventoryPaginationDefaults.page)}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <InventoryItemListHeader
@@ -204,7 +193,7 @@ export default function DesktopInventoryItemList(props: Props) {
             }
             orderBy={
               (router.query.orderBy ||
-                inventoryPaginationDefaults.sort) as string
+                inventoryPaginationDefaults.orderBy) as string
             }
             router={router}
           />
@@ -223,6 +212,17 @@ export default function DesktopInventoryItemList(props: Props) {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={props.total}
+        rowsPerPage={Number(
+          router.query.limit || inventoryPaginationDefaults.limit
+        )}
+        page={Number(router.query.page || inventoryPaginationDefaults.page)}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </Box>
   )
 }
