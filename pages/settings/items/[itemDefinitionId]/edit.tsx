@@ -5,16 +5,16 @@ import {
   DialogContent,
   DialogTitle,
 } from '@mui/material'
-import UpsertItemForm, {
-  ItemDefinitionFormData,
-} from 'components/UpsertItemForm'
+import UpsertItemForm from 'components/UpsertItemForm'
 import { useRouter } from 'next/router'
+import React from 'react'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
 import {
   AttributeResponse,
   CategoryResponse,
+  ItemDefinitionFormData,
   ItemDefinitionResponse,
 } from 'utils/types'
 
@@ -56,6 +56,10 @@ export default function ItemDefinitionEditForm() {
     }
     fetchItemDefinition()
   }, [id])
+
+  React.useEffect(() => {
+    console.log(itemDefinition)
+  }, [itemDefinition])
 
   const handleSubmit = async (
     itemDefinitionFormData: ItemDefinitionFormData
@@ -119,6 +123,7 @@ export default function ItemDefinitionEditForm() {
           onChange={(itemDefinitionFormData) =>
             setItemDefinitionFormData(itemDefinitionFormData)
           }
+          errors={{} as Record<keyof ItemDefinitionFormData, string>}
         />
       </DialogContent>
       <DialogActions>

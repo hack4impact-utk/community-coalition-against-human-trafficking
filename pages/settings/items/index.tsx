@@ -16,6 +16,7 @@ import DialogLink from 'components/DialogLink'
 import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
 import NewItemPage from 'pages/items/new'
+import ItemDefinitionEditForm from './[itemDefinitionId]/edit'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -60,12 +61,15 @@ export default function ItemsPage({ itemDefinitions }: Props) {
           search={router.query.search as string}
         />
       </Grid2>
-      <RoutableDialog>
+      <RoutableDialog name="createItem">
         <NewItemPage
           redirectBack={async (router) => {
             await router.push(`/settings/items`)
           }}
         />
+      </RoutableDialog>
+      <RoutableDialog>
+        <ItemDefinitionEditForm />
       </RoutableDialog>
     </>
   )

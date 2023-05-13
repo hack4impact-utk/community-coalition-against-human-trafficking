@@ -75,6 +75,10 @@ export default function UpsertItemForm({
     transformItemDefinitionToFormData(itemDefinition)
   )
 
+  React.useEffect(() => {
+    setFormData(transformItemDefinitionToFormData(itemDefinition))
+  }, [itemDefinition])
+
   // this is here to support adding newly created attributes to the create new item form attributes list options after they are created
   const [proxyAttributes, setProxyAttributes] = React.useState(attributes)
 
