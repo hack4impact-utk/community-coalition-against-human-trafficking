@@ -1,13 +1,15 @@
+import urls from 'utils/urls'
+
 export { default } from 'next-auth/middleware'
 
 export const config = {
   matcher: [
-    '/',
-    '/checkIn',
-    '/checkOut',
-    '/inventory',
-    '/history',
-    '/settings',
+    urls.pages.dashboard,
+    urls.pages.checkIn,
+    urls.pages.checkOut,
+    urls.pages.inventory,
+    urls.pages.history,
+    urls.pages.settings.general,
     '/settings/:path*',
   ],
 }

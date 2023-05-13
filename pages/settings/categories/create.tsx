@@ -4,63 +4,53 @@ import {
   DialogActions,
   Button,
 } from '@mui/material'
-import UpsertAttributeForm from 'components/UpsertAttributeForm'
-import { AttributeFormData } from 'components/UpsertAttributeForm'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { LoadingButton } from '@mui/lab'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
+import UpsertCategoryForm from 'components/UpsertCategoryForm'
+import transformZodErrors from 'utils/transformZodErrors'
+import { categoryFormSchema } from 'utils/types'
 import urls from 'utils/urls'
 
-export default function AttributeCreateDialog() {
+export default function CategoryCreateForm() {
   const [loading, setLoading] = useState(false)
-  const [attributeFormData, setAttributeFormData] = useState<AttributeFormData>(
-    {} as AttributeFormData
-  )
+  const [categoryFormData, setCategoryFormData] = useState<string>('')
 
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const handleClose = () => {
-    router.push(urls.pages.settings.attributes)
+  const handleClose = async () => {
+    await router.push(urls.pages.settings.categories)
   }
-
-  const handleSubmit = async (attributeFormData: AttributeFormData) => {
+  const [errors, setErrors] = useState<Record<string, string>>(
+    {} as Record<string, string>
+  )
+  const handleSubmit = async (categoryFormData: string) => {
     // form validation
-    if (!attributeFormData.name) {
-      dispatch(
-        showSnackbar({
-          message: 'You must give the attribute a name.',
-          severity: 'error',
-        })
-      )
+    const zodResponse = categoryFormSchema.safeParse(categoryFormData)
+    if (!zodResponse.success) {
+      setErrors(transformZodErrors(zodResponse.error))
       return
     }
-
-    // add attribute to database
-    const response = await fetch(urls.api.attributes.attributes, {
+    // add category
+    const response = await fetch(urls.api.categories.categories, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: attributeFormData.name,
-        color: attributeFormData.color,
-        possibleValues:
-          attributeFormData.valueType === 'list'
-            ? attributeFormData.listOptions
-            : attributeFormData.valueType,
+        name: categoryFormData,
       }),
     })
-
     // close dialog
-    await router.push(urls.api.attributes.attributes)
+    await handleClose()
 
     // handle snackbar logic
     const data = await response.json()
     if (data.success) {
       dispatch(
         showSnackbar({
-          message: 'Attribute successfully added',
+          message: 'Category successfully added',
           severity: 'success',
         })
       )
@@ -76,12 +66,11 @@ export default function AttributeCreateDialog() {
 
   return (
     <>
-      <DialogTitle>Create Attribute</DialogTitle>
-      <DialogContent sx={{ overflowY: 'visible' }}>
-        <UpsertAttributeForm
-          onChange={(attributeFormData) =>
-            setAttributeFormData(attributeFormData)
-          }
+      <DialogTitle>Create Category</DialogTitle>
+      <DialogContent>
+        <UpsertCategoryForm
+          onChange={(categoryFormData) => setCategoryFormData(categoryFormData)}
+          errors={errors}
         />
       </DialogContent>
       <DialogActions>
@@ -92,7 +81,7 @@ export default function AttributeCreateDialog() {
           loading={loading}
           onClick={async () => {
             setLoading(true)
-            await handleSubmit(attributeFormData)
+            await handleSubmit(categoryFormData)
             setLoading(false)
           }}
         >

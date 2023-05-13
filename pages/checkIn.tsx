@@ -34,6 +34,7 @@ import RoutableDialog from 'components/RoutableDialog'
 import NewItemPage from './items/new'
 import { showSnackbar } from 'store/snackbar'
 import { LoadingButton } from '@mui/lab'
+import urls from 'utils/urls'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -105,8 +106,7 @@ export default function CheckInPage({
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
-    // TODO better way of coding URLs
-    const response = await fetch(`/api/inventoryItems/checkIn`, {
+    const response = await fetch(urls.api.inventoryItems.checkIn, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -140,35 +140,23 @@ export default function CheckInPage({
 
   return (
     <>
-      <Grid2 container sx={{ flexGrow: 1 }}>
-        <Grid2
-          xs={12}
-          sm={8}
-          lg={6}
-          display="flex"
-          justifyContent="flex-end"
-          smOffset={2}
-          lgOffset={3}
-        >
-          <DialogLink href="/items/new">
-            <Button
-              variant="outlined"
-              fullWidth={isMobileView}
-              size="large"
-              sx={{ my: 2 }}
-            >
-              Create new item
-            </Button>
-          </DialogLink>
-        </Grid2>
-
+      <Grid2 container my={2} sx={{ flexGrow: 1 }}>
         <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
           <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
             <Box display="flex" flexDirection="column">
-              <CardContent sx={{ p: isMobileView ? 0 : 2 }}>
-                <Typography variant="h5" sx={{ mb: 2 }}>
-                  Check in items
-                </Typography>
+              <CardContent sx={{ p: 2 }}>
+                <Grid2 xs={12} container direction={'row'}>
+                  <Typography variant="h5" sx={{ mb: 2 }}>
+                    Check in items
+                  </Typography>
+                  <Grid2 ml="auto">
+                    <DialogLink href="/items/new">
+                      <Button variant="outlined" sx={{ width: '100%' }}>
+                        Create New Item
+                      </Button>
+                    </DialogLink>
+                  </Grid2>
+                </Grid2>
                 <CheckInOutForm
                   kioskMode={kioskMode.enabled}
                   users={users}
@@ -200,7 +188,7 @@ export default function CheckInPage({
       <RoutableDialog>
         <NewItemPage
           redirectBack={async (router, itemId) => {
-            await router.push(`/checkIn?item=${itemId}`)
+            await router.push(`${urls.pages.checkIn}?item=${itemId}`)
           }}
         />
       </RoutableDialog>
