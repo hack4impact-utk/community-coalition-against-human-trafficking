@@ -24,6 +24,7 @@ export default function SearchAutocomplete({
 
   return (
     <Autocomplete
+      autoHighlight
       options={options}
       onChange={(_e, val) => {
         onChange(val)
