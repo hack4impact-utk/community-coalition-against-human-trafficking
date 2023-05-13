@@ -8,7 +8,6 @@ import inventoryItemsHandler from 'pages/api/inventoryItems'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
-import { clientPromise } from '@api/auth/[...nextauth]'
 import { errors } from 'utils/constants/errors'
 import {
   validInventoryItemResponse,
@@ -23,7 +22,6 @@ beforeAll(() => {
 // restore mocked implementations and close db connections
 afterAll(() => {
   jest.restoreAllMocks()
-  
 })
 
 beforeEach(() => {
@@ -88,12 +86,13 @@ describe('api/inventoryItems', () => {
       const response = createResponse()
 
       await inventoryItemsHandler(request, response)
-      const data = response._getJSONData().payload
+      const payload = response._getJSONData().payload
 
       expect(serverAuth).toHaveBeenCalledTimes(1)
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
       expect(response.statusCode).toBe(200)
-      expect(data).toEqual(validInventoryItemResponse)
+      expect(payload.total).toEqual(validInventoryItemResponse.length)
+      expect(payload.data).toEqual(validInventoryItemResponse)
     })
 
     test('valid call with no data returns 204', async () => {
@@ -109,11 +108,12 @@ describe('api/inventoryItems', () => {
       const response = createResponse()
 
       await inventoryItemsHandler(request, response)
-      const data = response._getJSONData().payload
+      const payload = response._getJSONData().payload
 
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
-      expect(response.statusCode).toBe(204)
-      expect(data).toEqual([])
+      expect(response.statusCode).toBe(200)
+      expect(payload.data).toEqual([])
+      expect(payload.total).toEqual(0)
     })
   })
 
