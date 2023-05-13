@@ -43,7 +43,7 @@ export default async function logsHandler(
           Number(page || historyPaginationDefaults.page),
           Number(limit || historyPaginationDefaults.limit),
           sortPathMap[orderBy as keyof typeof sortPathMap] ||
-            historyPaginationDefaults.sort,
+            historyPaginationDefaults.orderBy,
           (order as string) || historyPaginationDefaults.order,
           search as string,
           category as string,
