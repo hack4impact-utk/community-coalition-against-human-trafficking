@@ -34,6 +34,7 @@ import RoutableDialog from 'components/RoutableDialog'
 import NewItemPage from './items/new'
 import { showSnackbar } from 'store/snackbar'
 import { LoadingButton } from '@mui/lab'
+import urls from 'utils/urls'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -106,7 +107,7 @@ export default function CheckInPage({
       checkInOutFormDataToCheckInOutRequest(formData)
 
     // TODO better way of coding URLs
-    const response = await fetch(`/api/inventoryItems/checkIn`, {
+    const response = await fetch(urls.api.inventoryItems.checkIn, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -151,10 +152,7 @@ export default function CheckInPage({
                   </Typography>
                   <Grid2 ml="auto">
                     <DialogLink href="/items/new">
-                      <Button
-                        variant="outlined"
-                        sx={{ width: '100%' }}
-                      >
+                      <Button variant="outlined" sx={{ width: '100%' }}>
                         Create New Item
                       </Button>
                     </DialogLink>
@@ -191,7 +189,7 @@ export default function CheckInPage({
       <RoutableDialog>
         <NewItemPage
           redirectBack={async (router, itemId) => {
-            await router.push(`/checkIn?item=${itemId}`)
+            await router.push(`${urls.pages.checkIn}?item=${itemId}`)
           }}
         />
       </RoutableDialog>

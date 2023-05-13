@@ -1,3 +1,5 @@
+import urls from 'utils/urls'
+
 export interface DialogRoute {
   name: string
   path: string
@@ -6,14 +8,14 @@ export interface DialogRoute {
 export const dialogRoutes: DialogRoute[] = [
   {
     name: 'editAttribute',
-    path: '/settings/attributes/:id/edit',
+    path: urls.pages.dialogs.editAttribute,
   },
   {
     name: 'createAttribute',
-    path: '/settings/attributes/create',
+    path: urls.pages.dialogs.createAttribute,
   },
   {
     name: 'createItem',
-    path: '/items/new',
+    path: urls.pages.dialogs.createItem,
   },
 ]

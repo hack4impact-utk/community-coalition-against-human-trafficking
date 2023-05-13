@@ -25,6 +25,7 @@ import UpsertAttributeForm from 'components/UpsertAttributeForm'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import theme from 'utils/theme'
 import transformZodErrors from 'utils/transformZodErrors'
+import urls from 'utils/urls'
 
 interface Props {
   categories: CategoryResponse[]
@@ -66,7 +67,7 @@ export default function UpsertItemForm({
     }
 
     const attrReq = attributeFormDataToAttributeRequest(fd)
-    const response = await fetch(`/api/attributes`, {
+    const response = await fetch(urls.api.attributes.attributes, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

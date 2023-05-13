@@ -18,6 +18,7 @@ import {
   ItemDefinitionFormData,
   newItemFormSchema,
 } from 'utils/types'
+import urls from 'utils/urls'
 
 let itemDefinitionFormData: ItemDefinitionFormData
 
@@ -35,14 +36,14 @@ export default function NewItemPage({ redirectBack }: Props) {
 
   React.useEffect(() => {
     const getCategories = async () => {
-      const response = await fetch('/api/categories', {
+      const response = await fetch(urls.api.categories.categories, {
         method: 'GET',
       })
       const data = await response.json()
       setCategories(data.payload)
     }
     const getAttributes = async () => {
-      const response = await fetch('/api/attributes', {
+      const response = await fetch(urls.api.attributes.attributes, {
         method: 'GET',
       })
       const data = await response.json()
@@ -63,16 +64,13 @@ export default function NewItemPage({ redirectBack }: Props) {
       setLoading(true)
       const itemDefReq = itemDefinitionFormDataToItemDefinitionRequest(formData)
 
-      const response = await fetch(
-        'http://localhost:3000/api/itemDefinitions',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(itemDefReq),
-        }
-      )
+      const response = await fetch(urls.api.itemDefinitions.itemDefinitions, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(itemDefReq),
+      })
 
       const data = await response.json()
       await redirectBack(router, data.payload)

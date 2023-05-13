@@ -29,6 +29,7 @@ import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
 import { showSnackbar } from 'store/snackbar'
 import transformZodErrors from 'utils/transformZodErrors'
 import { LoadingButton } from '@mui/lab'
+import urls from 'utils/urls'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -90,7 +91,7 @@ export default function CheckOutPage({
       checkInOutFormDataToCheckInOutRequest(formData)
 
     // TODO better way of coding URLs
-    const response = await fetch(`/api/inventoryItems/checkOut`, {
+    const response = await fetch(urls.api.inventoryItems.checkOut, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
