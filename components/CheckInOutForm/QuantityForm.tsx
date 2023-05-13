@@ -7,9 +7,10 @@ import RemoveOutlinedIcon from '@mui/icons-material/RemoveOutlined'
 interface Props {
   quantity: number
   setQuantity: (q: number) => void
+  error?: string
 }
 
-function QuantityForm({ quantity, setQuantity }: Props) {
+function QuantityForm({ quantity, setQuantity, error }: Props) {
   return (
     <Box sx={{ display: 'flex', alignSelf: 'center', marginTop: 3 }}>
       <Typography variant="h5" sx={{ marginRight: 2, alignSelf: 'center' }}>
@@ -29,6 +30,7 @@ function QuantityForm({ quantity, setQuantity }: Props) {
         InputProps={{
           inputProps: { min: 1, style: { textAlign: 'center' } },
         }}
+        error={!!error}
       ></TextField>
       <Box
         sx={{
