@@ -48,18 +48,16 @@ export default function CategoryEditForm() {
       setErrors(transformZodErrors(zodResponse.error))
       return
     }
+
     // update category
     const response = await fetch(`/api/categories/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        _id: id,
-        name: categoryFormData,
-      }),
+      body: JSON.stringify(categoryFormData),
     })
 
     // close dialog
-    handleClose()
+    await handleClose()
 
     // handle snackbar logic
     const data = await response.json()
@@ -86,9 +84,9 @@ export default function CategoryEditForm() {
       <DialogContent>
         <UpsertCategoryForm
           category={categoryFormData}
-          onChange={(newName) =>
+          onChange={(newName) => {
             setCategoryFormData({ ...categoryFormData, name: newName })
-          }
+          }}
           errors={errors}
         />
       </DialogContent>
