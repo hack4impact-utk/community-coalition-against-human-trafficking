@@ -18,8 +18,8 @@ export default function CategoryCreateForm() {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const handleClose = () => {
-    router.push('/settings/attributes')
+  const handleClose = async () => {
+    await router.push('/settings/categories')
   }
 
   const handleSubmit = async (categoryFormData: string) => {
@@ -33,7 +33,7 @@ export default function CategoryCreateForm() {
     })
 
     // close dialog
-    await router.push('/settings/categories')
+    await handleClose()
 
     // handle snackbar logic
     const data = await response.json()
