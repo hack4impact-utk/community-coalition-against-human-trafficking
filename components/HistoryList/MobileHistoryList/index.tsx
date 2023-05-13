@@ -52,7 +52,7 @@ export default function MobileHistoryList(props: Props) {
     const response = await fetch(
       `/api/logs?page=${newPage}${constructQueryString(
         router.query as { [key: string]: string }
-      )}}`
+      )}`
     )
     const { payload } = await response.json()
 
