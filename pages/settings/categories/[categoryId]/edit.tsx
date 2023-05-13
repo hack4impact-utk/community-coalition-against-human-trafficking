@@ -19,6 +19,10 @@ export default function CategoryEditForm() {
   const router = useRouter()
   const dispatch = useDispatch()
 
+  const handleClose = async () => {
+    await router.push('/settings/categories')
+  }
+
   // get id from URL and get categories
   const { id } = router.query
   useEffect(() => {
@@ -43,6 +47,7 @@ export default function CategoryEditForm() {
     })
 
     // close dialog
+    handleClose()
     await router.push('/settings/category')
 
     // handle snackbar logic
@@ -62,10 +67,6 @@ export default function CategoryEditForm() {
         })
       )
     }
-  }
-
-  const handleClose = () => {
-    router.push('/settings/categories')
   }
 
   return (
