@@ -25,6 +25,7 @@ import UpsertAttributeForm from 'components/UpsertAttributeForm'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import theme from 'utils/theme'
 import transformZodErrors from 'utils/transformZodErrors'
+import urls from 'utils/urls'
 
 interface Props {
   categories: CategoryResponse[]
@@ -58,7 +59,6 @@ export default function UpsertItemForm({
   }, [attributes])
 
   const createNewAttribute = async (fd: AttributeFormData) => {
-    // TODO better way of coding URLs
     const zodResult = attributeFormSchema.safeParse(fd)
     if (!zodResult.success) {
       setAttributeErrors(transformZodErrors(zodResult.error))
@@ -66,7 +66,7 @@ export default function UpsertItemForm({
     }
 
     const attrReq = attributeFormDataToAttributeRequest(fd)
-    const response = await fetch(`/api/attributes`, {
+    const response = await fetch(urls.api.attributes.attributes, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -100,6 +100,7 @@ export default function UpsertItemForm({
   return (
     <FormControl fullWidth>
       <Autocomplete
+        autoHighlight
         options={categories}
         getOptionLabel={(option) => option.name}
         renderInput={(params) => <TextField {...params} label="Category" />}
@@ -148,6 +149,7 @@ export default function UpsertItemForm({
         }}
       >
         <Autocomplete
+          autoHighlight
           multiple
           options={proxyAttributes}
           getOptionLabel={(option) => option.name}

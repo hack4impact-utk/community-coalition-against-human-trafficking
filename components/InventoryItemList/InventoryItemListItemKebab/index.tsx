@@ -6,6 +6,7 @@ import { InventoryItem } from 'utils/types'
 import { useRouter } from 'next/router'
 import { showSnackbar } from 'store/snackbar'
 import { useAppDispatch } from 'store'
+import urls from 'utils/urls'
 
 interface InventoryItemListItemKebabOption {
   name: string
@@ -60,7 +61,7 @@ export default function InventoryItemListItemKebab({
             'Are you sure you want to delete this from the inventory?'
           )
         ) {
-          fetch(`/api/inventoryItems/${inventoryItem._id}`, {
+          fetch(urls.api.inventoryItems.inventoryItem(inventoryItem._id!), {
             method: 'DELETE',
           }).then(() => {
             window.location.reload()

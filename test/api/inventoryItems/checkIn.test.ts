@@ -17,6 +17,7 @@ import {
   validInventoryItemPostRequest,
   validCheckInOutRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -39,7 +40,7 @@ describe('api/inventoryItems/checkIn', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: '/api/inventoryItems/checkIn/checkIn',
+      url: urls.api.inventoryItems.checkIn,
     })
     const response = createResponse()
 
@@ -55,7 +56,7 @@ describe('api/inventoryItems/checkIn', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'HEAD',
-      url: '/api/inventoryItems/checkIn',
+      url: urls.api.inventoryItems.checkIn,
     })
     const response = createResponse()
 
@@ -76,7 +77,7 @@ describe('api/inventoryItems/checkIn', () => {
 
       const request = createRequest({
         method: 'POST',
-        url: `/api/inventoryItems/checkIn`,
+        url: urls.api.inventoryItems.checkIn,
         body: validCheckInOutRequest,
       })
 
