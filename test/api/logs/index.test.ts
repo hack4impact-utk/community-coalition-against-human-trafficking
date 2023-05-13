@@ -7,6 +7,7 @@ import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import { errors } from 'utils/constants/errors'
 import { validLogResponse } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -29,7 +30,7 @@ describe('api/logs', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: '/api/logs',
+      url: urls.api.logs.logs,
     })
     const response = createResponse()
 
@@ -45,7 +46,7 @@ describe('api/logs', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'HEAD',
-      url: '/api/logs',
+      url: urls.api.logs.logs,
     })
     const response = createResponse()
 
@@ -70,7 +71,7 @@ describe('api/logs', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/logs`,
+        url: urls.api.logs.logs,
       })
 
       const response = createResponse()
@@ -94,7 +95,7 @@ describe('api/logs', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/logs`,
+        url: urls.api.logs.logs,
       })
 
       const response = createResponse()
