@@ -34,7 +34,8 @@ interface Props {
 const fetchInventoryItems = async (router: NextRouter) => {
   const response = await fetch(
     `${urls.api.inventoryItems.inventoryItems}${constructQueryString(
-      router.query as { [key: string]: string }
+      router.query as { [key: string]: string },
+      true
     )}`,
     {
       method: 'GET',
