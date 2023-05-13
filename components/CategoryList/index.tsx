@@ -64,7 +64,10 @@ const headCells: readonly HeadCell[] = [
     label: 'Name',
     sortable: true,
     sortFn: (category1: CategoryResponse, category2: CategoryResponse) => {
-      return comparator(category1.name, category2.name)
+      return comparator(
+        category1.name.toLowerCase(),
+        category2.name.toLowerCase()
+      )
     },
   },
   {
