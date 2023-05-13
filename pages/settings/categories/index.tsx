@@ -24,7 +24,7 @@ interface CategoriesPageProps {
 
 export default function CategoriesPage({ categories }: CategoriesPageProps) {
   const router = useRouter()
-  const isMobileView = useMediaQuery(theme.breakpoints.down('xs'))
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   return (
     <>
       <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
@@ -32,7 +32,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
           <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
             Categories
           </Typography>
-          <Grid2 ml={isMobileView ? '0' : 'auto'}>
+          <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
             <Button variant="outlined" sx={{ width: '100%', px: 1 }}>
               Create New Category
             </Button>
