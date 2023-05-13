@@ -24,6 +24,7 @@ import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
 import React from 'react'
 import { historyPaginationDefaults } from 'utils/constants'
+import urls from 'utils/urls'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -89,7 +90,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
 
   const handleExport = async () => {
-    const requestStr = `/api/logs/export${constructQueryString(
+    const requestStr = `${urls.api.logs.export('')}${constructQueryString(
       router.query as { [key: string]: string }
     )}`
 
@@ -132,7 +133,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
       }
 
       const response = await fetch(
-        `/api/logs${constructQueryString(
+        `${urls.api.logs.logs}${constructQueryString(
           router.query as { [key: string]: string }
         )}`,
         {
