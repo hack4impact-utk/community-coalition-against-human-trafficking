@@ -90,7 +90,6 @@ export default function CheckOutPage({
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
-    // TODO better way of coding URLs
     const response = await fetch(urls.api.inventoryItems.checkOut, {
       method: 'POST',
       headers: {

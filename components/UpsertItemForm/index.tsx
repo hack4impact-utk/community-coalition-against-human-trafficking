@@ -59,7 +59,6 @@ export default function UpsertItemForm({
   }, [attributes])
 
   const createNewAttribute = async (fd: AttributeFormData) => {
-    // TODO better way of coding URLs
     const zodResult = attributeFormSchema.safeParse(fd)
     if (!zodResult.success) {
       setAttributeErrors(transformZodErrors(zodResult.error))

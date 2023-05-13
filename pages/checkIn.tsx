@@ -106,7 +106,6 @@ export default function CheckInPage({
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
-    // TODO better way of coding URLs
     const response = await fetch(urls.api.inventoryItems.checkIn, {
       method: 'POST',
       headers: {
