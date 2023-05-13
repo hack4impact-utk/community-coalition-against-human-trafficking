@@ -48,7 +48,6 @@ export default function CategoryEditForm() {
 
     // close dialog
     handleClose()
-    await router.push('/settings/category')
 
     // handle snackbar logic
     const data = await response.json()
