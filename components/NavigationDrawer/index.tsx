@@ -28,6 +28,7 @@ interface NavigationDrawerProps {
   open: boolean
   setDrawerOpen: (status: boolean) => void
 }
+
 export default function NavigationDrawer({
   open,
   setDrawerOpen,
@@ -85,26 +86,31 @@ export default function NavigationDrawer({
           icon={<AssignmentLateOutlinedIcon />}
           text="Dashboard"
           route="/"
+          setDrawerOpen={setDrawerOpen}
         />
         <NavigationDrawerListItem
           icon={<ArchiveOutlinedIcon />}
           text="Check In"
           route="/checkIn"
+          setDrawerOpen={setDrawerOpen}
         />
         <NavigationDrawerListItem
           icon={<UnarchiveOutlinedIcon />}
           text="Check Out"
           route="/checkOut"
+          setDrawerOpen={setDrawerOpen}
         />
         <NavigationDrawerListItem
           icon={<AssignmentOutlinedIcon />}
           text="Inventory"
           route="/inventory"
+          setDrawerOpen={setDrawerOpen}
         />
         <NavigationDrawerListItem
           icon={<AccessTimeIcon />}
           text="History"
           route="/history"
+          setDrawerOpen={setDrawerOpen}
         />
 
         {/* Collapsable Drawer using ListItem functional component*/}
@@ -121,21 +127,25 @@ export default function NavigationDrawer({
               text="General"
               collapsable
               route="/settings"
+              setDrawerOpen={setDrawerOpen}
             />
             <NavigationDrawerListItem
               text="Categories"
               collapsable
               route="/settings/categories"
+              setDrawerOpen={setDrawerOpen}
             />
             <NavigationDrawerListItem
               text="Items"
               collapsable
               route="/settings/items"
+              setDrawerOpen={setDrawerOpen}
             />
             <NavigationDrawerListItem
               text="Item Attributes"
               collapsable
               route="/settings/attributes"
+              setDrawerOpen={setDrawerOpen}
             />
           </List>
         </Collapse>
