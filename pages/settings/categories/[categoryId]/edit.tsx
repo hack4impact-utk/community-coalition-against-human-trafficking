@@ -11,11 +11,17 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
+import transformZodErrors from 'utils/transformZodErrors'
+import { CategoryResponse, categoryFormSchema } from 'utils/types'
 
 export default function CategoryEditForm() {
-  const [categoryFormData, setCategoryFormData] = useState<string>('')
-
+  const [categoryFormData, setCategoryFormData] = useState<CategoryResponse>(
+    {} as CategoryResponse
+  )
   const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>(
+    {} as Record<string, string>
+  )
   const router = useRouter()
   const dispatch = useDispatch()
 
@@ -35,7 +41,13 @@ export default function CategoryEditForm() {
     fetchCategory()
   }, [id])
 
-  const handleSubmit = async (categoryFormData: string) => {
+  const handleSubmit = async (categoryFormData: CategoryResponse) => {
+    // form validation
+    const zodResponse = categoryFormSchema.safeParse(categoryFormData)
+    if (!zodResponse.success) {
+      setErrors(transformZodErrors(zodResponse.error))
+      return
+    }
     // update category
     const response = await fetch(`/api/categories/${id}`, {
       method: 'PUT',
@@ -73,8 +85,11 @@ export default function CategoryEditForm() {
       <DialogTitle>Edit Category</DialogTitle>
       <DialogContent>
         <UpsertCategoryForm
-          category={category}
-          onChange={(categoryFormData) => setCategoryFormData(categoryFormData)}
+          category={categoryFormData}
+          onChange={(newName) =>
+            setCategoryFormData({ ...categoryFormData, name: newName })
+          }
+          errors={errors}
         />
       </DialogContent>
       <DialogActions>
