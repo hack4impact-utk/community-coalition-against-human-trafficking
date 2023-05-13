@@ -5,6 +5,7 @@ import MobileHistoryListItem from 'components/HistoryList/MobileHistoryList/Mobi
 import InfiniteScroll from 'components/InfiniteScroll'
 import { useRouter } from 'next/router'
 import { historyPaginationDefaults } from 'utils/constants'
+import urls from 'utils/urls'
 
 interface Props {
   logs: LogResponse[]
@@ -50,7 +51,7 @@ export default function MobileHistoryList(props: Props) {
       return prev + 1
     })
     const response = await fetch(
-      `/api/logs?page=${newPage}${constructQueryString(
+      `${urls.api.logs.logs}?page=${newPage}${constructQueryString(
         router.query as { [key: string]: string }
       )}`
     )
