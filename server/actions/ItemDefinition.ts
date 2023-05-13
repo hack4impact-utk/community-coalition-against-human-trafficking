@@ -88,6 +88,15 @@ const existingAttributeValuesPipeline: PipelineStage[] = [
   },
 ]
 
+const softDeleteRequestPipeline: PipelineStage[] = [
+  ...getRequestPipeline,
+  {
+    $match: {
+      softDelete: { $exists: false },
+    },
+  },
+]
+
 /**
  * Finds an itemDefinition by its id
  * @id The id of the ItemDefinition object to find
@@ -102,13 +111,13 @@ export async function getItemDefinition(id: string) {
 }
 
 /**
- * Finds all itemDefinitions
- * @returns All itemDefinitions
+ * Finds all itemDefinitions that do not have the softDelete flag
+ * @returns All itemDefinitions that do not have the softDelete flag
  */
 export async function getItemDefinitions() {
   return (await getEntities(
     ItemDefinitionSchema,
-    getRequestPipeline
+    softDeleteRequestPipeline
   )) as ItemDefinitionResponse[]
 }
 

@@ -21,6 +21,7 @@ import {
   NotificationEmailPostRequest,
   NotificationEmailPutRequest,
   NotificationEmailResponse,
+  PaginatedResponse,
 } from 'utils/types'
 
 export const mockObjectId = '6408a7156668c5655c25b105'
@@ -154,6 +155,11 @@ export const validLogResponse: LogResponse[] = [
     date: new Date(),
   },
 ]
+
+export const validPaginatedResponse: PaginatedResponse<LogResponse> = {
+  total: 1,
+  data: validLogResponse,
+}
 
 export const validCheckInOutRequest: CheckInOutRequest = {
   quantityDelta: 1,

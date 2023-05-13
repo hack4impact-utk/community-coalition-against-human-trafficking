@@ -17,6 +17,7 @@ export default function App({
     <>
       <Provider store={store}>
         {/* this type error is ok, im not sure how to fix it rn */}
+        {/* @ts-ignore */}
         <PersistGate loading={null} persistor={store.__persistor}>
           <LocalizationProvider dateAdapter={AdapterDayjs}>
             <SessionProvider session={session}>

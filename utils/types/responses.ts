@@ -16,7 +16,7 @@ export interface UserResponse extends User {
 export interface ItemDefinitionResponse extends ItemDefinition {
   _id: string
   category?: CategoryResponse
-  attributes?: AttributeResponse[]
+  attributes: AttributeResponse[]
 }
 
 export interface InventoryItemAttributeResponse extends InventoryItemAttribute {
@@ -59,6 +59,11 @@ export interface LogResponse extends Log {
   _id: string
   staff: UserResponse
   item: InventoryItemResponse
+}
+
+export interface PaginatedResponse<T> {
+  total: number
+  data: T[]
 }
 
 export interface NotificationEmailResponse extends NotificationEmail {

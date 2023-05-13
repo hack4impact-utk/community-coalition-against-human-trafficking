@@ -141,6 +141,53 @@ const requestPipeline: PipelineStage[] = [
   },
 ]
 
+function searchAggregate(search: string): PipelineStage {
+  return {
+    $match: {
+      $or: [
+        { 'item.itemDefinition.name': { $regex: search, $options: 'i' } },
+        {
+          'item.itemDefinition.category.name': {
+            $regex: search,
+            $options: 'i',
+          },
+        },
+        { 'item.assignee.name': { $regex: search, $options: 'i' } },
+        { 'staff.name': { $regex: search, $options: 'i' } },
+        { 'staff.email': { $regex: search, $options: 'i' } },
+      ],
+    },
+  }
+}
+
+function categorySearchAggregate(category: string): PipelineStage {
+  return {
+    $match: {
+      'item.itemDefinition.category.name': category,
+    },
+  }
+}
+
+function startDateAggregate(startAfter: string): PipelineStage {
+  return {
+    $match: {
+      date: {
+        $gte: new Date(startAfter),
+      },
+    },
+  }
+}
+
+function endDateAggregate(endBefore: string): PipelineStage {
+  return {
+    $match: {
+      date: {
+        $lte: new Date(endBefore),
+      },
+    },
+  }
+}
+
 /**
  * Finds all logs
  * @returns All logs
@@ -149,6 +196,90 @@ export async function getLogs() {
   return await MongoDriver.getEntities(LogSchema, requestPipeline)
 }
 
+/**
+ * Finds logs for the current page with the given page size and sorting
+ * @param page The current page to get
+ * @param pageSize The number of logs to get per page
+ * @param sort The string to sort the logs by
+ * @returns The logs for the current page
+ */
+export async function getPaginatedLogs(
+  page: number,
+  limit: number,
+  sort: string,
+  order: string,
+  search?: string,
+  categorySearch?: string,
+  startDate?: string,
+  endDate?: string,
+  internal?: boolean
+) {
+  const filteredLogs = await getFilteredLogs(
+    sort,
+    order,
+    search,
+    categorySearch,
+    startDate,
+    endDate,
+    internal
+  )
+  const startIndex = page * limit
+  const endIndex = page * limit + limit
+  const logs = filteredLogs.slice(startIndex, endIndex)
+  return {
+    data: logs,
+    total: filteredLogs.length,
+  }
+}
+
+/**
+ * Filter and sort logs by params and return the filtered logs
+ * @param sort The string to sort the logs by
+ * @param order The order to sort the logs by
+ * @param search The string to search the logs by
+ * @param categorySearch The string to search the logs by category
+ * @param startDate The start date to filter the logs by
+ * @param endDate The end date to filter the logs by
+ * @param internal Only show internal logs
+ * @returns Filtered logs
+ */
+export async function getFilteredLogs(
+  sort: string,
+  order: string,
+  search?: string,
+  categorySearch?: string,
+  startDate?: string,
+  endDate?: string,
+  internal?: boolean
+) {
+  const pipeline = [...requestPipeline]
+  if (search) {
+    pipeline.push(searchAggregate(search))
+  }
+  if (categorySearch) {
+    pipeline.push(categorySearchAggregate(categorySearch))
+  }
+  if (startDate) {
+    pipeline.push(startDateAggregate(startDate))
+  }
+  if (endDate) {
+    pipeline.push(endDateAggregate(endDate))
+  }
+  if (internal) {
+    pipeline.push({
+      $match: {
+        'item.itemDefinition.internal': true,
+      },
+    })
+  }
+  pipeline.push({
+    $sort: {
+      [sort]: order === 'asc' ? 1 : -1,
+    },
+  })
+
+  return await MongoDriver.getEntities(LogSchema, pipeline)
+}
 /**
  * Finds a log by its id
  * @id The id of the log object to find

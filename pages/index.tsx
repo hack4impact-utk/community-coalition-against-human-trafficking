@@ -1,7 +1,6 @@
 import { Button } from '@mui/material'
 import DialogLink from 'components/DialogLink'
 import { useAppDispatch } from 'store'
-import { toggleKioskMode } from 'store/kiosk'
 
 export default function DashboardPage() {
   const dispatch = useAppDispatch()
@@ -10,6 +9,7 @@ export default function DashboardPage() {
       <DialogLink href={'/dialog/test'}>
         <Button>Take me to dialog</Button>
       </DialogLink>
+      {/* @ts-ignore */}
       <Button onClick={() => dispatch(toggleKioskMode())}>
         Toggle Kiosk Mode
       </Button>

@@ -23,105 +23,18 @@ import DesktopHistoryList from 'components/HistoryList/DesktopHistoryList'
 import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
 import React from 'react'
-import deepCopy from 'utils/deepCopy'
-import { dateToReadableDateString } from 'utils/transformations'
-import logsHandler from '@api/logs'
+import { historyPaginationDefaults } from 'utils/constants'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       categories: await apiWrapper(categoriesHandler, context),
-      logs: await apiWrapper(logsHandler, context),
     },
   }
 }
 
 interface HistoryPageProps {
-  logs: LogResponse[]
   categories: CategoryResponse[]
-}
-
-interface CsvRow {
-  Item: string
-  Attributes: string
-  Category: string
-  Quantity: number
-  Staff: string
-  Date: string
-}
-
-function handleExport(logs: LogResponse[]) {
-  const csvString = createLogsCsvAsString(logs)
-  const file: Blob = new Blob([csvString], { type: 'text/csv' })
-
-  // to download the file, create an <a> tag, associate the file with it, and click it
-  const a = document.createElement('a')
-  a.href = URL.createObjectURL(file)
-
-  // set file name. .slice() to put date in in yyyy-mm-dd format
-  a.download = `Warehouse History ${new Date().toISOString().slice(0, 10)}`
-  a.style.display = 'none'
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-}
-
-function createLogsCsvAsString(logs: LogResponse[]) {
-  /* Creates CSV-formatted string by:
-   * 1. Create the header row
-   * 2. creating a CsvRow obj
-   * 3. converted obj to string by separating the object values by with a comma
-   * 4. creating an array of CsvRow obj converted strings
-   * 5. joining each array element with a newline
-   */
-  const csvKeys: (keyof CsvRow)[] = [
-    'Item',
-    'Attributes',
-    'Category',
-    'Quantity',
-    'Staff',
-    'Date',
-  ]
-
-  const csvKeysString: string = csvKeys.join(',')
-
-  const csvData: CsvRow[] = logs.map((log) => {
-    const csvRow: CsvRow = {
-      Item: log.item.itemDefinition.name,
-      Attributes:
-        log.item.attributes
-          ?.map((attr) => `${attr.attribute.name}: ${attr.value}`)
-          .join('; ') ?? '',
-      Category: log.item.itemDefinition.category?.name ?? '',
-      Quantity: log.quantityDelta,
-      Staff: log.staff.name,
-      Date: new Date(log.date).toISOString(),
-    }
-    return csvRow
-  })
-
-  // sort rows by date
-  const compareFn = (d1: Date, d2: Date) => {
-    if (d1 < d2) {
-      return -1
-    }
-
-    if (d1 > d2) {
-      return 1
-    }
-
-    return 0
-  }
-
-  csvData.sort((row1: CsvRow, row2: CsvRow) =>
-    compareFn(new Date(row2.Date), new Date(row1.Date))
-  )
-
-  const csvDataString: string = csvData
-    .map((data) => Object.values(data).join(','))
-    .join('\n')
-
-  return `${csvKeysString}\n${csvDataString}`
 }
 
 const updateQuery = (router: NextRouter, key: string, val?: string) => {
@@ -152,95 +65,96 @@ const renderInternalCheckbox = (router: NextRouter, isMobileView: boolean) => {
   )
 }
 
-export default function HistoryPage({ logs, categories }: HistoryPageProps) {
-  const [tableData, setTableData] = React.useState<LogResponse[]>(logs)
+const constructQueryString = (params: { [key: string]: string }) => {
+  if (Object.keys(params).length === 0) return ''
+  return `?${Object.entries(params)
+    .map(([key, value]) => `${key}=${value}`)
+    .join('&')}`
+}
+
+export default function HistoryPage({ categories }: HistoryPageProps) {
+  const [tableData, setTableData] = React.useState<LogResponse[]>([])
+  const [totalLogs, setTotalLogs] = React.useState<number>(
+    historyPaginationDefaults.page
+  )
+  const [loading, setLoading] = React.useState<boolean>(true)
+  const [search, setSearch] = React.useState<string>('')
+  const [category, setCategory] = React.useState<string>('')
+  const [startDate, setStartDate] = React.useState<string>('')
+  const [endDate, setEndDate] = React.useState<string>('')
+  const [internal, setInternal] = React.useState<boolean>(false)
+
   const router = useRouter()
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
 
+  const handleExport = async () => {
+    const requestStr = `http://localhost:3000/api/logs/export${constructQueryString(
+      router.query as { [key: string]: string }
+    )}`
+
+    const response = await fetch(requestStr, {
+      method: 'GET',
+    })
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `Warehouse History ${new Date().toISOString().slice(0, 10)}`
+    a.style.display = 'none'
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }
+
   React.useEffect(() => {
-    let newTableData: LogResponse[] = deepCopy(logs)
+    const fetchLogs = async () => {
+      setLoading(true)
+      if (router.query.search !== search) {
+        removeURLQueryParam(router, 'page')
+        setSearch(router.query.search as string)
+      }
+      if (router.query.category !== category) {
+        removeURLQueryParam(router, 'page')
+        setCategory(router.query.category as string)
+      }
+      if (router.query.startDate !== startDate) {
+        removeURLQueryParam(router, 'page')
+        setStartDate(router.query.startDate as string)
+      }
+      if (router.query.endDate !== endDate) {
+        removeURLQueryParam(router, 'page')
+        setEndDate(router.query.endDate as string)
+      }
+      if ((router.query.internal === 'true') !== internal) {
+        removeURLQueryParam(router, 'page')
+        setInternal(router.query.internal === 'true')
+      }
 
-    if (router.query.internal) {
-      newTableData = newTableData.filter(
-        (log) => log.item.itemDefinition.internal
+      const response = await fetch(
+        `http://localhost:3000/api/logs${constructQueryString(
+          router.query as { [key: string]: string }
+        )}`,
+        {
+          method: 'GET',
+        }
       )
+      const { payload } = await response.json()
+      setTableData(payload.data)
+      setTotalLogs(payload.total)
+      setLoading(false)
     }
-
-    if (router.query.search) {
-      const search = (router.query.search as string).toLowerCase()
-      newTableData = newTableData.filter((log) => {
-        return (
-          log.staff.name.toLowerCase().includes(search) ||
-          log.item.itemDefinition.name.toLowerCase().includes(search) ||
-          (log.item.attributes &&
-            log.item.attributes
-              .map((attr) =>
-                `${attr.attribute.name}: ${attr.value}`.toLowerCase()
-              )
-              .join(' ')
-              .includes(search)) ||
-          (log.item.itemDefinition.category &&
-            log.item.itemDefinition.category.name
-              .toLowerCase()
-              .includes(search)) ||
-          log.quantityDelta.toString().toLowerCase().includes(search) ||
-          dateToReadableDateString(log.date).toLowerCase().includes(search)
-        )
-      })
-    }
-
-    const startDate = router.query.startDate
-      ? new Date(router.query.startDate as string).getTime()
-      : undefined
-    const endDate = router.query.endDate
-      ? new Date(router.query.endDate as string).getTime()
-      : undefined
-
-    if (router.query.startDate && router.query.endDate) {
-      newTableData = newTableData.filter(
-        (log) =>
-          new Date(log.date).getTime() >= startDate! &&
-          new Date(log.date).getTime() <= endDate!
-      )
-    } else if (router.query.startDate) {
-      newTableData = newTableData.filter(
-        (log) => new Date(log.date).getTime() >= startDate!
-      )
-    } else if (router.query.endDate) {
-      newTableData = newTableData.filter(
-        (log) => new Date(log.date).getTime() <= endDate!
-      )
-    }
-
-    if (router.query.startDate || router.query.endDate) {
-      // if props.startDate or props.endDate are not present, use an arbitrarily far-away date
-      const startDate = new Date(
-        (router.query.startDate as string) ?? '1000-01-01'
-      ).getTime()
-      const endDate = new Date(
-        (router.query.endDate as string) ?? '9999-01-01'
-      ).getTime()
-      newTableData = newTableData.filter((log) => {
-        return (
-          new Date(log.date).getTime() >= startDate &&
-          new Date(log.date).getTime() <= endDate
-        )
-      })
-    }
-
-    if (router.query.category) {
-      newTableData = newTableData.filter((log) => {
-        return log.item.itemDefinition.category?.name === router.query.category
-      })
-    }
-    setTableData(newTableData)
+    fetchLogs()
   }, [
+    router.query.page,
+    router.query.limit,
     router.query.search,
     router.query.category,
     router.query.startDate,
     router.query.endDate,
     router.query.internal,
+    router.query.sort,
+    router.query.order,
   ])
 
   return (
@@ -255,7 +169,7 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
             <Button
               variant="outlined"
               sx={{ width: '100%' }}
-              onClick={() => handleExport(tableData)}
+              onClick={() => handleExport()}
             >
               Export To Excel
             </Button>
@@ -408,6 +322,8 @@ export default function HistoryPage({ logs, categories }: HistoryPageProps) {
           startDate={router.query.startDate as string}
           internal={!!router.query.internal}
           setTableData={setTableData}
+          total={totalLogs}
+          loading={loading}
         />
       )}
     </Grid2>

@@ -1,17 +1,12 @@
 import { ObjectId } from 'mongodb'
-import LogSchema, { LogDocument } from 'server/models/Log'
+import { LogDocument } from 'server/models/Log'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
 import logsHandler from 'pages/api/logs'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
-import * as apiValidator from 'utils/apiValidators'
 import { errors } from 'utils/constants/errors'
-import {
-  validLogResponse,
-  mockObjectId,
-  validLogPostRequest,
-} from 'test/testData'
+import { validLogResponse } from 'test/testData'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -86,12 +81,13 @@ describe('api/logs', () => {
       expect(serverAuth).toHaveBeenCalledTimes(1)
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
       expect(response.statusCode).toBe(200)
-      expect([{ ...data[0], date: new Date(data[0].date) }]).toEqual(
+      expect(data.total).toBe(1)
+      expect([{ ...data.data[0], date: new Date(data.data[0].date) }]).toEqual(
         validLogResponse
       )
     })
 
-    test('valid call with no data returns 204', async () => {
+    test('valid call with no data returns empty payload', async () => {
       const mockGetEntities = jest
         .spyOn(MongoDriver, 'getEntities')
         .mockImplementation(async () => [])
@@ -107,8 +103,9 @@ describe('api/logs', () => {
       const data = response._getJSONData().payload
 
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
-      expect(response.statusCode).toBe(204)
-      expect(data).toEqual([])
+      expect(response.statusCode).toBe(200)
+      expect(data.data).toEqual([])
+      expect(data.total).toBe(0)
     })
   })
 
