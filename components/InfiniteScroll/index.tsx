@@ -20,7 +20,6 @@ export default function InfiniteScroll({
     const clientHeight = document.documentElement.clientHeight
 
     if (scrollTop + clientHeight >= scrollHeight && hasMore && !loading) {
-      console.log('getting next page')
       setLoading(true)
       await next()
       setLoading(false)
