@@ -25,6 +25,7 @@ import { Clear } from '@mui/icons-material'
 import React from 'react'
 import { historyPaginationDefaults } from 'utils/constants'
 import urls from 'utils/urls'
+import { constructQueryString } from 'utils/constructQueryString'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -64,13 +65,6 @@ const renderInternalCheckbox = (router: NextRouter, isMobileView: boolean) => {
       <Typography>Internal only</Typography>
     </Grid2>
   )
-}
-
-const constructQueryString = (params: { [key: string]: string }) => {
-  if (Object.keys(params).length === 0) return ''
-  return `?${Object.entries(params)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')}`
 }
 
 export default function HistoryPage({ categories }: HistoryPageProps) {

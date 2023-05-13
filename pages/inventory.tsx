@@ -15,6 +15,7 @@ import theme from 'utils/theme'
 import React from 'react'
 import { removeURLQueryParam } from 'utils/queryParams'
 import urls from 'utils/urls'
+import { constructQueryString } from 'utils/constructQueryString'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -28,13 +29,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 interface Props {
   inventoryItems: InventoryItemResponse[]
   categories: string[]
-}
-
-const constructQueryString = (params: { [key: string]: string }) => {
-  if (Object.keys(params).length === 0) return ''
-  return `?${Object.entries(params)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')}`
 }
 
 const fetchInventoryItems = async (router: NextRouter) => {
