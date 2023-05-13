@@ -197,6 +197,7 @@ function CheckInOutForm({
       {/* Staff member, Date, and Item input fields */}
       {kioskMode && (
         <Autocomplete
+          autoHighlight
           options={users}
           isOptionEqualToValue={(option, value) => option._id === value._id}
           renderInput={(params) => (
@@ -240,6 +241,7 @@ function CheckInOutForm({
         />
       </Box>
       <Autocomplete
+        autoHighlight
         options={categories}
         sx={{ marginTop: 4 }}
         renderInput={(params) => (
@@ -263,6 +265,7 @@ function CheckInOutForm({
         disabled={!!formData.itemDefinition}
       />
       <Autocomplete
+        autoHighlight
         options={filteredItemDefinitions}
         sx={{ marginTop: 4 }}
         renderInput={(params) => (

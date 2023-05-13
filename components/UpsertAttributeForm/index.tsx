@@ -134,6 +134,7 @@ export default function UpsertAttributeForm({
         {formData?.valueType == 'list' && (
           <Grid2 xs={12} sx={{ mt: 2 }}>
             <Autocomplete
+              autoHighlight
               freeSolo
               multiple
               value={formData.listOptions}
