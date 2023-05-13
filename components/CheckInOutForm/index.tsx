@@ -291,7 +291,7 @@ function CheckInOutForm({
       />
 
       {/* Assignee Autocomplete */}
-      {formData.itemDefinition.internal && (
+      {formData.itemDefinition?.internal && (
         <Autocomplete
           options={users}
           sx={{ mt: 4 }}
