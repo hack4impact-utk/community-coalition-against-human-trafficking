@@ -11,16 +11,23 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
+import transformZodErrors from 'utils/transformZodErrors'
+import { CategoryResponse, categoryFormSchema } from 'utils/types'
+import urls from 'utils/urls'
 
 export default function CategoryEditForm() {
-  const [categoryFormData, setCategoryFormData] = useState<string>('')
-
+  const [categoryFormData, setCategoryFormData] = useState<CategoryResponse>(
+    {} as CategoryResponse
+  )
   const [loading, setLoading] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>(
+    {} as Record<string, string>
+  )
   const router = useRouter()
   const dispatch = useDispatch()
 
   const handleClose = async () => {
-    await router.push('/settings/categories')
+    await router.push(urls.pages.settings.categories)
   }
 
   // get id from URL and get categories
@@ -28,26 +35,32 @@ export default function CategoryEditForm() {
   useEffect(() => {
     const fetchCategory = async () => {
       if (!id) return // on page load, id is undefined, resulting in bad requests
-      const response = await fetch(`/api/category/${id}`, { method: 'GET' })
+      const response = await fetch(urls.api.categories.category(id as string), {
+        method: 'GET',
+      })
       const data = await response.json()
       setCategoryFormData(data.payload)
     }
     fetchCategory()
   }, [id])
 
-  const handleSubmit = async (categoryFormData: string) => {
+  const handleSubmit = async (categoryFormData: CategoryResponse) => {
+    // form validation
+    const zodResponse = categoryFormSchema.safeParse(categoryFormData)
+    if (!zodResponse.success) {
+      setErrors(transformZodErrors(zodResponse.error))
+      return
+    }
+
     // update category
-    const response = await fetch(`/api/category/${id}`, {
+    const response = await fetch(urls.api.categories.category(id as string), {
       method: 'PUT',
-      headers: { 'Content-Type': 'category/json' },
-      body: JSON.stringify({
-        _id: id,
-        name: categoryFormData,
-      }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(categoryFormData),
     })
 
     // close dialog
-    handleClose()
+    await handleClose()
 
     // handle snackbar logic
     const data = await response.json()
@@ -73,7 +86,11 @@ export default function CategoryEditForm() {
       <DialogTitle>Edit Category</DialogTitle>
       <DialogContent>
         <UpsertCategoryForm
-          onChange={(categoryFormData) => setCategoryFormData(categoryFormData)}
+          category={categoryFormData}
+          onChange={(newName) => {
+            setCategoryFormData({ ...categoryFormData, name: newName })
+          }}
+          errors={errors}
         />
       </DialogContent>
       <DialogActions>

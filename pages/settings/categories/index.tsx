@@ -12,6 +12,7 @@ import CategoryCreateForm from './create'
 import { useRouter } from 'next/router'
 import theme from 'utils/theme'
 import DialogLink from 'components/DialogLink'
+import urls from 'utils/urls'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -34,7 +35,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
             Categories
           </Typography>
           <Grid2 ml={isMobileView ? '0' : 'auto'}>
-            <DialogLink href="/settings/categories/create">
+            <DialogLink href={urls.pages.dialogs.createCategory}>
               <Button variant="outlined" sx={{ width: '100%' }}>
                 Create New Category
               </Button>

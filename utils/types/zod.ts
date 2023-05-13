@@ -181,12 +181,14 @@ export const attributeFormSchema = z
     }
   )
 
-export const categoryFormSchema = z.string().refine(
-  (schema: string) => {
-    return schema !== ''
-  },
-  {
-    message: 'Required',
-    path: ['name'],
-  }
-)
+export const categoryFormSchema = z.object({
+  name: z.string().refine(
+    (schema: string) => {
+      return schema !== ''
+    },
+    {
+      message: 'Required',
+      path: ['name'],
+    }
+  ),
+})

@@ -15,6 +15,8 @@ export default {
     dialogs: {
       editAttribute: '/settings/attributes/:id/edit',
       createAttribute: '/settings/attributes/create',
+      editCategory: (id: string) => `/settings/categories/${id}/edit`,
+      createCategory: '/settings/categories/create',
       createItem: '/items/new',
     },
   },
