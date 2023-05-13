@@ -1,13 +1,17 @@
 import categoriesHandler from '@api/categories'
 import { Button, Typography, useMediaQuery } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
 import Grid2 from '@mui/material/Unstable_Grid2'
 import CategoryList from 'components/CategoryList'
 import SearchField from 'components/SearchField'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import { CategoryResponse } from 'utils/types'
+import RoutableDialog from 'components/RoutableDialog'
+import CategoryEditForm from './[categoryId]/edit'
+import CategoryCreateForm from './create'
+import { useRouter } from 'next/router'
 import theme from 'utils/theme'
+import DialogLink from 'components/DialogLink'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -20,6 +24,7 @@ interface CategoriesPageProps {
 }
 
 export default function CategoriesPage({ categories }: CategoriesPageProps) {
+  const router = useRouter()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   return (
     <>
@@ -28,17 +33,29 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
           <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
             Categories
           </Typography>
-          <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
-            <Button variant="outlined" sx={{ width: '100%', px: 1 }}>
-              Create New Category
-            </Button>
+          <Grid2 ml={isMobileView ? '0' : 'auto'}>
+            <DialogLink href="/settings/categories/create">
+              <Button variant="outlined" sx={{ width: '100%' }}>
+                Create New Category
+              </Button>
+            </DialogLink>
           </Grid2>
         </Grid2>
         <Grid2 xs={12} md={5} lg={4} sx={{ px: 2 }}>
           <SearchField />
         </Grid2>
-        <CategoryList categories={categories} search={''} />
+        <CategoryList
+          categories={categories}
+          search={router.query.search as string}
+        />
       </Grid2>
+
+      <RoutableDialog name="editCategory">
+        <CategoryEditForm />
+      </RoutableDialog>
+      <RoutableDialog name="createCategory">
+        <CategoryCreateForm />
+      </RoutableDialog>
     </>
   )
 }

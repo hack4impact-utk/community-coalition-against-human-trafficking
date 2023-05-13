@@ -159,7 +159,7 @@ export default function DesktopCategoryList(props: Props) {
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
     setVisibleRows(rowsOnMount)
-  }, [props.search])
+  }, [props.search, props.categories])
 
   const handleRequestSort = React.useCallback(
     (_e: React.MouseEvent<unknown>, newOrderBy: keyof CategoryTableData) => {

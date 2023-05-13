@@ -13,6 +13,14 @@ export const dialogRoutes: DialogRoute[] = [
     path: '/settings/attributes/create',
   },
   {
+    name: 'editCategory',
+    path: '/settings/categories/:id/edit',
+  },
+  {
+    name: 'createCategory',
+    path: '/settings/categories/create',
+  },
+  {
     name: 'createItem',
     path: '/items/new',
   },
