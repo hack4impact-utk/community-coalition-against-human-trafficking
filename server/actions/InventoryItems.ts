@@ -138,8 +138,6 @@ function searchAggregate(search: string): PipelineStage {
           },
         },
         { 'assignee.name': { $regex: search, $options: 'i' } },
-        { name: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
       ],
     },
   }
@@ -166,14 +164,14 @@ export async function getInventoryItems() {
 
 /**
  * Filter and sort inventory items by params and return the filtered inventory items
- * @param sort The string to sort the inventory item by
+ * @param orderBy The string to sort the inventory item by
  * @param order The order to sort the inventory items by
  * @param search The string to search the inventory items by
  * @param categorySearch The string to search the inventory items by category
  * @returns Filtered inventory items
  */
 export async function getFilteredInventoryItems(
-  sort: string,
+  orderBy: string,
   order: string,
   search?: string,
   categorySearch?: string
@@ -187,7 +185,7 @@ export async function getFilteredInventoryItems(
   }
   pipeline.push({
     $sort: {
-      [sort]: order === 'asc' ? 1 : -1,
+      [orderBy]: order === 'asc' ? 1 : -1,
     },
   })
 
@@ -198,7 +196,7 @@ export async function getFilteredInventoryItems(
  * Finds inventory items for the current page with the given page size and sorting
  * @param page The current page to get
  * @param pageSize The number of inventory items to get per page
- * @param sort The string to sort the inventory items by
+ * @param orderBy The string to sort the inventory items by
  * @param order The order to sort the inventory items by
  * @param search The string to search the inventory items by
  * @param categorySearch The string to search the inventory items by category
@@ -207,13 +205,13 @@ export async function getFilteredInventoryItems(
 export async function getPaginatedInventoryItems(
   page: number,
   limit: number,
-  sort: string,
+  orderBy: string,
   order: string,
   search?: string,
   categorySearch?: string
 ) {
   const filteredLogs = await getFilteredInventoryItems(
-    sort,
+    orderBy,
     order,
     search,
     categorySearch

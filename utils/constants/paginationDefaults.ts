@@ -8,6 +8,6 @@ export const historyPaginationDefaults = {
 export const inventoryPaginationDefaults = {
   page: 0,
   limit: 5,
-  sort: 'name',
+  orderBy: 'name',
   order: 'asc',
 }

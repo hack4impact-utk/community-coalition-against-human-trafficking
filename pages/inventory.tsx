@@ -14,6 +14,7 @@ import { NextRouter, useRouter } from 'next/router'
 import theme from 'utils/theme'
 import React from 'react'
 import { removeURLQueryParam } from 'utils/queryParams'
+import urls from 'utils/urls'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -38,7 +39,7 @@ const constructQueryString = (params: { [key: string]: string }) => {
 
 const fetchInventoryItems = async (router: NextRouter) => {
   const response = await fetch(
-    `/api/inventoryItems${constructQueryString(
+    `${urls.api.inventoryItems.inventoryItems}${constructQueryString(
       router.query as { [key: string]: string }
     )}`,
     {
@@ -63,8 +64,9 @@ export default function InventoryPage({ categories }: Props) {
   const [order, setOrder] = React.useState<string | undefined>(undefined)
 
   React.useEffect(() => {
-    setLoading(true)
-    fetchInventoryItems(router).then((items) => {
+    const getItems = async () => {
+      setLoading(true)
+      const items = await fetchInventoryItems(router)
       if (router.query.search !== search) {
         removeURLQueryParam(router, 'page')
         setSearch(router.query.search as string)
@@ -84,7 +86,8 @@ export default function InventoryPage({ categories }: Props) {
       setInventoryItems(items.data)
       setTotal(items.total)
       setLoading(false)
-    })
+    }
+    getItems()
   }, [
     router.query.search,
     router.query.category,

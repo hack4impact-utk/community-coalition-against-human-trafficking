@@ -32,7 +32,7 @@ export default async function inventoryItemsHandler(
           Number(limit || inventoryPaginationDefaults.limit),
           sortPathMap[
             (orderBy as keyof typeof sortPathMap) ||
-              inventoryPaginationDefaults.sort
+              inventoryPaginationDefaults.orderBy
           ],
           (order as string) || inventoryPaginationDefaults.order,
           search as string,
