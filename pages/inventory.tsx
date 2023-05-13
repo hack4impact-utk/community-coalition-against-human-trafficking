@@ -13,6 +13,7 @@ import SearchAutocomplete from 'components/SearchAutocomplete'
 import { NextRouter, useRouter } from 'next/router'
 import theme from 'utils/theme'
 import React from 'react'
+import { removeURLQueryParam } from 'utils/queryParams'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -55,18 +56,41 @@ export default function InventoryPage({ categories }: Props) {
     InventoryItemResponse[]
   >([])
   const [total, setTotal] = React.useState<number>(0)
+  const [loading, setLoading] = React.useState<boolean>(true)
+  const [search, setSearch] = React.useState<string | undefined>(undefined)
+  const [category, setCategory] = React.useState<string | undefined>(undefined)
+  const [orderBy, setOrderBy] = React.useState<string | undefined>(undefined)
+  const [order, setOrder] = React.useState<string | undefined>(undefined)
 
   React.useEffect(() => {
+    setLoading(true)
     fetchInventoryItems(router).then((items) => {
+      if (router.query.search !== search) {
+        removeURLQueryParam(router, 'page')
+        setSearch(router.query.search as string)
+      }
+      if (router.query.category !== category) {
+        removeURLQueryParam(router, 'page')
+        setCategory(router.query.category as string | undefined)
+      }
+      if (router.query.orderBy !== orderBy) {
+        removeURLQueryParam(router, 'page')
+        setOrderBy(router.query.orderBy as string | undefined)
+      }
+      if (router.query.order !== order) {
+        removeURLQueryParam(router, 'page')
+        setOrder(router.query.order as string | undefined)
+      }
       setInventoryItems(items.data)
       setTotal(items.total)
+      setLoading(false)
     })
   }, [
     router.query.search,
     router.query.category,
     router.query.page,
     router.query.limit,
-    router.query.sort,
+    router.query.orderBy,
     router.query.order,
   ])
 
@@ -97,6 +121,7 @@ export default function InventoryPage({ categories }: Props) {
             search={router.query.search as string}
             category={router.query.category as string}
             total={total}
+            loading={loading}
           />
         </Grid2>
       </Grid2>

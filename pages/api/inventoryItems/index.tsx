@@ -7,6 +7,13 @@ import InventoryItemSchema from 'server/models/InventoryItem'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
 import { inventoryPaginationDefaults } from 'utils/constants'
 
+const sortPathMap = {
+  name: 'itemDefinition.name',
+  category: 'itemDefinition.category.name',
+  quantity: 'quantity',
+  assignee: 'assignee.name',
+}
+
 // @route GET api/inventoryItems - Returns a list of all inventoryItems in the database - Private
 // @route POST /api/inventoryItems - Create a inventoryItems from request body - Private
 export default async function inventoryItemsHandler(
@@ -23,7 +30,10 @@ export default async function inventoryItemsHandler(
         const items = await getPaginatedInventoryItems(
           Number(page || inventoryPaginationDefaults.page),
           Number(limit || inventoryPaginationDefaults.limit),
-          (orderBy as string) || inventoryPaginationDefaults.sort,
+          sortPathMap[
+            (orderBy as keyof typeof sortPathMap) ||
+              inventoryPaginationDefaults.sort
+          ],
           (order as string) || inventoryPaginationDefaults.order,
           search as string,
           category as string

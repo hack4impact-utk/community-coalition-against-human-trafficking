@@ -19,6 +19,7 @@ import {
   removeURLQueryParam,
 } from 'utils/queryParams'
 import { NextRouter, useRouter } from 'next/router'
+import DesktopInventoryItemListSkeleton from './DesktopInventoryItemListSkeleton'
 
 type HeadId =
   | 'name'
@@ -92,15 +93,27 @@ interface EnhancedTableProps {
 
 function InventoryItemListHeader(props: EnhancedTableProps) {
   const { order, orderBy, router } = props
+  console.log(order, orderBy)
   const createSortHandler = (property: HeadId) => async () => {
-    const orderBy = router.query.orderBy
-    const order = router.query.order
     const isAsc = orderBy === property && order === 'asc'
     const newOrder = isAsc ? 'desc' : 'asc'
-    await bulkAddURLQueryParams(router, {
-      order: newOrder,
-      orderBy: property,
-    })
+    if (
+      newOrder === inventoryPaginationDefaults.order &&
+      property === inventoryPaginationDefaults.sort
+    ) {
+      await bulkRemoveURLQueryParams(router, ['order', 'orderBy'])
+    } else if (property === inventoryPaginationDefaults.sort) {
+      await removeURLQueryParam(router, 'orderBy')
+      await addURLQueryParam(router, 'order', newOrder)
+    } else if (newOrder === inventoryPaginationDefaults.order) {
+      await removeURLQueryParam(router, 'order')
+      await addURLQueryParam(router, 'orderBy', property)
+    } else {
+      await bulkAddURLQueryParams(router, {
+        order: newOrder,
+        orderBy: property,
+      })
+    }
   }
 
   return (
@@ -140,11 +153,8 @@ interface Props {
   search: string
   category: string
   total: number
+  loading: boolean
 }
-
-const DEFAULT_ROWS_PER_PAGE = 5
-const DEFAULT_ORDER_BY = 'name'
-const DEFAULT_ORDER = 'asc'
 
 const updateQuery = async (router: NextRouter, key: string, val?: string) => {
   if (!val) await removeURLQueryParam(router, key)
@@ -152,19 +162,7 @@ const updateQuery = async (router: NextRouter, key: string, val?: string) => {
 }
 
 export default function DesktopInventoryItemList(props: Props) {
-  const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] = React.useState<HeadId>(DEFAULT_ORDER_BY)
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = React.useState<
-    InventoryItemResponse[] | null
-  >(null)
-  const [tableData, setTableData] = React.useState<InventoryItemResponse[]>([])
   const router = useRouter()
-
-  React.useEffect(() => {
-    console.log('test: ', props.inventoryItems)
-  }, [props.inventoryItems])
 
   // when the change page buttons are clicked
   const handleChangePage = (_e: unknown, newPage: number) => {
@@ -188,20 +186,6 @@ export default function DesktopInventoryItemList(props: Props) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <TableContainer>
-        <Table aria-labelledby="tableTitle" size="medium">
-          <InventoryItemListHeader
-            order={router.query.order as Order}
-            orderBy={router.query.orderBy as string}
-            router={router}
-          />
-          <TableBody>
-            {props.inventoryItems.map((item) => (
-              <InventoryItemListItem inventoryItem={item} key={item._id} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
@@ -213,6 +197,33 @@ export default function DesktopInventoryItemList(props: Props) {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <TableContainer>
+        <Table aria-labelledby="tableTitle" size="medium">
+          <InventoryItemListHeader
+            order={
+              (router.query.order || inventoryPaginationDefaults.order) as Order
+            }
+            orderBy={
+              (router.query.orderBy ||
+                inventoryPaginationDefaults.sort) as string
+            }
+            router={router}
+          />
+          <TableBody>
+            {props.loading ? (
+              <DesktopInventoryItemListSkeleton
+                rowsPerPage={Number(
+                  router.query.limit || inventoryPaginationDefaults.limit
+                )}
+              />
+            ) : (
+              props.inventoryItems.map((item) => (
+                <InventoryItemListItem inventoryItem={item} key={item._id} />
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Box>
   )
 }

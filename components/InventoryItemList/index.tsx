@@ -9,6 +9,7 @@ interface InventoryItemListProps {
   search: string
   category: string
   total: number
+  loading: boolean
 }
 
 export default function InventoryItemList({
@@ -16,6 +17,7 @@ export default function InventoryItemList({
   search,
   category,
   total,
+  loading,
 }: InventoryItemListProps) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
@@ -33,6 +35,7 @@ export default function InventoryItemList({
           search={search}
           category={category}
           total={total}
+          loading={loading}
         />
       )}
     </>
