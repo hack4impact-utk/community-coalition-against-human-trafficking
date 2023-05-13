@@ -14,6 +14,7 @@ import {
   mockObjectId,
   validNotificationEmailPostRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -22,7 +23,6 @@ beforeAll(() => {
 // restore mocked implementations and close db connections
 afterAll(() => {
   jest.restoreAllMocks()
-  
 })
 
 beforeEach(() => {
@@ -37,7 +37,7 @@ describe('api/notificationEmails', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: '/api/notificationEmails',
+      url: urls.api.notificationEmails.notificationEmails,
     })
     const response = createResponse()
 
@@ -53,7 +53,7 @@ describe('api/notificationEmails', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'HEAD',
-      url: '/api/notificationEmails',
+      url: urls.api.notificationEmails.notificationEmails,
     })
     const response = createResponse()
 
@@ -81,7 +81,7 @@ describe('api/notificationEmails', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/notificationEmails`,
+        url: urls.api.notificationEmails.notificationEmails,
       })
 
       const response = createResponse()
@@ -102,7 +102,7 @@ describe('api/notificationEmails', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/notificationEmails`,
+        url: urls.api.notificationEmails.notificationEmails,
       })
 
       const response = createResponse()
@@ -132,7 +132,7 @@ describe('api/notificationEmails', () => {
 
       const request = createRequest({
         method: 'POST',
-        url: `/api/notificationEmails`,
+        url: urls.api.notificationEmails.notificationEmails,
         body: validNotificationEmailPostRequest,
       })
 

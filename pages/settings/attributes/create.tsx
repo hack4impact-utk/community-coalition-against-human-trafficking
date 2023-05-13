@@ -11,6 +11,7 @@ import { useRouter } from 'next/router'
 import { LoadingButton } from '@mui/lab'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
+import urls from 'utils/urls'
 
 export default function AttributeCreateDialog() {
   const [loading, setLoading] = useState(false)
@@ -22,7 +23,7 @@ export default function AttributeCreateDialog() {
   const dispatch = useDispatch()
 
   const handleClose = () => {
-    router.push('/settings/attributes')
+    router.push(urls.pages.settings.attributes)
   }
 
   const handleSubmit = async (attributeFormData: AttributeFormData) => {
@@ -38,7 +39,7 @@ export default function AttributeCreateDialog() {
     }
 
     // add attribute to database
-    const response = await fetch('/api/attributes', {
+    const response = await fetch(urls.api.attributes.attributes, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -52,7 +53,7 @@ export default function AttributeCreateDialog() {
     })
 
     // close dialog
-    await router.push('/settings/attributes')
+    await router.push(urls.api.attributes.attributes)
 
     // handle snackbar logic
     const data = await response.json()

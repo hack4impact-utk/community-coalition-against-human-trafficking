@@ -14,6 +14,7 @@ import {
   mockObjectId,
   validNotificationEmailPutRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -33,7 +34,7 @@ describe('api/notificationEmails/[notificationEmailId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: `/api/notificationEmails/${mockObjectId}`,
+      url: urls.api.notificationEmails.notificationEmail(mockObjectId),
       query: {
         notificationEmailId: mockObjectId,
       },
@@ -52,7 +53,7 @@ describe('api/notificationEmails/[notificationEmailId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: `/api/notificationEmails/${mockObjectId}`,
+      url: urls.api.notificationEmails.notificationEmail(mockObjectId),
       query: {
         notificationEmailId: mockObjectId,
       },
@@ -80,7 +81,7 @@ describe('api/notificationEmails/[notificationEmailId]', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/notificationEmails/${mockObjectId}`,
+        url: urls.api.notificationEmails.notificationEmail(mockObjectId),
         query: {
           notificationEmailId: mockObjectId,
         },
@@ -116,7 +117,7 @@ describe('api/notificationEmails/[notificationEmailId]', () => {
 
       const request = createRequest({
         method: 'PUT',
-        url: `/api/notificationEmails/${mockObjectId}`,
+        url: urls.api.notificationEmails.notificationEmail(mockObjectId),
         query: {
           notificationEmailId: mockObjectId,
         },
@@ -148,7 +149,7 @@ describe('api/notificationEmails/[notificationEmailId]', () => {
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: `/api/notificationEmails/${mockObjectId}`,
+        url: urls.api.notificationEmails.notificationEmail(mockObjectId),
         query: {
           notificationEmailId: mockObjectId,
         },

@@ -15,6 +15,7 @@ import {
   mockObjectId,
   validInventoryItemPostRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -23,7 +24,6 @@ beforeAll(() => {
 // restore mocked implementations and close db connections
 afterAll(() => {
   jest.restoreAllMocks()
-  
 })
 
 beforeEach(() => {
@@ -38,7 +38,7 @@ describe('api/inventoryItems', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: '/api/inventoryItems',
+      url: urls.api.inventoryItems.inventoryItems,
     })
     const response = createResponse()
 
@@ -54,7 +54,7 @@ describe('api/inventoryItems', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'HEAD',
-      url: '/api/inventoryItems',
+      url: urls.api.inventoryItems.inventoryItems,
     })
     const response = createResponse()
 
@@ -82,7 +82,7 @@ describe('api/inventoryItems', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/inventoryItems`,
+        url: urls.api.inventoryItems.inventoryItems,
       })
 
       const response = createResponse()
@@ -103,7 +103,7 @@ describe('api/inventoryItems', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/inventoryItems`,
+        url: urls.api.inventoryItems.inventoryItems,
       })
 
       const response = createResponse()
@@ -133,7 +133,7 @@ describe('api/inventoryItems', () => {
 
       const request = createRequest({
         method: 'POST',
-        url: `/api/inventoryItems`,
+        url: urls.api.inventoryItems.inventoryItems,
         body: validInventoryItemPostRequest,
       })
 

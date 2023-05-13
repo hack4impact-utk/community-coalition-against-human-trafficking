@@ -19,6 +19,7 @@ import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import { showSnackbar } from 'store/snackbar'
 import { LoadingButton } from '@mui/lab'
+import urls from 'utils/urls'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -61,7 +62,7 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
     setLoading(true)
 
     const response = await fetch(
-      `/api/notificationEmails/${notificationEmailData._id}`,
+      urls.api.notificationEmails.notificationEmail(notificationEmailData._id),
       {
         method: 'PUT',
         headers: {
