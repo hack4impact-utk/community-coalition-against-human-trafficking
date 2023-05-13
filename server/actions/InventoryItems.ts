@@ -180,9 +180,7 @@ export async function getFilteredInventoryItems(
 ) {
   const pipeline = [...requestPipeline]
   if (search) {
-    console.log('searching: ', search)
     pipeline.push(searchAggregate(search))
-    console.log('pipeline: ', pipeline)
   }
   if (categorySearch) {
     pipeline.push(categorySearchAggregate(categorySearch))

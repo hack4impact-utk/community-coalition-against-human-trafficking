@@ -93,7 +93,6 @@ interface EnhancedTableProps {
 
 function InventoryItemListHeader(props: EnhancedTableProps) {
   const { order, orderBy, router } = props
-  console.log(order, orderBy)
   const createSortHandler = (property: HeadId) => async () => {
     const isAsc = orderBy === property && order === 'asc'
     const newOrder = isAsc ? 'desc' : 'asc'
