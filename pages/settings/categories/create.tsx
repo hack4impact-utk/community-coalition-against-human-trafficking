@@ -10,6 +10,8 @@ import { LoadingButton } from '@mui/lab'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
 import UpsertCategoryForm from 'components/UpsertCategoryForm'
+import transformZodErrors from 'utils/transformZodErrors'
+import { categoryFormSchema } from 'utils/types'
 
 export default function CategoryCreateForm() {
   const [loading, setLoading] = useState(false)
@@ -18,11 +20,19 @@ export default function CategoryCreateForm() {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const handleClose = () => {
-    router.push('/settings/attributes')
+  const handleClose = async () => {
+    await router.push('/settings/categories')
   }
-
+  const [errors, setErrors] = useState<Record<string, string>>(
+    {} as Record<string, string>
+  )
   const handleSubmit = async (categoryFormData: string) => {
+    // form validation
+    const zodResponse = categoryFormSchema.safeParse(categoryFormData)
+    if (!zodResponse.success) {
+      setErrors(transformZodErrors(zodResponse.error))
+      return
+    }
     // add category
     const response = await fetch('/api/categories', {
       method: 'POST',
@@ -31,9 +41,8 @@ export default function CategoryCreateForm() {
         name: categoryFormData,
       }),
     })
-
     // close dialog
-    await router.push('/settings/categories')
+    await handleClose()
 
     // handle snackbar logic
     const data = await response.json()
@@ -60,6 +69,7 @@ export default function CategoryCreateForm() {
       <DialogContent>
         <UpsertCategoryForm
           onChange={(categoryFormData) => setCategoryFormData(categoryFormData)}
+          errors={errors}
         />
       </DialogContent>
       <DialogActions>

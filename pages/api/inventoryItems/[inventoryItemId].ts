@@ -46,7 +46,7 @@ export default async function inventoryItemHandler(
         })
       }
       case 'DELETE': {
-        await MongoDriver.deleteEntity(InventoryItemSchema, inventoryItemId)
+        await MongoDriver.softDeleteEntity(InventoryItemSchema, inventoryItemId)
 
         return res.status(200).json({
           success: true,

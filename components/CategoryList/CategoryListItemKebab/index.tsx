@@ -15,7 +15,7 @@ interface CategoryListItemKebabProps {
   category: CategoryResponse
 }
 
-export default function AttributeListItemKebab({
+export default function CategoryListItemKebab({
   category,
 }: CategoryListItemKebabProps) {
   // kebab menu functionality

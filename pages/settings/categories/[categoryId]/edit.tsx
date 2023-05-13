@@ -11,15 +11,17 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
-import { CategoryResponse } from 'utils/types'
 
 export default function CategoryEditForm() {
-  const [category, setCategory] = useState<CategoryResponse>()
   const [categoryFormData, setCategoryFormData] = useState<string>('')
 
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const dispatch = useDispatch()
+
+  const handleClose = async () => {
+    await router.push('/settings/categories')
+  }
 
   // get id from URL and get categories
   const { id } = router.query
@@ -28,7 +30,7 @@ export default function CategoryEditForm() {
       if (!id) return // on page load, id is undefined, resulting in bad requests
       const response = await fetch(`/api/categories/${id}`, { method: 'GET' })
       const data = await response.json()
-      setCategory(data.payload)
+      setCategoryFormData(data.payload)
     }
     fetchCategory()
   }, [id])
@@ -45,7 +47,7 @@ export default function CategoryEditForm() {
     })
 
     // close dialog
-    await router.push('/settings/categories')
+    handleClose()
 
     // handle snackbar logic
     const data = await response.json()
@@ -64,10 +66,6 @@ export default function CategoryEditForm() {
         })
       )
     }
-  }
-
-  const handleClose = () => {
-    router.push('/settings/categories')
   }
 
   return (

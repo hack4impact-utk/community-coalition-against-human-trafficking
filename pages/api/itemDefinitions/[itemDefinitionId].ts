@@ -53,7 +53,10 @@ export default async function itemDefinitionHandler(
         })
       }
       case 'DELETE': {
-        await MongoDriver.deleteEntity(ItemDefinitionSchema, itemDefinitionId)
+        await MongoDriver.softDeleteEntity(
+          ItemDefinitionSchema,
+          itemDefinitionId
+        )
 
         return res.status(200).json({
           success: true,

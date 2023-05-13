@@ -16,6 +16,7 @@ interface AttributeListItemKebabProps {
 }
 
 export default function AttributeListItemKebab({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   attribute,
 }: AttributeListItemKebabProps) {
   const router = useRouter()
