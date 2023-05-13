@@ -100,6 +100,7 @@ export default function UpsertItemForm({
   return (
     <FormControl fullWidth>
       <Autocomplete
+        autoHighlight
         options={categories}
         getOptionLabel={(option) => option.name}
         renderInput={(params) => <TextField {...params} label="Category" />}
@@ -148,6 +149,7 @@ export default function UpsertItemForm({
         }}
       >
         <Autocomplete
+          autoHighlight
           multiple
           options={proxyAttributes}
           getOptionLabel={(option) => option.name}
