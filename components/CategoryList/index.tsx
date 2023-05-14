@@ -162,7 +162,7 @@ export default function DesktopCategoryList(props: Props) {
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
     setVisibleRows(rowsOnMount)
-  }, [props.search, props.categories])
+  }, [props.search])
 
   const handleRequestSort = React.useCallback(
     (_e: React.MouseEvent<unknown>, newOrderBy: keyof CategoryTableData) => {
@@ -183,9 +183,8 @@ export default function DesktopCategoryList(props: Props) {
 
   const handleChangePage = (_e: unknown, newPage: number) => {
     setPage(newPage)
-    const sortedRows = sortTable(tableData, orderBy, order)
 
-    const updatedRows = sortedRows.slice(
+    const updatedRows = tableData.slice(
       newPage * rowsPerPage,
       newPage * rowsPerPage + rowsPerPage
     )
@@ -198,9 +197,8 @@ export default function DesktopCategoryList(props: Props) {
     const updatedRowsPerPage = parseInt(event.target.value, 10)
     setRowsPerPage(updatedRowsPerPage)
     setPage(0)
-    const sortedRows = sortTable(tableData, orderBy, order)
 
-    const updatedRows = sortedRows.slice(
+    const updatedRows = tableData.slice(
       page * updatedRowsPerPage,
       page * updatedRowsPerPage + updatedRowsPerPage
     )
