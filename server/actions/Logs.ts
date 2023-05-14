@@ -244,10 +244,15 @@ function startDateAggregate(startAfter: string): PipelineStage {
 }
 
 function endDateAggregate(endBefore: string): PipelineStage {
+  const date = new Date(endBefore)
+
+  date.setMinutes(date.getMinutes() + date.getTimezoneOffset())
+  date.setHours(23 - date.getTimezoneOffset() / 60, 59, 59, 999)
+
   return {
     $match: {
       date: {
-        $lte: new Date(endBefore),
+        $lte: date,
       },
     },
   }
