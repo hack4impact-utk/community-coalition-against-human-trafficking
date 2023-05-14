@@ -141,23 +141,88 @@ const requestPipeline: PipelineStage[] = [
   },
 ]
 
-function searchAggregate(search: string): PipelineStage {
-  return {
-    $match: {
-      $or: [
-        { 'item.itemDefinition.name': { $regex: search, $options: 'i' } },
-        {
-          'item.itemDefinition.category.name': {
-            $regex: search,
-            $options: 'i',
+function searchAggregate(search: string): PipelineStage[] {
+  return [
+    // pull each item.attributes.attribute out of the array into its own document
+    {
+      $unwind: '$item.attributes',
+    },
+
+    // create a new field as "item.attributeSearch": `${attributeName}: ${attributeValue}`
+    {
+      $set: {
+        'item.attributeSearch': {
+          $concat: [
+            '$item.attributes.attribute.name',
+            ': ',
+            { $toString: '$item.attributes.value' },
+          ],
+        },
+      },
+    },
+
+    // recombine the documents from the unwind (most fields remain untouched),
+    // adding the attributeSearch values as an array
+    {
+      $group: {
+        _id: '$_id',
+        staff: { $first: '$staff' },
+        item: {
+          $first: {
+            _id: '$item._id',
+            itemDefinition: '$item.itemDefinition',
+            quantity: '$item.quantity',
+            assignee: '$item.assignee',
           },
         },
-        { 'item.assignee.name': { $regex: search, $options: 'i' } },
-        { 'staff.name': { $regex: search, $options: 'i' } },
-        { 'staff.email': { $regex: search, $options: 'i' } },
-      ],
+        attributes: { $addToSet: '$item.attributes' },
+        attributeSearch: { $addToSet: '$item.attributeSearch' },
+        quantityDelta: { $first: '$quantityDelta' },
+        date: { $first: '$date' },
+      },
     },
-  }
+
+    {
+      $addFields: {
+        item: {
+          $mergeObjects: [
+            '$item',
+            {
+              attributes: '$attributes',
+              attributeSearch: '$attributeSearch',
+            },
+          ],
+        },
+      },
+    },
+    {
+      $project: {
+        attributes: 0,
+        attributeSearch: 0,
+      },
+    },
+
+    {
+      $match: {
+        $or: [
+          { 'item.itemDefinition.name': { $regex: search, $options: 'i' } },
+          {
+            'item.itemDefinition.category.name': {
+              $regex: search,
+              $options: 'i',
+            },
+          },
+          { 'item.assignee.name': { $regex: search, $options: 'i' } },
+          { 'item.attributeSearch': { $regex: search, $options: 'i' } },
+        ],
+      },
+    },
+
+    // removes the attributeSearch array
+    {
+      $unset: 'item.attributeSearch',
+    },
+  ]
 }
 
 function categorySearchAggregate(category: string): PipelineStage {
@@ -252,9 +317,9 @@ export async function getFilteredLogs(
   endDate?: string,
   internal?: boolean
 ) {
-  const pipeline = [...requestPipeline]
+  let pipeline = [...requestPipeline]
   if (search) {
-    pipeline.push(searchAggregate(search))
+    pipeline = pipeline.concat(searchAggregate(search))
   }
   if (categorySearch) {
     pipeline.push(categorySearchAggregate(categorySearch))
