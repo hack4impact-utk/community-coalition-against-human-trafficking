@@ -33,10 +33,7 @@ function preloadState(): RootState {
       open: false,
       message: '',
     },
-    config: {
-      emails: [],
-      defaultAttributes: [],
-    },
+    config: {},
   }
 }
 

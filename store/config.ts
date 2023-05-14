@@ -2,10 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ConfigState } from 'store/types'
 import { HYDRATE } from 'next-redux-wrapper'
 
-const initialState: ConfigState = {
-  emails: [],
-  defaultAttributes: [],
-}
+const initialState: ConfigState = {}
 
 export const configSlice = createSlice({
   name: 'config',

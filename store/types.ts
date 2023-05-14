@@ -1,6 +1,6 @@
 import { AppConfigResponse } from 'utils/types'
 
-export type ConfigState = Omit<AppConfigResponse, '_id'>
+export type ConfigState = Partial<Omit<AppConfigResponse, '_id'>>
 
 export interface KioskState {
   enabled: boolean

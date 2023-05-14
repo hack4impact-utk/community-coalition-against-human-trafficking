@@ -15,7 +15,7 @@ async function getConfig() {
   const res = await fetch(urls.api.appConfigs.appConfigs)
   const data = await res.json()
   if (!data.success) {
-    console.log('Error fetching config')
+    console.error('Error fetching config')
     return
   }
   return data.payload[0]
@@ -29,7 +29,10 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
 
   React.useEffect(() => {
     const fetchConfig = async () => {
-      if (!config.defaultAttributes.length && !config.emails.length) {
+      if (
+        config.defaultAttributes === undefined &&
+        config.emails === undefined
+      ) {
         const data = await getConfig()
         dispatch(updateConfig(data))
       }
