@@ -78,11 +78,11 @@ export default function MobileHistoryList(props: Props) {
       hasMore={Number(page) * limit + limit < props.total}
     >
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {!!visibleRows.length &&
+        {visibleRows.length ? (
           visibleRows.map((log) => (
             <MobileHistoryListItem log={log} key={log._id} />
-          ))}
-        {!visibleRows.length && (
+          ))
+        ) : (
           <ListItem>
             <ListItemText>{errors.noResultsFound}</ListItemText>
           </ListItem>
