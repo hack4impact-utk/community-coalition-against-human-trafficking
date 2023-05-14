@@ -19,7 +19,6 @@ import {
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import usersHandler from '@api/users'
-import itemDefinitionsHandler from '@api/itemDefinitions'
 import { apiWrapper } from 'utils/apiWrappers'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
@@ -30,12 +29,13 @@ import { showSnackbar } from 'store/snackbar'
 import transformZodErrors from 'utils/transformZodErrors'
 import { LoadingButton } from '@mui/lab'
 import urls from 'utils/urls'
+import presentItemDefinitionsHandler from '@api/itemDefinitions/present'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       categories: await apiWrapper(categoriesHandler, context),
-      itemDefinitions: await apiWrapper(itemDefinitionsHandler, context),
+      itemDefinitions: await apiWrapper(presentItemDefinitionsHandler, context),
       users: await apiWrapper(usersHandler, context),
     },
   }
