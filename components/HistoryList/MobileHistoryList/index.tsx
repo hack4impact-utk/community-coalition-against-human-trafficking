@@ -1,4 +1,4 @@
-import { List } from '@mui/material'
+import { List, ListItem, ListItemText, Typography } from '@mui/material'
 import React from 'react'
 import { LogResponse } from 'utils/types'
 import MobileHistoryListItem from 'components/HistoryList/MobileHistoryList/MobileHistoryListItem'
@@ -77,9 +77,15 @@ export default function MobileHistoryList(props: Props) {
       hasMore={Number(page) * limit + limit < props.total}
     >
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {visibleRows.map((log) => (
-          <MobileHistoryListItem log={log} key={log._id} />
-        ))}
+        {!!visibleRows.length &&
+          visibleRows.map((log) => (
+            <MobileHistoryListItem log={log} key={log._id} />
+          ))}
+        {!visibleRows.length && (
+          <ListItem>
+            <ListItemText>No results found</ListItemText>
+          </ListItem>
+        )}
       </List>
     </InfiniteScroll>
   )
