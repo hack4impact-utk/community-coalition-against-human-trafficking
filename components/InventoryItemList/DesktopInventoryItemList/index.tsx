@@ -20,6 +20,8 @@ import {
 } from 'utils/queryParams'
 import { NextRouter, useRouter } from 'next/router'
 import DesktopInventoryItemListSkeleton from './DesktopInventoryItemListSkeleton'
+import { IconButton } from '@mui/material'
+import { MoreVert } from '@mui/icons-material'
 
 type HeadId =
   | 'name'
@@ -209,17 +211,31 @@ export default function DesktopInventoryItemList(props: Props) {
             router={router}
           />
           <TableBody>
-            {props.loading ? (
+            {props.loading && (
               <DesktopInventoryItemListSkeleton
                 rowsPerPage={Number(
                   router.query.limit || inventoryPaginationDefaults.limit
                 )}
               />
-            ) : (
-              props.inventoryItems.map((item) => (
-                <InventoryItemListItem inventoryItem={item} key={item._id} />
-              ))
             )}
+            {!props.loading &&
+              (props.inventoryItems.length ? (
+                props.inventoryItems.map((item) => (
+                  <InventoryItemListItem inventoryItem={item} key={item._id} />
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell sx={{ alignItems: 'center' }}>
+                    No results found
+                    <IconButton sx={{ visibility: 'hidden' }}>
+                      <MoreVert />
+                    </IconButton>
+                  </TableCell>
+                  {[0, 0, 0, 0, 0].map(() => (
+                    <TableCell />
+                  ))}
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
