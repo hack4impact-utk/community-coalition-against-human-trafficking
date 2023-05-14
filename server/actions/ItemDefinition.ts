@@ -1,9 +1,13 @@
 import ItemDefinitionSchema from 'server/models/ItemDefinition'
+import InventoryItemSchema from 'server/models/InventoryItem'
 import { getEntities, getEntity } from 'server/actions/MongoDriver'
-import { ItemDefinitionResponse } from 'utils/types'
-import { PipelineStage } from 'mongoose'
+import {
+  InventoryItemExistingAttributeValuesResponse,
+  ItemDefinitionResponse,
+} from 'utils/types'
+import { PipelineStage, Types } from 'mongoose'
 
-const requestPipeline: PipelineStage[] = [
+const getRequestPipeline: PipelineStage[] = [
   {
     $lookup: {
       from: 'categories',
@@ -27,8 +31,65 @@ const requestPipeline: PipelineStage[] = [
   },
 ]
 
+// find all inventory items with the matching itemDefinitionId
+// for each of those, get the unique attribute values of each
+const existingAttributeValuesPipeline: PipelineStage[] = [
+  // find all inventory items with the given itemDefinition
+  {
+    $lookup: {
+      from: 'inventoryItems',
+      localField: '_id',
+      foreignField: 'itemDefinition',
+      as: 'inventoryItems',
+    },
+  },
+
+  // only get the array of inventory items, nothing else with the item definition
+  {
+    $project: {
+      _id: 0,
+      inventoryItems: 1,
+    },
+  },
+
+  // puts each inventoryItem.attributes array into a new array
+  // structure is now "inventoryItemAttrArr": [inventoryItem[0].attributes, inventoryItem[1].attributes, ...]
+  {
+    $group: {
+      _id: null,
+      inventoryItemAttrArr: { $push: '$inventoryItems.attributes' },
+    },
+  },
+  {
+    $set: {
+      inventoryItemAttrArr: { $arrayElemAt: ['$inventoryItemAttrArr', 0] },
+    },
+  },
+
+  // removes _id field from above array
+  {
+    $project: {
+      _id: 0,
+    },
+  },
+
+  // change format from "inventoryItemAttrArr": [inventoryItem[0].attributes, inventoryItem[1].attributes, ...]
+  // to [{inventoryItemAttrArr: {attribute: ..., value: ...}}, ...]
+  { $unwind: '$inventoryItemAttrArr' },
+  { $unwind: '$inventoryItemAttrArr' },
+
+  // group each inventoryItem[i].attributes[j] by unique attribute Id
+  // format is now [ { _id: ID, values: [ARRAY_OF_VALUES] }, ... ]
+  {
+    $group: {
+      _id: '$inventoryItemAttrArr.attribute',
+      values: { $addToSet: '$inventoryItemAttrArr.value' }, // $addToSet creates the array and removes duplicates
+    },
+  },
+]
+
 const softDeleteRequestPipeline: PipelineStage[] = [
-  ...requestPipeline,
+  ...getRequestPipeline,
   {
     $match: {
       softDelete: { $exists: false },
@@ -82,7 +143,7 @@ export async function getItemDefinition(id: string) {
   return (await getEntity(
     ItemDefinitionSchema,
     id,
-    requestPipeline
+    getRequestPipeline
   )) as ItemDefinitionResponse
 }
 
@@ -98,11 +159,25 @@ export async function getItemDefinitions() {
 }
 
 /**
- * Finds all itemDefinitions that do not have the softDelete flag
- * @returns All itemDefinitions that do not have the softDelete flag
+ * Finds all itemDefinitions have corresponding inventory items with quantity > 0
+ * @returns All itemDefinitions that have inventory items with quantity > 0
  */
 export async function getPresentItemDefinitions() {
   return (await ItemDefinitionSchema.aggregate(
     presentItemDefinitionsPipeline
   )) as ItemDefinitionResponse[]
+}
+
+export async function getItemDefinitionAttributeValues(id: string) {
+  // only look at the target itemDefinition
+  const pipeline = [
+    {
+      $match: { _id: new Types.ObjectId(id) },
+    },
+    ...existingAttributeValuesPipeline,
+  ]
+
+  return (await ItemDefinitionSchema.aggregate(
+    pipeline
+  )) as InventoryItemExistingAttributeValuesResponse[]
 }

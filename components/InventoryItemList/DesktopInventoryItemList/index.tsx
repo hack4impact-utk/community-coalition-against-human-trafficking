@@ -11,6 +11,15 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import InventoryItemListItem from 'components/InventoryItemList/DesktopInventoryItemList/DesktopInventoryItemListItem'
 import { InventoryItemResponse } from 'utils/types'
+import { inventoryPaginationDefaults } from 'utils/constants'
+import {
+  addURLQueryParam,
+  bulkAddURLQueryParams,
+  bulkRemoveURLQueryParams,
+  removeURLQueryParam,
+} from 'utils/queryParams'
+import { NextRouter, useRouter } from 'next/router'
+import DesktopInventoryItemListSkeleton from './DesktopInventoryItemListSkeleton'
 
 type HeadId =
   | 'name'
@@ -26,40 +35,7 @@ interface HeadCell {
   label: string
   numeric: boolean
   sortable?: boolean
-  sortFn?(a: InventoryItemResponse, b: InventoryItemResponse): number
   showIcon?: boolean
-}
-
-function comparator(v1?: string | number, v2?: string | number) {
-  if (!v1 || !v2) {
-    return 0
-  }
-
-  if (v1 < v2) {
-    return -1
-  }
-
-  if (v1 > v2) {
-    return 1
-  }
-
-  return 0
-}
-
-function sortTable(
-  tableData: InventoryItemResponse[],
-  sortBy: HeadId,
-  order: Order
-) {
-  const orderByHeadCell = headCells.filter(
-    (headCell) => headCell.id === sortBy.toString()
-  )[0]
-
-  return tableData.sort((a: InventoryItemResponse, b: InventoryItemResponse) =>
-    order === 'asc'
-      ? orderByHeadCell.sortFn!(a, b)
-      : orderByHeadCell.sortFn!(b, a)
-  )
 }
 
 const headCells: readonly HeadCell[] = [
@@ -69,9 +45,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: true,
     label: 'Item Name',
     sortable: true,
-    sortFn(a, b) {
-      return comparator(a.itemDefinition.name, b.itemDefinition.name)
-    },
   },
   {
     id: 'attributes',
@@ -85,12 +58,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Category',
     sortable: true,
-    sortFn(a, b) {
-      return comparator(
-        a.itemDefinition.category?.name,
-        b.itemDefinition.category?.name
-      )
-    },
   },
   {
     id: 'quantity',
@@ -98,9 +65,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Quantity',
     sortable: true,
-    sortFn(a, b) {
-      return comparator(a.quantity, b.quantity)
-    },
     showIcon: true,
   },
   {
@@ -109,9 +73,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Assignee',
     sortable: true,
-    sortFn(a, b) {
-      return comparator(a.assignee?.name, b.assignee?.name)
-    },
   },
   {
     id: 'kebab',
@@ -125,17 +86,34 @@ const headCells: readonly HeadCell[] = [
 type Order = 'asc' | 'desc'
 
 interface EnhancedTableProps {
-  onRequestSort: (event: React.MouseEvent<unknown>, property: HeadId) => void
   order: Order
   orderBy: string
+  router: NextRouter
 }
 
 function InventoryItemListHeader(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort } = props
-  const createSortHandler =
-    (property: HeadId) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property)
+  const { order, orderBy, router } = props
+  const createSortHandler = (property: HeadId) => async () => {
+    const isAsc = orderBy === property && order === 'asc'
+    const newOrder = isAsc ? 'desc' : 'asc'
+    if (
+      newOrder === inventoryPaginationDefaults.order &&
+      property === inventoryPaginationDefaults.orderBy
+    ) {
+      await bulkRemoveURLQueryParams(router, ['order', 'orderBy'])
+    } else if (property === inventoryPaginationDefaults.orderBy) {
+      await removeURLQueryParam(router, 'orderBy')
+      await addURLQueryParam(router, 'order', newOrder)
+    } else if (newOrder === inventoryPaginationDefaults.order) {
+      await removeURLQueryParam(router, 'order')
+      await addURLQueryParam(router, 'orderBy', property)
+    } else {
+      await bulkAddURLQueryParams(router, {
+        order: newOrder,
+        orderBy: property,
+      })
     }
+  }
 
   return (
     <TableHead>
@@ -173,111 +151,36 @@ interface Props {
   inventoryItems: InventoryItemResponse[]
   search: string
   category: string
+  total: number
+  loading: boolean
 }
 
-const DEFAULT_ROWS_PER_PAGE = 5
-const DEFAULT_ORDER_BY = 'name'
-const DEFAULT_ORDER = 'asc'
+const updateQuery = async (router: NextRouter, key: string, val?: string) => {
+  if (!val) await removeURLQueryParam(router, key)
+  else await addURLQueryParam(router, key, val)
+}
 
 export default function DesktopInventoryItemList(props: Props) {
-  const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] = React.useState<HeadId>(DEFAULT_ORDER_BY)
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = React.useState<
-    InventoryItemResponse[] | null
-  >(null)
-  const [tableData, setTableData] = React.useState<InventoryItemResponse[]>([])
+  const router = useRouter()
 
-  React.useEffect(() => {
-    let newTableData = props.inventoryItems
-
-    if (props.search) {
-      const search = props.search.toLowerCase()
-      newTableData = [
-        ...newTableData.filter((item) => {
-          return (
-            item.itemDefinition.name.toLowerCase().includes(search) ||
-            (item.attributes &&
-              item.attributes
-                .map((attr) =>
-                  `${attr.attribute.name}: ${attr.value}`.toLowerCase()
-                )
-                .join(' ')
-                .includes(search)) ||
-            (item.itemDefinition.category?.name &&
-              item.itemDefinition.category?.name
-                .toLowerCase()
-                .includes(search)) ||
-            (item.assignee && item.assignee.name.toLowerCase().includes(search))
-          )
-        }),
-      ]
+  // when the change page buttons are clicked
+  const handleChangePage = (_e: unknown, newPage: number) => {
+    if (newPage === inventoryPaginationDefaults.page) {
+      removeURLQueryParam(router, 'page')
+    } else {
+      updateQuery(router, 'page', newPage.toString())
     }
-
-    if (props.category) {
-      newTableData = [
-        ...newTableData.filter((item) => {
-          return item.itemDefinition.category?.name === props.category
-        }),
-      ]
-    }
-    setTableData(newTableData)
-
-    let rowsOnMount = sortTable(newTableData, orderBy, order)
-    rowsOnMount = rowsOnMount.slice(
-      0 * DEFAULT_ROWS_PER_PAGE,
-      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
-    )
-
-    setVisibleRows(rowsOnMount)
-  }, [props.search, props.category])
-
-  const handleRequestSort = React.useCallback(
-    (event: React.MouseEvent<unknown>, newOrderBy: HeadId) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder: Order = isAsc ? 'desc' : 'asc'
-      setOrder(toggledOrder)
-      setOrderBy(newOrderBy)
-
-      const sortedRows = sortTable(tableData, newOrderBy, toggledOrder)
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
-      // @ts-ignore
-      setVisibleRows(updatedRows)
-    },
-    [order, orderBy, page, rowsPerPage, tableData]
-  )
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-    const sortedRows = sortTable(tableData, orderBy, order)
-    const updatedRows = sortedRows.slice(
-      newPage * rowsPerPage,
-      newPage * rowsPerPage + rowsPerPage
-    )
-
-    //@ts-ignore
-    setVisibleRows(updatedRows)
   }
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(updatedRowsPerPage)
-    setPage(0)
-
-    const sortedRows = sortTable(tableData, orderBy, order)
-    const updatedRows = sortedRows.slice(
-      0 * updatedRowsPerPage,
-      0 * updatedRowsPerPage + updatedRowsPerPage
-    )
-
-    // @ts-ignore
-    setVisibleRows(updatedRows)
+    if (Number(event.target.value) === inventoryPaginationDefaults.limit) {
+      bulkRemoveURLQueryParams(router, ['limit', 'page'])
+    } else {
+      removeURLQueryParam(router, 'page')
+      updateQuery(router, 'limit', event.target.value)
+    }
   }
 
   return (
@@ -285,24 +188,38 @@ export default function DesktopInventoryItemList(props: Props) {
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <InventoryItemListHeader
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            order={
+              (router.query.order || inventoryPaginationDefaults.order) as Order
+            }
+            orderBy={
+              (router.query.orderBy ||
+                inventoryPaginationDefaults.orderBy) as string
+            }
+            router={router}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((item) => (
+            {props.loading ? (
+              <DesktopInventoryItemListSkeleton
+                rowsPerPage={Number(
+                  router.query.limit || inventoryPaginationDefaults.limit
+                )}
+              />
+            ) : (
+              props.inventoryItems.map((item) => (
                 <InventoryItemListItem inventoryItem={item} key={item._id} />
-              ))}
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={tableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
+        count={props.total}
+        rowsPerPage={Number(
+          router.query.limit || inventoryPaginationDefaults.limit
+        )}
+        page={Number(router.query.page || inventoryPaginationDefaults.page)}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

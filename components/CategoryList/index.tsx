@@ -64,7 +64,10 @@ const headCells: readonly HeadCell[] = [
     label: 'Name',
     sortable: true,
     sortFn: (category1: CategoryResponse, category2: CategoryResponse) => {
-      return comparator(category1.name, category2.name)
+      return comparator(
+        category1.name.toLowerCase(),
+        category2.name.toLowerCase()
+      )
     },
   },
   {
@@ -158,6 +161,8 @@ export default function DesktopCategoryList(props: Props) {
     let rowsOnMount = sortTable(newTableData, orderBy, order)
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
+    setPage(0)
+
     setVisibleRows(rowsOnMount)
   }, [props.search])
 
@@ -180,9 +185,8 @@ export default function DesktopCategoryList(props: Props) {
 
   const handleChangePage = (_e: unknown, newPage: number) => {
     setPage(newPage)
-    const sortedRows = sortTable(tableData, orderBy, order)
 
-    const updatedRows = sortedRows.slice(
+    const updatedRows = tableData.slice(
       newPage * rowsPerPage,
       newPage * rowsPerPage + rowsPerPage
     )
@@ -195,9 +199,8 @@ export default function DesktopCategoryList(props: Props) {
     const updatedRowsPerPage = parseInt(event.target.value, 10)
     setRowsPerPage(updatedRowsPerPage)
     setPage(0)
-    const sortedRows = sortTable(tableData, orderBy, order)
 
-    const updatedRows = sortedRows.slice(
+    const updatedRows = tableData.slice(
       page * updatedRowsPerPage,
       page * updatedRowsPerPage + updatedRowsPerPage
     )

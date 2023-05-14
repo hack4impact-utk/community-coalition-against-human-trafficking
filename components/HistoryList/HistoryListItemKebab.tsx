@@ -3,6 +3,7 @@ import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React from 'react'
 import theme from 'utils/theme'
 import { LogResponse } from 'utils/types'
+import urls from 'utils/urls'
 
 interface HistoryListItemKebabOption {
   name: string
@@ -28,7 +29,7 @@ export default function AttributeListItemKebab({
             "Are you sure you want to delete this log entry? You won't be able to undo this action."
           )
         ) {
-          fetch(`/api/logs/${log._id}`, {
+          fetch(urls.api.logs.log(log._id), {
             method: 'DELETE',
           }).then(() => {
             window.location.reload()

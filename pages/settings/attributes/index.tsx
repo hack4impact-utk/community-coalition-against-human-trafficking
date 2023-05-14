@@ -17,6 +17,7 @@ import AttributeEditForm from 'pages/settings/attributes/[attributeId]/edit'
 import React from 'react'
 import DialogLink from 'components/DialogLink'
 import AttributeCreateForm from 'pages/settings/attributes/create'
+import urls from 'utils/urls'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -39,11 +40,8 @@ export default function AttributesPage({ attributes }: AttributesPageProps) {
             Attributes
           </Typography>
           <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
-            <DialogLink href="/settings/attributes/create">
-              <Button
-                variant="outlined"
-                sx={{ width: '100%' }}
-              >
+            <DialogLink href={urls.pages.dialogs.createAttribute}>
+              <Button variant="outlined" sx={{ width: '100%' }}>
                 Create New Attribute
               </Button>
             </DialogLink>

@@ -2,6 +2,7 @@ import { SxProps } from '@mui/material'
 import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
 import { ListAttributeResponse } from 'utils/types'
+import getContrastYIQ from 'utils/getContrastYIQ'
 
 export interface AutocompleteAttributeOption {
   id: string
@@ -61,6 +62,7 @@ export default function AttributeAutocomplete({
   return (
     <Autocomplete
       multiple
+      autoHighlight
       open={open}
       options={options}
       disableCloseOnSelect
@@ -73,7 +75,12 @@ export default function AttributeAutocomplete({
         tagValue.map((option, index) => (
           <Chip
             label={option.value}
-            style={{ backgroundColor: option.color }}
+            sx={{
+              backgroundColor: option.color,
+              '& .MuiChip-label': {
+                color: getContrastYIQ(option.color),
+              },
+            }}
             {...getTagProps({ index })}
             key={option.id}
           />

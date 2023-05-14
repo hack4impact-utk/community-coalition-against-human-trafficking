@@ -16,6 +16,7 @@ import {
   mockObjectId,
   validInventoryItemPutRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 // TODO: add assertion for GET 'called with' aggregate stuff
 // this may need to have different functionality
@@ -38,7 +39,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: `/api/inventoryItems/${mockObjectId}`,
+      url: urls.api.inventoryItems.inventoryItem(mockObjectId),
       query: {
         inventoryItemId: mockObjectId,
       },
@@ -57,7 +58,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: `/api/inventoryItems/${mockObjectId}`,
+      url: urls.api.inventoryItems.inventoryItem(mockObjectId),
       query: {
         inventoryItemId: mockObjectId,
       },
@@ -85,7 +86,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/inventoryItems/${mockObjectId}`,
+        url: urls.api.inventoryItems.inventoryItem(mockObjectId),
         query: {
           inventoryItemId: mockObjectId,
         },
@@ -120,7 +121,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
 
       const request = createRequest({
         method: 'PUT',
-        url: `/api/inventoryItems/${mockObjectId}`,
+        url: urls.api.inventoryItems.inventoryItem(mockObjectId),
         query: {
           inventoryItemId: mockObjectId,
         },
@@ -152,7 +153,7 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: `/api/inventoryItems/${mockObjectId}`,
+        url: urls.api.inventoryItems.inventoryItem(mockObjectId),
         query: {
           inventoryItemId: mockObjectId,
         },

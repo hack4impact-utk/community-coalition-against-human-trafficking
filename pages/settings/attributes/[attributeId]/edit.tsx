@@ -17,6 +17,7 @@ import {
 } from 'utils/types'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
+import urls from 'utils/urls'
 
 export default function AttributeEditDialog() {
   // you have to do this to otherwise the AttributeForm says that
@@ -38,7 +39,12 @@ export default function AttributeEditDialog() {
   useEffect(() => {
     const fetchAttribute = async () => {
       if (!id) return // on page load, id is undefined, resulting in bad requests
-      const response = await fetch(`/api/attributes/${id}`, { method: 'GET' })
+      const response = await fetch(
+        urls.api.attributes.attribute(id as string),
+        {
+          method: 'GET',
+        }
+      )
       const data = await response.json()
       setAttribute(data.payload)
     }
@@ -53,7 +59,7 @@ export default function AttributeEditDialog() {
         return
       }
       // update attribute
-      const response = await fetch(`/api/attributes/${id}`, {
+      const response = await fetch(urls.api.attributes.attribute(id![0]), {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -70,7 +76,7 @@ export default function AttributeEditDialog() {
       const data = await response.json()
 
       // close dialog
-      await router.push('/settings/attributes')
+      await router.push(urls.pages.settings.attributes)
 
       if (data.success) {
         dispatch(
@@ -92,7 +98,7 @@ export default function AttributeEditDialog() {
   )
 
   const handleClose = () => {
-    router.push('/settings/attributes')
+    router.push(urls.pages.settings.attributes)
   }
 
   return (

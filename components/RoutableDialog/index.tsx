@@ -1,4 +1,4 @@
-import { Dialog } from '@mui/material'
+import { Dialog, useMediaQuery, useTheme } from '@mui/material'
 import { useRouter } from 'next/router'
 
 interface RoutableDialogProps {
@@ -11,12 +11,18 @@ export default function RoutableDialog({
   children,
 }: RoutableDialogProps) {
   const router = useRouter()
+  const theme = useTheme()
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   const { showDialog } = router.query
 
   const shouldShowDialog: boolean =
     (!name && !!showDialog) || (!!name && !!showDialog && name === showDialog)
   return (
-    <Dialog open={shouldShowDialog} onClose={() => router.back()}>
+    <Dialog
+      open={shouldShowDialog}
+      fullScreen={isMobileView}
+      onClose={() => router.back()}
+    >
       {children}
     </Dialog>
   )

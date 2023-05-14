@@ -232,6 +232,7 @@ export default function ItemDefinitionList({
       0 * DEFAULT_ROWS_PER_PAGE,
       0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
     )
+    setPage(0)
 
     setVisibleRows(rowsOnMount)
   }, [search])
@@ -255,8 +256,7 @@ export default function ItemDefinitionList({
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
-    const sortedRows = sortTable(tableData, orderBy, order)
-    const updatedRows = sortedRows.slice(
+    const updatedRows = tableData.slice(
       newPage * rowsPerPage,
       newPage * rowsPerPage + rowsPerPage
     )
@@ -270,8 +270,7 @@ export default function ItemDefinitionList({
     setRowsPerPage(updatedRowsPerPage)
     setPage(0)
 
-    const sortedRows = sortTable(tableData, orderBy, order)
-    const updatedRows = sortedRows.slice(
+    const updatedRows = tableData.slice(
       0 * updatedRowsPerPage,
       0 * updatedRowsPerPage + updatedRowsPerPage
     )
