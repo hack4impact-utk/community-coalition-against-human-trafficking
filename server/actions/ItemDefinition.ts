@@ -98,6 +98,7 @@ const softDeleteRequestPipeline: PipelineStage[] = [
 ]
 
 const presentItemDefinitionsPipeline: PipelineStage[] = [
+  ...softDeleteRequestPipeline,
   // pull in all inventory items for each item definition
   {
     $lookup: {
