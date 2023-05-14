@@ -9,4 +9,5 @@ export const errors = {
   invalidReqMethod: 'Method Not Allowed',
   notFound: 'Entity does not exist',
   unauthorized: 'Unauthorized',
+  noResultsFound: 'No results found',
 }

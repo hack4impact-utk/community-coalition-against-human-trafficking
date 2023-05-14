@@ -1,4 +1,4 @@
-import { List } from '@mui/material'
+import { List, ListItem, ListItemText } from '@mui/material'
 import React from 'react'
 import { InventoryItemResponse } from 'utils/types'
 import MobileInventoryItemListItem from 'components/InventoryItemList/MobileInventoryItemList/MobileInventoryItemListItem'
@@ -58,12 +58,18 @@ export default function MobileInventoryItemList({
       hasMore={Number(page) * limit + limit < total}
     >
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {visibleRows.map((inventoryItem) => (
-          <MobileInventoryItemListItem
-            inventoryItem={inventoryItem}
-            key={inventoryItem._id}
-          />
-        ))}
+        {visibleRows.length ? (
+          visibleRows.map((inventoryItem) => (
+            <MobileInventoryItemListItem
+              inventoryItem={inventoryItem}
+              key={inventoryItem._id}
+            />
+          ))
+        ) : (
+          <ListItem>
+            <ListItemText>No results found</ListItemText>
+          </ListItem>
+        )}
       </List>
     </InfiniteScroll>
   )
