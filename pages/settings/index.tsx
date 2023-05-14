@@ -110,6 +110,10 @@ export default function SettingsPage({
           <Typography variant="h5" sx={{ mb: 2 }}>
             Kiosk
           </Typography>
+          <Typography sx={{ mb: 2 }}>
+            Enables a field to specify which staff member is checking an item in
+            or out.
+          </Typography>
           <Box
             sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
           >
@@ -119,13 +123,6 @@ export default function SettingsPage({
               onChange={() => dispatch(toggleKioskMode())}
             />
             <Typography mr={1}>Enable Kiosk Mode</Typography>
-            <Tooltip
-              title="Kiosk Mode enables a field to specify which staff member is checking an item in or out."
-              placement="top"
-              enterTouchDelay={0}
-            >
-              <InfoIcon sx={{ color: theme.palette.grey['500'] }} />
-            </Tooltip>
           </Box>
         </Grid2>
         <Grid2 xs={isMobileView ? 12 : 5}>
@@ -156,6 +153,9 @@ export default function SettingsPage({
           <Typography variant="h5" sx={{ mb: 2 }}>
             Default attributes
           </Typography>
+          <Typography sx={{ mb: 2 }}>
+            Apply these attributes to new items by default:
+          </Typography>
           <Box
             sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
           >
@@ -165,7 +165,7 @@ export default function SettingsPage({
               multiple
               value={appConfigData.defaultAttributes}
               renderInput={(params) => (
-                <TextField {...params} label="Attribute Values" />
+                <TextField {...params} label="Attributes" />
               )}
               isOptionEqualToValue={(option, value) => option._id === value._id}
               getOptionLabel={(option) => option.name}
