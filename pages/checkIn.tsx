@@ -61,9 +61,13 @@ export default function CheckInPage({
   const router = useRouter()
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const dispatch = useAppDispatch()
-  const inventoryItem = !!router.query.inventoryItem
-    ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
-    : undefined
+  const inventoryItem = React.useMemo(
+    () =>
+      !!router.query.inventoryItem
+        ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
+        : undefined,
+    [router.query.inventoryItem]
+  )
   const [defaultItemDef, setDefaultItemDef] = React.useState(
     itemDefinitions.find((id) => id._id === router.query.item)
   )
