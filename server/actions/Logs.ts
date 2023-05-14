@@ -139,6 +139,24 @@ const requestPipeline: PipelineStage[] = [
       staff: { $arrayElemAt: ['$staff', 0] },
     },
   },
+
+  // pull each item.attributes.attribute out of the array into its own document
+  {
+    $unwind: '$item.attributes',
+  },
+
+  // create a new field as "item.attributeSearch": `${attributeName}: ${attributeValue}`
+  {
+    $set: {
+      'item.attributeSearch': {
+        $concat: [
+          '$item.attributes.attribute.name',
+          ': ',
+          { $toString: '$item.attributes.value' },
+        ],
+      },
+    },
+  },
 ]
 
 function searchAggregate(search: string): PipelineStage {
@@ -278,7 +296,7 @@ export async function getFilteredLogs(
     },
   })
 
-  return await MongoDriver.getEntities(LogSchema, pipeline)
+  return await MongoDriver.getEntities(LogSchema, requestPipeline)
 }
 /**
  * Finds a log by its id
