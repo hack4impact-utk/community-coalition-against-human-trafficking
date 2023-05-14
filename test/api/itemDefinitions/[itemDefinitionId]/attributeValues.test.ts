@@ -48,7 +48,7 @@ describe('GET', () => {
     expect(data).toEqual(validInventoryItemExistingAttributeValuesResponse)
   })
 
-  test('no content has 204', async () => {
+  test('no content returns empty', async () => {
     const mockAggregate = (ItemDefinitionSchema.aggregate = jest
       .fn()
       .mockImplementation(async () => []))
@@ -67,7 +67,7 @@ describe('GET', () => {
     const data = response._getJSONData().payload
 
     expect(mockAggregate).toHaveBeenCalledTimes(1)
-    expect(response.statusCode).toBe(204)
+    expect(response.statusCode).toBe(200)
     expect(data).toEqual([])
   })
 })

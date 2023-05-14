@@ -167,6 +167,7 @@ export default function SettingsPage({
               renderInput={(params) => (
                 <TextField {...params} label="Attribute Values" />
               )}
+              isOptionEqualToValue={(option, value) => option._id === value._id}
               getOptionLabel={(option) => option.name}
               options={attributes}
               onChange={(_e, newValue) => {
