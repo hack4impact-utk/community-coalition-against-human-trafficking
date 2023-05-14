@@ -161,6 +161,8 @@ export default function DesktopCategoryList(props: Props) {
     let rowsOnMount = sortTable(newTableData, orderBy, order)
     rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
 
+    setPage(0)
+
     setVisibleRows(rowsOnMount)
   }, [props.search])
 

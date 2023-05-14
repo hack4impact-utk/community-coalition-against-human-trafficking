@@ -232,6 +232,7 @@ export default function ItemDefinitionList({
       0 * DEFAULT_ROWS_PER_PAGE,
       0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
     )
+    setPage(0)
 
     setVisibleRows(rowsOnMount)
   }, [search])
