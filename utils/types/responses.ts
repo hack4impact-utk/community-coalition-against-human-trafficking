@@ -30,6 +30,11 @@ export interface InventoryItemResponse extends InventoryItem {
   attributes?: InventoryItemAttributeResponse[]
 }
 
+export interface InventoryItemExistingAttributeValuesResponse {
+  _id: string
+  values: (string | number)[]
+}
+
 export interface CategoryResponse extends Category {
   _id: string
 }
@@ -64,6 +69,7 @@ export interface PaginatedResponse<T> {
 export interface NotificationEmailResponse extends NotificationEmail {
   _id: string
 }
+
 export type ServerResponse =
   | UserResponse
   | ItemDefinitionResponse
