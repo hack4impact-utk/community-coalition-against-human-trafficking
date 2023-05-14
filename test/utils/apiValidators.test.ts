@@ -176,10 +176,10 @@ describe('apiValidators', () => {
     })
   })
 
-  describe('apiNotificationEmailValidation', () => {
+  describe('apiAppConfigValidation', () => {
     test('validation success', () => {
       jest
-        .spyOn(validators, 'validateNotificationEmailRequest')
+        .spyOn(validators, 'validateAppConfigRequest')
         .mockReturnValue(validationSuccessReturn)
       try {
         apiAppConfigValidation({}, 'POST')
@@ -190,7 +190,7 @@ describe('apiValidators', () => {
 
     test('validation failed throws api error', () => {
       jest
-        .spyOn(validators, 'validateNotificationEmailRequest')
+        .spyOn(validators, 'validateAppConfigRequest')
         .mockReturnValue(validationFailedReturn)
       try {
         apiAppConfigValidation({}, 'POST')

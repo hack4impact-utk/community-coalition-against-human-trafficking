@@ -18,9 +18,9 @@ import {
   LogPutRequest,
   LogResponse,
   CheckInOutRequest,
-  NotificationEmailPostRequest,
-  NotificationEmailPutRequest,
-  NotificationEmailResponse,
+  AppConfigPostRequest,
+  AppConfigPutRequest,
+  AppConfigResponse,
   PaginatedResponse,
   InventoryItemExistingAttributeValuesResponse,
 } from 'utils/types'
@@ -177,18 +177,20 @@ export const validCheckInOutRequest: CheckInOutRequest = {
   inventoryItem: validInventoryItemPostRequest,
 }
 
-export const validNotificationEmailPostRequest: NotificationEmailPostRequest = {
+export const validAppConfigPostRequest: AppConfigPostRequest = {
   emails: ['test@user.com', 'test2@gmail.com'],
+  defaultAttributes: [validAttributeResponse[0]._id],
 }
 
-export const validNotificationEmailPutRequest: NotificationEmailPutRequest = {
-  ...validNotificationEmailPostRequest,
+export const validAppConfigPutRequest: AppConfigPutRequest = {
+  ...validAppConfigPostRequest,
   _id: mockObjectId,
 }
 
-export const validNotificationEmailResponse: NotificationEmailResponse[] = [
+export const validAppConfigResponse: AppConfigResponse[] = [
   {
-    ...validNotificationEmailPostRequest,
+    ...validAppConfigPostRequest,
+    defaultAttributes: validAttributeResponse,
     _id: mockObjectId,
   },
 ]
