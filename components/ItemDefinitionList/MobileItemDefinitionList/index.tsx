@@ -1,8 +1,9 @@
-import { List, ListItem, ListItemText } from '@mui/material'
+import { List, ListItem, ListItemText, Stack, Typography } from '@mui/material'
 import { AttributeResponse, ItemDefinitionResponse } from 'utils/types'
 import React from 'react'
 import MobileItemDefinitionListItem from 'components/ItemDefinitionList/MobileItemDefinitionList/MobileItemDefinitionListItem'
 import { errors } from 'utils/constants'
+import theme from 'utils/theme'
 
 interface Props {
   itemDefinitions: ItemDefinitionResponse[]
@@ -70,8 +71,20 @@ export default function MobileItemDefinitionList({
           />
         ))
       ) : (
-        <ListItem>
-          <ListItemText>{errors.noResultsFound}</ListItemText>
+        <ListItem divider>
+          <ListItemText
+            primary={<Typography sx={{ visibility: 'hidden' }}>a</Typography>}
+            secondary={
+              <Typography sx={{ display: 'block', mt: theme.spacing(1) }}>
+                <Stack>
+                  <Stack spacing={1}>
+                    <Typography>{errors.noResultsFound}</Typography>
+                    <Typography sx={{ visibility: 'hidden' }}>a</Typography>
+                  </Stack>
+                </Stack>
+              </Typography>
+            }
+          />
         </ListItem>
       )}
     </List>
