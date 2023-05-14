@@ -1,9 +1,12 @@
 import React from 'react'
 import { MuiChipsInput, MuiChipsInputChip } from 'mui-chips-input'
 import {
+  Autocomplete,
   Box,
   Button,
   Checkbox,
+  Chip,
+  TextField,
   Tooltip,
   Typography,
   useMediaQuery,
@@ -13,27 +16,34 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import InfoIcon from '@mui/icons-material/Info'
 import { useAppDispatch, useAppSelector } from 'store'
 import { toggleKioskMode } from 'store/kiosk'
-import { AppConfigResponse } from 'utils/types'
+import { AppConfigResponse, AttributeResponse } from 'utils/types'
 import appConfigsHandler from '@api/appConfigs'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import { showSnackbar } from 'store/snackbar'
 import { LoadingButton } from '@mui/lab'
 import urls from 'utils/urls'
+import getContrastYIQ from 'utils/getContrastYIQ'
+import attributesHandler from '@api/attributes'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       config: (await apiWrapper(appConfigsHandler, context))[0],
+      attributes: await apiWrapper(attributesHandler, context),
     },
   }
 }
 
 interface GeneralSettingsProps {
   config: AppConfigResponse
+  attributes: AttributeResponse[]
 }
 
-export default function SettingsPage({ config }: GeneralSettingsProps) {
+export default function SettingsPage({
+  config,
+  attributes,
+}: GeneralSettingsProps) {
   const [appConfigData, setAppConfigData] =
     React.useState<AppConfigResponse>(config)
   const [initialAppConfigData, setInitialAppConfigData] =
@@ -48,6 +58,7 @@ export default function SettingsPage({ config }: GeneralSettingsProps) {
       emails: newValue,
     }))
   }
+
   React.useEffect(() => {
     setDirty(
       JSON.stringify(initialAppConfigData) !== JSON.stringify(appConfigData)
@@ -95,6 +106,28 @@ export default function SettingsPage({ config }: GeneralSettingsProps) {
         mx={2}
         sx={{ display: 'flex', flexDirection: 'column' }}
       >
+        <Grid2 xs={isMobileView ? 12 : 5} sx={{ mb: 4 }}>
+          <Typography variant="h5" sx={{ mb: 2 }}>
+            Kiosk
+          </Typography>
+          <Box
+            sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+          >
+            <Checkbox
+              checked={kiosk.enabled}
+              // @ts-ignore
+              onChange={() => dispatch(toggleKioskMode())}
+            />
+            <Typography mr={1}>Enable Kiosk Mode</Typography>
+            <Tooltip
+              title="Kiosk Mode enables a field to specify which staff member is checking an item in or out."
+              placement="top"
+              enterTouchDelay={0}
+            >
+              <InfoIcon sx={{ color: theme.palette.grey['500'] }} />
+            </Tooltip>
+          </Box>
+        </Grid2>
         <Grid2 xs={isMobileView ? 12 : 5}>
           <Typography variant="h5" sx={{ mb: 2 }}>
             Notifications
@@ -118,6 +151,57 @@ export default function SettingsPage({ config }: GeneralSettingsProps) {
             onChange={handleChange}
             hideClearAll
           />
+        </Grid2>
+        <Grid2 xs={isMobileView ? 12 : 5}>
+          <Typography variant="h5" sx={{ mb: 2 }}>
+            Default attributes
+          </Typography>
+          <Box
+            sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+          >
+            <Autocomplete
+              autoHighlight
+              fullWidth
+              multiple
+              value={appConfigData.defaultAttributes}
+              renderInput={(params) => (
+                <TextField {...params} label="Attribute Values" />
+              )}
+              getOptionLabel={(option) => option.name}
+              options={attributes}
+              onChange={(_e, newValue) => {
+                setAppConfigData((emailData) => ({
+                  ...emailData,
+                  defaultAttributes: newValue,
+                }))
+              }}
+              renderTags={(tagValue, getTagProps) =>
+                tagValue.map((option, index) => (
+                  <Chip
+                    label={option.name}
+                    sx={{
+                      backgroundColor: option.color,
+                      '& .MuiChip-label': {
+                        color: getContrastYIQ(option.color),
+                      },
+                    }}
+                    {...getTagProps({ index })}
+                    key={index}
+                  />
+                ))
+              }
+            />
+            {/* <Tooltip
+              title="Kiosk Mode enables a field to specify which staff member is checking an item in or out."
+              placement="top"
+              enterTouchDelay={0}
+            >
+              <InfoIcon sx={{ color: theme.palette.grey['500'] }} />
+            </Tooltip> */}
+          </Box>
+        </Grid2>
+
+        <Grid2 xs={isMobileView ? 12 : 5} sx={{ mt: 4 }}>
           {dirty && (
             <Grid2 display="flex" justifyContent="flex-end" mt={1}>
               <Button
@@ -139,28 +223,6 @@ export default function SettingsPage({ config }: GeneralSettingsProps) {
               </LoadingButton>
             </Grid2>
           )}
-        </Grid2>
-        <Grid2 xs={isMobileView ? 12 : 5}>
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            Kiosk
-          </Typography>
-          <Box
-            sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
-          >
-            <Checkbox
-              checked={kiosk.enabled}
-              // @ts-ignore
-              onChange={() => dispatch(toggleKioskMode())}
-            />
-            <Typography mr={1}>Enable Kiosk Mode</Typography>
-            <Tooltip
-              title="Kiosk Mode enables a field to specify which staff member is checking an item in or out."
-              placement="top"
-              enterTouchDelay={0}
-            >
-              <InfoIcon sx={{ color: theme.palette.grey['500'] }} />
-            </Tooltip>
-          </Box>
         </Grid2>
       </Grid2>
     </>
