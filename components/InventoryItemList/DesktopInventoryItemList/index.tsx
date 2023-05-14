@@ -223,7 +223,7 @@ export default function DesktopInventoryItemList(props: Props) {
                   <InventoryItemListItem inventoryItem={item} key={item._id} />
                 ))
               ) : (
-                <NoResultsRow numCols={6} />
+                <NoResultsRow numCols={5} />
               ))}
           </TableBody>
         </Table>

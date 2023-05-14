@@ -14,6 +14,7 @@ import {
 import React from 'react'
 import { ItemDefinitionResponse } from 'utils/types'
 import ItemDefinitionListItem from 'components/ItemDefinitionList/DesktopItemDefinitionList/DesktopItemDefinitionListItem'
+import NoResultsRow from 'components/NoResultsRow'
 
 /// HEADER ///
 
@@ -296,13 +297,16 @@ export default function ItemDefinitionList({
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
+            {visibleRows?.length ? (
               visibleRows.map((itemDefinition) => (
                 <ItemDefinitionListItem
                   key={itemDefinition._id}
                   itemDefinition={itemDefinition}
                 />
-              ))}
+              ))
+            ) : (
+              <NoResultsRow numCols={5} />
+            )}
           </TableBody>
         </Table>
       </TableContainer>

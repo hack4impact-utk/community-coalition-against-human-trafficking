@@ -13,6 +13,7 @@ import { visuallyHidden } from '@mui/utils'
 import { AttributeResponse } from 'utils/types'
 import { useState, useEffect, useCallback } from 'react'
 import AttributeListItem from './AttributeListItem'
+import NoResultsRow from 'components/NoResultsRow'
 
 interface AttributeTableData extends AttributeResponse {
   kebab: string
@@ -278,10 +279,13 @@ export default function AttributeList({
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
+            {visibleRows?.length ? (
               visibleRows.map((item) => (
                 <AttributeListItem attribute={item} key={item._id} />
-              ))}
+              ))
+            ) : (
+              <NoResultsRow numCols={3} />
+            )}
           </TableBody>
         </Table>
       </TableContainer>

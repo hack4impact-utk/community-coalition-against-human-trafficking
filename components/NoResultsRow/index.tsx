@@ -15,7 +15,7 @@ export default function NoResultsRow({ numCols }: Props) {
           <MoreVert />
         </IconButton>
       </TableCell>
-      {Array(numCols - 1)
+      {Array(numCols)
         .fill(0)
         .map(() => (
           <TableCell />

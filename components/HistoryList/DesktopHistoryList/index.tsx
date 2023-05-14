@@ -205,11 +205,13 @@ export default function DesktopHistoryList(props: Props) {
             router={router}
           />
           <TableBody>
-            {!!props.logs.length &&
+            {props.logs.length ? (
               props.logs.map((log) => (
                 <HistoryListItem log={log} key={log._id} />
-              ))}
-            {!props.logs.length && <NoResultsRow numCols={6} />}
+              ))
+            ) : (
+              <NoResultsRow numCols={5} />
+            )}
           </TableBody>
         </Table>
       </TableContainer>

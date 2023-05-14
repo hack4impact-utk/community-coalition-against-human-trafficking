@@ -12,6 +12,7 @@ import { visuallyHidden } from '@mui/utils'
 import { CategoryResponse } from 'utils/types'
 import CategoryListItem from 'components/CategoryList/CategoryListItem'
 import deepCopy from 'utils/deepCopy'
+import NoResultsRow from 'components/NoResultsRow'
 
 type Order = 'asc' | 'desc'
 
@@ -226,10 +227,13 @@ export default function DesktopCategoryList(props: Props) {
             onRequestSort={handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
+            {visibleRows.length ? (
               visibleRows.map((category) => (
                 <CategoryListItem category={category} key={category._id} />
-              ))}
+              ))
+            ) : (
+              <NoResultsRow numCols={1} />
+            )}
           </TableBody>
         </Table>
       </TableContainer>
