@@ -117,13 +117,6 @@ export default function CheckInPage({
       },
       body: JSON.stringify(checkInOutRequest),
     })
-    setFormData((formData) => {
-      return {
-        user: formData.user,
-        date: new Date(),
-        quantityDelta: 0,
-      } as CheckInOutFormData
-    })
 
     const data = await response.json()
     setLoading(false)
@@ -136,6 +129,13 @@ export default function CheckInPage({
           severity: 'success',
         })
       )
+      setFormData((formData) => {
+        return {
+          user: formData.user,
+          date: new Date(),
+          quantityDelta: 0,
+        } as CheckInOutFormData
+      })
     } else {
       // @ts-ignore
       dispatch(showSnackbar({ message: data.message, severity: 'error' }))
