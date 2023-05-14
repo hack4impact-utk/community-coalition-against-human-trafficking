@@ -126,21 +126,59 @@ const softDeleteRequestPipeline: PipelineStage[] = [
   },
 ]
 
-function searchAggregate(search: string): PipelineStage {
-  return {
-    $match: {
-      $or: [
-        { 'itemDefinition.name': { $regex: search, $options: 'i' } },
-        {
-          'itemDefinition.category.name': {
-            $regex: search,
-            $options: 'i',
-          },
-        },
-        { 'assignee.name': { $regex: search, $options: 'i' } },
-      ],
+function searchAggregate(search: string): PipelineStage[] {
+  return [
+    // pull each attributes.attribute out of the array into its own document
+    {
+      $unwind: '$attributes',
     },
-  }
+
+    // create a new field as "attributeSearch": `${attributeName}: ${attributeValue}`
+    {
+      $set: {
+        attributeSearch: {
+          $concat: [
+            '$attributes.attribute.name',
+            ': ',
+            { $toString: '$attributes.value' },
+          ],
+        },
+      },
+    },
+
+    // recombine the documents from the unwind (most fields remain untouched),
+    // adding the attributeSearch values as an array
+    {
+      $group: {
+        _id: '$_id',
+        itemDefinition: { $first: '$itemDefinition' },
+        attributes: { $addToSet: '$attributes' },
+        quantity: { $first: '$quantity' },
+        attributeSearch: { $addToSet: '$attributeSearch' },
+      },
+    },
+
+    {
+      $match: {
+        $or: [
+          { 'itemDefinition.name': { $regex: search, $options: 'i' } },
+          {
+            'itemDefinition.category.name': {
+              $regex: search,
+              $options: 'i',
+            },
+          },
+          { 'assignee.name': { $regex: search, $options: 'i' } },
+          { attributeSearch: { $regex: search, $options: 'i' } },
+        ],
+      },
+    },
+
+    // removes the attributeSearch array
+    {
+      $unset: 'attributeSearch',
+    },
+  ]
 }
 
 function categorySearchAggregate(category: string): PipelineStage {
@@ -176,9 +214,9 @@ export async function getFilteredInventoryItems(
   search?: string,
   categorySearch?: string
 ) {
-  const pipeline = [...requestPipeline]
+  let pipeline = [...softDeleteRequestPipeline]
   if (search) {
-    pipeline.push(searchAggregate(search))
+    pipeline = pipeline.concat(searchAggregate(search))
   }
   if (categorySearch) {
     pipeline.push(categorySearchAggregate(categorySearch))

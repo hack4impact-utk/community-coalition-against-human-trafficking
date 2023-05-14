@@ -8,6 +8,7 @@ import {
   InventoryItemResponse,
   CheckInOutFormData,
   TextFieldAttributesInternalRepresentation,
+  InventoryItemExistingAttributeValuesResponse,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete, {
@@ -19,6 +20,7 @@ import {
 } from 'utils/attribute'
 import { usePrevious } from 'utils/hooks/usePrevious'
 import { useSession } from 'next-auth/react'
+import urls from 'utils/urls'
 
 interface Props {
   kioskMode: boolean
@@ -74,6 +76,10 @@ function CheckInOutForm({
     React.useState<SeparatedAttributeResponses>(
       separateAttributeResponses(inventoryItem?.itemDefinition.attributes)
     )
+  const [existingNumAttrVals, setExistingNumAttrVals] =
+    React.useState<InventoryItemExistingAttributeValuesResponse[]>()
+  const [existingTextAttrVals, setExistingTextAttrVals] =
+    React.useState<InventoryItemExistingAttributeValuesResponse[]>()
   const session = useSession()
 
   const initialFormData: Partial<CheckInOutFormData> = {
@@ -143,9 +149,39 @@ function CheckInOutForm({
 
   // if you select an item definition without selecting a category, infer the category
   React.useEffect(() => {
-    setFormData((formData) =>
-      updateFormData(formData, { category: formData.itemDefinition?.category })
-    )
+    const onItemDefinitionUpdate = async () => {
+      if (formData.itemDefinition) {
+        const res = await fetch(
+          urls.api.itemDefinitions.attributeValues(formData.itemDefinition._id)
+        )
+        const resJson = await res.json()
+        const existingInventoryItemAttributeValues: InventoryItemExistingAttributeValuesResponse[] =
+          resJson.payload
+
+        var numAttrVals: InventoryItemExistingAttributeValuesResponse[] = []
+        var textAttrVals: InventoryItemExistingAttributeValuesResponse[] = []
+
+        existingInventoryItemAttributeValues.forEach((attrVal) => {
+          if (attrVal.values.length) {
+            if (typeof attrVal.values[0] === 'number') {
+              numAttrVals.push(attrVal)
+            } else {
+              textAttrVals.push(attrVal)
+            }
+          }
+        })
+
+        setExistingNumAttrVals(numAttrVals)
+        setExistingTextAttrVals(textAttrVals)
+      }
+
+      setFormData((formData) =>
+        updateFormData(formData, {
+          category: formData.itemDefinition?.category,
+        })
+      )
+    }
+    onItemDefinitionUpdate()
   }, [formData.itemDefinition, setFormData])
 
   // Update filtered item defs when category changes
@@ -289,6 +325,38 @@ function CheckInOutForm({
         getOptionLabel={(itemDefinition) => itemDefinition.name}
         value={formData.itemDefinition || null}
       />
+
+      {/* Assignee Autocomplete */}
+      {formData.itemDefinition?.internal && (
+        <Autocomplete
+          options={users}
+          sx={{ mt: 4 }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Assignee"
+              error={!!errors['assignee']}
+              helperText={errors['assignee'] || ''}
+            />
+          )}
+          getOptionLabel={(user) => user.name}
+          renderOption={(props, option) => {
+            return (
+              <li {...props} key={option._id}>
+                {option.name}
+              </li>
+            )
+          }}
+          onChange={(_e, user) => {
+            setFormData((formData) =>
+              updateFormData(formData, {
+                assignee: user || undefined,
+              })
+            )
+          }}
+        />
+      )}
+
       {/* Attribute Autocomplete */}
       {splitAttrs.list.length > 0 && (
         <AttributeAutocomplete
@@ -308,32 +376,59 @@ function CheckInOutForm({
       )}
       {/* Text Fields */}
       {splitAttrs.text.map((textAttr) => (
-        <TextField
+        <Autocomplete
           key={textAttr._id}
-          label={textAttr.name}
-          onChange={(e) =>
-            updateTextFieldAttributes(e.target.value, textAttr._id)
+          options={
+            existingTextAttrVals
+              ?.find((val) => val._id === textAttr._id)
+              ?.values.sort() || []
           }
           sx={{ marginTop: 4 }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={textAttr.name}
+              error={!!errors['textFieldAttributes']}
+              helperText={errors['textFieldAttributes']}
+            />
+          )}
+          isOptionEqualToValue={(option, value) => option === value}
+          onChange={(_e, textAttrVal) => {
+            updateTextFieldAttributes(textAttrVal as string, textAttr._id)
+          }}
+          getOptionLabel={(attrValue) => attrValue as string}
           value={formData.textFieldAttributes?.[textAttr._id] || ''}
-          error={!!errors['textFieldAttributes']}
-          helperText={errors['textFieldAttributes']}
+          freeSolo
+          autoSelect
         />
       ))}
 
       {/* Number Fields */}
       {splitAttrs.number.map((numAttr) => (
-        <TextField
+        <Autocomplete
           key={numAttr._id}
-          label={numAttr.name}
-          type="number"
-          onChange={(e) =>
-            updateTextFieldAttributes(Number(e.target.value), numAttr._id)
+          options={
+            existingNumAttrVals
+              ?.find((val) => val._id === numAttr._id)
+              ?.values.sort((v1, v2) => Number(v1) - Number(v2)) || []
           }
           sx={{ marginTop: 4 }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={numAttr.name}
+              error={!!errors['textFieldAttributes']}
+              helperText={errors['textFieldAttributes']}
+            />
+          )}
+          isOptionEqualToValue={(option, value) => option === value}
+          onChange={(_e, numAttrVal) => {
+            updateTextFieldAttributes(Number(numAttrVal), numAttr._id)
+          }}
+          getOptionLabel={(attrValue) => String(attrValue)}
           value={formData.textFieldAttributes?.[numAttr._id] || ''}
-          error={!!errors['textFieldAttributes']}
-          helperText={errors['textFieldAttributes']}
+          freeSolo
+          autoSelect
         />
       ))}
 

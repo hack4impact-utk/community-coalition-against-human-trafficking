@@ -28,6 +28,7 @@ interface NavigationDrawerProps {
   open: boolean
   setDrawerOpen: (status: boolean) => void
 }
+
 export default function NavigationDrawer({
   open,
   setDrawerOpen,
@@ -84,26 +85,31 @@ export default function NavigationDrawer({
         <NavigationDrawerListItem
           icon={<AssignmentLateOutlinedIcon />}
           text="Dashboard"
+          setDrawerOpen={setDrawerOpen}
           route={urls.pages.dashboard}
         />
         <NavigationDrawerListItem
           icon={<ArchiveOutlinedIcon />}
           text="Check In"
+          setDrawerOpen={setDrawerOpen}
           route={urls.pages.checkIn}
         />
         <NavigationDrawerListItem
           icon={<UnarchiveOutlinedIcon />}
           text="Check Out"
+          setDrawerOpen={setDrawerOpen}
           route={urls.pages.checkOut}
         />
         <NavigationDrawerListItem
           icon={<AssignmentOutlinedIcon />}
           text="Inventory"
+          setDrawerOpen={setDrawerOpen}
           route={urls.pages.inventory}
         />
         <NavigationDrawerListItem
           icon={<AccessTimeIcon />}
           text="History"
+          setDrawerOpen={setDrawerOpen}
           route={urls.pages.history}
         />
 
@@ -120,21 +126,25 @@ export default function NavigationDrawer({
             <NavigationDrawerListItem
               text="General"
               collapsable
+              setDrawerOpen={setDrawerOpen}
               route={urls.pages.settings.general}
             />
             <NavigationDrawerListItem
               text="Categories"
               collapsable
+              setDrawerOpen={setDrawerOpen}
               route={urls.pages.settings.categories}
             />
             <NavigationDrawerListItem
               text="Items"
               collapsable
+              setDrawerOpen={setDrawerOpen}
               route={urls.pages.settings.itemDefinitions}
             />
             <NavigationDrawerListItem
               text="Item Attributes"
               collapsable
+              setDrawerOpen={setDrawerOpen}
               route={urls.pages.settings.attributes}
             />
           </List>

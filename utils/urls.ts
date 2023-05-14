@@ -45,6 +45,8 @@ export default {
       itemDefinitions: '/api/itemDefinitions',
       itemDefinition: (itemDefinitionId: string) =>
         `/api/itemDefinitions/${itemDefinitionId}`,
+      attributeValues: (itemDefinitionId: string) =>
+        `/api/itemDefinitions/${itemDefinitionId}/attributeValues`,
     },
 
     logs: {

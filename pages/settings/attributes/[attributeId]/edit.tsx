@@ -39,9 +39,12 @@ export default function AttributeEditDialog() {
   useEffect(() => {
     const fetchAttribute = async () => {
       if (!id) return // on page load, id is undefined, resulting in bad requests
-      const response = await fetch(urls.api.attributes.attribute(id[0]), {
-        method: 'GET',
-      })
+      const response = await fetch(
+        urls.api.attributes.attribute(id as string),
+        {
+          method: 'GET',
+        }
+      )
       const data = await response.json()
       setAttribute(data.payload)
     }

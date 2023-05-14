@@ -68,6 +68,7 @@ export const checkInOutFormSchema = z
       .refine((val) => val <= new Date(), "Date can't be in the future"),
     category: categoryResponseSchema.optional(),
     itemDefinition: itemDefinitionResponseSchema,
+    assignee: userResponseSchema.optional(),
     attributes: inventoryItemAttributeSchema.optional(),
     textFieldAttributes: z
       .record(z.string(), z.union([z.string(), z.number()]))
@@ -79,6 +80,19 @@ export const checkInOutFormSchema = z
         return val > 0
       }, 'Quantity must be positive'),
   })
+  .refine(
+    // assert that there is an assignee if the item is internal
+    (schema) => {
+      if (schema.itemDefinition.internal && !schema.assignee) {
+        return false
+      }
+      return true
+    },
+    {
+      message: 'Must assign internal items',
+      path: ['assignee'],
+    }
+  )
   .refine(
     // assert that all defined attributes are set
     (schema) => {

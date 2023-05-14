@@ -22,6 +22,7 @@ import {
   NotificationEmailPutRequest,
   NotificationEmailResponse,
   PaginatedResponse,
+  InventoryItemExistingAttributeValuesResponse,
 } from 'utils/types'
 
 export const mockObjectId = '6408a7156668c5655c25b105'
@@ -82,6 +83,14 @@ export const validItemDefinitionResponse: ItemDefinitionResponse[] = [
     attributes: validAttributeResponse,
   },
 ]
+
+export const validInventoryItemExistingAttributeValuesResponse: InventoryItemExistingAttributeValuesResponse[] =
+  [
+    {
+      _id: mockObjectId,
+      values: ['val1', 2],
+    },
+  ]
 
 export const validUserPostRequest: UserPostRequest = {
   name: 'Test User',
