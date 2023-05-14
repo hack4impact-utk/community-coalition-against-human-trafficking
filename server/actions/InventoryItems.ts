@@ -155,6 +155,7 @@ function searchAggregate(search: string): PipelineStage[] {
         attributes: { $addToSet: '$attributes' },
         quantity: { $first: '$quantity' },
         attributeSearch: { $addToSet: '$attributeSearch' },
+        assignee: { $first: '$assignee' },
       },
     },
 
@@ -248,7 +249,7 @@ export async function getPaginatedInventoryItems(
   search?: string,
   categorySearch?: string
 ) {
-  const filteredLogs = await getFilteredInventoryItems(
+  const filteredItems = await getFilteredInventoryItems(
     orderBy,
     order,
     search,
@@ -256,10 +257,10 @@ export async function getPaginatedInventoryItems(
   )
   const startIndex = page * limit
   const endIndex = page * limit + limit
-  const logs = filteredLogs.slice(startIndex, endIndex)
+  const items = filteredItems.slice(startIndex, endIndex)
   return {
-    data: logs,
-    total: filteredLogs.length,
+    data: items,
+    total: filteredItems.length,
   }
 }
 
