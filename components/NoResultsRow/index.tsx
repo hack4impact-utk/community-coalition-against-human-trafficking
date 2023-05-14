@@ -17,8 +17,8 @@ export default function NoResultsRow({ numCols }: Props) {
       </TableCell>
       {Array(numCols - 1)
         .fill(0)
-        .map(() => (
-          <TableCell />
+        .map((_, i) => (
+          <TableCell key={i} />
         ))}
     </TableRow>
   )

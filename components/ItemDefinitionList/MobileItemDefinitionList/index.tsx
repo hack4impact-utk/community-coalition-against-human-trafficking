@@ -78,7 +78,9 @@ export default function MobileItemDefinitionList({
               <Typography sx={{ display: 'block', mt: theme.spacing(1) }}>
                 <Stack>
                   <Stack spacing={1}>
-                    <Typography>{errors.noResultsFound}</Typography>
+                    <Typography variant="body2">
+                      {errors.noResultsFound}
+                    </Typography>
                     <Typography sx={{ visibility: 'hidden' }}>a</Typography>
                   </Stack>
                 </Stack>
