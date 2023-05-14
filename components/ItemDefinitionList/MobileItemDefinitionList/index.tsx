@@ -1,4 +1,11 @@
-import { List, ListItem, ListItemText, Stack, Typography } from '@mui/material'
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Stack,
+  Typography,
+} from '@mui/material'
 import { AttributeResponse, ItemDefinitionResponse } from 'utils/types'
 import React from 'react'
 import MobileItemDefinitionListItem from 'components/ItemDefinitionList/MobileItemDefinitionList/MobileItemDefinitionListItem'
@@ -73,15 +80,17 @@ export default function MobileItemDefinitionList({
       ) : (
         <ListItem divider>
           <ListItemText
-            primary={<Typography sx={{ visibility: 'hidden' }}>a</Typography>}
+            primary={<Typography sx={{ visibility: 'hidden' }}>_</Typography>}
             secondary={
-              <Typography sx={{ display: 'block', mt: theme.spacing(1) }}>
+              <Typography
+                component="span"
+                variant="body2"
+                sx={{ display: 'block', mt: theme.spacing(1) }}
+              >
                 <Stack>
                   <Stack spacing={1}>
-                    <Typography variant="body2">
-                      {errors.noResultsFound}
-                    </Typography>
-                    <Typography sx={{ visibility: 'hidden' }}>a</Typography>
+                    <Typography>{errors.noResultsFound}</Typography>
+                    <Typography sx={{ visibility: 'hidden' }}>_</Typography>
                   </Stack>
                 </Stack>
               </Typography>
