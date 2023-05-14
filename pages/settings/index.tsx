@@ -14,7 +14,7 @@ import InfoIcon from '@mui/icons-material/Info'
 import { useAppDispatch, useAppSelector } from 'store'
 import { toggleKioskMode } from 'store/kiosk'
 import { AppConfigResponse } from 'utils/types'
-import appConfigsHandler from '@api/appConfig'
+import appConfigsHandler from '@api/appConfigs'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import { showSnackbar } from 'store/snackbar'
@@ -24,7 +24,7 @@ import urls from 'utils/urls'
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
-      config: await apiWrapper(appConfigsHandler, context),
+      config: (await apiWrapper(appConfigsHandler, context))[0],
     },
   }
 }
