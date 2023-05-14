@@ -7,8 +7,8 @@ import AppConfigSchema from 'server/models/AppConfig'
 import { errors } from 'utils/constants/errors'
 import { getAppConfigs } from 'server/actions/AppConfig'
 
-// @route GET api/appConfigs - Returns a list of all Notifications in the database - Private
-// @route POST /api/appConfigs - Create a Notification from request body - Private
+// @route GET api/appConfigs - Returns a list of all AppConfigs in the database - Private
+// @route POST /api/appConfigs - Create an AppConfig from request body - Private
 export default async function appConfigsHandler(
   req: NextApiRequest,
   res: NextApiResponse

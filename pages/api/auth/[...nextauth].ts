@@ -2,12 +2,12 @@ import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
 import { MongoClient } from 'mongodb'
 import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
+import dbConnect from 'server'
 
-const client = new MongoClient(process.env.MONGODB_URI)
-export const clientPromise = client.connect()
+const clientPromise = dbConnect().then((mon) => mon.connection.getClient())
 
 export const authOptions: NextAuthOptions = {
-  adapter: MongoDBAdapter(clientPromise),
+  adapter: MongoDBAdapter(clientPromise as Promise<MongoClient>),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
