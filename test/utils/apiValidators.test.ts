@@ -6,7 +6,7 @@ import {
   apiItemDefinitionValidation,
   apiUserValidation,
   apiLogValidation,
-  apiNotificationEmailValidation,
+  apiAppConfigValidation,
 } from 'utils/apiValidators'
 import * as validators from 'utils/validators'
 import { ApiError } from 'utils/types'
@@ -182,7 +182,7 @@ describe('apiValidators', () => {
         .spyOn(validators, 'validateNotificationEmailRequest')
         .mockReturnValue(validationSuccessReturn)
       try {
-        apiNotificationEmailValidation({}, 'POST')
+        apiAppConfigValidation({}, 'POST')
       } catch (e) {
         fail('should not have thrown an error: ' + e.message)
       }
@@ -193,7 +193,7 @@ describe('apiValidators', () => {
         .spyOn(validators, 'validateNotificationEmailRequest')
         .mockReturnValue(validationFailedReturn)
       try {
-        apiNotificationEmailValidation({}, 'POST')
+        apiAppConfigValidation({}, 'POST')
       } catch (error) {
         expect(error).toBeInstanceOf(ApiError)
         expect(error.statusCode).toBe(400)

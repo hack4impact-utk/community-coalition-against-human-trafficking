@@ -55,10 +55,9 @@ export default {
       export: `/api/logs/export`,
     },
 
-    notificationEmails: {
-      notificationEmails: '/api/notificationEmails',
-      notificationEmail: (notificationEmailId: string) =>
-        `/api/notificationEmails${notificationEmailId}`,
+    appConfigs: {
+      appConfigs: '/api/appConfigs',
+      appConfig: (appConfigId: string) => `/api/appConfigs/${appConfigId}`,
     },
 
     users: {

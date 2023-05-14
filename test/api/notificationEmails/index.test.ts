@@ -1,10 +1,10 @@
 import { ObjectId } from 'mongodb'
 import NotificationEmailSchema, {
   NotificationEmailDocument,
-} from 'server/models/NotificationEmail'
+} from 'server/models/AppConfig'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import notificationEmailHandler from 'pages/api/notificationEmails'
+import notificationEmailHandler from '@api/appConfig'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'

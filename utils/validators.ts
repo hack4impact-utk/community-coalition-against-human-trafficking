@@ -128,23 +128,23 @@ export function validateLogRequest(
 }
 
 /**
- * Checks the validity of an notificationEmail object. Does not validate child objects.
- * @param notificationEmail The NotificationEmail object to test
+ * Checks the validity of an appConfig object. Does not validate child objects.
+ * @param appConfig The AppConfig object to test
  * @returns A ValidationResult object
  */
-export function validateNotificationEmailRequest(
-  notificationEmail: Record<string, unknown>,
+export function validateAppConfigRequest(
+  appConfig: Record<string, unknown>,
   requestType?: 'PUT' | 'POST'
 ) {
   let validationModel: Property[]
   if (requestType === 'PUT') {
-    validationModel = notificationEmailPutModelProperties
+    validationModel = appConfigPutModelProperties
   } else if (requestType === 'POST') {
-    validationModel = notificationEmailPostModelProperties
+    validationModel = appConfigPostModelProperties
   } else {
-    validationModel = notificationEmailRequestModelProperties
+    validationModel = appConfigRequestModelProperties
   }
-  return validateProperties(validationModel, notificationEmail)
+  return validateProperties(validationModel, appConfig)
 }
 
 /*
@@ -364,7 +364,7 @@ export const logPutModelProperties: Property[] = deepCopy(
 )
 logPutModelProperties.find((prop) => prop.key === '_id')!.required = true
 
-export const notificationEmailRequestModelProperties: Property[] = [
+export const appConfigRequestModelProperties: Property[] = [
   {
     key: '_id',
     types: 'string',
@@ -375,14 +375,17 @@ export const notificationEmailRequestModelProperties: Property[] = [
     types: 'object',
     required: true,
   },
+  {
+    key: 'defaultAttributes',
+    types: 'object',
+    required: true,
+  },
 ]
-export const notificationEmailPostModelProperties: Property[] = deepCopy(
-  notificationEmailRequestModelProperties
+export const appConfigPostModelProperties: Property[] = deepCopy(
+  appConfigRequestModelProperties
 )
 
-export const notificationEmailPutModelProperties: Property[] = deepCopy(
-  notificationEmailRequestModelProperties
+export const appConfigPutModelProperties: Property[] = deepCopy(
+  appConfigRequestModelProperties
 )
-notificationEmailPutModelProperties.find(
-  (prop) => prop.key === '_id'
-)!.required = true
+appConfigPutModelProperties.find((prop) => prop.key === '_id')!.required = true
