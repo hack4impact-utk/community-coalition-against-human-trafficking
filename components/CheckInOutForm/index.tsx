@@ -152,7 +152,7 @@ function CheckInOutForm({
     const onItemDefinitionUpdate = async () => {
       if (formData.itemDefinition) {
         const res = await fetch(
-          urls.api.itemDefinitions.attributeValues(itemDefinition!._id)
+          urls.api.itemDefinitions.attributeValues(formData.itemDefinition._id)
         )
         const resJson = await res.json()
         const existingInventoryItemAttributeValues: InventoryItemExistingAttributeValuesResponse[] =
@@ -391,7 +391,7 @@ function CheckInOutForm({
           )}
           isOptionEqualToValue={(option, value) => option === value}
           onChange={(_e, numAttrVal) => {
-            updateTextFieldAttributes(numAttrVal as string, numAttr._id)
+            updateTextFieldAttributes(Number(numAttrVal), numAttr._id)
           }}
           getOptionLabel={(attrValue) => String(attrValue)}
           value={formData.textFieldAttributes?.[numAttr._id] || ''}
