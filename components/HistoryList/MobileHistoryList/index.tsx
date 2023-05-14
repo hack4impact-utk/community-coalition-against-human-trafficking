@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText, Typography } from '@mui/material'
+import { List, ListItem, ListItemText, Stack, Typography } from '@mui/material'
 import React from 'react'
 import { LogResponse } from 'utils/types'
 import MobileHistoryListItem from 'components/HistoryList/MobileHistoryList/MobileHistoryListItem'
@@ -8,6 +8,7 @@ import { historyPaginationDefaults } from 'utils/constants'
 import urls from 'utils/urls'
 import { errors } from 'utils/constants/errors'
 import { constructQueryString } from 'utils/constructQueryString'
+import theme from 'utils/theme'
 
 interface Props {
   logs: LogResponse[]
@@ -83,8 +84,32 @@ export default function MobileHistoryList(props: Props) {
             <MobileHistoryListItem log={log} key={log._id} />
           ))
         ) : (
-          <ListItem>
-            <ListItemText>{errors.noResultsFound}</ListItemText>
+          <ListItem divider>
+            <ListItemText
+              primary={
+                <Typography variant="body2" sx={{ visibility: 'hidden' }}>
+                  _
+                </Typography>
+              }
+              secondary={
+                <Typography
+                  component="span"
+                  variant="body2"
+                  sx={{ display: 'block', mt: theme.spacing(1) }}
+                >
+                  <Stack>
+                    <Stack spacing={1}>
+                      <Typography variant="body2">
+                        {errors.noResultsFound}
+                      </Typography>
+                      <Typography variant="body2" sx={{ visibility: 'hidden' }}>
+                        _
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </Typography>
+              }
+            />
           </ListItem>
         )}
       </List>

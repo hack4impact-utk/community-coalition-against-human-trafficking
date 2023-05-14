@@ -84,7 +84,6 @@ export default function MobileItemDefinitionList({
             secondary={
               <Typography
                 component="span"
-                variant="body2"
                 sx={{ display: 'block', mt: theme.spacing(1) }}
               >
                 <Stack>
