@@ -114,10 +114,11 @@ function CheckInOutForm({
   }, [setFormData])
 
   React.useEffect(() => {
+    if (inventoryItem) return // don't update if we're editing an existing item
     setFormData((fd) => {
       return updateFormData(fd, { itemDefinition })
     })
-  }, [itemDefinition])
+  }, [itemDefinition, inventoryItem])
 
   useEffect(() => {
     // check if kiosk mode
@@ -158,8 +159,8 @@ function CheckInOutForm({
         const existingInventoryItemAttributeValues: InventoryItemExistingAttributeValuesResponse[] =
           resJson.payload
 
-        var numAttrVals: InventoryItemExistingAttributeValuesResponse[] = []
-        var textAttrVals: InventoryItemExistingAttributeValuesResponse[] = []
+        const numAttrVals: InventoryItemExistingAttributeValuesResponse[] = []
+        const textAttrVals: InventoryItemExistingAttributeValuesResponse[] = []
 
         existingInventoryItemAttributeValues.forEach((attrVal) => {
           if (attrVal.values.length) {

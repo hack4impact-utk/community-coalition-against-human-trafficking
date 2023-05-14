@@ -54,9 +54,13 @@ export default function CheckOutPage({
   const theme = useTheme()
   const router = useRouter()
   const [errors, setErrors] = React.useState<Record<string, string>>({})
-  const inventoryItem = !!router.query.inventoryItem
-    ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
-    : undefined
+  const inventoryItem = React.useMemo(
+    () =>
+      !!router.query.inventoryItem
+        ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
+        : undefined,
+    [router.query.inventoryItem]
+  )
   const dispatch = useAppDispatch()
 
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
