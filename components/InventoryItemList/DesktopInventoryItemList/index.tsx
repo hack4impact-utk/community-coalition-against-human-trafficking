@@ -185,6 +185,17 @@ export default function DesktopInventoryItemList(props: Props) {
 
   return (
     <Box sx={{ width: '100%' }}>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={props.total}
+        rowsPerPage={Number(
+          router.query.limit || inventoryPaginationDefaults.limit
+        )}
+        page={Number(router.query.page || inventoryPaginationDefaults.page)}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <InventoryItemListHeader
@@ -212,17 +223,6 @@ export default function DesktopInventoryItemList(props: Props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={props.total}
-        rowsPerPage={Number(
-          router.query.limit || inventoryPaginationDefaults.limit
-        )}
-        page={Number(router.query.page || inventoryPaginationDefaults.page)}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </Box>
   )
 }
