@@ -1,6 +1,7 @@
 import { LogResponse } from './types'
 
 export interface CsvRow {
+  Assignee: string
   Item: string
   Attributes: string
   Category: string
@@ -17,6 +18,7 @@ export function createLogsCsvAsString(logs: LogResponse[]) {
    * 5. joining each array element with a newline
    */
   const csvKeys: (keyof CsvRow)[] = [
+    'Assignee',
     'Item',
     'Attributes',
     'Category',
@@ -29,6 +31,7 @@ export function createLogsCsvAsString(logs: LogResponse[]) {
 
   const csvData: CsvRow[] = logs.map((log) => {
     const csvRow: CsvRow = {
+      Assignee: log.item.assignee?.name || '',
       Item: log.item.itemDefinition.name,
       Attributes:
         log.item.attributes
