@@ -9,7 +9,6 @@ import inventoryItemHandler from 'pages/api/inventoryItems/[inventoryItemId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
-import { clientPromise } from '@api/auth/[...nextauth]'
 import { errors } from 'utils/constants/errors'
 import {
   validInventoryItemResponse,
