@@ -14,7 +14,10 @@ interface DefaultLayoutProps {
 async function getConfig() {
   const res = await fetch(urls.api.appConfigs.appConfigs)
   const data = await res.json()
-  if (!data.success) throw new Error(data.message)
+  if (!data.success) {
+    console.log('Error fetching config')
+    return
+  }
   return data.payload[0]
 }
 
@@ -25,11 +28,13 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
   const config = useAppSelector((state) => state.config)
 
   React.useEffect(() => {
-    if (!config.defaultAttributes.length && !config.emails.length) {
-      getConfig().then((data) => {
+    const fetchConfig = async () => {
+      if (!config.defaultAttributes.length && !config.emails.length) {
+        const data = await getConfig()
         dispatch(updateConfig(data))
-      })
+      }
     }
+    fetchConfig()
   }, [config, dispatch])
 
   React.useEffect(() => {
