@@ -2,7 +2,6 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
@@ -17,7 +16,7 @@ import {
   addURLQueryParam,
   bulkAddURLQueryParams,
 } from 'utils/queryParams'
-import { LinearProgress } from '@mui/material'
+import { Avatar, LinearProgress, TableCell, Typography } from '@mui/material'
 import { historyPaginationDefaults } from 'utils/constants'
 
 type Order = 'asc' | 'desc'
@@ -150,8 +149,6 @@ const updateQuery = async (router: NextRouter, key: string, val?: string) => {
 export default function DesktopHistoryList(props: Props) {
   const router = useRouter()
 
-  // when a header is clicked
-
   // when the change page buttons are clicked
   const handleChangePage = (_e: unknown, newPage: number) => {
     if (newPage === historyPaginationDefaults.page) {
@@ -207,9 +204,31 @@ export default function DesktopHistoryList(props: Props) {
             router={router}
           />
           <TableBody>
-            {props.logs.map((log) => (
-              <HistoryListItem log={log} key={log._id} />
-            ))}
+            {!!props.logs.length &&
+              props.logs.map((log) => (
+                <HistoryListItem log={log} key={log._id} />
+              ))}
+            {!props.logs.length && (
+              <TableRow>
+                <TableCell>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Box mr={2}>
+                      <Avatar sx={{ visibility: 'hidden' }} />
+                    </Box>
+                    No results found
+                  </Box>
+                </TableCell>
+                {[0, 0, 0, 0, 0].map(() => (
+                  <TableCell />
+                ))}
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </TableContainer>
