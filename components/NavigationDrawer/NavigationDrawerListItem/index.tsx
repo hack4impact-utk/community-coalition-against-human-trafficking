@@ -9,6 +9,7 @@ interface ListProps {
   icon?: React.ReactNode
   collapsable?: boolean
   route: string
+  setDrawerOpen: (status: boolean) => void
 }
 
 function NavigationDrawerListItem({
@@ -16,6 +17,7 @@ function NavigationDrawerListItem({
   icon,
   text,
   route,
+  setDrawerOpen,
 }: ListProps) {
   const router = useRouter()
   return (
@@ -23,6 +25,7 @@ function NavigationDrawerListItem({
       component={Link}
       href={route}
       selected={router.pathname === route}
+      onClick={() => setDrawerOpen(false)}
     >
       <ListItemIcon>{icon}</ListItemIcon>
       <ListItemText
