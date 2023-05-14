@@ -1,7 +1,8 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
+import configReducer, { configSlice } from 'store/config'
 import kioskReducer, { kioskSlice } from 'store/kiosk'
 import snackbarReducer, { snackbarSlice } from 'store/snackbar'
-import { KioskState, SnackbarState } from 'store/types'
+import { ConfigState, KioskState, SnackbarState } from 'store/types'
 import { useDispatch, useSelector } from 'react-redux'
 import type { TypedUseSelectorHook } from 'react-redux'
 import { createWrapper } from 'next-redux-wrapper'
@@ -20,6 +21,7 @@ import {
 export type RootState = {
   kiosk: KioskState
   snackbar: SnackbarState
+  config: ConfigState
 }
 
 function preloadState(): RootState {
@@ -31,12 +33,14 @@ function preloadState(): RootState {
       open: false,
       message: '',
     },
+    config: {},
   }
 }
 
 const rootReducer = combineReducers({
   [kioskSlice.name]: kioskSlice.reducer,
   [snackbarSlice.name]: snackbarSlice.reducer,
+  [configSlice.name]: configSlice.reducer,
 })
 
 const makeConfiguredStore = () =>
@@ -44,6 +48,7 @@ const makeConfiguredStore = () =>
     reducer: {
       kiosk: kioskReducer,
       snackbar: snackbarReducer,
+      config: configReducer,
     },
     preloadedState: preloadState(),
     devTools: process.env.NODE_ENV !== 'production',

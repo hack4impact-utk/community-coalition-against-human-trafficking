@@ -26,6 +26,7 @@ import getContrastYIQ from 'utils/getContrastYIQ'
 import theme from 'utils/theme'
 import transformZodErrors from 'utils/transformZodErrors'
 import urls from 'utils/urls'
+import { useAppSelector } from 'store'
 
 interface Props {
   categories: CategoryResponse[]
@@ -47,6 +48,7 @@ export default function UpsertItemForm({
   const [attrFormData, setAttrFormData] = React.useState(
     {} as AttributeFormData
   )
+  const { defaultAttributes } = useAppSelector((state) => state.config)
   const [formData, setFormData] = React.useState({
     internal: false,
   } as ItemDefinitionFormData)
@@ -57,6 +59,14 @@ export default function UpsertItemForm({
   React.useEffect(() => {
     setProxyAttributes(attributes)
   }, [attributes])
+
+  // Update the formData when the defaultAttributes change
+  React.useEffect(() => {
+    setFormData((fd) => ({
+      ...fd,
+      attributes: defaultAttributes,
+    }))
+  }, [defaultAttributes])
 
   const createNewAttribute = async (fd: AttributeFormData) => {
     const zodResult = attributeFormSchema.safeParse(fd)
@@ -167,6 +177,7 @@ export default function UpsertItemForm({
               />
             ))
           }
+          isOptionEqualToValue={(option, value) => option._id === value._id}
           value={formData.attributes || []}
           onChange={(_e, val) => {
             setFormData((fd) => ({
