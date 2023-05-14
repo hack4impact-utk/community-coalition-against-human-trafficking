@@ -157,6 +157,22 @@ const requestPipeline: PipelineStage[] = [
       },
     },
   },
+
+  // recombine the documents from the unwind (most fields remain untouched),
+  // adding the attributeSearch values as an array
+  {
+    $group: {
+      _id: '$_id',
+      staff: { $first: '$staff' },
+      item: { $first: '$item' },
+      // 'item.itemDefinition': { $first: '$item.itemDefinition' },
+      // 'item.attributes': { $addToSet: '$item.attributes' },
+      // 'item.quantity': { $first: '$item.quantity' },
+      // 'item.attributeSearch': { $addToSet: '$item.attributeSearch' },
+      quantityDelta: { $first: '$quantityDelta' },
+      date: { $first: '$date' },
+    },
+  },
 ]
 
 function searchAggregate(search: string): PipelineStage {

@@ -152,9 +152,9 @@ function searchAggregate(search: string): PipelineStage[] {
       $group: {
         _id: '$_id',
         itemDefinition: { $first: '$itemDefinition' },
-        attributes: { $addToSet: '$attributes' },
+        attributes: { $push: '$attributes' },
         quantity: { $first: '$quantity' },
-        attributeSearch: { $addToSet: '$attributeSearch' },
+        attributeSearch: { $push: '$attributeSearch' },
       },
     },
 
