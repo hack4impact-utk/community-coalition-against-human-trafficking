@@ -14,6 +14,7 @@ import {
   mockObjectId,
   validCategoryPostRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -23,7 +24,6 @@ beforeAll(() => {
 afterAll(() => {
   jest.restoreAllMocks()
   mongoose.connection.close()
-  
 })
 
 beforeEach(() => {
@@ -38,7 +38,7 @@ describe('api/categories', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: '/api/categories',
+      url: urls.api.categories.categories,
     })
     const response = createResponse()
 
@@ -54,7 +54,7 @@ describe('api/categories', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'HEAD',
-      url: '/api/categories',
+      url: urls.api.categories.categories,
     })
     const response = createResponse()
 
@@ -72,7 +72,7 @@ describe('api/categories', () => {
         .spyOn(auth, 'serverAuth')
         .mockImplementation(() => Promise.resolve())
       const mockGetEntities = jest
-        .spyOn(MongoDriver, 'getEntities')
+        .spyOn(MongoDriver, 'findEntitiesByQuery')
         .mockImplementation(
           async () =>
             validCategoryResponse as [CategoryDocument & { _id: ObjectId }]
@@ -80,7 +80,7 @@ describe('api/categories', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/categories`,
+        url: urls.api.categories.categories,
       })
 
       const response = createResponse()
@@ -90,19 +90,21 @@ describe('api/categories', () => {
 
       expect(serverAuth).toHaveBeenCalledTimes(1)
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
-      expect(mockGetEntities).lastCalledWith(CategorySchema)
+      expect(mockGetEntities).lastCalledWith(CategorySchema, {
+        softDelete: { $exists: false },
+      })
       expect(response.statusCode).toBe(200)
       expect(data).toEqual(validCategoryResponse)
     })
 
     test('valid call with no data returns 204', async () => {
       const mockGetEntities = jest
-        .spyOn(MongoDriver, 'getEntities')
+        .spyOn(MongoDriver, 'findEntitiesByQuery')
         .mockImplementation(async () => [])
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/categories`,
+        url: urls.api.categories.categories,
       })
 
       const response = createResponse()
@@ -111,7 +113,9 @@ describe('api/categories', () => {
       const data = response._getJSONData().payload
 
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
-      expect(mockGetEntities).lastCalledWith(CategorySchema)
+      expect(mockGetEntities).lastCalledWith(CategorySchema, {
+        softDelete: { $exists: false },
+      })
       expect(response.statusCode).toBe(204)
       expect(data).toEqual([])
     })
@@ -131,7 +135,7 @@ describe('api/categories', () => {
 
       const request = createRequest({
         method: 'POST',
-        url: `/api/categories`,
+        url: urls.api.categories.categories,
         body: validCategoryPostRequest,
       })
 

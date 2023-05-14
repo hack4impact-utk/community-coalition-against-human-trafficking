@@ -1,7 +1,6 @@
 import CheckInOutForm from 'components/CheckInOutForm'
 import {
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
@@ -13,10 +12,9 @@ import {
 import {
   CategoryResponse,
   CheckInOutFormData,
+  checkInOutFormSchema,
   CheckInOutRequest,
-  InventoryItemRequest,
   ItemDefinitionResponse,
-  LogRequest,
   UserResponse,
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
@@ -28,8 +26,10 @@ import { useRouter } from 'next/router'
 import { useAppDispatch, useAppSelector } from 'store'
 import React from 'react'
 import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
-import dayjs from 'dayjs'
 import { showSnackbar } from 'store/snackbar'
+import transformZodErrors from 'utils/transformZodErrors'
+import { LoadingButton } from '@mui/lab'
+import urls from 'utils/urls'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -53,6 +53,7 @@ export default function CheckOutPage({
 }: Props) {
   const theme = useTheme()
   const router = useRouter()
+  const [errors, setErrors] = React.useState<Record<string, string>>({})
   const inventoryItem = !!router.query.inventoryItem
     ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
     : undefined
@@ -63,24 +64,42 @@ export default function CheckOutPage({
   const [formData, setFormData] = React.useState<CheckInOutFormData>(
     {} as CheckInOutFormData
   )
+  const [loading, setLoading] = React.useState(false)
+
+  React.useEffect(() => {
+    setErrors((errors) => {
+      return {
+        ...errors,
+        attributes: '',
+        textFieldAttributes: '',
+      }
+    })
+  }, [formData.itemDefinition])
 
   const onSubmit = async (formData: CheckInOutFormData) => {
+    const res = checkInOutFormSchema.safeParse(formData)
+
+    if (!res.success) {
+      setErrors(transformZodErrors(res.error))
+      return
+    }
+    setErrors({})
+
+    // when validation is added, must be done before this
+    setLoading(true)
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
-    // TODO better way of coding URLs
-    const response = await fetch(
-      `http://localhost:3000/api/inventoryItems/checkOut`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(checkInOutRequest),
-      }
-    )
+    const response = await fetch(urls.api.inventoryItems.checkOut, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(checkInOutRequest),
+    })
 
     const data = await response.json()
+    setLoading(false)
 
     if (data.success) {
       // @ts-ignore
@@ -97,7 +116,7 @@ export default function CheckOutPage({
     setFormData((formData) => {
       return {
         user: formData.user,
-        date: dayjs(new Date()),
+        date: new Date(),
         quantityDelta: 0,
       } as CheckInOutFormData
     })
@@ -109,7 +128,7 @@ export default function CheckOutPage({
       <Grid2 xs={12} sm={8} lg={6} smOffset={2} lgOffset={3}>
         <Card variant={isMobileView ? 'elevation' : 'outlined'} elevation={0}>
           <Box display="flex" flexDirection="column">
-            <CardContent sx={{ p: isMobileView ? 0 : 2 }}>
+            <CardContent sx={{ p: 2 }}>
               <Typography variant="h5" sx={{ mb: 2 }}>
                 Check out items
               </Typography>
@@ -121,15 +140,20 @@ export default function CheckOutPage({
                 formData={formData}
                 setFormData={setFormData}
                 inventoryItem={inventoryItem}
+                errors={errors}
               />
             </CardContent>
 
             <CardActions
               sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'end' } }}
             >
-              <Button onClick={() => onSubmit(formData)} variant="contained">
+              <LoadingButton
+                onClick={() => onSubmit(formData)}
+                variant="contained"
+                loading={loading}
+              >
                 Check Out
-              </Button>
+              </LoadingButton>
             </CardActions>
           </Box>
         </Card>

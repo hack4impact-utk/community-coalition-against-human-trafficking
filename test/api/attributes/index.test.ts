@@ -10,6 +10,7 @@ import mongoose from 'mongoose'
 import { clientPromise } from '@api/auth/[...nextauth]'
 import { errors } from 'utils/constants/errors'
 import { validAttributeResponse, mockObjectId } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -19,7 +20,6 @@ beforeAll(() => {
 afterAll(() => {
   jest.restoreAllMocks()
   mongoose.connection.close()
-  
 })
 
 beforeEach(() => {
@@ -34,7 +34,7 @@ describe('api/attributes', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: '/api/attributes',
+      url: urls.api.attributes.attributes,
     })
     const response = createResponse()
 
@@ -50,7 +50,7 @@ describe('api/attributes', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'HEAD',
-      url: '/api/attributes',
+      url: urls.api.attributes.attributes,
     })
     const response = createResponse()
 
@@ -68,7 +68,7 @@ describe('api/attributes', () => {
         .spyOn(auth, 'serverAuth')
         .mockImplementation(() => Promise.resolve())
       const mockGetEntities = jest
-        .spyOn(MongoDriver, 'getEntities')
+        .spyOn(MongoDriver, 'findEntitiesByQuery')
         .mockImplementation(
           async () =>
             validAttributeResponse as [AttributeDocument & { _id: ObjectId }]
@@ -76,7 +76,7 @@ describe('api/attributes', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/attributes`,
+        url: urls.api.attributes.attributes,
       })
 
       const response = createResponse()
@@ -86,19 +86,21 @@ describe('api/attributes', () => {
 
       expect(serverAuth).toHaveBeenCalledTimes(1)
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
-      expect(mockGetEntities).lastCalledWith(AttributeSchema)
+      expect(mockGetEntities).lastCalledWith(AttributeSchema, {
+        softDelete: { $exists: false },
+      })
       expect(response.statusCode).toBe(200)
       expect(data).toEqual(validAttributeResponse)
     })
 
     test('valid call with no data returns 204', async () => {
       const mockGetEntities = jest
-        .spyOn(MongoDriver, 'getEntities')
+        .spyOn(MongoDriver, 'findEntitiesByQuery')
         .mockImplementation(async () => [])
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/attributes`,
+        url: urls.api.attributes.attributes,
       })
 
       const response = createResponse()
@@ -107,7 +109,9 @@ describe('api/attributes', () => {
       const data = response._getJSONData().payload
 
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
-      expect(mockGetEntities).lastCalledWith(AttributeSchema)
+      expect(mockGetEntities).lastCalledWith(AttributeSchema, {
+        softDelete: { $exists: false },
+      })
       expect(response.statusCode).toBe(204)
       expect(data).toEqual([])
     })
@@ -127,7 +131,7 @@ describe('api/attributes', () => {
 
       const request = createRequest({
         method: 'POST',
-        url: `/api/attributes`,
+        url: urls.api.attributes.attributes,
         body: validAttributeResponse,
       })
 

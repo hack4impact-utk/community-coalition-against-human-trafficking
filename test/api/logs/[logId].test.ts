@@ -12,6 +12,7 @@ import {
   mockObjectId,
   validLogPutRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 // TODO: add assertion for GET 'called with' aggregate stuff
 // this may need to have different functionality
@@ -34,7 +35,7 @@ describe('api/logs/[logId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: `/api/logs/${mockObjectId}`,
+      url: urls.api.logs.log(mockObjectId),
       query: {
         logId: mockObjectId,
       },
@@ -53,7 +54,7 @@ describe('api/logs/[logId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: `/api/logs/${mockObjectId}`,
+      url: urls.api.logs.log(mockObjectId),
       query: {
         logId: mockObjectId,
       },
@@ -81,7 +82,7 @@ describe('api/logs/[logId]', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/logs/${mockObjectId}`,
+        url: urls.api.logs.log(mockObjectId),
         query: {
           logId: mockObjectId,
         },
@@ -118,7 +119,7 @@ describe('api/logs/[logId]', () => {
 
       const request = createRequest({
         method: 'PUT',
-        url: `/api/logs/${mockObjectId}`,
+        url: urls.api.logs.log(mockObjectId),
         query: {
           logId: mockObjectId,
         },
@@ -150,7 +151,7 @@ describe('api/logs/[logId]', () => {
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: `/api/logs/${mockObjectId}`,
+        url: urls.api.logs.log(mockObjectId),
         query: {
           logId: mockObjectId,
         },

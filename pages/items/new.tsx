@@ -1,67 +1,90 @@
-import attributesHandler from '@api/attributes'
-import categoriesHandler from '@api/categories'
+import { LoadingButton } from '@mui/lab'
 import {
   Button,
   DialogActions,
   DialogContent,
   DialogTitle,
 } from '@mui/material'
-import UpsertItemForm, {
-  ItemDefinitionFormData,
-} from 'components/UpsertItemForm'
-import { useRouter } from 'next/router'
+import UpsertItemForm from 'components/UpsertItemForm'
+import { NextRouter, useRouter } from 'next/router'
 import React from 'react'
+import { useAppDispatch } from 'store'
+import { showSnackbar } from 'store/snackbar'
 import { itemDefinitionFormDataToItemDefinitionRequest } from 'utils/transformations'
-import { AttributeResponse, CategoryResponse } from 'utils/types'
-let categories: CategoryResponse[]
-let attributes: AttributeResponse[] = [] as AttributeResponse[]
-fetch('http://localhost:3000/api/categories', {
-  method: 'GET',
-}).then((response) => {
-  response.json().then((data) => {
-    categories = data.payload
-  })
-})
-fetch('http://localhost:3000/api/attributes', {
-  method: 'GET',
-}).then((response) => {
-  response.json().then((data) => {
-    attributes = data.payload
-  })
-})
+import transformZodErrors from 'utils/transformZodErrors'
+import {
+  AttributeResponse,
+  CategoryResponse,
+  ItemDefinitionFormData,
+  newItemFormSchema,
+} from 'utils/types'
+import urls from 'utils/urls'
 
 let itemDefinitionFormData: ItemDefinitionFormData
 
-async function createItem(formData: ItemDefinitionFormData) {
-  const itemDefReq = itemDefinitionFormDataToItemDefinitionRequest(formData)
-
-  const response = await fetch('http://localhost:3000/api/itemDefinitions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(itemDefReq),
-  })
-
-  const data = await response.json()
-
-  return data.payload
-}
-
 interface Props {
-  backHref?: string
+  redirectBack: (router: NextRouter, itemId?: string) => Promise<void>
 }
 
-export default function NewItemPage({ backHref }: Props) {
+export default function NewItemPage({ redirectBack }: Props) {
   const router = useRouter()
+  const [loading, setLoading] = React.useState(false)
+  const [categories, setCategories] = React.useState<CategoryResponse[]>([])
+  const [attributes, setAttributes] = React.useState<AttributeResponse[]>([])
+  const [errors, setErrors] = React.useState<Record<string, string>>({})
+  const dispatch = useAppDispatch()
 
-  const redirectBack = (queryStr?: string) => {
-    if (backHref) {
-      router.push(`${backHref}${queryStr}`)
-    } else {
-      router.reload()
+  React.useEffect(() => {
+    const getCategories = async () => {
+      const response = await fetch(urls.api.categories.categories, {
+        method: 'GET',
+      })
+      const data = await response.json()
+      setCategories(data.payload)
     }
-  }
+    const getAttributes = async () => {
+      const response = await fetch(urls.api.attributes.attributes, {
+        method: 'GET',
+      })
+      const data = await response.json()
+      setAttributes(data.payload)
+    }
+
+    getCategories()
+    getAttributes()
+  }, [])
+
+  const createItem = React.useCallback(
+    async (formData: ItemDefinitionFormData) => {
+      const zodResult = newItemFormSchema.safeParse(formData)
+      if (!zodResult.success) {
+        setErrors(transformZodErrors(zodResult.error))
+        return
+      }
+      setLoading(true)
+      const itemDefReq = itemDefinitionFormDataToItemDefinitionRequest(formData)
+
+      const response = await fetch(urls.api.itemDefinitions.itemDefinitions, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(itemDefReq),
+      })
+
+      const data = await response.json()
+      await redirectBack(router, data.payload)
+      setLoading(false)
+      // @ts-ignore
+      dispatch(
+        showSnackbar({
+          message: 'Item successfully created.',
+          severity: 'success',
+        })
+      )
+    },
+    [router, redirectBack, setLoading, dispatch]
+  )
 
   return (
     <>
@@ -73,21 +96,21 @@ export default function NewItemPage({ backHref }: Props) {
           onChange={(formData) => {
             itemDefinitionFormData = formData
           }}
+          errors={errors}
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => redirectBack('')} color="inherit">
+        <Button onClick={() => redirectBack(router)} color="inherit">
           Close
         </Button>
-        <Button
-          onClick={async () => {
-            const itemId = await createItem(itemDefinitionFormData)
-            // todo: router.back() will leave the app if a page is accessed by entering the url. figure this out
-            redirectBack(`?item=${itemId}`)
+        <LoadingButton
+          onClick={() => {
+            createItem(itemDefinitionFormData)
           }}
+          loading={loading}
         >
           Submit
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </>
   )

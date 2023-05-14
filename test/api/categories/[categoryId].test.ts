@@ -14,6 +14,7 @@ import {
   mockObjectId,
   validCategoryPutRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -35,7 +36,7 @@ describe('api/categories/[categoryId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: `/api/categories/${mockObjectId}`,
+      url: urls.api.categories.category(mockObjectId),
       query: {
         categoryId: mockObjectId,
       },
@@ -54,7 +55,7 @@ describe('api/categories/[categoryId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: `/api/categories/${mockObjectId}`,
+      url: urls.api.categories.category(mockObjectId),
       query: {
         categoryId: mockObjectId,
       },
@@ -81,7 +82,7 @@ describe('api/categories/[categoryId]', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/categories/${mockObjectId}`,
+        url: urls.api.categories.category(mockObjectId),
         query: {
           categoryId: mockObjectId,
         },
@@ -117,7 +118,7 @@ describe('api/categories/[categoryId]', () => {
 
       const request = createRequest({
         method: 'PUT',
-        url: `/api/categories/${mockObjectId}`,
+        url: urls.api.categories.category(mockObjectId),
         query: {
           categoryId: mockObjectId,
         },
@@ -144,12 +145,12 @@ describe('api/categories/[categoryId]', () => {
   describe('DELETE', () => {
     test('valid id returns correct data', async () => {
       const mockDeleteEntity = jest
-        .spyOn(MongoDriver, 'deleteEntity')
+        .spyOn(MongoDriver, 'softDeleteEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: `/api/categories/${mockObjectId}`,
+        url: urls.api.categories.category(mockObjectId),
         query: {
           categoryId: mockObjectId,
         },

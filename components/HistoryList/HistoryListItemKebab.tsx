@@ -2,7 +2,8 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React from 'react'
 import theme from 'utils/theme'
-import { AttributeResponse, LogResponse } from 'utils/types'
+import { LogResponse } from 'utils/types'
+import urls from 'utils/urls'
 
 interface HistoryListItemKebabOption {
   name: string
@@ -14,6 +15,7 @@ interface HistoryListItemKebabProps {
 }
 
 export default function AttributeListItemKebab({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   log,
 }: HistoryListItemKebabProps) {
   // kebab menu functionality
@@ -27,7 +29,7 @@ export default function AttributeListItemKebab({
             "Are you sure you want to delete this log entry? You won't be able to undo this action."
           )
         ) {
-          fetch(`/api/logs/${log._id}`, {
+          fetch(urls.api.logs.log(log._id), {
             method: 'DELETE',
           }).then(() => {
             window.location.reload()

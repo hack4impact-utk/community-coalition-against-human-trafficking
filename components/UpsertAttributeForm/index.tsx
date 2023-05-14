@@ -1,6 +1,5 @@
 import {
   Autocomplete,
-  Button,
   Chip,
   FormControl,
   FormControlLabel,
@@ -10,25 +9,21 @@ import {
   TextField,
   Unstable_Grid2 as Grid2,
 } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { TwitterPicker } from 'react-color'
 import getContrastYIQ from 'utils/getContrastYIQ'
-import { Attribute, AttributeRequest } from 'utils/types'
+import { Attribute, AttributeFormData, AttributeRequest } from 'utils/types'
 
-type PossibleValues = 'text' | 'number' | 'list'
-export interface AttributeFormData {
-  name: string
-  color: string
-  valueType: PossibleValues
-  listOptions?: string[]
-}
 interface AttributeFormProps {
   attribute?: AttributeRequest
   onChange: (attrFormData: AttributeFormData) => void
   children?: React.ReactNode // contains the form buttons (Add/Edit/Cancel)
+  errors: Record<keyof AttributeFormData, string>
 }
 
-function transformAttributeToFormData(attr?: Attribute): AttributeFormData {
+function transformAttributeToFormData(
+  attr?: Attribute
+): Partial<AttributeFormData> {
   if (!attr)
     return {
       name: '',
@@ -60,10 +55,17 @@ export default function UpsertAttributeForm({
   onChange,
   attribute,
   children,
+  errors,
 }: AttributeFormProps) {
   const [formData, setFormData] = React.useState<AttributeFormData>(
-    transformAttributeToFormData(attribute)
+    transformAttributeToFormData(attribute) as AttributeFormData
   )
+
+  // the attribute passed into this form is sometimes undefined as it is still being fetched
+  // Thus, make sure to fill out the form when the attribute gets fetched
+  useEffect(() => {
+    setFormData(transformAttributeToFormData(attribute) as AttributeFormData)
+  }, [attribute])
 
   React.useEffect(() => {
     onChange(formData)
@@ -83,6 +85,8 @@ export default function UpsertAttributeForm({
               } as AttributeFormData)
             }}
             value={formData.name}
+            error={!!errors.name}
+            helperText={errors.name}
           />
         </Grid2>
         <Grid2 xs={6} sx={{ mt: 2 }}>
@@ -130,11 +134,17 @@ export default function UpsertAttributeForm({
         {formData?.valueType == 'list' && (
           <Grid2 xs={12} sx={{ mt: 2 }}>
             <Autocomplete
+              autoHighlight
               freeSolo
               multiple
               value={formData.listOptions}
               renderInput={(params) => (
-                <TextField {...params} label="Attribute Values" />
+                <TextField
+                  {...params}
+                  label="Attribute Values"
+                  error={!!errors.listOptions}
+                  helperText={errors.listOptions}
+                />
               )}
               options={[]}
               onChange={(_e, value) => {

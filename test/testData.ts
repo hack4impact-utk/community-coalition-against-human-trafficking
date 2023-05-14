@@ -21,6 +21,8 @@ import {
   NotificationEmailPostRequest,
   NotificationEmailPutRequest,
   NotificationEmailResponse,
+  PaginatedResponse,
+  InventoryItemExistingAttributeValuesResponse,
 } from 'utils/types'
 
 export const mockObjectId = '6408a7156668c5655c25b105'
@@ -81,6 +83,14 @@ export const validItemDefinitionResponse: ItemDefinitionResponse[] = [
     attributes: validAttributeResponse,
   },
 ]
+
+export const validInventoryItemExistingAttributeValuesResponse: InventoryItemExistingAttributeValuesResponse[] =
+  [
+    {
+      _id: mockObjectId,
+      values: ['val1', 2],
+    },
+  ]
 
 export const validUserPostRequest: UserPostRequest = {
   name: 'Test User',
@@ -154,6 +164,11 @@ export const validLogResponse: LogResponse[] = [
     date: new Date(),
   },
 ]
+
+export const validPaginatedResponse: PaginatedResponse<LogResponse> = {
+  total: 1,
+  data: validLogResponse,
+}
 
 export const validCheckInOutRequest: CheckInOutRequest = {
   quantityDelta: 1,

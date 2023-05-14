@@ -12,35 +12,38 @@ import {
   Unstable_Grid2 as Grid2,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-import { AttributeResponse, CategoryResponse } from 'utils/types'
+import {
+  attributeFormSchema,
+  AttributeResponse,
+  CategoryResponse,
+  ItemDefinitionFormData,
+  AttributeFormData,
+} from 'utils/types'
 import React from 'react'
 import { attributeFormDataToAttributeRequest } from 'utils/transformations'
-import UpsertAttributeForm, {
-  AttributeFormData,
-} from 'components/UpsertAttributeForm'
+import UpsertAttributeForm from 'components/UpsertAttributeForm'
 import getContrastYIQ from 'utils/getContrastYIQ'
+import theme from 'utils/theme'
+import transformZodErrors from 'utils/transformZodErrors'
+import urls from 'utils/urls'
 
 interface Props {
   categories: CategoryResponse[]
   attributes: AttributeResponse[]
   onChange: (formData: ItemDefinitionFormData) => void
-}
-
-export interface ItemDefinitionFormData {
-  category: CategoryResponse
-  internal: boolean
-  name: string
-  attributes: AttributeResponse[]
-  lowStockThreshold: number
-  criticalStockThreshold: number
+  errors: Record<keyof ItemDefinitionFormData, string>
 }
 
 export default function UpsertItemForm({
   categories,
   attributes,
   onChange,
+  errors,
 }: Props) {
   const [showAttributeForm, setShowAttributeForm] = React.useState(false)
+  const [attributeErrors, setAttributeErrors] = React.useState<
+    Record<keyof AttributeFormData, string>
+  >({} as Record<keyof AttributeFormData, string>)
   const [attrFormData, setAttrFormData] = React.useState(
     {} as AttributeFormData
   )
@@ -51,10 +54,19 @@ export default function UpsertItemForm({
   // this is here to support adding newly created attributes to the create new item form attributes list options after they are created
   const [proxyAttributes, setProxyAttributes] = React.useState(attributes)
 
+  React.useEffect(() => {
+    setProxyAttributes(attributes)
+  }, [attributes])
+
   const createNewAttribute = async (fd: AttributeFormData) => {
-    // TODO better way of coding URLs
+    const zodResult = attributeFormSchema.safeParse(fd)
+    if (!zodResult.success) {
+      setAttributeErrors(transformZodErrors(zodResult.error))
+      return
+    }
+
     const attrReq = attributeFormDataToAttributeRequest(fd)
-    const response = await fetch(`http://localhost:3000/api/attributes`, {
+    const response = await fetch(urls.api.attributes.attributes, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -78,6 +90,7 @@ export default function UpsertItemForm({
     setProxyAttributes((pa) => {
       return [...pa, newAttr]
     })
+    setShowAttributeForm(false)
   }
 
   React.useEffect(() => {
@@ -87,6 +100,7 @@ export default function UpsertItemForm({
   return (
     <FormControl fullWidth>
       <Autocomplete
+        autoHighlight
         options={categories}
         getOptionLabel={(option) => option.name}
         renderInput={(params) => <TextField {...params} label="Category" />}
@@ -121,6 +135,8 @@ export default function UpsertItemForm({
             name: e.target.value,
           }))
         }}
+        error={!!errors.name}
+        helperText={errors.name}
       />
 
       {/* Attribute Autocomplete and Create Attribute Button */}
@@ -133,6 +149,7 @@ export default function UpsertItemForm({
         }}
       >
         <Autocomplete
+          autoHighlight
           multiple
           options={proxyAttributes}
           getOptionLabel={(option) => option.name}
@@ -181,6 +198,7 @@ export default function UpsertItemForm({
             onChange={(attrFD) => {
               setAttrFormData(attrFD)
             }}
+            errors={attributeErrors}
           >
             <Grid2
               xs={12}
@@ -200,7 +218,6 @@ export default function UpsertItemForm({
                 size="large"
                 onClick={() => {
                   createNewAttribute(attrFormData)
-                  setShowAttributeForm(false)
                 }}
               >
                 Add Attribute
@@ -234,8 +251,14 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
+          error={!!errors['lowStockThreshold']}
         />
       </Box>
+      {errors['lowStockThreshold'] && (
+        <Typography variant="caption" color={theme.palette.error.main}>
+          {errors['lowStockThreshold']}
+        </Typography>
+      )}
 
       {/* Critical Stock Threshold Prompt */}
       <Box sx={{ display: 'flex', alignSelf: 'flex-start', marginTop: 4 }}>
@@ -261,8 +284,16 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
+          error={
+            !!errors['criticalStockThreshold'] || !!errors['lowStockThreshold']
+          }
         />
       </Box>
+      {errors['criticalStockThreshold'] && (
+        <Typography variant="caption" color={theme.palette.error.main}>
+          {errors['criticalStockThreshold']}
+        </Typography>
+      )}
     </FormControl>
   )
 }

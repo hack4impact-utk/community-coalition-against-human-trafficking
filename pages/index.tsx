@@ -56,6 +56,8 @@ export default function DashboardPage({ inventoryItems, categories }: Props) {
             inventoryItems={inventoryItems}
             search={router.query.search as string}
             category={router.query.category as string}
+            total={0}
+            loading={false}
           />
         </Grid2>
       </Grid2>

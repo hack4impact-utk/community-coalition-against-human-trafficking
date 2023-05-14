@@ -10,59 +10,28 @@ import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import InventoryItemListItem from 'components/InventoryItemList/DesktopInventoryItemList/DesktopInventoryItemListItem'
+import { InventoryItemResponse } from 'utils/types'
+import { inventoryPaginationDefaults } from 'utils/constants'
 import {
-  InventoryItemAttributeResponse,
-  InventoryItemResponse,
-} from 'utils/types'
-import { Data } from './types'
-import WarningIcon from '@mui/icons-material/Warning'
+  addURLQueryParam,
+  bulkAddURLQueryParams,
+  bulkRemoveURLQueryParams,
+  removeURLQueryParam,
+} from 'utils/queryParams'
+import { NextRouter, useRouter } from 'next/router'
+import DesktopInventoryItemListSkeleton from './DesktopInventoryItemListSkeleton'
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1
-  }
-  return 0
-}
-
-type Order = 'asc' | 'desc'
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy)
-}
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0])
-    if (order !== 0) {
-      return order
-    }
-    return a[1] - b[1]
-  })
-  return stabilizedThis.map((el) => el[0])
-}
+type HeadId =
+  | 'name'
+  | 'attributes'
+  | 'category'
+  | 'quantity'
+  | 'assignee'
+  | 'kebab'
 
 interface HeadCell {
   disablePadding: boolean
-  id: keyof Data
+  id: HeadId
   label: string
   numeric: boolean
   sortable?: boolean
@@ -114,21 +83,37 @@ const headCells: readonly HeadCell[] = [
   },
 ]
 
+type Order = 'asc' | 'desc'
+
 interface EnhancedTableProps {
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data
-  ) => void
   order: Order
   orderBy: string
+  router: NextRouter
 }
 
 function InventoryItemListHeader(props: EnhancedTableProps) {
-  const { order, orderBy, onRequestSort } = props
-  const createSortHandler =
-    (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property)
+  const { order, orderBy, router } = props
+  const createSortHandler = (property: HeadId) => async () => {
+    const isAsc = orderBy === property && order === 'asc'
+    const newOrder = isAsc ? 'desc' : 'asc'
+    if (
+      newOrder === inventoryPaginationDefaults.order &&
+      property === inventoryPaginationDefaults.orderBy
+    ) {
+      await bulkRemoveURLQueryParams(router, ['order', 'orderBy'])
+    } else if (property === inventoryPaginationDefaults.orderBy) {
+      await removeURLQueryParam(router, 'orderBy')
+      await addURLQueryParam(router, 'order', newOrder)
+    } else if (newOrder === inventoryPaginationDefaults.order) {
+      await removeURLQueryParam(router, 'order')
+      await addURLQueryParam(router, 'orderBy', property)
+    } else {
+      await bulkAddURLQueryParams(router, {
+        order: newOrder,
+        orderBy: property,
+      })
     }
+  }
 
   return (
     <TableHead>
@@ -166,127 +151,36 @@ interface Props {
   inventoryItems: InventoryItemResponse[]
   search: string
   category: string
+  total: number
+  loading: boolean
 }
 
-const DEFAULT_ROWS_PER_PAGE = 5
-const DEFAULT_ORDER_BY = 'name'
-const DEFAULT_ORDER = 'asc'
+const updateQuery = async (router: NextRouter, key: string, val?: string) => {
+  if (!val) await removeURLQueryParam(router, key)
+  else await addURLQueryParam(router, key, val)
+}
 
 export default function DesktopInventoryItemList(props: Props) {
-  const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] = React.useState<keyof Data>(DEFAULT_ORDER_BY)
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = React.useState<Data[] | null>(null)
-  const [tableData, setTableData] = React.useState<Data[]>([])
+  const router = useRouter()
 
-  React.useEffect(() => {
-    let newTableData = props.inventoryItems.map((item) => {
-      return {
-        name: item.itemDefinition.name,
-        attributes: item.attributes,
-        category: item.itemDefinition.category?.name,
-        quantity: item.quantity,
-        assignee: item.assignee?.name,
-        kebab: '',
-        _id: item._id,
-        lowStockThreshold: item.itemDefinition.lowStockThreshold,
-        criticalStockThreshold: item.itemDefinition.criticalStockThreshold,
-        inventoryItem: item,
-      }
-    })
-
-    if (props.search) {
-      const search = props.search.toLowerCase()
-      newTableData = [
-        ...newTableData.filter((item) => {
-          return (
-            item.name.toLowerCase().includes(search) ||
-            (item.attributes &&
-              item.attributes
-                .map((attr) =>
-                  `${attr.attribute.name}: ${attr.value}`.toLowerCase()
-                )
-                .join(' ')
-                .includes(search)) ||
-            (item.category && item.category.toLowerCase().includes(search)) ||
-            (item.assignee && item.assignee.toLowerCase().includes(search))
-          )
-        }),
-      ]
+  // when the change page buttons are clicked
+  const handleChangePage = (_e: unknown, newPage: number) => {
+    if (newPage === inventoryPaginationDefaults.page) {
+      removeURLQueryParam(router, 'page')
+    } else {
+      updateQuery(router, 'page', newPage.toString())
     }
-
-    if (props.category) {
-      newTableData = [
-        ...newTableData.filter((item) => {
-          return item.category === props.category
-        }),
-      ]
-    }
-    setTableData(newTableData)
-    let rowsOnMount = stableSort(
-      newTableData,
-      getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY)
-    )
-    rowsOnMount = rowsOnMount.slice(
-      0 * DEFAULT_ROWS_PER_PAGE,
-      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
-    )
-
-    setVisibleRows(rowsOnMount)
-  }, [props.search, props.category])
-
-  const handleRequestSort = React.useCallback(
-    (event: React.MouseEvent<unknown>, newOrderBy: keyof Data) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder = isAsc ? 'desc' : 'asc'
-      setOrder(toggledOrder)
-      setOrderBy(newOrderBy)
-
-      const sortedRows = stableSort(
-        // @ts-ignore
-        tableData,
-        getComparator(toggledOrder, newOrderBy)
-      )
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
-      // @ts-ignore
-      setVisibleRows(updatedRows)
-    },
-    [order, orderBy, page, rowsPerPage, tableData]
-  )
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-    // @ts-ignore
-    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
-    const updatedRows = sortedRows.slice(
-      newPage * rowsPerPage,
-      newPage * rowsPerPage + rowsPerPage
-    )
-
-    //@ts-ignore
-    setVisibleRows(updatedRows)
   }
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(updatedRowsPerPage)
-    setPage(0)
-
-    // @ts-ignore
-    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
-    const updatedRows = sortedRows.slice(
-      0 * updatedRowsPerPage,
-      0 * updatedRowsPerPage + updatedRowsPerPage
-    )
-
-    // @ts-ignore
-    setVisibleRows(updatedRows)
+    if (Number(event.target.value) === inventoryPaginationDefaults.limit) {
+      bulkRemoveURLQueryParams(router, ['limit', 'page'])
+    } else {
+      removeURLQueryParam(router, 'page')
+      updateQuery(router, 'limit', event.target.value)
+    }
   }
 
   return (
@@ -294,27 +188,38 @@ export default function DesktopInventoryItemList(props: Props) {
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <InventoryItemListHeader
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            order={
+              (router.query.order || inventoryPaginationDefaults.order) as Order
+            }
+            orderBy={
+              (router.query.orderBy ||
+                inventoryPaginationDefaults.orderBy) as string
+            }
+            router={router}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((item) => (
-                <InventoryItemListItem
-                  inventoryItemData={item}
-                  key={item._id}
-                />
-              ))}
+            {props.loading ? (
+              <DesktopInventoryItemListSkeleton
+                rowsPerPage={Number(
+                  router.query.limit || inventoryPaginationDefaults.limit
+                )}
+              />
+            ) : (
+              props.inventoryItems.map((item) => (
+                <InventoryItemListItem inventoryItem={item} key={item._id} />
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={tableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
+        count={props.total}
+        rowsPerPage={Number(
+          router.query.limit || inventoryPaginationDefaults.limit
+        )}
+        page={Number(router.query.page || inventoryPaginationDefaults.page)}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />

@@ -1,8 +1,11 @@
 import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
+import { useRouter } from 'next/router'
 import React from 'react'
+import { dialogPush } from 'utils/dialogLink'
 import theme from 'utils/theme'
 import { AttributeResponse } from 'utils/types'
+import urls from 'utils/urls'
 
 interface AttributeListItemKebabOption {
   name: string
@@ -13,20 +16,11 @@ interface AttributeListItemKebabProps {
   attribute: AttributeResponse
 }
 
-const settings: AttributeListItemKebabOption[] = [
-  {
-    name: 'Edit',
-    onClick: () => console.log('Edit'),
-  },
-  {
-    name: 'Delete',
-    onClick: () => console.log('delete'),
-  },
-]
-
 export default function AttributeListItemKebab({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   attribute,
 }: AttributeListItemKebabProps) {
+  const router = useRouter()
   // kebab menu functionality
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
@@ -39,6 +33,28 @@ export default function AttributeListItemKebab({
   const handleCloseKebabMenu = () => {
     setAnchorElKebab(null)
   }
+
+  // kebab menu actions
+  const settings: AttributeListItemKebabOption[] = [
+    {
+      name: 'Edit',
+      onClick: () => {
+        dialogPush(router, urls.pages.dialogs.editAttribute(attribute._id))
+      },
+    },
+    {
+      name: 'Delete',
+      onClick: async () => {
+        if (window.confirm('Are you sure you want to delete this attribute?')) {
+          await fetch(urls.api.attributes.attribute(attribute._id), {
+            method: 'DELETE',
+          })
+          window.location.reload()
+        }
+      },
+    },
+  ]
+
   return (
     <>
       <IconButton onClick={handleOpenKebabMenu}>

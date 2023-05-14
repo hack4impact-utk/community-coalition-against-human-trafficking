@@ -14,6 +14,7 @@ import {
   mockObjectId,
   validAttributePutRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -35,7 +36,7 @@ describe('api/attributes/[attributeId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: `/api/attributes/${mockObjectId}`,
+      url: urls.api.attributes.attribute(mockObjectId),
       query: {
         attributeId: mockObjectId,
       },
@@ -54,7 +55,7 @@ describe('api/attributes/[attributeId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: `/api/attributes/${mockObjectId}`,
+      url: urls.api.attributes.attribute(mockObjectId),
       query: {
         attributeId: mockObjectId,
       },
@@ -80,7 +81,7 @@ describe('api/attributes/[attributeId]', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/attributes/${mockObjectId}`,
+        url: urls.api.attributes.attribute(mockObjectId),
         query: {
           attributeId: mockObjectId,
         },
@@ -115,7 +116,7 @@ describe('api/attributes/[attributeId]', () => {
 
       const request = createRequest({
         method: 'PUT',
-        url: `/api/attributes/${mockObjectId}`,
+        url: urls.api.attributes.attribute(mockObjectId),
         query: {
           attributeId: mockObjectId,
         },
@@ -142,12 +143,12 @@ describe('api/attributes/[attributeId]', () => {
   describe('DELETE', () => {
     test('valid id returns correct data', async () => {
       const mockDeleteEntity = jest
-        .spyOn(MongoDriver, 'deleteEntity')
+        .spyOn(MongoDriver, 'softDeleteEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: `/api/attributes/${mockObjectId}`,
+        url: urls.api.attributes.attribute(mockObjectId),
         query: {
           attributeId: mockObjectId,
         },

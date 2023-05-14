@@ -17,49 +17,7 @@ import AttributeListItem from './AttributeListItem'
 interface AttributeTableData extends AttributeResponse {
   kebab: string
 }
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1
-  }
-  return 0
-}
-
 type Order = 'asc' | 'desc'
-
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string },
-  b: { [key in Key]: number | string }
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy)
-}
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0])
-    if (order !== 0) {
-      return order
-    }
-    return a[1] - b[1]
-  })
-  return stabilizedThis.map((el) => el[0])
-}
 
 interface HeadCell {
   disablePadding: boolean
@@ -67,6 +25,35 @@ interface HeadCell {
   label: string
   numeric: boolean
   sortable?: boolean
+  sortFn?(a: AttributeResponse, b: AttributeResponse): number
+}
+
+function sortTable(
+  tableData: AttributeResponse[],
+  sortBy: keyof AttributeTableData,
+  order: Order
+) {
+  const orderByHeadCell = headCells.filter(
+    (headCell) => headCell.id === sortBy.toString()
+  )[0]
+
+  return tableData.sort((a: AttributeResponse, b: AttributeResponse) =>
+    order === 'asc'
+      ? orderByHeadCell.sortFn!(a, b)
+      : orderByHeadCell.sortFn!(b, a)
+  )
+}
+
+function comparator(v1: string, v2: string) {
+  if (v1 < v2) {
+    return -1
+  }
+
+  if (v1 > v2) {
+    return 1
+  }
+
+  return 0
 }
 
 const headCells: readonly HeadCell[] = [
@@ -76,6 +63,9 @@ const headCells: readonly HeadCell[] = [
     disablePadding: true,
     label: 'Attribute Name',
     sortable: true,
+    sortFn(a, b) {
+      return comparator(a.name, b.name)
+    },
   },
   {
     id: 'possibleValues',
@@ -170,10 +160,12 @@ export default function AttributeList({
     useState<keyof AttributeTableData>(DEFAULT_ORDER_BY)
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = useState<AttributeTableData[] | null>(
+  const [visibleRows, setVisibleRows] = useState<AttributeResponse[] | null>(
     null
   )
-  const [tableData, setTableData] = useState<AttributeTableData[]>([])
+  const [sortedTableData, setSortedTableData] = useState<AttributeResponse[]>(
+    []
+  )
 
   useEffect(() => {
     let newTableData = attributes.map((attribute) => {
@@ -204,15 +196,17 @@ export default function AttributeList({
       ]
     }
 
-    setTableData(newTableData)
-    let rowsOnMount = stableSort(
+    const newSortedData = sortTable(
       newTableData,
-      getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY)
+      DEFAULT_ORDER_BY,
+      DEFAULT_ORDER
     )
-    rowsOnMount = rowsOnMount.slice(
+    setSortedTableData(newSortedData)
+    const rowsOnMount = newSortedData.slice(
       0 * DEFAULT_ROWS_PER_PAGE,
       0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
     )
+    setPage(0)
 
     setVisibleRows(rowsOnMount)
   }, [search])
@@ -227,27 +221,29 @@ export default function AttributeList({
       setOrder(toggledOrder)
       setOrderBy(newOrderBy)
 
-      const sortedRows = stableSort(
-        tableData,
-        getComparator(toggledOrder, newOrderBy)
+      const newSortedTableData = sortTable(
+        sortedTableData,
+        newOrderBy,
+        toggledOrder
       )
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
+      setPage(0)
+      setSortedTableData(newSortedTableData)
+      const newVisibleRows = newSortedTableData.slice(
+        0 * rowsPerPage,
+        0 * rowsPerPage + rowsPerPage
       )
-      setVisibleRows(updatedRows)
+      setVisibleRows(newVisibleRows)
     },
-    [order, orderBy, page, rowsPerPage, tableData]
+    [order, orderBy, page, rowsPerPage, sortedTableData]
   )
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
-    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
-    const updatedRows = sortedRows.slice(
+    const newVisibleRows = sortedTableData.slice(
       newPage * rowsPerPage,
       newPage * rowsPerPage + rowsPerPage
     )
-    setVisibleRows(updatedRows)
+    setVisibleRows(newVisibleRows)
   }
 
   const handleChangeRowsPerPage = (
@@ -256,13 +252,11 @@ export default function AttributeList({
     const updatedRowsPerPage = parseInt(event.target.value, 10)
     setRowsPerPage(updatedRowsPerPage)
     setPage(0)
-
-    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
-    const updatedRows = sortedRows.slice(
+    const newVisibleRows = sortedTableData.slice(
       0 * updatedRowsPerPage,
       0 * updatedRowsPerPage + updatedRowsPerPage
     )
-    setVisibleRows(updatedRows)
+    setVisibleRows(newVisibleRows)
   }
 
   return (
@@ -285,7 +279,7 @@ export default function AttributeList({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={tableData.length}
+        count={sortedTableData.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}

@@ -1,22 +1,29 @@
-import NewItemPage from 'pages/items/new'
-import { ReactElement } from 'react'
-
-interface DialogProps {
-  backHref?: string
-  [key: string]: any
-}
+import urls from 'utils/urls'
 
 export interface DialogRoute {
   name: string
   path: string
-  // todo: fix this type
-  component: (props: DialogProps) => ReactElement
 }
 
 export const dialogRoutes: DialogRoute[] = [
   {
+    name: 'editAttribute',
+    path: urls.pages.dialogs.editAttribute(':id'),
+  },
+  {
+    name: 'createAttribute',
+    path: urls.pages.dialogs.createAttribute,
+  },
+  {
+    name: 'editCategory',
+    path: urls.pages.dialogs.editCategory(':id'),
+  },
+  {
+    name: 'createCategory',
+    path: urls.pages.dialogs.createCategory,
+  },
+  {
     name: 'createItem',
-    path: '/items/new',
-    component: NewItemPage,
+    path: urls.pages.dialogs.createItemDefinition,
   },
 ]

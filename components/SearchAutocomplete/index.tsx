@@ -1,5 +1,4 @@
 import { Autocomplete, TextField } from '@mui/material'
-import { debounce } from 'ts-debounce'
 import {
   addURLQueryParam,
   removeURLQueryParam,
@@ -25,6 +24,7 @@ export default function SearchAutocomplete({
 
   return (
     <Autocomplete
+      autoHighlight
       options={options}
       onChange={(_e, val) => {
         onChange(val)

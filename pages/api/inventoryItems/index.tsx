@@ -1,10 +1,18 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, InventoryItem, InventoryItemPostRequest } from 'utils/types'
+import { ApiError, InventoryItemPostRequest } from 'utils/types'
 import { serverAuth } from 'utils/auth'
-import { getInventoryItems } from 'server/actions/InventoryItems'
+import { getPaginatedInventoryItems } from 'server/actions/InventoryItems'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import InventoryItemSchema from 'server/models/InventoryItem'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
+import { inventoryPaginationDefaults } from 'utils/constants'
+
+const sortPathMap = {
+  name: 'itemDefinition.name',
+  category: 'itemDefinition.category.name',
+  quantity: 'quantity',
+  assignee: 'assignee.name',
+}
 
 // @route GET api/inventoryItems - Returns a list of all inventoryItems in the database - Private
 // @route POST /api/inventoryItems - Create a inventoryItems from request body - Private
@@ -15,12 +23,22 @@ export default async function inventoryItemsHandler(
   try {
     // ensure user is logged in
     await serverAuth(req, res)
+    const { orderBy, order, limit, page, search, category } = req.query
 
     switch (req.method) {
       case 'GET': {
-        const items = await getInventoryItems()
-        const resStatus = items.length ? 200 : 204
-        return res.status(resStatus).json({
+        const items = await getPaginatedInventoryItems(
+          Number(page || inventoryPaginationDefaults.page),
+          Number(limit || inventoryPaginationDefaults.limit),
+          sortPathMap[
+            (orderBy as keyof typeof sortPathMap) ||
+              inventoryPaginationDefaults.orderBy
+          ],
+          (order as string) || inventoryPaginationDefaults.order,
+          search as string,
+          category as string
+        )
+        return res.status(200).json({
           success: true,
           payload: items,
         })

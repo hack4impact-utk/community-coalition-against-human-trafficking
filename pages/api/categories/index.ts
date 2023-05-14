@@ -18,9 +18,10 @@ export default async function categoriesHandler(
 
     switch (req.method) {
       case 'GET': {
-        const categories: CategoryResponse[] = await MongoDriver.getEntities(
-          CategorySchema
-        )
+        const categories: CategoryResponse[] =
+          await MongoDriver.findEntitiesByQuery(CategorySchema, {
+            softDelete: { $exists: false },
+          })
         const resStatus = categories.length ? 200 : 204
         return res.status(resStatus).json({
           success: true,
