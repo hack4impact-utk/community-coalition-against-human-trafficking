@@ -1,18 +1,16 @@
 import { ObjectId } from 'mongodb'
-import NotificationEmailSchema, {
-  NotificationEmailDocument,
-} from 'server/models/NotificationEmail'
+import AppConfigSchema, { AppConfigDocument } from 'server/models/AppConfig'
 import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import notificationEmailHandler from 'pages/api/notificationEmails/[notificationEmailId]'
+import appConfigHandler from '@api/appConfigs/[appConfigId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import { errors } from 'utils/constants/errors'
 import {
-  validNotificationEmailResponse,
+  validAppConfigResponse,
   mockObjectId,
-  validNotificationEmailPutRequest,
+  validAppConfigPutRequest,
 } from 'test/testData'
 import urls from 'utils/urls'
 
@@ -26,7 +24,7 @@ afterAll(() => {
   jest.restoreAllMocks()
 })
 
-describe('api/notificationEmails/[notificationEmailId]', () => {
+describe('api/appConfigs/[appConfigId]', () => {
   test('thrown error is caught, response is unsuccessful and shows correct error message', async () => {
     jest.spyOn(auth, 'serverAuth').mockImplementationOnce(async () => {
       throw new ApiError(401, errors.unauthorized)
@@ -34,14 +32,14 @@ describe('api/notificationEmails/[notificationEmailId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: urls.api.notificationEmails.notificationEmail(mockObjectId),
+      url: urls.api.appConfigs.appConfig(mockObjectId),
       query: {
-        notificationEmailId: mockObjectId,
+        appConfigId: mockObjectId,
       },
     })
     const response = createResponse()
 
-    await notificationEmailHandler(request, response)
+    await appConfigHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -53,14 +51,14 @@ describe('api/notificationEmails/[notificationEmailId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: urls.api.notificationEmails.notificationEmail(mockObjectId),
+      url: urls.api.appConfigs.appConfig(mockObjectId),
       query: {
-        notificationEmailId: mockObjectId,
+        appConfigId: mockObjectId,
       },
     })
     const response = createResponse()
 
-    await notificationEmailHandler(request, response)
+    await appConfigHandler(request, response)
 
     const data = response._getJSONData()
 
@@ -74,67 +72,65 @@ describe('api/notificationEmails/[notificationEmailId]', () => {
         .spyOn(MongoDriver, 'getEntity')
         .mockImplementation(
           async () =>
-            validNotificationEmailResponse[0] as NotificationEmailDocument & {
+            validAppConfigResponse[0] as AppConfigDocument & {
               _id: ObjectId
             }
         )
 
       const request = createRequest({
         method: 'GET',
-        url: urls.api.notificationEmails.notificationEmail(mockObjectId),
+        url: urls.api.appConfigs.appConfig(mockObjectId),
         query: {
-          notificationEmailId: mockObjectId,
+          appConfigId: mockObjectId,
         },
       })
 
       const response = createResponse()
 
-      await notificationEmailHandler(request, response)
+      await appConfigHandler(request, response)
       const data = response._getJSONData().payload
 
       expect(mockGetEntity).toHaveBeenCalledTimes(1)
       expect(response.statusCode).toBe(200)
-      expect(data).toEqual(validNotificationEmailResponse[0])
+      expect(data).toEqual(validAppConfigResponse[0])
     })
   })
 
   describe('PUT', () => {
-    jest
-      .spyOn(apiValidator, 'apiNotificationEmailValidation')
-      .mockImplementation()
+    jest.spyOn(apiValidator, 'apiAppConfigValidation').mockImplementation()
     test('valid call returns correct data', async () => {
       const mockUpdateEntity = jest
         .spyOn(MongoDriver, 'updateEntity')
         .mockImplementation(
           async () =>
-            validNotificationEmailResponse[0] as NotificationEmailDocument & {
+            validAppConfigResponse[0] as AppConfigDocument & {
               _id: ObjectId
             }
         )
-      const mockApiNotificationEmailValidation = jest
-        .spyOn(apiValidator, 'apiNotificationEmailValidation')
+      const mockApiAppConfigValidation = jest
+        .spyOn(apiValidator, 'apiAppConfigValidation')
         .mockImplementation()
 
       const request = createRequest({
         method: 'PUT',
-        url: urls.api.notificationEmails.notificationEmail(mockObjectId),
+        url: urls.api.appConfigs.appConfig(mockObjectId),
         query: {
-          notificationEmailId: mockObjectId,
+          appConfigId: mockObjectId,
         },
-        body: validNotificationEmailPutRequest,
+        body: validAppConfigPutRequest,
       })
 
       const response = createResponse()
 
-      await notificationEmailHandler(request, response)
+      await appConfigHandler(request, response)
       const data = response._getJSONData().payload
 
-      expect(mockApiNotificationEmailValidation).toHaveBeenCalledTimes(1)
+      expect(mockApiAppConfigValidation).toHaveBeenCalledTimes(1)
       expect(mockUpdateEntity).toHaveBeenCalledTimes(1)
       expect(mockUpdateEntity).lastCalledWith(
-        NotificationEmailSchema,
+        AppConfigSchema,
         mockObjectId,
-        validNotificationEmailPutRequest
+        validAppConfigPutRequest
       )
       expect(response.statusCode).toBe(200)
       expect(data).toEqual({})
@@ -149,20 +145,17 @@ describe('api/notificationEmails/[notificationEmailId]', () => {
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: urls.api.notificationEmails.notificationEmail(mockObjectId),
+        url: urls.api.appConfigs.appConfig(mockObjectId),
         query: {
-          notificationEmailId: mockObjectId,
+          appConfigId: mockObjectId,
         },
       })
       const response = createResponse()
 
-      await notificationEmailHandler(request, response)
+      await appConfigHandler(request, response)
 
       expect(mockDeleteEntity).toHaveBeenCalledTimes(1)
-      expect(mockDeleteEntity).lastCalledWith(
-        NotificationEmailSchema,
-        mockObjectId
-      )
+      expect(mockDeleteEntity).lastCalledWith(AppConfigSchema, mockObjectId)
       expect(response.statusCode).toBe(200)
       expect(response._getJSONData().payload).toEqual({})
     })

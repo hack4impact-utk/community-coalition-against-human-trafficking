@@ -13,8 +13,8 @@ import Grid2 from '@mui/material/Unstable_Grid2'
 import InfoIcon from '@mui/icons-material/Info'
 import { useAppDispatch, useAppSelector } from 'store'
 import { toggleKioskMode } from 'store/kiosk'
-import { NotificationEmailResponse } from 'utils/types'
-import notificationEmailsHandler from '@api/notificationEmails'
+import { AppConfigResponse } from 'utils/types'
+import appConfigsHandler from '@api/appConfigs'
 import { GetServerSidePropsContext } from 'next'
 import { apiWrapper } from 'utils/apiWrappers'
 import { showSnackbar } from 'store/snackbar'
@@ -24,36 +24,35 @@ import urls from 'utils/urls'
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
-      emails: (await apiWrapper(notificationEmailsHandler, context))[0],
+      config: (await apiWrapper(appConfigsHandler, context))[0],
     },
   }
 }
 
-interface NotificationEmailProps {
-  emails: NotificationEmailResponse
+interface GeneralSettingsProps {
+  config: AppConfigResponse
 }
 
-export default function SettingsPage({ emails }: NotificationEmailProps) {
-  const [notificationEmailData, setNotificationEmailData] =
-    React.useState<NotificationEmailResponse>(emails)
-  const [initialNotificationEmailData, setInitialNotificationEmailData] =
-    React.useState<NotificationEmailResponse>(emails)
+export default function SettingsPage({ config }: GeneralSettingsProps) {
+  const [appConfigData, setAppConfigData] =
+    React.useState<AppConfigResponse>(config)
+  const [initialAppConfigData, setInitialAppConfigData] =
+    React.useState<AppConfigResponse>(config)
   const [dirty, setDirty] = React.useState(false)
   const [loading, setLoading] = React.useState(false)
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   const handleChange = (newValue: MuiChipsInputChip[]) => {
-    setNotificationEmailData((emailData) => ({
+    setAppConfigData((emailData) => ({
       ...emailData,
       emails: newValue,
     }))
   }
   React.useEffect(() => {
     setDirty(
-      JSON.stringify(initialNotificationEmailData) !==
-        JSON.stringify(notificationEmailData)
+      JSON.stringify(initialAppConfigData) !== JSON.stringify(appConfigData)
     )
-  }, [notificationEmailData, initialNotificationEmailData])
+  }, [appConfigData, initialAppConfigData])
 
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   const kiosk = useAppSelector((state) => state.kiosk)
@@ -62,20 +61,20 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
     setLoading(true)
 
     const response = await fetch(
-      urls.api.notificationEmails.notificationEmail(notificationEmailData._id),
+      urls.api.appConfigs.appConfig(appConfigData._id),
       {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(notificationEmailData),
+        body: JSON.stringify(appConfigData),
       }
     )
     const data = await response.json()
     setLoading(false)
 
     if (data.success) {
-      setInitialNotificationEmailData(notificationEmailData)
+      setInitialAppConfigData(appConfigData)
       //@ts-ignore
       dispatch(
         showSnackbar({
@@ -115,7 +114,7 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
                 textError: 'Enter a valid email address',
               }
             }}
-            value={notificationEmailData.emails}
+            value={appConfigData.emails}
             onChange={handleChange}
             hideClearAll
           />
@@ -124,7 +123,7 @@ export default function SettingsPage({ emails }: NotificationEmailProps) {
               <Button
                 sx={{ mr: 2 }}
                 onClick={() => {
-                  setNotificationEmailData(initialNotificationEmailData)
+                  setAppConfigData(initialAppConfigData)
                 }}
               >
                 Cancel
