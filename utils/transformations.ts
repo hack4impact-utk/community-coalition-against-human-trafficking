@@ -18,6 +18,7 @@ export function checkInOutFormDataToCheckInOutRequest(
 ): CheckInOutRequest {
   const partialInventoryItem = {
     itemDefinition: formData.itemDefinition._id,
+    assignee: formData.assignee?._id,
     attributes: [] as InventoryItemAttributeRequest[],
   }
   if (formData.attributes) {

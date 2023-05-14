@@ -3,12 +3,10 @@ import {
   Category,
   InventoryItem,
   InventoryItemAttribute,
-  InventoryItemResponse,
   ItemDefinition,
   Log,
   NotificationEmail,
   User,
-  UserResponse,
 } from '.'
 
 export type UserPostRequest = UserRequest
