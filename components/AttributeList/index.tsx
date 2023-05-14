@@ -196,9 +196,13 @@ export default function AttributeList({
       ]
     }
 
-    setSortedTableData(newTableData)
-    let rowsOnMount = sortTable(newTableData, DEFAULT_ORDER_BY, DEFAULT_ORDER)
-    rowsOnMount = rowsOnMount.slice(
+    const newSortedData = sortTable(
+      newTableData,
+      DEFAULT_ORDER_BY,
+      DEFAULT_ORDER
+    )
+    setSortedTableData(newSortedData)
+    const rowsOnMount = newSortedData.slice(
       0 * DEFAULT_ROWS_PER_PAGE,
       0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
     )
