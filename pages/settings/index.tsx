@@ -192,13 +192,6 @@ export default function SettingsPage({
                 ))
               }
             />
-            {/* <Tooltip
-              title="Kiosk Mode enables a field to specify which staff member is checking an item in or out."
-              placement="top"
-              enterTouchDelay={0}
-            >
-              <InfoIcon sx={{ color: theme.palette.grey['500'] }} />
-            </Tooltip> */}
           </Box>
         </Grid2>
 
