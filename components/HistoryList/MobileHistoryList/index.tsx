@@ -6,6 +6,7 @@ import InfiniteScroll from 'components/InfiniteScroll'
 import { useRouter } from 'next/router'
 import { historyPaginationDefaults } from 'utils/constants'
 import urls from 'utils/urls'
+import { errors } from 'utils/constants/errors'
 import { constructQueryString } from 'utils/constructQueryString'
 
 interface Props {
@@ -83,7 +84,7 @@ export default function MobileHistoryList(props: Props) {
           ))}
         {!visibleRows.length && (
           <ListItem>
-            <ListItemText>No results found</ListItemText>
+            <ListItemText>{errors.noResultsFound}</ListItemText>
           </ListItem>
         )}
       </List>

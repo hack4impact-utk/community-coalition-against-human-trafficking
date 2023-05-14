@@ -7,6 +7,7 @@ import { inventoryPaginationDefaults } from 'utils/constants'
 import { useRouter } from 'next/router'
 import urls from 'utils/urls'
 import { constructQueryString } from 'utils/constructQueryString'
+import { errors } from 'utils/constants/errors'
 
 interface MobileInventoryItemListProps {
   inventoryItems: InventoryItemResponse[]
@@ -67,7 +68,7 @@ export default function MobileInventoryItemList({
           ))
         ) : (
           <ListItem>
-            <ListItemText>No results found</ListItemText>
+            <ListItemText>{errors.noResultsFound}</ListItemText>
           </ListItem>
         )}
       </List>

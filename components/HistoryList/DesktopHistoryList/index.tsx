@@ -16,8 +16,9 @@ import {
   addURLQueryParam,
   bulkAddURLQueryParams,
 } from 'utils/queryParams'
-import { Avatar, LinearProgress, TableCell, Typography } from '@mui/material'
+import { Avatar, LinearProgress, TableCell } from '@mui/material'
 import { historyPaginationDefaults } from 'utils/constants'
+import { errors } from 'utils/constants/errors'
 
 type Order = 'asc' | 'desc'
 
@@ -221,7 +222,7 @@ export default function DesktopHistoryList(props: Props) {
                     <Box mr={2}>
                       <Avatar sx={{ visibility: 'hidden' }} />
                     </Box>
-                    No results found
+                    {errors.noResultsFound}
                   </Box>
                 </TableCell>
                 {[0, 0, 0, 0, 0].map(() => (
