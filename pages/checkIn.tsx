@@ -191,8 +191,10 @@ export default function CheckInPage({
       </Grid2>
       <RoutableDialog>
         <NewItemPage
-          redirectBack={async (router, itemId) => {
-            await router.push(`${urls.pages.checkIn}?item=${itemId}`)
+          redirectBack={async (router, itemId?) => {
+            if (itemId)
+              await router.push(`${urls.pages.checkIn}?item=${itemId}`)
+            else await router.push(urls.pages.checkIn)
           }}
         />
       </RoutableDialog>
