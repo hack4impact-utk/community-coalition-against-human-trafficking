@@ -16,9 +16,9 @@ import {
   addURLQueryParam,
   bulkAddURLQueryParams,
 } from 'utils/queryParams'
-import { Avatar, LinearProgress, TableCell } from '@mui/material'
+import { LinearProgress, TableCell } from '@mui/material'
 import { historyPaginationDefaults } from 'utils/constants'
-import { errors } from 'utils/constants/errors'
+import NoResultsRow from 'components/NoResultsRow'
 
 type Order = 'asc' | 'desc'
 
@@ -209,27 +209,7 @@ export default function DesktopHistoryList(props: Props) {
               props.logs.map((log) => (
                 <HistoryListItem log={log} key={log._id} />
               ))}
-            {!props.logs.length && (
-              <TableRow>
-                <TableCell>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Box mr={2}>
-                      <Avatar sx={{ visibility: 'hidden' }} />
-                    </Box>
-                    {errors.noResultsFound}
-                  </Box>
-                </TableCell>
-                {[0, 0, 0, 0, 0].map(() => (
-                  <TableCell />
-                ))}
-              </TableRow>
-            )}
+            {!props.logs.length && <NoResultsRow numCols={6} />}
           </TableBody>
         </Table>
       </TableContainer>

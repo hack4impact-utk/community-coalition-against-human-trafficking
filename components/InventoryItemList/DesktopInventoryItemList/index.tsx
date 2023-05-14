@@ -20,9 +20,7 @@ import {
 } from 'utils/queryParams'
 import { NextRouter, useRouter } from 'next/router'
 import DesktopInventoryItemListSkeleton from './DesktopInventoryItemListSkeleton'
-import { IconButton } from '@mui/material'
-import { MoreVert } from '@mui/icons-material'
-import { errors } from 'utils/constants/errors'
+import NoResultsRow from 'components/NoResultsRow'
 
 type HeadId =
   | 'name'
@@ -225,17 +223,7 @@ export default function DesktopInventoryItemList(props: Props) {
                   <InventoryItemListItem inventoryItem={item} key={item._id} />
                 ))
               ) : (
-                <TableRow>
-                  <TableCell sx={{ alignItems: 'center' }}>
-                    {errors.noResultsFound}
-                    <IconButton sx={{ visibility: 'hidden' }}>
-                      <MoreVert />
-                    </IconButton>
-                  </TableCell>
-                  {[0, 0, 0, 0, 0].map(() => (
-                    <TableCell />
-                  ))}
-                </TableRow>
+                <NoResultsRow numCols={6} />
               ))}
           </TableBody>
         </Table>
