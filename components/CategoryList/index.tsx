@@ -209,15 +209,24 @@ export default function DesktopCategoryList(props: Props) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={tableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          backgroundColor: 'white',
+          zIndex: 999,
+        }}
+      >
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={tableData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Box>
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <CategoryListHeader
