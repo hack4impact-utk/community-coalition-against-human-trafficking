@@ -53,7 +53,7 @@ export default function AttributeCreateDialog() {
     })
 
     // close dialog
-    await router.push(urls.api.attributes.attributes)
+    await router.push(urls.pages.settings.attributes)
 
     // handle snackbar logic
     const data = await response.json()
