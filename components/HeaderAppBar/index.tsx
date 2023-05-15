@@ -9,8 +9,9 @@ import MenuIcon from '@mui/icons-material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { signOut } from 'next-auth/react'
 import { useSession } from 'next-auth/react'
-import { Avatar } from '@mui/material'
+import { Avatar, useMediaQuery } from '@mui/material'
 import theme from 'utils/theme'
+import { relative } from 'path'
 
 const settings = ['Sign out']
 
@@ -22,6 +23,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   )
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   const { data: session } = useSession()
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -39,7 +41,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
 
   return (
     <AppBar
-      position="fixed"
+      position={isMobileView ? 'fixed' : 'relative'}
       sx={{ background: 'white', px: 2, backfaceVisibility: 'hidden' }}
     >
       <Toolbar disableGutters>
