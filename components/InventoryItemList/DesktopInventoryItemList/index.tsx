@@ -185,17 +185,26 @@ export default function DesktopInventoryItemList(props: Props) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={props.total}
-        rowsPerPage={Number(
-          router.query.limit || inventoryPaginationDefaults.limit
-        )}
-        page={Number(router.query.page || inventoryPaginationDefaults.page)}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      <Box
+        sx={{
+          position: 'sticky',
+          top: 0,
+          backgroundColor: 'white',
+          zIndex: 999,
+        }}
+      >
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={props.total}
+          rowsPerPage={Number(
+            router.query.limit || inventoryPaginationDefaults.limit
+          )}
+          page={Number(router.query.page || inventoryPaginationDefaults.page)}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Box>
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <InventoryItemListHeader
