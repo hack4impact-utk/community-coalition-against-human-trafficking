@@ -19,6 +19,7 @@ import {
 } from 'utils/queryParams'
 import { LinearProgress } from '@mui/material'
 import { historyPaginationDefaults } from 'utils/constants'
+import NoResultsText from 'components/NoResultsText'
 
 type Order = 'asc' | 'desc'
 
@@ -199,9 +200,12 @@ export default function DesktopHistoryList(props: Props) {
           top: 0,
           backgroundColor: 'white',
           zIndex: 999,
+          visibility: props.logs.length > 0 ? 'default' : 'hidden',
         }}
       />
-      <TableContainer>
+      <TableContainer
+        sx={{ visibility: props.logs.length > 0 ? 'default' : 'hidden' }}
+      >
         <Table
           aria-labelledby="tableTitle"
           size="medium"
@@ -219,6 +223,14 @@ export default function DesktopHistoryList(props: Props) {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box
+        sx={{
+          display: !props.logs.length && !props.loading ? 'none' : 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <NoResultsText />
+      </Box>
     </Box>
   )
 }

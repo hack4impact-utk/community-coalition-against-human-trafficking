@@ -1,4 +1,4 @@
-import { List } from '@mui/material'
+import { Box, List } from '@mui/material'
 import React from 'react'
 import { LogResponse } from 'utils/types'
 import MobileHistoryListItem from 'components/HistoryList/MobileHistoryList/MobileHistoryListItem'
@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import { historyPaginationDefaults } from 'utils/constants'
 import urls from 'utils/urls'
 import { constructQueryString } from 'utils/constructQueryString'
+import NoResultsText from 'components/NoResultsText'
 
 interface Props {
   logs: LogResponse[]
@@ -36,6 +37,7 @@ export default function MobileHistoryList(props: Props) {
     props.logs
   )
   const [page, setPage] = React.useState<number>(0)
+  const [loading, setLoading] = React.useState(true)
   const { limit } = historyPaginationDefaults
   const router = useRouter()
 
@@ -75,11 +77,18 @@ export default function MobileHistoryList(props: Props) {
     <InfiniteScroll
       next={nextFn}
       hasMore={Number(page) * limit + limit < props.total}
+      setParentLoading={setLoading}
     >
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {visibleRows.map((log) => (
-          <MobileHistoryListItem log={log} key={log._id} />
-        ))}
+        {visibleRows.length ? (
+          visibleRows.map((log) => (
+            <MobileHistoryListItem log={log} key={log._id} />
+          ))
+        ) : (
+          <Box sx={{ display: !loading ? 'none' : 'default' }}>
+            <NoResultsText />
+          </Box>
+        )}
       </List>
     </InfiniteScroll>
   )

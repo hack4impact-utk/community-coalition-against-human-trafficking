@@ -235,7 +235,7 @@ export default function DesktopInventoryItemList(props: Props) {
       </TableContainer>
       <Box
         sx={{
-          display: itemsFound ? 'none' : 'flex',
+          display: itemsFound && !props.loading ? 'none' : 'flex',
           justifyContent: 'center',
         }}
       >

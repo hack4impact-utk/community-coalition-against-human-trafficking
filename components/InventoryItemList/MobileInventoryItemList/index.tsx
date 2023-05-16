@@ -1,4 +1,4 @@
-import { List } from '@mui/material'
+import { Box, List } from '@mui/material'
 import React from 'react'
 import { InventoryItemResponse } from 'utils/types'
 import MobileInventoryItemListItem from 'components/InventoryItemList/MobileInventoryItemList/MobileInventoryItemListItem'
@@ -23,6 +23,7 @@ export default function MobileInventoryItemList({
   const [visibleRows, setVisibleRows] =
     React.useState<InventoryItemResponse[]>(inventoryItems)
   const [page, setPage] = React.useState<number>(0)
+  const [loading, setLoading] = React.useState(true)
   const { limit } = inventoryPaginationDefaults
   const router = useRouter()
 
@@ -58,6 +59,7 @@ export default function MobileInventoryItemList({
     <InfiniteScroll
       next={nextFn}
       hasMore={Number(page) * limit + limit < total}
+      setParentLoading={setLoading}
     >
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
         {visibleRows.length ? (
@@ -68,7 +70,13 @@ export default function MobileInventoryItemList({
             />
           ))
         ) : (
-          <NoResultsText />
+          <Box
+            sx={{
+              display: visibleRows.length ? 'none' : 'default',
+            }}
+          >
+            <NoResultsText />
+          </Box>
         )}
       </List>
     </InfiniteScroll>
