@@ -16,6 +16,10 @@ import React from 'react'
 import { removeURLQueryParam } from 'utils/queryParams'
 import urls from 'utils/urls'
 import { constructQueryString } from 'utils/constructQueryString'
+import { inventoryPaginationDefaults } from 'utils/constants'
+import useBackendPaginationCache from 'utils/hooks/useBackendPaginationCache'
+
+type Order = 'asc' | 'desc'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -27,7 +31,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 interface Props {
-  inventoryItems: InventoryItemResponse[]
   categories: string[]
 }
 
@@ -58,28 +61,58 @@ export default function InventoryPage({ categories }: Props) {
   const [orderBy, setOrderBy] = React.useState<string | undefined>(undefined)
   const [order, setOrder] = React.useState<string | undefined>(undefined)
 
+  const { updateCache, cacheFor, isCached } =
+    useBackendPaginationCache<InventoryItemResponse>(
+      total,
+      router.query.orderBy as string,
+      router.query.order as Order
+    )
+
   React.useEffect(() => {
     const getItems = async () => {
       setLoading(true)
+      const page = Number(router.query.page) || inventoryPaginationDefaults.page
+      const limit =
+        Number(router.query.limit) || inventoryPaginationDefaults.limit
+
+      // use cache if nothing has changed and cache exists
+      if (
+        router.query.search === search &&
+        router.query.category === category &&
+        router.query.orderBy === orderBy &&
+        router.query.order === order
+      ) {
+        if (isCached(page, limit)) {
+          setInventoryItems(cacheFor(page, limit))
+          setLoading(false)
+          return
+        }
+      } else {
+        if (router.query.search !== search) {
+          removeURLQueryParam(router, 'page')
+          setSearch(router.query.search as string)
+        }
+        if (router.query.category !== category) {
+          removeURLQueryParam(router, 'page')
+          setCategory(router.query.category as string | undefined)
+        }
+        if (router.query.orderBy !== orderBy) {
+          removeURLQueryParam(router, 'page')
+          setOrderBy(router.query.orderBy as string | undefined)
+        }
+        if (router.query.order !== order) {
+          removeURLQueryParam(router, 'page')
+          setOrder(router.query.order as string | undefined)
+        }
+      }
+
+      // get new items
       const items = await fetchInventoryItems(router)
-      if (router.query.search !== search) {
-        removeURLQueryParam(router, 'page')
-        setSearch(router.query.search as string)
-      }
-      if (router.query.category !== category) {
-        removeURLQueryParam(router, 'page')
-        setCategory(router.query.category as string | undefined)
-      }
-      if (router.query.orderBy !== orderBy) {
-        removeURLQueryParam(router, 'page')
-        setOrderBy(router.query.orderBy as string | undefined)
-      }
-      if (router.query.order !== order) {
-        removeURLQueryParam(router, 'page')
-        setOrder(router.query.order as string | undefined)
-      }
+
+      // set the new items and update the cache
       setInventoryItems(items.data)
-      setTotal(items.total)
+      if (total !== items.total) setTotal(items.total)
+      updateCache(items.data, page, limit)
       setLoading(false)
     }
     getItems()

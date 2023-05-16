@@ -69,9 +69,7 @@ const renderInternalCheckbox = (router: NextRouter, isMobileView: boolean) => {
 
 export default function HistoryPage({ categories }: HistoryPageProps) {
   const [tableData, setTableData] = React.useState<LogResponse[]>([])
-  const [totalLogs, setTotalLogs] = React.useState<number>(
-    historyPaginationDefaults.page
-  )
+  const [totalLogs, setTotalLogs] = React.useState<number>(0)
   const [loading, setLoading] = React.useState<boolean>(true)
   const [search, setSearch] = React.useState<string>('')
   const [category, setCategory] = React.useState<string>('')
@@ -82,8 +80,14 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
   const router = useRouter()
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
+  const { updateCache, cacheFor, isCached } =
+    useBackendPaginationCache<LogResponse>(
+      total,
+      router.query.orderBy as string,
+      router.query.order as Order
+    )
 
-  const handleExport = async () => {
+  const handleExport = React.useCallback(async () => {
     const requestStr = `${urls.api.logs.export}${constructQueryString(
       router.query as { [key: string]: string },
       true
@@ -101,7 +105,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
-  }
+  }, [router.query])
 
   React.useEffect(() => {
     const fetchLogs = async () => {
