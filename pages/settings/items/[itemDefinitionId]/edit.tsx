@@ -61,10 +61,6 @@ export default function ItemDefinitionEditForm() {
     fetchItemDefinition()
   }, [id])
 
-  React.useEffect(() => {
-    console.log(itemDefinition)
-  }, [itemDefinition])
-
   const handleSubmit = async (
     itemDefinitionFormData: ItemDefinitionFormData
   ) => {
