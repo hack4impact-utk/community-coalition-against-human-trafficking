@@ -85,7 +85,7 @@ export default function CategoryEditForm() {
   return (
     <>
       <DialogTitle>Edit Category</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ overflowY: 'visible' }}>
         <UpsertCategoryForm
           category={categoryFormData}
           onChange={(newName) => {
