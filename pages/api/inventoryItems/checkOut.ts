@@ -33,6 +33,7 @@ export default async function inventoryItemsCheckOutHandler(
         const inventoryItem = (await getInventoryItem(
           response.toString()
         )) as InventoryItemResponse
+
         const emailSent =
           inventoryItem.quantity + quantity <
           inventoryItem.itemDefinition.criticalStockThreshold

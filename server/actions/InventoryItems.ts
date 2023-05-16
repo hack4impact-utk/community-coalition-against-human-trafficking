@@ -13,7 +13,7 @@ import { PipelineStage } from 'mongoose'
 import { errors } from 'utils/constants/errors'
 import deepCopy from 'utils/deepCopy'
 import { createTransport } from 'nodemailer'
-import {constructQueryString} from 'utils/constructQueryString'
+import { constructQueryString } from 'utils/constructQueryString'
 import urls from 'utils/urls'
 
 // aggregate pipeline does the following:
@@ -391,19 +391,43 @@ export async function sendCriticallyLowStockEmail(
     to: emailList.join(','),
     subject: `Critically Low Stock: ${inventoryItem.itemDefinition.name}`,
     text: emailBody,
-  };
+  }
 
   await transporter.sendMail(emailOptions)
-};
+}
 
-function createEmailBody(inventoryItem:InventoryItemResponse) {
-  return (`The following item is critically low in stock: \n
+function createEmailBody(inventoryItem: InventoryItemResponse) {
+  return `The following item is critically low in stock: \n
 Name: ${inventoryItem.itemDefinition.name}
-Category: ${inventoryItem.itemDefinition.category?.name || "-"}
-Attributes: \n    ${inventoryItem.attributes?.map(inventoryItemAttribute => `${inventoryItemAttribute.attribute.name}: ${inventoryItemAttribute.value}`).join('\n    ') || "-"}\n 
-Assignee: ${inventoryItem.assignee?.name || "-"}
+Category: ${inventoryItem.itemDefinition.category?.name || '-'}
+Attributes: \n    ${
+    inventoryItem.attributes
+      ?.map(
+        (inventoryItemAttribute) =>
+          `${inventoryItemAttribute.attribute.name}: ${inventoryItemAttribute.value}`
+      )
+      .join('\n    ') || '-'
+  }\n 
+Assignee: ${inventoryItem.assignee?.name || '-'}
 Current Quantity: ${inventoryItem.quantity} \n
-Low Stock Threshold: ${inventoryItem.itemDefinition.lowStockThreshold === 0 ? '-' : inventoryItem.itemDefinition.lowStockThreshold}
-Critically Low Stock Threshold: ${inventoryItem.itemDefinition.criticalStockThreshold === 0 ? '-' : inventoryItem.itemDefinition.criticalStockThreshold}\n
-View here: ${process.env.NEXTAUTH_URL}${urls.pages.inventory}${constructQueryString({search: inventoryItem.itemDefinition.name, category: inventoryItem.itemDefinition.category?.name || "", orderBy: 'quantity'}, true)}`
-)}
+Low Stock Threshold: ${
+    inventoryItem.itemDefinition.lowStockThreshold === 0
+      ? '-'
+      : inventoryItem.itemDefinition.lowStockThreshold
+  }
+Critically Low Stock Threshold: ${
+    inventoryItem.itemDefinition.criticalStockThreshold === 0
+      ? '-'
+      : inventoryItem.itemDefinition.criticalStockThreshold
+  }\n
+View here: ${process.env.NEXTAUTH_URL}${
+    urls.pages.inventory
+  }${constructQueryString(
+    {
+      search: inventoryItem.itemDefinition.name,
+      category: inventoryItem.itemDefinition.category?.name || '',
+      orderBy: 'quantity',
+    },
+    true
+  )}`
+}
