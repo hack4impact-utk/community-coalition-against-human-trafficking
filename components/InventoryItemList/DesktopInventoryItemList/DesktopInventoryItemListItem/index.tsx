@@ -1,5 +1,5 @@
 import WarningIcon from '@mui/icons-material/Warning'
-import { TableRow, TableCell, Tooltip, Box } from '@mui/material'
+import { TableRow, TableCell, Tooltip, Box, Avatar } from '@mui/material'
 import theme from 'utils/theme'
 import * as React from 'react'
 import InventoryItemListItemKebab from 'components/InventoryItemList/InventoryItemListItemKebab'
@@ -92,12 +92,21 @@ export default function DesktopInventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.assignee ? inventoryItem.assignee.name : ''}
+        {inventoryItem.assignee && (
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+          >
+            <Avatar sx={{ mr: 2 }} src={inventoryItem.assignee.image || ''} />
+            {inventoryItem.assignee.name}
+          </Box>
+        )}
       </TableCell>
       <TableCell sx={{ width: '10px' }}>
-        <Box sx={{ flexGrow: 0, ml: 'auto' }}>
-          <InventoryItemListItemKebab inventoryItem={inventoryItem} />
-        </Box>
+        <InventoryItemListItemKebab inventoryItem={inventoryItem} />
       </TableCell>
     </TableRow>
   )
