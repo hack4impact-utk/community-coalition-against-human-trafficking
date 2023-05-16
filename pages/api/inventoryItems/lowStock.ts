@@ -1,10 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ApiError, ItemDefinitionResponse } from 'utils/types'
 import { serverAuth } from 'utils/auth'
-import {
-  getInventoryItems,
-  getPaginatedInventoryItems,
-} from 'server/actions/InventoryItems'
+import { getPaginatedInventoryItems } from 'server/actions/InventoryItems'
 import { inventoryPaginationDefaults } from 'utils/constants'
 
 const sortPathMap = {
@@ -26,7 +23,7 @@ export default async function inventoryItemsLowStockHandler(
 
     switch (req.method) {
       case 'GET': {
-        let items = await getPaginatedInventoryItems(
+        const items = await getPaginatedInventoryItems(
           Number(page || inventoryPaginationDefaults.page),
           Number(limit || inventoryPaginationDefaults.limit),
           sortPathMap[
@@ -42,7 +39,7 @@ export default async function inventoryItemsLowStockHandler(
             item.quantity <
             (item.itemDefinition as ItemDefinitionResponse).lowStockThreshold
         )
-        const resStatus = items.length ? 200 : 204
+        const resStatus = 200
         return res.status(resStatus).json({
           success: true,
           payload: items,

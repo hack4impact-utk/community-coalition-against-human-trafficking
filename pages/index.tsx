@@ -78,7 +78,7 @@ export default function DashboardPage({ categories }: Props) {
         removeURLQueryParam(router, 'page')
         setOrder(router.query.order as string | undefined)
       }
-      setInventoryItems(items)
+      setInventoryItems(items.data)
       setTotal(items.length)
       setLoading(false)
     }
