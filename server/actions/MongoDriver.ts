@@ -34,9 +34,10 @@ export async function getEntity<Schema extends Document>(
 
   // if aggregate is defined, use that instead of simple find
   if (!!aggregate) {
+    const pipeline = [...aggregate]
     const objectId = new Types.ObjectId(id)
-    aggregate.push({ $match: { _id: objectId } })
-    response = (await dbSchema.aggregate(aggregate))[0]
+    pipeline.push({ $match: { _id: objectId } })
+    response = (await dbSchema.aggregate(pipeline))[0]
   } else {
     response = await dbSchema.findById(id)
   }
