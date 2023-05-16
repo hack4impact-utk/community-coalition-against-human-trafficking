@@ -59,19 +59,22 @@ export default function AttributeEditDialog() {
         return
       }
       // update attribute
-      const response = await fetch(urls.api.attributes.attribute(id![0]), {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _id: id,
-          name: attributeFormData.name,
-          color: attributeFormData.color,
-          possibleValues:
-            attributeFormData.valueType === 'list'
-              ? attributeFormData.listOptions
-              : attributeFormData.valueType,
-        }),
-      })
+      const response = await fetch(
+        urls.api.attributes.attribute(id as string),
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            _id: id,
+            name: attributeFormData.name,
+            color: attributeFormData.color,
+            possibleValues:
+              attributeFormData.valueType === 'list'
+                ? attributeFormData.listOptions
+                : attributeFormData.valueType,
+          }),
+        }
+      )
       // handle snackbar logic
       const data = await response.json()
 
