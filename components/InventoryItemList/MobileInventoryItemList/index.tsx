@@ -7,6 +7,7 @@ import { inventoryPaginationDefaults } from 'utils/constants'
 import { useRouter } from 'next/router'
 import urls from 'utils/urls'
 import { constructQueryString } from 'utils/constructQueryString'
+import NoResultsText from 'components/NoResultsText'
 
 interface MobileInventoryItemListProps {
   inventoryItems: InventoryItemResponse[]
@@ -52,18 +53,23 @@ export default function MobileInventoryItemList({
   React.useEffect(() => {
     setVisibleRows(inventoryItems)
   }, [inventoryItems])
+
   return (
     <InfiniteScroll
       next={nextFn}
       hasMore={Number(page) * limit + limit < total}
     >
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {visibleRows.map((inventoryItem) => (
-          <MobileInventoryItemListItem
-            inventoryItem={inventoryItem}
-            key={inventoryItem._id}
-          />
-        ))}
+        {visibleRows.length ? (
+          visibleRows.map((inventoryItem) => (
+            <MobileInventoryItemListItem
+              inventoryItem={inventoryItem}
+              key={inventoryItem._id}
+            />
+          ))
+        ) : (
+          <NoResultsText />
+        )}
       </List>
     </InfiniteScroll>
   )

@@ -20,6 +20,7 @@ import {
 } from 'utils/queryParams'
 import { NextRouter, useRouter } from 'next/router'
 import DesktopInventoryItemListSkeleton from './DesktopInventoryItemListSkeleton'
+import NoResultsText from 'components/NoResultsText'
 
 type HeadId =
   | 'name'
@@ -183,6 +184,8 @@ export default function DesktopInventoryItemList(props: Props) {
     }
   }
 
+  const itemsFound = props.inventoryItems.length > 0
+
   return (
     <Box sx={{ width: '100%' }}>
       <TablePagination
@@ -200,9 +203,10 @@ export default function DesktopInventoryItemList(props: Props) {
           top: 0,
           backgroundColor: 'white',
           zIndex: 999,
+          visibility: itemsFound ? 'default' : 'hidden',
         }}
       />
-      <TableContainer>
+      <TableContainer sx={{ visibility: itemsFound ? 'default' : 'hidden' }}>
         <Table aria-labelledby="tableTitle" size="medium">
           <InventoryItemListHeader
             order={
@@ -229,6 +233,14 @@ export default function DesktopInventoryItemList(props: Props) {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box
+        sx={{
+          display: itemsFound ? 'none' : 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <NoResultsText />
+      </Box>
     </Box>
   )
 }
