@@ -37,28 +37,6 @@ interface Props {
   errors: Record<keyof ItemDefinitionFormData, string>
 }
 
-function transformItemDefinitionToFormData(
-  item?: ItemDefinitionResponse
-): ItemDefinitionFormData {
-  return item
-    ? ({
-        name: item.name,
-        category: item.category ? item.category : undefined,
-        attributes: item.attributes ? item.attributes : undefined,
-        internal: item.internal,
-        lowStockThreshold: item.lowStockThreshold,
-        criticalStockThreshold: item.criticalStockThreshold,
-      } as ItemDefinitionFormData)
-    : ({
-        name: '',
-        category: undefined,
-        attributes: [],
-        internal: false,
-        lowStockThreshold: 0,
-        criticalStockThreshold: 0,
-      } as ItemDefinitionFormData)
-}
-
 export default function UpsertItemForm({
   itemDefinition,
   categories,
@@ -177,7 +155,7 @@ export default function UpsertItemForm({
             name: e.target.value,
           }))
         }}
-        value={formData.name}
+        value={formData.name || ''}
         error={!!errors.name}
         helperText={errors.name}
       />
@@ -295,7 +273,7 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
-          value={formData.lowStockThreshold}
+          value={formData.lowStockThreshold || 0}
           error={!!errors['lowStockThreshold']}
         />
       </Box>
@@ -329,7 +307,7 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
-          value={formData.criticalStockThreshold}
+          value={formData.criticalStockThreshold || 0}
           error={
             !!errors['criticalStockThreshold'] || !!errors['lowStockThreshold']
           }

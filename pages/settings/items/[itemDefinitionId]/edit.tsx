@@ -87,8 +87,10 @@ export default function ItemDefinitionEditForm() {
         body: JSON.stringify({
           _id: id,
           name: itemDefinitionFormData.name,
-          category: itemDefinitionFormData.category,
-          attributes: itemDefinitionFormData.attributes,
+          category: itemDefinitionFormData.category?._id,
+          attributes: itemDefinitionFormData.attributes?.map(
+            (attribute) => attribute._id
+          ),
           internal: itemDefinitionFormData.internal,
           lowStockThreshold: itemDefinitionFormData.lowStockThreshold,
           criticalStockThreshold: itemDefinitionFormData.criticalStockThreshold,
