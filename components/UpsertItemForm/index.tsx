@@ -273,7 +273,7 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
-          value={formData.lowStockThreshold || 0}
+          value={formData.lowStockThreshold || ''}
           error={!!errors['lowStockThreshold']}
         />
       </Box>
@@ -307,7 +307,7 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
-          value={formData.criticalStockThreshold || 0}
+          value={formData.criticalStockThreshold || ''}
           error={
             !!errors['criticalStockThreshold'] || !!errors['lowStockThreshold']
           }

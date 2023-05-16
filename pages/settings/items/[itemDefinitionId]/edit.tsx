@@ -16,8 +16,10 @@ import {
   CategoryResponse,
   ItemDefinitionFormData,
   ItemDefinitionResponse,
+  itemDefinitionFormSchema,
 } from 'utils/types'
 import urls from 'utils/urls'
+import transformZodErrors from 'utils/transformZodErrors'
 
 export default function ItemDefinitionEditForm() {
   const [itemDefinition, setItemDefinition] = useState<ItemDefinitionResponse>()
@@ -25,6 +27,9 @@ export default function ItemDefinitionEditForm() {
   const [attributes, setAttributes] = React.useState<AttributeResponse[]>([])
   const [itemDefinitionFormData, setItemDefinitionFormData] =
     useState<ItemDefinitionFormData>({} as ItemDefinitionFormData)
+  const [errors, setErrors] = useState<
+    Record<keyof ItemDefinitionFormData, string>
+  >({} as Record<keyof ItemDefinitionFormData, string>)
 
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -69,13 +74,11 @@ export default function ItemDefinitionEditForm() {
   const handleSubmit = async (
     itemDefinitionFormData: ItemDefinitionFormData
   ) => {
-    if (!itemDefinitionFormData.name) {
-      dispatch(
-        showSnackbar({
-          message: 'You must give the item a name.',
-          severity: 'error',
-        })
-      )
+    const zodResponse = itemDefinitionFormSchema.safeParse(
+      itemDefinitionFormData
+    )
+    if (!zodResponse.success) {
+      setErrors(transformZodErrors(zodResponse.error))
       return
     }
 
@@ -133,7 +136,7 @@ export default function ItemDefinitionEditForm() {
           onChange={(itemDefinitionFormData) =>
             setItemDefinitionFormData(itemDefinitionFormData)
           }
-          errors={{} as Record<keyof ItemDefinitionFormData, string>}
+          errors={errors as Record<keyof ItemDefinitionFormData, string>}
         />
       </DialogContent>
       <DialogActions>
