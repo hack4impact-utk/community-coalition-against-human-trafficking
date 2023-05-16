@@ -5,6 +5,7 @@ import React from 'react'
 import { dialogPush } from 'utils/dialogLink'
 import theme from 'utils/theme'
 import { ItemDefinitionResponse } from 'utils/types'
+import urls from 'utils/urls'
 
 interface Props {
   itemDefinition: ItemDefinitionResponse
@@ -33,16 +34,22 @@ export default function ItemDefinitionListItemKebab({ itemDefinition }: Props) {
     {
       name: 'Edit',
       onClick: () => {
-        dialogPush(router, `/settings/items/${itemDefinition._id}/edit`)
+        dialogPush(
+          router,
+          urls.pages.dialogs.editItemDefinition(itemDefinition._id)
+        )
       },
     },
     {
       name: 'Delete',
       onClick: async () => {
         if (window.confirm('Are you sure you want to delete this item?')) {
-          await fetch(`/api/itemDefinitions/${itemDefinition._id}`, {
-            method: 'DELETE',
-          })
+          await fetch(
+            urls.api.itemDefinitions.itemDefinition(itemDefinition._id),
+            {
+              method: 'DELETE',
+            }
+          )
           window.location.reload()
         }
       },

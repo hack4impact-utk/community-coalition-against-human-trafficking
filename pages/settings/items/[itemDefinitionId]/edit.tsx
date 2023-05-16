@@ -17,17 +17,18 @@ import {
   ItemDefinitionFormData,
   ItemDefinitionResponse,
 } from 'utils/types'
+import urls from 'utils/urls'
 
 let categories: CategoryResponse[]
 let attributes: AttributeResponse[] = [] as AttributeResponse[]
-fetch('http://localhost:3000/api/categories', {
+fetch(urls.api.categories.categories, {
   method: 'GET',
 }).then((response) => {
   response.json().then((data) => {
     categories = data.payload
   })
 })
-fetch('http://localhost:3000/api/attributes', {
+fetch(urls.api.attributes.attributes, {
   method: 'GET',
 }).then((response) => {
   response.json().then((data) => {
@@ -48,9 +49,12 @@ export default function ItemDefinitionEditForm() {
   useEffect(() => {
     const fetchItemDefinition = async () => {
       if (!id) return
-      const response = await fetch(`/api/itemDefinitions/${id}`, {
-        method: 'GET',
-      })
+      const response = await fetch(
+        urls.api.itemDefinitions.itemDefinition(id as string),
+        {
+          method: 'GET',
+        }
+      )
       const data = await response.json()
       setItemDefinition(data.payload)
     }
@@ -74,21 +78,24 @@ export default function ItemDefinitionEditForm() {
       return
     }
 
-    const response = await fetch(`/api/itemDefinitions/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        _id: id,
-        name: itemDefinitionFormData.name,
-        category: itemDefinitionFormData.category,
-        attributes: itemDefinitionFormData.attributes,
-        internal: itemDefinitionFormData.internal,
-        lowStockThreshold: itemDefinitionFormData.lowStockThreshold,
-        criticalStockThreshold: itemDefinitionFormData.criticalStockThreshold,
-      }),
-    })
+    const response = await fetch(
+      urls.api.itemDefinitions.itemDefinition(id as string),
+      {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          _id: id,
+          name: itemDefinitionFormData.name,
+          category: itemDefinitionFormData.category,
+          attributes: itemDefinitionFormData.attributes,
+          internal: itemDefinitionFormData.internal,
+          lowStockThreshold: itemDefinitionFormData.lowStockThreshold,
+          criticalStockThreshold: itemDefinitionFormData.criticalStockThreshold,
+        }),
+      }
+    )
 
-    await router.push('/settings/items')
+    await handleClose()
 
     const data = await response.json()
     if (data.success) {
@@ -108,8 +115,8 @@ export default function ItemDefinitionEditForm() {
     }
   }
 
-  const handleClose = () => {
-    router.push('/settings/items')
+  const handleClose = async () => {
+    await router.push(urls.pages.settings.itemDefinitions)
   }
 
   return (
