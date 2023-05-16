@@ -26,12 +26,12 @@ const ItemDefinitionSchema = new Schema(
     lowStockThreshold: {
       type: Number,
       required: false,
-      default: -1,
+      default: 0,
     },
     criticalStockThreshold: {
       type: Number,
       required: false,
-      default: -1,
+      default: 0,
     },
     softDelete: {
       type: Boolean,
