@@ -19,6 +19,7 @@ import {
 } from 'utils/queryParams'
 import { LinearProgress } from '@mui/material'
 import { historyPaginationDefaults } from 'utils/constants'
+import DesktopHistoryListSkeleton from './DesktopHistoryListSkeleton'
 
 type Order = 'asc' | 'desc'
 
@@ -213,9 +214,17 @@ export default function DesktopHistoryList(props: Props) {
             router={router}
           />
           <TableBody>
-            {props.logs.map((log) => (
-              <HistoryListItem log={log} key={log._id} />
-            ))}
+            {props.loading ? (
+              <DesktopHistoryListSkeleton
+                rowsPerPage={Number(
+                  router.query.limit || historyPaginationDefaults.limit
+                )}
+              />
+            ) : (
+              props.logs.map((log) => (
+                <HistoryListItem log={log} key={log._id} />
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
