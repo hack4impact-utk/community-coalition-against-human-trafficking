@@ -1,15 +1,20 @@
 import InventoryItemSchema from 'server/models/InventoryItem'
+import AppConfigSchema from 'server/models/AppConfig'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import {
   InventoryItem,
   InventoryItemPostRequest,
   InventoryItemPutRequest,
+  InventoryItemResponse,
 } from 'utils/types'
 import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
 import { PipelineStage } from 'mongoose'
 import { errors } from 'utils/constants/errors'
 import deepCopy from 'utils/deepCopy'
+import { createTransport } from 'nodemailer'
+import {constructQueryString} from 'utils/constructQueryString'
+import urls from 'utils/urls'
 
 // aggregate pipeline does the following:
 // looks up itemDefinition _id in inventoryItem
@@ -350,3 +355,55 @@ export async function checkOutInventoryItem(
     throw new ApiError(404, errors.notFound)
   }
 }
+
+/**
+ * Sends an email to everyone in the email list. The email contains
+ * 1. what item needs to be stocked due to critically low status
+ * 2. what the critically low stock threshold is
+ * 3. what is the quantity of the item is now
+ * 4. the category of the critically low stock item
+ * 5. The assignee of the critically low stock item
+ * @param inventoryItem the item in the inventory that is of critically low stock
+ */
+
+export async function sendCriticallyLowStockEmail(
+  inventoryItem: InventoryItemResponse
+) {
+  //get email list using mongo driver
+  const appConfig = await MongoDriver.getEntities(AppConfigSchema)
+  const emailList = appConfig[0].emails
+  //create the email body
+  const emailBody = createEmailBody(inventoryItem)
+
+  const transporter = createTransport({
+    /*TODO: change service when deploying*/
+    service: 'gmail',
+    auth: {
+      user: process.env.FROM_EMAIL_ADDRESS,
+      pass: process.env.FROM_EMAIL_PASSWORD,
+    },
+  })
+
+  //put email credentials in env.local
+  //email options
+  const emailOptions = {
+    from: `"CCAHT" <${process.env.FROM_EMAIL_ADDRESS || ''}>`,
+    to: emailList.join(','),
+    subject: `Critically Low Stock: ${inventoryItem.itemDefinition.name}`,
+    text: emailBody,
+  };
+
+  await transporter.sendMail(emailOptions)
+};
+
+function createEmailBody(inventoryItem:InventoryItemResponse) {
+  return (`The following item is critically low in stock: \n
+Name: ${inventoryItem.itemDefinition.name}
+Category: ${inventoryItem.itemDefinition.category?.name || "-"}
+Attributes: \n    ${inventoryItem.attributes?.map(inventoryItemAttribute => `${inventoryItemAttribute.attribute.name}: ${inventoryItemAttribute.value}`).join('\n    ') || "-"}\n 
+Assignee: ${inventoryItem.assignee?.name || "-"}
+Current Quantity: ${inventoryItem.quantity} \n
+Low Stock Threshold: ${inventoryItem.itemDefinition.lowStockThreshold === 0 ? '-' : inventoryItem.itemDefinition.lowStockThreshold}
+Critically Low Stock Threshold: ${inventoryItem.itemDefinition.criticalStockThreshold === 0 ? '-' : inventoryItem.itemDefinition.criticalStockThreshold}\n
+View here: ${process.env.NEXTAUTH_URL}${urls.pages.inventory}${constructQueryString({search: inventoryItem.itemDefinition.name, category: inventoryItem.itemDefinition.category?.name || "", orderBy: 'quantity'}, true)}`
+)}

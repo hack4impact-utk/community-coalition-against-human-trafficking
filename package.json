@@ -45,6 +45,7 @@
   "devDependencies": {
     "@shelf/jest-mongodb": "^4.1.7",
     "@types/jest": "^29.4.0",
+    "@types/nodemailer": "^6.4.7",
     "@types/react-color": "^3.0.6",
     "@types/redux-persist": "^4.3.1",
     "@typescript-eslint/eslint-plugin": "^5.42.1",

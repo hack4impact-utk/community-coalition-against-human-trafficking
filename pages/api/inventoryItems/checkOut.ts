@@ -9,6 +9,7 @@ import { serverAuth } from 'utils/auth'
 import {
   checkOutInventoryItem,
   getInventoryItem,
+  sendCriticallyLowStockEmail,
 } from 'server/actions/InventoryItems'
 import { createLog } from 'server/actions/Logs'
 
@@ -41,7 +42,7 @@ export default async function inventoryItemsCheckOutHandler(
             inventoryItem.itemDefinition.criticalStockThreshold &&
           !emailSent
         ) {
-          //sendCriticallyLowStockEmail(inventoryItem)
+          sendCriticallyLowStockEmail(inventoryItem)
         }
         const log: LogPostRequest = {
           staff: checkInOutRequest.staff,
