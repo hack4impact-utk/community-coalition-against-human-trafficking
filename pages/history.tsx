@@ -26,6 +26,9 @@ import React from 'react'
 import { historyPaginationDefaults } from 'utils/constants'
 import urls from 'utils/urls'
 import { constructQueryString } from 'utils/constructQueryString'
+import useBackendPaginationCache from 'utils/hooks/useBackendPaginationCache'
+
+type Order = 'asc' | 'desc'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -76,13 +79,15 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
   const [startDate, setStartDate] = React.useState<string>('')
   const [endDate, setEndDate] = React.useState<string>('')
   const [internal, setInternal] = React.useState<boolean>(false)
+  const [orderBy, setOrderBy] = React.useState<string | undefined>(undefined)
+  const [order, setOrder] = React.useState<string | undefined>(undefined)
 
   const router = useRouter()
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   const { updateCache, cacheFor, isCached } =
     useBackendPaginationCache<LogResponse>(
-      total,
+      totalLogs,
       router.query.orderBy as string,
       router.query.order as Order
     )
@@ -110,27 +115,53 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
   React.useEffect(() => {
     const fetchLogs = async () => {
       setLoading(true)
-      if (router.query.search !== search) {
-        removeURLQueryParam(router, 'page')
-        setSearch(router.query.search as string)
+      const page = Number(router.query.page) || historyPaginationDefaults.page
+      const limit =
+        Number(router.query.limit) || historyPaginationDefaults.limit
+      if (
+        router.query.search === search &&
+        router.query.category === category &&
+        router.query.startDate === startDate &&
+        router.query.endDate === endDate &&
+        (router.query.internal === 'true') === internal &&
+        router.query.orderBy === orderBy &&
+        router.query.order === order
+      ) {
+        if (isCached(page, limit)) {
+          setTableData(cacheFor(page, limit))
+          setLoading(false)
+          return
+        }
+      } else {
+        if (router.query.search !== search) {
+          removeURLQueryParam(router, 'page')
+          setSearch(router.query.search as string)
+        }
+        if (router.query.category !== category) {
+          removeURLQueryParam(router, 'page')
+          setCategory(router.query.category as string)
+        }
+        if (router.query.startDate !== startDate) {
+          removeURLQueryParam(router, 'page')
+          setStartDate(router.query.startDate as string)
+        }
+        if (router.query.endDate !== endDate) {
+          removeURLQueryParam(router, 'page')
+          setEndDate(router.query.endDate as string)
+        }
+        if ((router.query.internal === 'true') !== internal) {
+          removeURLQueryParam(router, 'page')
+          setInternal(router.query.internal === 'true')
+        }
+        if (router.query.orderBy !== orderBy) {
+          removeURLQueryParam(router, 'page')
+          setOrderBy(router.query.orderBy as string | undefined)
+        }
+        if (router.query.order !== order) {
+          removeURLQueryParam(router, 'page')
+          setOrder(router.query.order as string | undefined)
+        }
       }
-      if (router.query.category !== category) {
-        removeURLQueryParam(router, 'page')
-        setCategory(router.query.category as string)
-      }
-      if (router.query.startDate !== startDate) {
-        removeURLQueryParam(router, 'page')
-        setStartDate(router.query.startDate as string)
-      }
-      if (router.query.endDate !== endDate) {
-        removeURLQueryParam(router, 'page')
-        setEndDate(router.query.endDate as string)
-      }
-      if ((router.query.internal === 'true') !== internal) {
-        removeURLQueryParam(router, 'page')
-        setInternal(router.query.internal === 'true')
-      }
-
       const response = await fetch(
         `${urls.api.logs.logs}${constructQueryString(
           router.query as { [key: string]: string },
@@ -142,7 +173,8 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
       )
       const { payload } = await response.json()
       setTableData(payload.data)
-      setTotalLogs(payload.total)
+      if (payload.total !== totalLogs) setTotalLogs(payload.total)
+      updateCache(payload.data, page, limit)
       setLoading(false)
     }
     fetchLogs()
