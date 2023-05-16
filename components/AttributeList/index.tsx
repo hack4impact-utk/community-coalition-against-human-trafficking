@@ -65,7 +65,7 @@ const headCells: readonly HeadCell[] = [
     label: 'Attribute Name',
     sortable: true,
     sortFn(a, b) {
-      return comparator(a.name, b.name)
+      return comparator(a.name.toLowerCase(), b.name.toLowerCase())
     },
   },
   {
@@ -164,7 +164,7 @@ export default function AttributeList({
           if (!search) return true
           const lowercaseSearch = search.toLowerCase()
           return (
-            attribute.name.toLowerCase().includes(search) ||
+            attribute.name.toLowerCase().includes(lowercaseSearch) ||
             (typeof attribute.possibleValues === 'string' &&
               attribute.possibleValues.includes(lowercaseSearch)) ||
             (typeof attribute.possibleValues === 'object' &&
