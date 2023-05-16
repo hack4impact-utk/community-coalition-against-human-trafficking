@@ -46,7 +46,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
           <SearchField />
         </Grid2>
         <CategoryList
-          categories={categories}
+          category={categories}
           search={router.query.search as string}
         />
       </Grid2>
