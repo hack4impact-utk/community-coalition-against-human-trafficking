@@ -34,7 +34,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
           <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
             Categories
           </Typography>
-          <Grid2 ml={isMobileView ? '0' : 'auto'}>
+          <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
             <DialogLink href={urls.pages.dialogs.createCategory}>
               <Button variant="outlined" sx={{ width: '100%' }}>
                 Create New Category
