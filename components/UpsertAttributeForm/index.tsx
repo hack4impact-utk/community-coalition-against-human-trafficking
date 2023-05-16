@@ -7,6 +7,7 @@ import {
   Radio,
   RadioGroup,
   TextField,
+  Typography,
   Unstable_Grid2 as Grid2,
 } from '@mui/material'
 import React, { useEffect } from 'react'
@@ -28,7 +29,6 @@ function transformAttributeToFormData(
     return {
       name: '',
       color: '#ebebeb',
-      valueType: 'text',
       listOptions: [],
     }
 
@@ -117,18 +117,26 @@ export default function UpsertAttributeForm({
               }}
               value={formData.valueType}
             >
+              <FormControlLabel
+                value="list"
+                control={<Radio />}
+                label="Choose from List"
+              />
               <FormControlLabel value="text" control={<Radio />} label="Text" />
               <FormControlLabel
                 value="number"
                 control={<Radio />}
                 label="Number"
               />
-              <FormControlLabel
-                value="list"
-                control={<Radio />}
-                label="Choose from List"
-              />
             </RadioGroup>
+            {errors.valueType && (
+              <Typography
+                variant="caption"
+                color={(theme) => theme.palette.error.main}
+              >
+                Must select one.
+              </Typography>
+            )}
           </FormControl>
         </Grid2>
         {formData?.valueType == 'list' && (
