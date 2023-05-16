@@ -15,9 +15,9 @@ export default function CategoryList({ search, category }: CategoryListProps) {
   return (
     <>
       {isMobileView ? (
-        <MobileCategoryList categories={category} search={''} />
+        <MobileCategoryList categories={category} search={search} />
       ) : (
-        <DesktopCategoryList categories={category} search={''} />
+        <DesktopCategoryList categories={category} search={search} />
       )}
     </>
   )

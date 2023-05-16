@@ -160,7 +160,7 @@ export default function MobileCategoryList(props: Props) {
     }
     setTableData(newTableData)
     let rowsOnMount = sortTable(newTableData, orderBy, order)
-    rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
+    rowsOnMount = rowsOnMount
 
     setPage(0)
 
