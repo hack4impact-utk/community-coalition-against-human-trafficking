@@ -5,7 +5,7 @@ import {
   InventoryItemAttribute,
   ItemDefinition,
   Log,
-  NotificationEmail,
+  AppConfig,
   User,
 } from '.'
 
@@ -28,6 +28,11 @@ export interface InventoryItemResponse extends InventoryItem {
   assignee?: UserResponse
   itemDefinition: ItemDefinitionResponse
   attributes?: InventoryItemAttributeResponse[]
+}
+
+export interface InventoryItemExistingAttributeValuesResponse {
+  _id: string
+  values: (string | number)[]
 }
 
 export interface CategoryResponse extends Category {
@@ -61,9 +66,11 @@ export interface PaginatedResponse<T> {
   data: T[]
 }
 
-export interface NotificationEmailResponse extends NotificationEmail {
+export interface AppConfigResponse extends AppConfig {
   _id: string
+  defaultAttributes: AttributeResponse[]
 }
+
 export type ServerResponse =
   | UserResponse
   | ItemDefinitionResponse

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import React from 'react'
 import { useMemo } from 'react'
 import { DialogRoute, dialogRoutes } from 'utils/constants'
@@ -58,27 +59,30 @@ const constructDialogRoute = (
 
 export default function DialogLink({ href, children }: Props) {
   const [params, setParams] = React.useState<{ [key: string]: string }>({})
+  const router = useRouter()
   const dialogRoute = useMemo(() => {
+    if (router.query.showDialog) return
     const attemptedDr = dialogRoutes.find((dr) => dr.path === href)
+    setParams({ ...(router.query as { [key: string]: string }) })
     if (!attemptedDr) {
       // try and find matching result from defined hrefs
       for (const dr of dialogRoutes) {
         const mr = matchParams(href, dr.path)
         if (mr.success) {
-          setParams(mr.params)
+          setParams((params) => ({
+            ...params,
+            ...mr.params,
+          }))
           return dr
-        } else {
-          setParams({})
         }
       }
     }
     return attemptedDr
-  }, [href])
+  }, [href, router.query])
 
-  const constructedHref = useMemo(
-    () => constructDialogRoute(params, dialogRoute),
-    [dialogRoute, params]
-  )
+  const constructedHref = useMemo(() => {
+    return constructDialogRoute(params, dialogRoute)
+  }, [dialogRoute, params])
   return (
     <Link
       href={constructedHref}

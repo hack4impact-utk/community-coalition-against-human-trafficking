@@ -17,6 +17,8 @@ import {
 } from 'utils/types'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
+import urls from 'utils/urls'
+import { bulkRemoveURLQueryParams } from 'utils/queryParams'
 
 export default function AttributeEditDialog() {
   // you have to do this to otherwise the AttributeForm says that
@@ -38,7 +40,12 @@ export default function AttributeEditDialog() {
   useEffect(() => {
     const fetchAttribute = async () => {
       if (!id) return // on page load, id is undefined, resulting in bad requests
-      const response = await fetch(`/api/attributes/${id}`, { method: 'GET' })
+      const response = await fetch(
+        urls.api.attributes.attribute(id as string),
+        {
+          method: 'GET',
+        }
+      )
       const data = await response.json()
       setAttribute(data.payload)
     }
@@ -53,24 +60,27 @@ export default function AttributeEditDialog() {
         return
       }
       // update attribute
-      const response = await fetch(`/api/attributes/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          _id: id,
-          name: attributeFormData.name,
-          color: attributeFormData.color,
-          possibleValues:
-            attributeFormData.valueType === 'list'
-              ? attributeFormData.listOptions
-              : attributeFormData.valueType,
-        }),
-      })
+      const response = await fetch(
+        urls.api.attributes.attribute(id as string),
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            _id: id,
+            name: attributeFormData.name,
+            color: attributeFormData.color,
+            possibleValues:
+              attributeFormData.valueType === 'list'
+                ? attributeFormData.listOptions
+                : attributeFormData.valueType,
+          }),
+        }
+      )
       // handle snackbar logic
       const data = await response.json()
 
       // close dialog
-      await router.push('/settings/attributes')
+      await handleClose()
 
       if (data.success) {
         dispatch(
@@ -91,9 +101,9 @@ export default function AttributeEditDialog() {
     [id, router]
   )
 
-  const handleClose = () => {
-    router.push('/settings/attributes')
-  }
+  const handleClose = React.useCallback(async () => {
+    await bulkRemoveURLQueryParams(router, ['showDialog', 'id'])
+  }, [router])
 
   return (
     <>

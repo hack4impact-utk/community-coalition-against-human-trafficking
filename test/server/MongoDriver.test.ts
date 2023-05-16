@@ -2,7 +2,6 @@ import CategorySchema from 'server/models/Category'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import { ApiError } from 'utils/types'
 import mongoose from 'mongoose'
-import { clientPromise } from '@api/auth/[...nextauth]'
 import { errors } from 'utils/constants/errors'
 import { validCategoryResponse, mockObjectId } from 'test/testData'
 

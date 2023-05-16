@@ -7,13 +7,13 @@ import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
-import { clientPromise } from '@api/auth/[...nextauth]'
 import { errors } from 'utils/constants/errors'
 import {
   validCategoryResponse,
   mockObjectId,
   validCategoryPostRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -37,7 +37,7 @@ describe('api/categories', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: '/api/categories',
+      url: urls.api.categories.categories,
     })
     const response = createResponse()
 
@@ -53,7 +53,7 @@ describe('api/categories', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'HEAD',
-      url: '/api/categories',
+      url: urls.api.categories.categories,
     })
     const response = createResponse()
 
@@ -79,7 +79,7 @@ describe('api/categories', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/categories`,
+        url: urls.api.categories.categories,
       })
 
       const response = createResponse()
@@ -103,7 +103,7 @@ describe('api/categories', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/categories`,
+        url: urls.api.categories.categories,
       })
 
       const response = createResponse()
@@ -134,7 +134,7 @@ describe('api/categories', () => {
 
       const request = createRequest({
         method: 'POST',
-        url: `/api/categories`,
+        url: urls.api.categories.categories,
         body: validCategoryPostRequest,
       })
 

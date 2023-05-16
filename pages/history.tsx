@@ -24,6 +24,8 @@ import MobileHistoryList from 'components/HistoryList/MobileHistoryList'
 import { Clear } from '@mui/icons-material'
 import React from 'react'
 import { historyPaginationDefaults } from 'utils/constants'
+import urls from 'utils/urls'
+import { constructQueryString } from 'utils/constructQueryString'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -65,13 +67,6 @@ const renderInternalCheckbox = (router: NextRouter, isMobileView: boolean) => {
   )
 }
 
-const constructQueryString = (params: { [key: string]: string }) => {
-  if (Object.keys(params).length === 0) return ''
-  return `?${Object.entries(params)
-    .map(([key, value]) => `${key}=${value}`)
-    .join('&')}`
-}
-
 export default function HistoryPage({ categories }: HistoryPageProps) {
   const [tableData, setTableData] = React.useState<LogResponse[]>([])
   const [totalLogs, setTotalLogs] = React.useState<number>(
@@ -89,8 +84,9 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
 
   const handleExport = async () => {
-    const requestStr = `http://localhost:3000/api/logs/export${constructQueryString(
-      router.query as { [key: string]: string }
+    const requestStr = `${urls.api.logs.export}${constructQueryString(
+      router.query as { [key: string]: string },
+      true
     )}`
 
     const response = await fetch(requestStr, {
@@ -132,8 +128,9 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
       }
 
       const response = await fetch(
-        `http://localhost:3000/api/logs${constructQueryString(
-          router.query as { [key: string]: string }
+        `${urls.api.logs.logs}${constructQueryString(
+          router.query as { [key: string]: string },
+          true
         )}`,
         {
           method: 'GET',
@@ -215,6 +212,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
             }}
           >
             <DatePicker
+              disableFuture
               label="Start Date"
               renderInput={(params) => (
                 <Box
@@ -259,6 +257,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
               <HorizontalRuleIcon sx={{ color: theme.palette.grey['500'] }} />
             </Box>
             <DatePicker
+              disableFuture
               label="End Date"
               renderInput={(params) => (
                 <Box
@@ -311,6 +310,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
           endDate={router.query.endDate as string}
           startDate={router.query.startDate as string}
           internal={!!router.query.internal}
+          total={totalLogs}
           setTableData={setTableData}
         />
       ) : (

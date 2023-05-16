@@ -19,7 +19,6 @@ import {
 } from 'utils/types'
 import { GetServerSidePropsContext } from 'next'
 import usersHandler from '@api/users'
-import itemDefinitionsHandler from '@api/itemDefinitions'
 import { apiWrapper } from 'utils/apiWrappers'
 import categoriesHandler from '@api/categories'
 import { useRouter } from 'next/router'
@@ -29,12 +28,14 @@ import { checkInOutFormDataToCheckInOutRequest } from 'utils/transformations'
 import { showSnackbar } from 'store/snackbar'
 import transformZodErrors from 'utils/transformZodErrors'
 import { LoadingButton } from '@mui/lab'
+import urls from 'utils/urls'
+import presentItemDefinitionsHandler from '@api/itemDefinitions/present'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       categories: await apiWrapper(categoriesHandler, context),
-      itemDefinitions: await apiWrapper(itemDefinitionsHandler, context),
+      itemDefinitions: await apiWrapper(presentItemDefinitionsHandler, context),
       users: await apiWrapper(usersHandler, context),
     },
   }
@@ -53,9 +54,13 @@ export default function CheckOutPage({
   const theme = useTheme()
   const router = useRouter()
   const [errors, setErrors] = React.useState<Record<string, string>>({})
-  const inventoryItem = !!router.query.inventoryItem
-    ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
-    : undefined
+  const inventoryItem = React.useMemo(
+    () =>
+      !!router.query.inventoryItem
+        ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
+        : undefined,
+    [router.query.inventoryItem]
+  )
   const dispatch = useAppDispatch()
 
   const isMobileView = useMediaQuery(theme.breakpoints.down('sm'))
@@ -89,8 +94,7 @@ export default function CheckOutPage({
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
-    // TODO better way of coding URLs
-    const response = await fetch(`/api/inventoryItems/checkOut`, {
+    const response = await fetch(urls.api.inventoryItems.checkOut, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -109,17 +113,17 @@ export default function CheckOutPage({
           severity: 'success',
         })
       )
+      setFormData((formData) => {
+        return {
+          user: formData.user,
+          date: new Date(),
+          quantityDelta: 0,
+        } as CheckInOutFormData
+      })
     } else {
       // @ts-ignore
       dispatch(showSnackbar({ message: data.message, severity: 'error' }))
     }
-    setFormData((formData) => {
-      return {
-        user: formData.user,
-        date: new Date(),
-        quantityDelta: 0,
-      } as CheckInOutFormData
-    })
   }
 
   const kioskMode = useAppSelector((state) => state.kiosk)

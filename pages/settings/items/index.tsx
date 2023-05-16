@@ -16,6 +16,8 @@ import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
 import NewItemPage from 'pages/items/new'
 import ItemDefinitionEditForm from './[itemDefinitionId]/edit'
+import urls from 'utils/urls'
+import { bulkRemoveURLQueryParams } from 'utils/queryParams'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -41,11 +43,8 @@ export default function ItemsPage({ itemDefinitions }: Props) {
             Items
           </Typography>
           <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
-            <DialogLink href="/items/new" backHref="/settings/items">
-              <Button
-                variant="outlined"
-                sx={{ width: '100%' }}
-              >
+            <DialogLink href={urls.pages.dialogs.createItemDefinition}>
+              <Button variant="outlined" sx={{ width: '100%' }}>
                 Create New Item
               </Button>
             </DialogLink>
@@ -62,7 +61,7 @@ export default function ItemsPage({ itemDefinitions }: Props) {
       <RoutableDialog name="createItem">
         <NewItemPage
           redirectBack={async (router) => {
-            await router.push(`/settings/items`)
+            await bulkRemoveURLQueryParams(router, ['showDialog', 'id'])
           }}
         />
       </RoutableDialog>

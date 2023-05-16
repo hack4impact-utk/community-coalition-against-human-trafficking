@@ -7,13 +7,13 @@ import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
-import { clientPromise } from '@api/auth/[...nextauth]'
 import { errors } from 'utils/constants/errors'
 import {
   validUserResponse,
   mockObjectId,
   validUserPutRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(apiValidator, 'apiObjectIdValidation').mockImplementation()
@@ -47,7 +47,7 @@ describe('api/users/[userId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: `/api/users/${mockObjectId}`,
+      url: urls.api.users.user(mockObjectId),
       query: {
         userId: mockObjectId,
       },
@@ -66,7 +66,7 @@ describe('api/users/[userId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: `/api/users/${mockObjectId}`,
+      url: urls.api.users.user(mockObjectId),
       query: {
         userId: mockObjectId,
       },
@@ -92,7 +92,7 @@ describe('api/users/[userId]', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/users/${mockObjectId}`,
+        url: urls.api.users.user(mockObjectId),
         query: {
           userId: mockObjectId,
         },
@@ -128,7 +128,7 @@ describe('api/users/[userId]', () => {
 
       const request = createRequest({
         method: 'PUT',
-        url: `/api/users/${mockObjectId}`,
+        url: urls.api.users.user(mockObjectId),
         query: {
           userId: mockObjectId,
         },
@@ -160,7 +160,7 @@ describe('api/users/[userId]', () => {
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: `/api/users/${mockObjectId}`,
+        url: urls.api.users.user(mockObjectId),
         query: {
           userId: mockObjectId,
         },

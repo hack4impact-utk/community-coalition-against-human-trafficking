@@ -1,3 +1,5 @@
+import urls from 'utils/urls'
+
 export { default } from 'next-auth/middleware'
 
 export const config = {

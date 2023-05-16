@@ -2,19 +2,19 @@ import { ObjectId } from 'mongodb'
 import ItemDefinitionSchema, {
   ItemDefinitionDocument,
 } from 'server/models/ItemDefinition'
-import { ApiError, ItemDefinitionResponse } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { createRequest, createResponse } from 'node-mocks-http'
-import itemDefinitionHandler from 'pages/api/itemDefinitions/[itemDefinitionId]'
+import itemDefinitionHandler from '@api/itemDefinitions/[itemDefinitionId]'
 import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
-import { clientPromise } from '@api/auth/[...nextauth]'
 import { errors } from 'utils/constants/errors'
 import {
   validItemDefinitionResponse,
   mockObjectId,
   validItemDefinitionPutRequest,
 } from 'test/testData'
+import urls from 'utils/urls'
 
 // TODO: add assertion for GET 'called with' aggregate stuff
 // this may need to have different functionality
@@ -37,7 +37,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: `/api/itemDefinitions/${mockObjectId}`,
+      url: urls.api.itemDefinitions.itemDefinition(mockObjectId),
       query: {
         itemDefinitionId: mockObjectId,
       },
@@ -56,7 +56,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'POST',
-      url: `/api/itemDefinitions/${mockObjectId}`,
+      url: urls.api.itemDefinitions.itemDefinition(mockObjectId),
       query: {
         itemDefinitionId: mockObjectId,
       },
@@ -84,7 +84,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/itemDefinitions/${mockObjectId}`,
+        url: urls.api.itemDefinitions.itemDefinition(mockObjectId),
         query: {
           itemDefinitionId: mockObjectId,
         },
@@ -119,7 +119,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
 
       const request = createRequest({
         method: 'PUT',
-        url: `/api/itemDefinitions/${mockObjectId}`,
+        url: urls.api.itemDefinitions.itemDefinition(mockObjectId),
         query: {
           itemDefinitionId: mockObjectId,
         },
@@ -151,7 +151,7 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
         .mockImplementation(async () => {})
       const request = createRequest({
         method: 'DELETE',
-        url: `/api/itemDefinitions/${mockObjectId}`,
+        url: urls.api.itemDefinitions.itemDefinition(mockObjectId),
         query: {
           itemDefinitionId: mockObjectId,
         },

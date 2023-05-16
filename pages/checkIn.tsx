@@ -34,6 +34,7 @@ import RoutableDialog from 'components/RoutableDialog'
 import NewItemPage from './items/new'
 import { showSnackbar } from 'store/snackbar'
 import { LoadingButton } from '@mui/lab'
+import urls from 'utils/urls'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -60,9 +61,13 @@ export default function CheckInPage({
   const router = useRouter()
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const dispatch = useAppDispatch()
-  const inventoryItem = !!router.query.inventoryItem
-    ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
-    : undefined
+  const inventoryItem = React.useMemo(
+    () =>
+      !!router.query.inventoryItem
+        ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
+        : undefined,
+    [router.query.inventoryItem]
+  )
   const [defaultItemDef, setDefaultItemDef] = React.useState(
     itemDefinitions.find((id) => id._id === router.query.item)
   )
@@ -105,20 +110,12 @@ export default function CheckInPage({
     const checkInOutRequest: CheckInOutRequest =
       checkInOutFormDataToCheckInOutRequest(formData)
 
-    // TODO better way of coding URLs
-    const response = await fetch(`/api/inventoryItems/checkIn`, {
+    const response = await fetch(urls.api.inventoryItems.checkIn, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(checkInOutRequest),
-    })
-    setFormData((formData) => {
-      return {
-        user: formData.user,
-        date: new Date(),
-        quantityDelta: 0,
-      } as CheckInOutFormData
     })
 
     const data = await response.json()
@@ -132,6 +129,13 @@ export default function CheckInPage({
           severity: 'success',
         })
       )
+      setFormData((formData) => {
+        return {
+          user: formData.user,
+          date: new Date(),
+          quantityDelta: 0,
+        } as CheckInOutFormData
+      })
     } else {
       // @ts-ignore
       dispatch(showSnackbar({ message: data.message, severity: 'error' }))
@@ -150,11 +154,8 @@ export default function CheckInPage({
                     Check in items
                   </Typography>
                   <Grid2 ml="auto">
-                    <DialogLink href="/items/new">
-                      <Button
-                        variant="outlined"
-                        sx={{ width: '100%' }}
-                      >
+                    <DialogLink href={urls.pages.dialogs.createItemDefinition}>
+                      <Button variant="outlined" sx={{ width: '100%' }}>
                         Create New Item
                       </Button>
                     </DialogLink>
@@ -190,8 +191,10 @@ export default function CheckInPage({
       </Grid2>
       <RoutableDialog>
         <NewItemPage
-          redirectBack={async (router, itemId) => {
-            await router.push(`/checkIn?item=${itemId}`)
+          redirectBack={async (router, itemId?) => {
+            if (itemId)
+              await router.push(`${urls.pages.checkIn}?item=${itemId}`)
+            else await router.push(urls.pages.checkIn)
           }}
         />
       </RoutableDialog>

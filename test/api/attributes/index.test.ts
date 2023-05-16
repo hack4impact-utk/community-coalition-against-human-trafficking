@@ -7,9 +7,9 @@ import * as auth from 'utils/auth'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import * as apiValidator from 'utils/apiValidators'
 import mongoose from 'mongoose'
-import { clientPromise } from '@api/auth/[...nextauth]'
 import { errors } from 'utils/constants/errors'
 import { validAttributeResponse, mockObjectId } from 'test/testData'
+import urls from 'utils/urls'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -33,7 +33,7 @@ describe('api/attributes', () => {
 
     const request = createRequest({
       method: 'GET',
-      url: '/api/attributes',
+      url: urls.api.attributes.attributes,
     })
     const response = createResponse()
 
@@ -49,7 +49,7 @@ describe('api/attributes', () => {
   test('unsupported method returns 405', async () => {
     const request = createRequest({
       method: 'HEAD',
-      url: '/api/attributes',
+      url: urls.api.attributes.attributes,
     })
     const response = createResponse()
 
@@ -75,7 +75,7 @@ describe('api/attributes', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/attributes`,
+        url: urls.api.attributes.attributes,
       })
 
       const response = createResponse()
@@ -99,7 +99,7 @@ describe('api/attributes', () => {
 
       const request = createRequest({
         method: 'GET',
-        url: `/api/attributes`,
+        url: urls.api.attributes.attributes,
       })
 
       const response = createResponse()
@@ -130,7 +130,7 @@ describe('api/attributes', () => {
 
       const request = createRequest({
         method: 'POST',
-        url: `/api/attributes`,
+        url: urls.api.attributes.attributes,
         body: validAttributeResponse,
       })
 

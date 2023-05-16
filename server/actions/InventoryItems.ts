@@ -1,16 +1,20 @@
 import InventoryItemSchema from 'server/models/InventoryItem'
+import AppConfigSchema from 'server/models/AppConfig'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import {
   InventoryItem,
   InventoryItemPostRequest,
   InventoryItemPutRequest,
-  InventoryItemRequest,
+  InventoryItemResponse,
 } from 'utils/types'
 import { ApiError } from 'utils/types'
 import { apiInventoryItemValidation } from 'utils/apiValidators'
 import { PipelineStage } from 'mongoose'
 import { errors } from 'utils/constants/errors'
 import deepCopy from 'utils/deepCopy'
+import { createTransport } from 'nodemailer'
+import { constructQueryString } from 'utils/constructQueryString'
+import urls from 'utils/urls'
 
 // aggregate pipeline does the following:
 // looks up itemDefinition _id in inventoryItem
@@ -127,6 +131,70 @@ const softDeleteRequestPipeline: PipelineStage[] = [
   },
 ]
 
+function searchAggregate(search: string): PipelineStage[] {
+  return [
+    // pull each attributes.attribute out of the array into its own document
+    {
+      $unwind: '$attributes',
+    },
+
+    // create a new field as "attributeSearch": `${attributeName}: ${attributeValue}`
+    {
+      $set: {
+        attributeSearch: {
+          $concat: [
+            '$attributes.attribute.name',
+            ': ',
+            { $toString: '$attributes.value' },
+          ],
+        },
+      },
+    },
+
+    // recombine the documents from the unwind (most fields remain untouched),
+    // adding the attributeSearch values as an array
+    {
+      $group: {
+        _id: '$_id',
+        itemDefinition: { $first: '$itemDefinition' },
+        attributes: { $addToSet: '$attributes' },
+        quantity: { $first: '$quantity' },
+        attributeSearch: { $addToSet: '$attributeSearch' },
+        assignee: { $first: '$assignee' },
+      },
+    },
+
+    {
+      $match: {
+        $or: [
+          { 'itemDefinition.name': { $regex: search, $options: 'i' } },
+          {
+            'itemDefinition.category.name': {
+              $regex: search,
+              $options: 'i',
+            },
+          },
+          { 'assignee.name': { $regex: search, $options: 'i' } },
+          { attributeSearch: { $regex: search, $options: 'i' } },
+        ],
+      },
+    },
+
+    // removes the attributeSearch array
+    {
+      $unset: 'attributeSearch',
+    },
+  ]
+}
+
+function categorySearchAggregate(category: string): PipelineStage {
+  return {
+    $match: {
+      'itemDefinition.category.name': category,
+    },
+  }
+}
+
 /**
  * Finds all inventoryItems that do not have the softDelete flag
  * @returns All inventoryItems that do not have the softDelete flag
@@ -136,6 +204,69 @@ export async function getInventoryItems() {
     InventoryItemSchema,
     softDeleteRequestPipeline
   )
+}
+
+/**
+ * Filter and sort inventory items by params and return the filtered inventory items
+ * @param orderBy The string to sort the inventory item by
+ * @param order The order to sort the inventory items by
+ * @param search The string to search the inventory items by
+ * @param categorySearch The string to search the inventory items by category
+ * @returns Filtered inventory items
+ */
+export async function getFilteredInventoryItems(
+  orderBy: string,
+  order: string,
+  search?: string,
+  categorySearch?: string
+) {
+  let pipeline = [...softDeleteRequestPipeline]
+  if (search) {
+    pipeline = pipeline.concat(searchAggregate(search))
+  }
+  if (categorySearch) {
+    pipeline.push(categorySearchAggregate(categorySearch))
+  }
+  pipeline.push({
+    $sort: {
+      [orderBy]: order === 'asc' ? 1 : -1,
+    },
+  })
+
+  return await MongoDriver.getEntities(InventoryItemSchema, pipeline)
+}
+
+/**
+ * Finds inventory items for the current page with the given page size and sorting
+ * @param page The current page to get
+ * @param pageSize The number of inventory items to get per page
+ * @param orderBy The string to sort the inventory items by
+ * @param order The order to sort the inventory items by
+ * @param search The string to search the inventory items by
+ * @param categorySearch The string to search the inventory items by category
+ * @returns The inventory items for the current page
+ */
+export async function getPaginatedInventoryItems(
+  page: number,
+  limit: number,
+  orderBy: string,
+  order: string,
+  search?: string,
+  categorySearch?: string
+) {
+  const filteredItems = await getFilteredInventoryItems(
+    orderBy,
+    order,
+    search,
+    categorySearch
+  )
+  const startIndex = page * limit
+  const endIndex = page * limit + limit
+  const items = filteredItems.slice(startIndex, endIndex)
+  return {
+    data: items,
+    total: filteredItems.length,
+  }
 }
 
 /**
@@ -223,4 +354,80 @@ export async function checkOutInventoryItem(
   } else {
     throw new ApiError(404, errors.notFound)
   }
+}
+
+/**
+ * Sends an email to everyone in the email list. The email contains
+ * 1. what item needs to be stocked due to critically low status
+ * 2. what the critically low stock threshold is
+ * 3. what is the quantity of the item is now
+ * 4. the category of the critically low stock item
+ * 5. The assignee of the critically low stock item
+ * @param inventoryItem the item in the inventory that is of critically low stock
+ */
+
+export async function sendCriticallyLowStockEmail(
+  inventoryItem: InventoryItemResponse
+) {
+  //get email list using mongo driver
+  const appConfig = await MongoDriver.getEntities(AppConfigSchema)
+  const emailList = appConfig[0].emails
+  //create the email body
+  const emailBody = createEmailBody(inventoryItem)
+
+  const transporter = createTransport({
+    /*TODO: change service when deploying*/
+    service: 'gmail',
+    auth: {
+      user: process.env.FROM_EMAIL_ADDRESS,
+      pass: process.env.FROM_EMAIL_PASSWORD,
+    },
+  })
+
+  //put email credentials in env.local
+  //email options
+  const emailOptions = {
+    from: `"CCAHT" <${process.env.FROM_EMAIL_ADDRESS || ''}>`,
+    to: emailList.join(','),
+    subject: `Critically Low Stock: ${inventoryItem.itemDefinition.name}`,
+    text: emailBody,
+  }
+
+  await transporter.sendMail(emailOptions)
+}
+
+function createEmailBody(inventoryItem: InventoryItemResponse) {
+  return `The following item is critically low in stock: \n
+Name: ${inventoryItem.itemDefinition.name}
+Category: ${inventoryItem.itemDefinition.category?.name || '-'}
+Attributes: \n    ${
+    inventoryItem.attributes
+      ?.map(
+        (inventoryItemAttribute) =>
+          `${inventoryItemAttribute.attribute.name}: ${inventoryItemAttribute.value}`
+      )
+      .join('\n    ') || '-'
+  }\n 
+Assignee: ${inventoryItem.assignee?.name || '-'}
+Current Quantity: ${inventoryItem.quantity} \n
+Low Stock Threshold: ${
+    inventoryItem.itemDefinition.lowStockThreshold === 0
+      ? '-'
+      : inventoryItem.itemDefinition.lowStockThreshold
+  }
+Critically Low Stock Threshold: ${
+    inventoryItem.itemDefinition.criticalStockThreshold === 0
+      ? '-'
+      : inventoryItem.itemDefinition.criticalStockThreshold
+  }\n
+View here: ${process.env.NEXTAUTH_URL}${
+    urls.pages.inventory
+  }${constructQueryString(
+    {
+      search: inventoryItem.itemDefinition.name,
+      category: inventoryItem.itemDefinition.category?.name || '',
+      orderBy: 'quantity',
+    },
+    true
+  )}`
 }

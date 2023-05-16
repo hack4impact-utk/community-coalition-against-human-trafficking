@@ -5,62 +5,20 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   TableSortLabel,
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
 import { AttributeResponse } from 'utils/types'
-import { useState, useEffect, useCallback } from 'react'
 import AttributeListItem from './AttributeListItem'
+import usePagination from 'utils/hooks/usePagination'
+import React from 'react'
+import SettingsTablePagination from 'components/SettingsTablePagination'
 
 interface AttributeTableData extends AttributeResponse {
   kebab: string
 }
-
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1
-  }
-  return 0
-}
-
 type Order = 'asc' | 'desc'
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function getComparator<Key extends keyof any>(
-  order: Order,
-  orderBy: Key
-): (
-  a: { [key in Key]: number | string | string[] },
-  b: { [key in Key]: number | string | string[] }
-) => number {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy)
-}
-
-// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
-// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
-// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
-// with exampleArray.slice().sort(exampleComparator)
-function stableSort<T>(
-  array: readonly T[],
-  comparator: (a: T, b: T) => number
-) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0])
-    if (order !== 0) {
-      return order
-    }
-    return a[1] - b[1]
-  })
-  return stabilizedThis.map((el) => el[0])
-}
 
 interface HeadCell {
   disablePadding: boolean
@@ -68,6 +26,35 @@ interface HeadCell {
   label: string
   numeric: boolean
   sortable?: boolean
+  sortFn?(a: AttributeResponse, b: AttributeResponse): number
+}
+
+function sortTable(
+  tableData: AttributeResponse[],
+  sortBy: keyof AttributeTableData,
+  order: Order
+): AttributeResponse[] {
+  const orderByHeadCell = headCells.filter(
+    (headCell) => headCell.id === sortBy.toString()
+  )[0]
+
+  return tableData.sort((a: AttributeResponse, b: AttributeResponse) =>
+    order === 'asc'
+      ? orderByHeadCell.sortFn!(a, b)
+      : orderByHeadCell.sortFn!(b, a)
+  )
+}
+
+function comparator(v1: string, v2: string) {
+  if (v1 < v2) {
+    return -1
+  }
+
+  if (v1 > v2) {
+    return 1
+  }
+
+  return 0
 }
 
 const headCells: readonly HeadCell[] = [
@@ -77,6 +64,9 @@ const headCells: readonly HeadCell[] = [
     disablePadding: true,
     label: 'Attribute Name',
     sortable: true,
+    sortFn(a, b) {
+      return comparator(a.name.toLowerCase(), b.name.toLowerCase())
+    },
   },
   {
     id: 'possibleValues',
@@ -166,33 +156,15 @@ export default function AttributeList({
   attributes,
   search,
 }: AttributeListProps) {
-  const [order, setOrder] = useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] =
-    useState<keyof AttributeTableData>(DEFAULT_ORDER_BY)
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = useState<AttributeTableData[] | null>(
-    null
-  )
-  const [tableData, setTableData] = useState<AttributeTableData[]>([])
-
-  useEffect(() => {
-    let newTableData = attributes.map((attribute) => {
-      return {
-        _id: attribute._id,
-        name: attribute.name,
-        possibleValues: attribute.possibleValues,
-        color: attribute.color,
-        kebab: '',
-      }
-    })
-
-    if (search) {
-      const lowercaseSearch = search.toLowerCase()
-      newTableData = [
-        ...newTableData.filter((attribute) => {
+  const searches = React.useMemo(
+    () => [
+      {
+        search,
+        filterFn: (attribute: AttributeResponse, search: string) => {
+          if (!search) return true
+          const lowercaseSearch = search.toLowerCase()
           return (
-            attribute.name.toLowerCase().includes(search) ||
+            attribute.name.toLowerCase().includes(lowercaseSearch) ||
             (typeof attribute.possibleValues === 'string' &&
               attribute.possibleValues.includes(lowercaseSearch)) ||
             (typeof attribute.possibleValues === 'object' &&
@@ -201,97 +173,39 @@ export default function AttributeList({
                 .join(' ')
                 .includes(lowercaseSearch))
           )
-        }),
-      ]
-    }
-
-    setTableData(newTableData)
-    let rowsOnMount = stableSort(
-      newTableData,
-      getComparator(DEFAULT_ORDER, DEFAULT_ORDER_BY)
-    )
-    rowsOnMount = rowsOnMount.slice(
-      0 * DEFAULT_ROWS_PER_PAGE,
-      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
-    )
-
-    setVisibleRows(rowsOnMount)
-  }, [search, attributes])
-
-  const handleRequestSort = useCallback(
-    (
-      event: React.MouseEvent<unknown>,
-      newOrderBy: keyof AttributeTableData
-    ) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder = isAsc ? 'desc' : 'asc'
-      setOrder(toggledOrder)
-      setOrderBy(newOrderBy)
-
-      const sortedRows = stableSort(
-        tableData,
-        getComparator(toggledOrder, newOrderBy)
-      )
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
-      setVisibleRows(updatedRows)
-    },
-    [order, orderBy, page, rowsPerPage, tableData]
+        },
+      },
+    ],
+    [search]
   )
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
-    const updatedRows = sortedRows.slice(
-      newPage * rowsPerPage,
-      newPage * rowsPerPage + rowsPerPage
-    )
-    setVisibleRows(updatedRows)
-  }
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(updatedRowsPerPage)
-    setPage(0)
-
-    const sortedRows = stableSort(tableData, getComparator(order, orderBy))
-    const updatedRows = sortedRows.slice(
-      0 * updatedRowsPerPage,
-      0 * updatedRowsPerPage + updatedRowsPerPage
-    )
-    setVisibleRows(updatedRows)
-  }
+  const pagination = usePagination<AttributeResponse, keyof AttributeTableData>(
+    attributes,
+    DEFAULT_ROWS_PER_PAGE,
+    DEFAULT_ORDER_BY,
+    DEFAULT_ORDER,
+    sortTable,
+    searches
+  )
 
   return (
     <Box sx={{ width: '100%' }}>
+      <SettingsTablePagination {...pagination} />
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <AttributeListHeader
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            order={pagination.order}
+            orderBy={pagination.orderBy}
+            onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((item) => (
+            {pagination.visibleRows &&
+              pagination.visibleRows.map((item) => (
                 <AttributeListItem attribute={item} key={item._id} />
               ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={tableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </Box>
   )
 }

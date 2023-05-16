@@ -182,6 +182,25 @@ export default function DesktopHistoryList(props: Props) {
           }}
         />
       )}
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={props.total}
+        rowsPerPage={Number(
+          router.query.limit || historyPaginationDefaults.limit.toString()
+        )}
+        page={Number(
+          router.query.page || historyPaginationDefaults.page.toString()
+        )}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          position: 'sticky',
+          top: 0,
+          backgroundColor: 'white',
+          zIndex: 999,
+        }}
+      />
       <TableContainer>
         <Table
           aria-labelledby="tableTitle"
@@ -200,19 +219,6 @@ export default function DesktopHistoryList(props: Props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={props.total}
-        rowsPerPage={Number(
-          router.query.limit || historyPaginationDefaults.limit.toString()
-        )}
-        page={Number(
-          router.query.page || historyPaginationDefaults.page.toString()
-        )}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </Box>
   )
 }

@@ -5,7 +5,7 @@ import {
   validateInventoryItemRequest,
   validateItemDefinitionRequest,
   validateLogRequest,
-  validateNotificationEmailRequest,
+  validateAppConfigRequest,
   validateUserRequest,
 } from 'utils/validators'
 import { validateObjectId, ValidationResult } from 'utils/validation'
@@ -65,11 +65,11 @@ export function apiLogValidation(
   badBodyValidationResponse(response)
 }
 
-export function apiNotificationEmailValidation(
+export function apiAppConfigValidation(
   notificationEmail: Record<string, unknown>,
   requestType?: 'PUT' | 'POST'
 ) {
-  const response = validateNotificationEmailRequest(notificationEmail, requestType)
+  const response = validateAppConfigRequest(notificationEmail, requestType)
   badBodyValidationResponse(response)
 }
 
