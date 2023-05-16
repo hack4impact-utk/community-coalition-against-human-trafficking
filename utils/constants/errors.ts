@@ -9,4 +9,6 @@ export const errors = {
   invalidReqMethod: 'Method Not Allowed',
   notFound: 'Entity does not exist',
   unauthorized: 'Unauthorized',
+  duplicate: 'Name must be unique',
+  badRequest: 'Bad Request',
 }
