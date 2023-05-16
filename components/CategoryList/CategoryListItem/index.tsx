@@ -22,13 +22,7 @@ export default function CategoryListItem({ category }: CategoryListItemProps) {
       <TableCell>
         <Grid2 container direction={isMobileView ? 'column' : 'row'}>
           <Grid2 md={12} lg={4}>
-            <Typography
-              sx={{
-                fontWeight: isMobileView ? 'bold' : 'normal',
-              }}
-              component="span"
-              variant="body1"
-            >
+            <Typography component="span" variant="body1">
               {category.name}
             </Typography>
           </Grid2>
