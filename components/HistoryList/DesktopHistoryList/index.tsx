@@ -194,6 +194,12 @@ export default function DesktopHistoryList(props: Props) {
         )}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          position: 'sticky',
+          top: 0,
+          backgroundColor: 'white',
+          zIndex: 999,
+        }}
       />
       <TableContainer>
         <Table

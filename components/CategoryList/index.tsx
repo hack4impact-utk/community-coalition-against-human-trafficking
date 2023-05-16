@@ -5,13 +5,13 @@ import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
-import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import { CategoryResponse } from 'utils/types'
 import CategoryListItem from 'components/CategoryList/CategoryListItem'
 import usePagination from 'utils/hooks/usePagination'
+import SettingsTablePagination from 'components/SettingsTablePagination'
 
 type Order = 'asc' | 'desc'
 
@@ -161,15 +161,7 @@ export default function DesktopCategoryList(props: Props) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={pagination.sortedTableData.length}
-        rowsPerPage={pagination.rowsPerPage}
-        page={pagination.page}
-        onPageChange={pagination.handleChangePage}
-        onRowsPerPageChange={pagination.handleChangeRowsPerPage}
-      />
+      <SettingsTablePagination {...pagination} />
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <CategoryListHeader

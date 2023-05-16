@@ -195,6 +195,12 @@ export default function DesktopInventoryItemList(props: Props) {
         page={Number(router.query.page || inventoryPaginationDefaults.page)}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          position: 'sticky',
+          top: 0,
+          backgroundColor: 'white',
+          zIndex: 999,
+        }}
       />
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">

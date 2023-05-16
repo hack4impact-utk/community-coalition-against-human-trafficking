@@ -6,7 +6,6 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   TableSortLabel,
   Typography,
@@ -15,6 +14,7 @@ import React from 'react'
 import { ItemDefinitionResponse } from 'utils/types'
 import ItemDefinitionListItem from 'components/ItemDefinitionList/DesktopItemDefinitionList/DesktopItemDefinitionListItem'
 import usePagination from 'utils/hooks/usePagination'
+import SettingsTablePagination from 'components/SettingsTablePagination'
 
 /// HEADER ///
 
@@ -223,15 +223,7 @@ export default function ItemDefinitionList({
   )
   return (
     <Box width={'100%'}>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={pagination.sortedTableData.length}
-        rowsPerPage={pagination.rowsPerPage}
-        page={pagination.page}
-        onPageChange={pagination.handleChangePage}
-        onRowsPerPageChange={pagination.handleChangeRowsPerPage}
-      />
+      <SettingsTablePagination {...pagination} />
       <TableContainer>
         <Table>
           <ItemDefinitionListHeader
