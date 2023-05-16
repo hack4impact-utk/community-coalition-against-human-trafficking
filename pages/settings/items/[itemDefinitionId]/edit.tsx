@@ -19,31 +19,36 @@ import {
 } from 'utils/types'
 import urls from 'utils/urls'
 
-let categories: CategoryResponse[]
-let attributes: AttributeResponse[] = [] as AttributeResponse[]
-fetch(urls.api.categories.categories, {
-  method: 'GET',
-}).then((response) => {
-  response.json().then((data) => {
-    categories = data.payload
-  })
-})
-fetch(urls.api.attributes.attributes, {
-  method: 'GET',
-}).then((response) => {
-  response.json().then((data) => {
-    attributes = data.payload
-  })
-})
-
 export default function ItemDefinitionEditForm() {
   const [itemDefinition, setItemDefinition] = useState<ItemDefinitionResponse>()
+  const [categories, setCategories] = React.useState<CategoryResponse[]>([])
+  const [attributes, setAttributes] = React.useState<AttributeResponse[]>([])
   const [itemDefinitionFormData, setItemDefinitionFormData] =
     useState<ItemDefinitionFormData>({} as ItemDefinitionFormData)
 
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const dispatch = useDispatch()
+
+  React.useEffect(() => {
+    const getCategories = async () => {
+      const response = await fetch(urls.api.categories.categories, {
+        method: 'GET',
+      })
+      const data = await response.json()
+      setCategories(data.payload)
+    }
+    const getAttributes = async () => {
+      const response = await fetch(urls.api.attributes.attributes, {
+        method: 'GET',
+      })
+      const data = await response.json()
+      setAttributes(data.payload)
+    }
+
+    getCategories()
+    getAttributes()
+  }, [])
 
   const { id } = router.query
   useEffect(() => {
