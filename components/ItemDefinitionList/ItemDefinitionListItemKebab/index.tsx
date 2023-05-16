@@ -38,11 +38,12 @@ export default function ItemDefinitionListItemKebab({ itemDefinition }: Props) {
     },
     {
       name: 'Delete',
-      onClick: () => {
+      onClick: async () => {
         if (window.confirm('Are you sure you want to delete this item?')) {
-          fetch(`/api/itemDefinitions/${itemDefinition._id}`, {
+          await fetch(`/api/itemDefinitions/${itemDefinition._id}`, {
             method: 'DELETE',
-          }).then(() => window.location.reload())
+          })
+          window.location.reload()
         }
       },
     },

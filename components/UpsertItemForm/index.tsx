@@ -49,8 +49,8 @@ function transformItemDefinitionToFormData(
       } as ItemDefinitionFormData)
     : ({
         name: '',
-        category: {} as CategoryResponse,
-        attributes: [{} as AttributeResponse],
+        category: undefined,
+        attributes: [],
         internal: false,
         lowStockThreshold: 0,
         criticalStockThreshold: 0,
@@ -197,7 +197,6 @@ export default function UpsertItemForm({
               />
             ))
           }
-          // TODO: check this
           value={formData.attributes || []}
           onChange={(_e, val) => {
             setFormData((fd) => ({
