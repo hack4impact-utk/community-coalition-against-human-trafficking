@@ -14,11 +14,7 @@ export default function CategoryListItem({ category }: CategoryListItemProps) {
   return (
     <TableRow>
       <TableCell>
-        <Grid2
-          container
-          direction={isMediumView ? 'column' : 'row'}
-          sx={{ alignItems: 'center' }}
-        >
+        <Grid2 container direction={isMediumView ? 'column' : 'row'}>
           <Grid2 md={12} lg={4}>
             {category.name}
           </Grid2>
