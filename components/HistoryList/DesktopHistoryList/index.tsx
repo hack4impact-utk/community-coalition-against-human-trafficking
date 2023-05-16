@@ -193,6 +193,16 @@ export default function DesktopHistoryList(props: Props) {
     const queryPage = Number(router.query.page)
     return queryPage ? queryPage : historyPaginationDefaults.page
   }, [router.query.page])
+  const order = React.useMemo(() => {
+    const queryOrder = router.query.order
+    return queryOrder ? (queryOrder as Order) : historyPaginationDefaults.order
+  }, [router.query.order])
+  const orderBy = React.useMemo(() => {
+    const queryOrderBy = router.query.orderBy
+    return queryOrderBy
+      ? (queryOrderBy as keyof HistoryTableData)
+      : historyPaginationDefaults.orderBy
+  }, [router.query.orderBy])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -220,8 +230,8 @@ export default function DesktopHistoryList(props: Props) {
           sx={{ mt: props.loading ? '0' : '3px' }} // lets us have the page not shift when loading
         >
           <HistoryListHeader
-            order={router.query.order as Order}
-            orderBy={router.query.orderBy as string}
+            order={order as Order}
+            orderBy={orderBy}
             router={router}
           />
           <TableBody>

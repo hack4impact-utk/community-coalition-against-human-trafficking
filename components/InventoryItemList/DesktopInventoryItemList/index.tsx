@@ -192,6 +192,18 @@ export default function DesktopInventoryItemList(props: Props) {
     const queryPage = Number(router.query.page)
     return queryPage ? queryPage : inventoryPaginationDefaults.page
   }, [router.query.page])
+  const order = React.useMemo(() => {
+    const queryOrder = router.query.order
+    return queryOrder
+      ? (queryOrder as Order)
+      : inventoryPaginationDefaults.order
+  }, [router.query.order])
+  const orderBy = React.useMemo(() => {
+    const queryOrderBy = router.query.orderBy
+    return queryOrderBy
+      ? (queryOrderBy as string)
+      : inventoryPaginationDefaults.orderBy
+  }, [router.query.orderBy])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -207,22 +219,13 @@ export default function DesktopInventoryItemList(props: Props) {
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <InventoryItemListHeader
-            order={
-              (router.query.order || inventoryPaginationDefaults.order) as Order
-            }
-            orderBy={
-              (router.query.orderBy ||
-                inventoryPaginationDefaults.orderBy) as string
-            }
+            order={order as Order}
+            orderBy={orderBy}
             router={router}
           />
           <TableBody>
             {props.loading ? (
-              <DesktopInventoryItemListSkeleton
-                rowsPerPage={Number(
-                  router.query.limit || inventoryPaginationDefaults.limit
-                )}
-              />
+              <DesktopInventoryItemListSkeleton rowsPerPage={limit} />
             ) : (
               props.inventoryItems.map((item) => (
                 <InventoryItemListItem inventoryItem={item} key={item._id} />
