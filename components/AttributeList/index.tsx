@@ -5,7 +5,6 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   TableSortLabel,
 } from '@mui/material'
@@ -14,6 +13,7 @@ import { AttributeResponse } from 'utils/types'
 import AttributeListItem from './AttributeListItem'
 import usePagination from 'utils/hooks/usePagination'
 import React from 'react'
+import SettingsTablePagination from 'components/SettingsTablePagination'
 
 interface AttributeTableData extends AttributeResponse {
   kebab: string
@@ -190,15 +190,7 @@ export default function AttributeList({
 
   return (
     <Box sx={{ width: '100%' }}>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={pagination.sortedTableData.length}
-        rowsPerPage={pagination.rowsPerPage}
-        page={pagination.page}
-        onPageChange={pagination.handleChangePage}
-        onRowsPerPageChange={pagination.handleChangeRowsPerPage}
-      />
+      <SettingsTablePagination {...pagination} />
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <AttributeListHeader

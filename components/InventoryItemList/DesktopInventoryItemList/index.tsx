@@ -215,6 +215,12 @@ export default function DesktopInventoryItemList(props: Props) {
         page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          position: 'sticky',
+          top: 0,
+          backgroundColor: 'white',
+          zIndex: 999,
+        }}
       />
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">

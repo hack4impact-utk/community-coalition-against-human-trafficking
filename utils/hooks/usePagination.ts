@@ -59,8 +59,17 @@ export default function usePagination<TData, TDataKey extends string>(
 
   const handleRequestSort = React.useCallback(
     (event: React.MouseEvent<unknown>, newOrderBy: TDataKey) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc
-      1 file changed, 5 insertions(+), 1 deletion(-)
+      const isAsc = orderBy === newOrderBy && order === 'asc'
+      const toggledOrder = isAsc ? 'desc' : 'asc'
+      setOrder(toggledOrder)
+      setOrderBy(newOrderBy)
+
+      const newSortedTableData = tableSortFn(
+        sortedTableData,
+        newOrderBy,
+        toggledOrder
+      )
+      setPage(0)
       setSortedTableData(newSortedTableData)
       const newVisibleRows = newSortedTableData.slice(
         0 * rowsPerPage,
