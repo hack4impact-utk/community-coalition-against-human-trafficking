@@ -42,8 +42,8 @@ export const itemDefinitionResponseSchema = z.object({
   _id: objectId,
   name: z.string(),
   internal: z.boolean(),
-  lowStockThreshold: z.number().int(),
-  criticalStockThreshold: z.number().int(),
+  lowStockThreshold: z.number().int().optional(),
+  criticalStockThreshold: z.number().int().optional(),
   category: categoryResponseSchema.optional(),
   attributes: attributeResponseSchema,
 })
@@ -151,7 +151,8 @@ export const newItemFormSchema = itemDefinitionResponseSchema
     category: categoryResponseSchema.nullable().optional(),
   })
   .refine(
-    (idSchema) => idSchema.lowStockThreshold >= idSchema.criticalStockThreshold,
+    (idSchema) =>
+      idSchema.lowStockThreshold || 0 >= (idSchema.criticalStockThreshold || 0),
     {
       message:
         'Low stock threshold must be greater than critical stock threshold',
