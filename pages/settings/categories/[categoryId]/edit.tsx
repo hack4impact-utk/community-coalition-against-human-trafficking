@@ -27,7 +27,7 @@ export default function CategoryEditForm() {
   const dispatch = useDispatch()
 
   const handleClose = async () => {
-    await router.push(urls.pages.settings.categories)
+    await bulkRemoveURLQueryParams(router, ['showDialog', 'id'])
   }
 
   // get id from URL and get categories

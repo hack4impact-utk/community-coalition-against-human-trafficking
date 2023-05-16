@@ -11,8 +11,9 @@ import {
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
 import { AttributeResponse } from 'utils/types'
-import { useState, useEffect, useCallback } from 'react'
 import AttributeListItem from './AttributeListItem'
+import usePagination from 'utils/hooks/usePagination'
+import React from 'react'
 
 interface AttributeTableData extends AttributeResponse {
   kebab: string
@@ -32,7 +33,7 @@ function sortTable(
   tableData: AttributeResponse[],
   sortBy: keyof AttributeTableData,
   order: Order
-) {
+): AttributeResponse[] {
   const orderByHeadCell = headCells.filter(
     (headCell) => headCell.id === sortBy.toString()
   )[0]
@@ -155,33 +156,13 @@ export default function AttributeList({
   attributes,
   search,
 }: AttributeListProps) {
-  const [order, setOrder] = useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] =
-    useState<keyof AttributeTableData>(DEFAULT_ORDER_BY)
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = useState<AttributeResponse[] | null>(
-    null
-  )
-  const [sortedTableData, setSortedTableData] = useState<AttributeResponse[]>(
-    []
-  )
-
-  useEffect(() => {
-    let newTableData = attributes.map((attribute) => {
-      return {
-        _id: attribute._id,
-        name: attribute.name,
-        possibleValues: attribute.possibleValues,
-        color: attribute.color,
-        kebab: '',
-      }
-    })
-
-    if (search) {
-      const lowercaseSearch = search.toLowerCase()
-      newTableData = [
-        ...newTableData.filter((attribute) => {
+  const searches = React.useMemo(
+    () => [
+      {
+        search,
+        filterFn: (attribute: AttributeResponse, search: string) => {
+          if (!search) return true
+          const lowercaseSearch = search.toLowerCase()
           return (
             attribute.name.toLowerCase().includes(search) ||
             (typeof attribute.possibleValues === 'string' &&
@@ -192,72 +173,29 @@ export default function AttributeList({
                 .join(' ')
                 .includes(lowercaseSearch))
           )
-        }),
-      ]
-    }
-
-    const newSortedData = sortTable(
-      newTableData,
-      DEFAULT_ORDER_BY,
-      DEFAULT_ORDER
-    )
-    setSortedTableData(newSortedData)
-    const rowsOnMount = newSortedData.slice(
-      0 * DEFAULT_ROWS_PER_PAGE,
-      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
-    )
-    setPage(0)
-
-    setVisibleRows(rowsOnMount)
-  }, [search])
-
-  const handleRequestSort = useCallback(
-    (
-      event: React.MouseEvent<unknown>,
-      newOrderBy: keyof AttributeTableData
-    ) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder = isAsc ? 'desc' : 'asc'
-      setOrder(toggledOrder)
-      setOrderBy(newOrderBy)
-
-      const newSortedTableData = sortTable(
-        sortedTableData,
-        newOrderBy,
-        toggledOrder
-      )
-      setPage(0)
-      setSortedTableData(newSortedTableData)
-      const newVisibleRows = newSortedTableData.slice(
-        0 * rowsPerPage,
-        0 * rowsPerPage + rowsPerPage
-      )
-      setVisibleRows(newVisibleRows)
-    },
-    [order, orderBy, page, rowsPerPage, sortedTableData]
+        },
+      },
+    ],
+    [search]
   )
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-    const newVisibleRows = sortedTableData.slice(
-      newPage * rowsPerPage,
-      newPage * rowsPerPage + rowsPerPage
-    )
-    setVisibleRows(newVisibleRows)
-  }
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(updatedRowsPerPage)
-    setPage(0)
-    const newVisibleRows = sortedTableData.slice(
-      0 * updatedRowsPerPage,
-      0 * updatedRowsPerPage + updatedRowsPerPage
-    )
-    setVisibleRows(newVisibleRows)
-  }
+  const {
+    order,
+    orderBy,
+    page,
+    rowsPerPage,
+    visibleRows,
+    sortedTableData,
+    handleChangePage,
+    handleChangeRowsPerPage,
+    handleRequestSort,
+  } = usePagination<AttributeResponse, keyof AttributeTableData>(
+    attributes,
+    DEFAULT_ROWS_PER_PAGE,
+    DEFAULT_ORDER_BY,
+    DEFAULT_ORDER,
+    sortTable,
+    searches
+  )
 
   return (
     <Box sx={{ width: '100%' }}>

@@ -13,6 +13,7 @@ import UpsertCategoryForm from 'components/UpsertCategoryForm'
 import transformZodErrors from 'utils/transformZodErrors'
 import { categoryFormSchema } from 'utils/types'
 import urls from 'utils/urls'
+import { removeURLQueryParam } from 'utils/queryParams'
 
 export default function CategoryCreateForm() {
   const [loading, setLoading] = useState(false)
@@ -22,7 +23,7 @@ export default function CategoryCreateForm() {
   const dispatch = useDispatch()
 
   const handleClose = async () => {
-    await router.push(urls.pages.settings.categories)
+    await removeURLQueryParam(router, 'showDialog')
   }
   const [errors, setErrors] = useState<Record<string, string>>(
     {} as Record<string, string>
