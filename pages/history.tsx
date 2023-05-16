@@ -212,6 +212,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
             }}
           >
             <DatePicker
+              disableFuture
               label="Start Date"
               renderInput={(params) => (
                 <Box
@@ -256,6 +257,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
               <HorizontalRuleIcon sx={{ color: theme.palette.grey['500'] }} />
             </Box>
             <DatePicker
+              disableFuture
               label="End Date"
               renderInput={(params) => (
                 <Box
