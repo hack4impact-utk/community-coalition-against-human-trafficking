@@ -35,6 +35,7 @@ export const attributeResponseSchema = z.array(
       z.array(z.string()),
     ]),
     color: hexColor,
+    softDelete: z.boolean().optional(),
   })
 )
 

@@ -85,6 +85,10 @@ export default function UpsertItemForm({
     setProxyAttributes(attributes)
   }, [attributes])
 
+  React.useEffect(() => {
+    setFormData(itemDefinition || ({} as ItemDefinitionFormData))
+  }, [itemDefinition])
+
   // Update the formData when the defaultAttributes change
   React.useEffect(() => {
     setFormData((fd) => ({
@@ -140,13 +144,14 @@ export default function UpsertItemForm({
         getOptionLabel={(option) => option.name}
         renderInput={(params) => <TextField {...params} label="Category" />}
         sx={{ marginTop: 4 }}
+        isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, val) => {
           setFormData((fd) => ({
             ...fd,
             category: val as CategoryResponse,
           }))
         }}
-        value={formData.category}
+        value={formData.category || null}
       />
 
       <FormControlLabel
