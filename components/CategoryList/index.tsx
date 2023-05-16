@@ -150,17 +150,7 @@ export default function DesktopCategoryList(props: Props) {
     ]
   }, [props.search])
 
-  const {
-    order,
-    orderBy,
-    page,
-    rowsPerPage,
-    visibleRows,
-    sortedTableData,
-    handleChangePage,
-    handleChangeRowsPerPage,
-    handleRequestSort,
-  } = usePagination<CategoryResponse, keyof CategoryTableData>(
+  const pagination = usePagination<CategoryResponse, keyof CategoryTableData>(
     props.categories,
     DEFAULT_ROWS_PER_PAGE,
     DEFAULT_ORDER_BY,
@@ -174,22 +164,22 @@ export default function DesktopCategoryList(props: Props) {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={sortedTableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        count={pagination.sortedTableData.length}
+        rowsPerPage={pagination.rowsPerPage}
+        page={pagination.page}
+        onPageChange={pagination.handleChangePage}
+        onRowsPerPageChange={pagination.handleChangeRowsPerPage}
       />
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <CategoryListHeader
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            order={pagination.order}
+            orderBy={pagination.orderBy}
+            onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((category) => (
+            {pagination.visibleRows &&
+              pagination.visibleRows.map((category) => (
                 <CategoryListItem category={category} key={category._id} />
               ))}
           </TableBody>

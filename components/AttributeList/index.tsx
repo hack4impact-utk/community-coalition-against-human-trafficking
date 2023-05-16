@@ -178,17 +178,8 @@ export default function AttributeList({
     ],
     [search]
   )
-  const {
-    order,
-    orderBy,
-    page,
-    rowsPerPage,
-    visibleRows,
-    sortedTableData,
-    handleChangePage,
-    handleChangeRowsPerPage,
-    handleRequestSort,
-  } = usePagination<AttributeResponse, keyof AttributeTableData>(
+
+  const pagination = usePagination<AttributeResponse, keyof AttributeTableData>(
     attributes,
     DEFAULT_ROWS_PER_PAGE,
     DEFAULT_ORDER_BY,
@@ -202,22 +193,22 @@ export default function AttributeList({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={sortedTableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        count={pagination.sortedTableData.length}
+        rowsPerPage={pagination.rowsPerPage}
+        page={pagination.page}
+        onPageChange={pagination.handleChangePage}
+        onRowsPerPageChange={pagination.handleChangeRowsPerPage}
       />
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <AttributeListHeader
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            order={pagination.order}
+            orderBy={pagination.orderBy}
+            onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((item) => (
+            {pagination.visibleRows &&
+              pagination.visibleRows.map((item) => (
                 <AttributeListItem attribute={item} key={item._id} />
               ))}
           </TableBody>

@@ -16,10 +16,7 @@ import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
 import NewItemPage from 'pages/items/new'
 import urls from 'utils/urls'
-import {
-  bulkRemoveURLQueryParams,
-  removeURLQueryParam,
-} from 'utils/queryParams'
+import { bulkRemoveURLQueryParams } from 'utils/queryParams'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {

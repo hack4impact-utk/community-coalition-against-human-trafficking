@@ -213,17 +213,7 @@ export default function ItemDefinitionList({
       },
     ]
   }, [search])
-  const {
-    order,
-    orderBy,
-    page,
-    rowsPerPage,
-    visibleRows,
-    sortedTableData,
-    handleChangePage,
-    handleChangeRowsPerPage,
-    handleRequestSort,
-  } = usePagination<ItemDefinitionResponse, HeadKey>(
+  const pagination = usePagination<ItemDefinitionResponse, HeadKey>(
     itemDefinitions,
     DEFAULT_ROWS_PER_PAGE,
     DEFAULT_ORDER_BY,
@@ -236,22 +226,22 @@ export default function ItemDefinitionList({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={sortedTableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        count={pagination.sortedTableData.length}
+        rowsPerPage={pagination.rowsPerPage}
+        page={pagination.page}
+        onPageChange={pagination.handleChangePage}
+        onRowsPerPageChange={pagination.handleChangeRowsPerPage}
       />
       <TableContainer>
         <Table>
           <ItemDefinitionListHeader
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            order={pagination.order}
+            orderBy={pagination.orderBy}
+            onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((itemDefinition) => (
+            {pagination.visibleRows &&
+              pagination.visibleRows.map((itemDefinition) => (
                 <ItemDefinitionListItem
                   key={itemDefinition._id}
                   itemDefinition={itemDefinition}
