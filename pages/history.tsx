@@ -212,6 +212,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
             }}
           >
             <DatePicker
+              disableFuture
               label="Start Date"
               renderInput={(params) => (
                 <Box
