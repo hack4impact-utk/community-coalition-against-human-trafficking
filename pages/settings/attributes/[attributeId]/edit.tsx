@@ -18,6 +18,7 @@ import {
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
 import urls from 'utils/urls'
+import { bulkRemoveURLQueryParams } from 'utils/queryParams'
 
 export default function AttributeEditDialog() {
   // you have to do this to otherwise the AttributeForm says that
@@ -79,7 +80,7 @@ export default function AttributeEditDialog() {
       const data = await response.json()
 
       // close dialog
-      await router.push(urls.pages.settings.attributes)
+      await handleClose()
 
       if (data.success) {
         dispatch(
@@ -100,9 +101,9 @@ export default function AttributeEditDialog() {
     [id, router]
   )
 
-  const handleClose = () => {
-    router.push(urls.pages.settings.attributes)
-  }
+  const handleClose = React.useCallback(async () => {
+    await bulkRemoveURLQueryParams(router, ['showDialog', 'id'])
+  }, [router])
 
   return (
     <>

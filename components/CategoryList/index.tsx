@@ -11,7 +11,7 @@ import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
 import { CategoryResponse } from 'utils/types'
 import CategoryListItem from 'components/CategoryList/CategoryListItem'
-import deepCopy from 'utils/deepCopy'
+import usePagination from 'utils/hooks/usePagination'
 
 type Order = 'asc' | 'desc'
 
@@ -137,97 +137,49 @@ const DEFAULT_ORDER_BY = 'name'
 const DEFAULT_ORDER = 'asc'
 
 export default function DesktopCategoryList(props: Props) {
-  const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] =
-    React.useState<keyof CategoryTableData>(DEFAULT_ORDER_BY)
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = React.useState<CategoryResponse[]>(
-    [] as CategoryResponse[]
-  )
-  const [tableData, setTableData] = React.useState<CategoryResponse[]>([])
-
-  React.useEffect(() => {
-    let newTableData: CategoryResponse[] = deepCopy(props.categories)
-    if (props.search) {
-      const search = props.search.toLowerCase()
-      newTableData = [
-        ...newTableData.filter((category) => {
+  const searches = React.useMemo(() => {
+    return [
+      {
+        search: props.search,
+        filterFn: (category: CategoryResponse, s: string) => {
+          if (!s) return true
+          const search = s.toLowerCase()
           return category.name.toLowerCase().includes(search)
-        }),
-      ]
-    }
-    setTableData(newTableData)
-    let rowsOnMount = sortTable(newTableData, orderBy, order)
-    rowsOnMount = rowsOnMount.slice(0, rowsPerPage)
-
-    setPage(0)
-
-    setVisibleRows(rowsOnMount)
+        },
+      },
+    ]
   }, [props.search])
 
-  const handleRequestSort = React.useCallback(
-    (_e: React.MouseEvent<unknown>, newOrderBy: keyof CategoryTableData) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder: Order = isAsc ? 'desc' : 'asc'
-      setOrder(toggledOrder)
-      setOrderBy(newOrderBy)
-
-      const sortedRows = sortTable(tableData, newOrderBy, toggledOrder)
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
-      setVisibleRows(updatedRows)
-    },
-    [order, orderBy, page, rowsPerPage, tableData]
+  const pagination = usePagination<CategoryResponse, keyof CategoryTableData>(
+    props.categories,
+    DEFAULT_ROWS_PER_PAGE,
+    DEFAULT_ORDER_BY,
+    DEFAULT_ORDER,
+    sortTable,
+    searches
   )
-
-  const handleChangePage = (_e: unknown, newPage: number) => {
-    setPage(newPage)
-
-    const updatedRows = tableData.slice(
-      newPage * rowsPerPage,
-      newPage * rowsPerPage + rowsPerPage
-    )
-    setVisibleRows(updatedRows)
-  }
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(updatedRowsPerPage)
-    setPage(0)
-
-    const updatedRows = tableData.slice(
-      page * updatedRowsPerPage,
-      page * updatedRowsPerPage + updatedRowsPerPage
-    )
-    setVisibleRows(updatedRows)
-  }
 
   return (
     <Box sx={{ width: '100%' }}>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={tableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        count={pagination.sortedTableData.length}
+        rowsPerPage={pagination.rowsPerPage}
+        page={pagination.page}
+        onPageChange={pagination.handleChangePage}
+        onRowsPerPageChange={pagination.handleChangeRowsPerPage}
       />
       <TableContainer>
         <Table aria-labelledby="tableTitle" size="medium">
           <CategoryListHeader
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            order={pagination.order}
+            orderBy={pagination.orderBy}
+            onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((category) => (
+            {pagination.visibleRows &&
+              pagination.visibleRows.map((category) => (
                 <CategoryListItem category={category} key={category._id} />
               ))}
           </TableBody>

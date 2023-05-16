@@ -14,6 +14,7 @@ import {
 import React from 'react'
 import { ItemDefinitionResponse } from 'utils/types'
 import ItemDefinitionListItem from 'components/ItemDefinitionList/DesktopItemDefinitionList/DesktopItemDefinitionListItem'
+import usePagination from 'utils/hooks/usePagination'
 
 /// HEADER ///
 
@@ -186,28 +187,14 @@ export default function ItemDefinitionList({
   itemDefinitions,
   search,
 }: ItemDefinitionListProps) {
-  const [tableData, setTableData] = React.useState<ItemDefinitionResponse[]>([])
-  const [visibleRows, setVisibleRows] = React.useState<
-    ItemDefinitionResponse[] | null
-  >(null)
-
-  // Sorting hooks
-  const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] = React.useState<HeadKey>(DEFAULT_ORDER_BY)
-
-  // Pagination hooks
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-
-  // useEffect updates table data whenever search prop changes
-  React.useEffect(() => {
-    let filteredData = itemDefinitions
-
-    if (search) {
-      const searchLowerCase = search.toLowerCase()
-      filteredData = [
-        ...filteredData.filter(
-          (itemDefinition) =>
+  const searches = React.useMemo(() => {
+    return [
+      {
+        search: search,
+        filterFn: (itemDefinition: ItemDefinitionResponse, search: string) => {
+          if (!search) return true
+          const searchLowerCase = search.toLowerCase()
+          return (
             itemDefinition.name.toLowerCase().includes(searchLowerCase) ||
             (itemDefinition.attributes &&
               itemDefinition.attributes
@@ -221,83 +208,40 @@ export default function ItemDefinitionList({
             internalString(itemDefinition.internal)
               .toLowerCase()
               .includes(searchLowerCase)
-        ),
-      ]
-    }
-
-    setTableData(filteredData)
-
-    let rowsOnMount = sortTable(filteredData, orderBy, order)
-    rowsOnMount = rowsOnMount.slice(
-      0 * DEFAULT_ROWS_PER_PAGE,
-      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
-    )
-    setPage(0)
-
-    setVisibleRows(rowsOnMount)
+          )
+        },
+      },
+    ]
   }, [search])
-
-  const handleRequestSort = React.useCallback(
-    (event: React.MouseEvent<unknown>, newOrderBy: HeadKey) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder: Order = isAsc ? 'desc' : 'asc'
-      setOrder(toggledOrder)
-      setOrderBy(newOrderBy)
-
-      const sortedRows = sortTable(tableData, newOrderBy, toggledOrder)
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
-      setVisibleRows(updatedRows)
-    },
-    [order, orderBy, page, rowsPerPage, tableData]
+  const pagination = usePagination<ItemDefinitionResponse, HeadKey>(
+    itemDefinitions,
+    DEFAULT_ROWS_PER_PAGE,
+    DEFAULT_ORDER_BY,
+    DEFAULT_ORDER,
+    sortTable,
+    searches
   )
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-    const updatedRows = tableData.slice(
-      newPage * rowsPerPage,
-      newPage * rowsPerPage + rowsPerPage
-    )
-    setVisibleRows(updatedRows)
-  }
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(updatedRowsPerPage)
-    setPage(0)
-
-    const updatedRows = tableData.slice(
-      0 * updatedRowsPerPage,
-      0 * updatedRowsPerPage + updatedRowsPerPage
-    )
-    setVisibleRows(updatedRows)
-  }
-
   return (
     <Box width={'100%'}>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={tableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+        count={pagination.sortedTableData.length}
+        rowsPerPage={pagination.rowsPerPage}
+        page={pagination.page}
+        onPageChange={pagination.handleChangePage}
+        onRowsPerPageChange={pagination.handleChangeRowsPerPage}
       />
       <TableContainer>
         <Table>
           <ItemDefinitionListHeader
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            order={pagination.order}
+            orderBy={pagination.orderBy}
+            onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((itemDefinition) => (
+            {pagination.visibleRows &&
+              pagination.visibleRows.map((itemDefinition) => (
                 <ItemDefinitionListItem
                   key={itemDefinition._id}
                   itemDefinition={itemDefinition}

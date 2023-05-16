@@ -16,6 +16,7 @@ import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
 import NewItemPage from 'pages/items/new'
 import urls from 'utils/urls'
+import { bulkRemoveURLQueryParams } from 'utils/queryParams'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -59,7 +60,7 @@ export default function ItemsPage({ itemDefinitions }: Props) {
       <RoutableDialog>
         <NewItemPage
           redirectBack={async (router) => {
-            await router.push(urls.pages.settings.itemDefinitions)
+            await bulkRemoveURLQueryParams(router, ['showDialog', 'id'])
           }}
         />
       </RoutableDialog>
