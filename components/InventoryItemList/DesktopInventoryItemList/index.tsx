@@ -172,16 +172,26 @@ export default function DesktopInventoryItemList(props: Props) {
     }
   }
 
-  const handleChangeRowsPerPage = (
+  const handleChangeRowsPerPage = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     if (Number(event.target.value) === inventoryPaginationDefaults.limit) {
-      bulkRemoveURLQueryParams(router, ['limit', 'page'])
+      await bulkRemoveURLQueryParams(router, ['limit', 'page'])
     } else {
-      removeURLQueryParam(router, 'page')
-      updateQuery(router, 'limit', event.target.value)
+      await removeURLQueryParam(router, 'page')
+      await updateQuery(router, 'limit', event.target.value)
     }
   }
+
+  const limit = React.useMemo(() => {
+    const queryLimit = Number(router.query.limit)
+    return queryLimit ? queryLimit : inventoryPaginationDefaults.limit
+  }, [router.query.limit])
+
+  const page = React.useMemo(() => {
+    const queryPage = Number(router.query.page)
+    return queryPage ? queryPage : inventoryPaginationDefaults.page
+  }, [router.query.page])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -189,10 +199,8 @@ export default function DesktopInventoryItemList(props: Props) {
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={props.total}
-        rowsPerPage={Number(
-          router.query.limit || inventoryPaginationDefaults.limit
-        )}
-        page={Number(router.query.page || inventoryPaginationDefaults.page)}
+        rowsPerPage={limit}
+        page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
