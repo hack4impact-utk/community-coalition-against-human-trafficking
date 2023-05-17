@@ -22,114 +22,131 @@ import urls from 'utils/urls'
 // looks up attribute _ids in itemDefinition
 // looks up attribte _ids in inventoryItem
 // looks up user _ids in inventoryItem
-const requestPipeline: PipelineStage[] = [
-  {
-    $lookup: {
-      from: 'itemDefinitions',
-      let: { itemDefinitions: '$itemDefinitions' },
-      pipeline: [
-        {
-          $lookup: {
-            from: 'categories',
-            localField: 'category',
-            foreignField: '_id',
-            as: 'category',
-          },
-        },
-        {
-          $lookup: {
-            from: 'attributes',
-            localField: 'attributes',
-            foreignField: '_id',
-            as: 'attributes',
-          },
-        },
-        {
-          $set: {
-            category: { $arrayElemAt: ['$category', 0] },
-          },
-        },
-      ],
-      localField: 'itemDefinition',
-      foreignField: '_id',
-      as: 'itemDefinition',
-    },
-  },
-  // itemDefinition was being returned as an array, so extract it from the array
-  {
-    $set: {
-      itemDefinition: { $arrayElemAt: ['$itemDefinition', 0] },
-    },
-  },
-  // creates a temporary array of attribute documents called 'attributeDocs' containing all relevant attribute documents
-  {
-    $lookup: {
-      from: 'attributes',
-      localField: 'attributes.attribute',
-      foreignField: '_id',
-      as: 'attributeDocs',
-    },
-  },
-  // the above lookup only gets the attribute docs from the 'attributes' collection.
-  // It does not generate the inventoryItem attribute/value pairs.
-  {
-    $addFields: {
-      // builds out the inventoryItem.attributes array from scratch
-      attributes: {
-        // for every attribute in inventoryItem.attributes object, create an attribute/value pair
-        $map: {
-          input: '$attributes',
-          as: 'attr', // attribute from the inventoryItem.attributes array
-          in: {
-            attribute: {
-              // find the corresponding document from the attributes collection with the same _id
-              $arrayElemAt: [
-                {
-                  $filter: {
-                    input: '$attributeDocs',
-                    as: 'doc', // document from the attributes collection
-                    cond: { $eq: ['$$doc._id', '$$attr.attribute'] },
-                  },
-                },
-                0,
-              ],
+function requestPipeline(lowStockOnly: boolean): PipelineStage[] {
+  const itemDefinitionPipeline: PipelineStage[] = [
+    {
+      $lookup: {
+        from: 'itemDefinitions',
+        let: { itemDefinitions: '$itemDefinitions' },
+        pipeline: [
+          {
+            $lookup: {
+              from: 'categories',
+              localField: 'category',
+              foreignField: '_id',
+              as: 'category',
             },
-            // set the inventoryItem.attributes[i].value to its original value
-            value: '$$attr.value',
+          },
+          {
+            $lookup: {
+              from: 'attributes',
+              localField: 'attributes',
+              foreignField: '_id',
+              as: 'attributes',
+            },
+          },
+          {
+            $set: {
+              category: { $arrayElemAt: ['$category', 0] },
+            },
+          },
+        ],
+        localField: 'itemDefinition',
+        foreignField: '_id',
+        as: 'itemDefinition',
+      },
+    },
+    // itemDefinition was being returned as an array, so extract it from the array
+    {
+      $set: {
+        itemDefinition: { $arrayElemAt: ['$itemDefinition', 0] },
+      },
+    },
+  ]
+  if (lowStockOnly)
+    itemDefinitionPipeline.push({
+      $match: {
+        $expr: {
+          $lt: ['$quantity', '$itemDefinition.lowStockThreshold'],
+        },
+      },
+    })
+
+  return [
+    ...itemDefinitionPipeline,
+
+    // creates a temporary array of attribute documents called 'attributeDocs' containing all relevant attribute documents
+    {
+      $lookup: {
+        from: 'attributes',
+        localField: 'attributes.attribute',
+        foreignField: '_id',
+        as: 'attributeDocs',
+      },
+    },
+    // the above lookup only gets the attribute docs from the 'attributes' collection.
+    // It does not generate the inventoryItem attribute/value pairs.
+    {
+      $addFields: {
+        // builds out the inventoryItem.attributes array from scratch
+        attributes: {
+          // for every attribute in inventoryItem.attributes object, create an attribute/value pair
+          $map: {
+            input: '$attributes',
+            as: 'attr', // attribute from the inventoryItem.attributes array
+            in: {
+              attribute: {
+                // find the corresponding document from the attributes collection with the same _id
+                $arrayElemAt: [
+                  {
+                    $filter: {
+                      input: '$attributeDocs',
+                      as: 'doc', // document from the attributes collection
+                      cond: { $eq: ['$$doc._id', '$$attr.attribute'] },
+                    },
+                  },
+                  0,
+                ],
+              },
+              // set the inventoryItem.attributes[i].value to its original value
+              value: '$$attr.value',
+            },
           },
         },
       },
     },
-  },
-  // delete the temporary array of attribute documents
-  {
-    $project: {
-      attributeDocs: 0,
+    // delete the temporary array of attribute documents
+    {
+      $project: {
+        attributeDocs: 0,
+      },
     },
-  },
-  {
-    $lookup: {
-      from: 'users',
-      localField: 'assignee',
-      foreignField: '_id',
-      as: 'assignee',
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'assignee',
+        foreignField: '_id',
+        as: 'assignee',
+      },
     },
-  },
-  {
-    $set: {
-      assignee: { $arrayElemAt: ['$assignee', 0] },
+    {
+      $set: {
+        assignee: { $arrayElemAt: ['$assignee', 0] },
+      },
     },
-  },
-]
+  ]
+}
 
-const softDeleteRequestPipeline: PipelineStage[] = [
-  ...requestPipeline,
-  {
-    $match: {
-      softDelete: { $exists: false },
+function softDeleteRequestPipeline(lowStockOnly: boolean): PipelineStage[] {
+  return [
+    ...requestPipeline(lowStockOnly),
+    {
+      $match: {
+        softDelete: { $exists: false },
+      },
     },
-  },
-]
+  ]
+}
 
 function searchAggregate(search: string): PipelineStage[] {
   return [
@@ -202,7 +219,7 @@ function categorySearchAggregate(category: string): PipelineStage {
 export async function getInventoryItems() {
   return await MongoDriver.getEntities(
     InventoryItemSchema,
-    softDeleteRequestPipeline
+    softDeleteRequestPipeline(false)
   )
 }
 
@@ -218,15 +235,17 @@ export async function getFilteredInventoryItems(
   orderBy: string,
   order: string,
   search?: string,
-  categorySearch?: string
+  categorySearch?: string,
+  lowStockOnly = false
 ) {
-  let pipeline = [...softDeleteRequestPipeline]
+  let pipeline = [...softDeleteRequestPipeline(lowStockOnly)]
   if (search) {
     pipeline = pipeline.concat(searchAggregate(search))
   }
   if (categorySearch) {
     pipeline.push(categorySearchAggregate(categorySearch))
   }
+
   pipeline.push({
     $sort: {
       [orderBy]: order === 'asc' ? 1 : -1,
@@ -252,13 +271,15 @@ export async function getPaginatedInventoryItems(
   orderBy: string,
   order: string,
   search?: string,
-  categorySearch?: string
+  categorySearch?: string,
+  lowStockOnly = false
 ) {
   const filteredItems = await getFilteredInventoryItems(
     orderBy,
     order,
     search,
-    categorySearch
+    categorySearch,
+    lowStockOnly
   )
   const startIndex = page * limit
   const endIndex = page * limit + limit
@@ -275,7 +296,11 @@ export async function getPaginatedInventoryItems(
  * @returns The InventoryItem with the given _id
  */
 export async function getInventoryItem(id: string) {
-  return await MongoDriver.getEntity(InventoryItemSchema, id, requestPipeline)
+  return await MongoDriver.getEntity(
+    InventoryItemSchema,
+    id,
+    requestPipeline(false)
+  )
 }
 
 /**

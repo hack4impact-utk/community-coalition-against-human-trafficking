@@ -32,15 +32,11 @@ export default async function inventoryItemsLowStockHandler(
           ],
           (order as string) || inventoryPaginationDefaults.order,
           search as string,
-          category as string
+          category as string,
+          true
         )
-        items.data = items.data.filter(
-          (item) =>
-            item.quantity <
-            (item.itemDefinition as ItemDefinitionResponse).lowStockThreshold
-        )
-        const resStatus = 200
-        return res.status(resStatus).json({
+
+        return res.status(200).json({
           success: true,
           payload: items,
         })

@@ -32,17 +32,15 @@ interface Props {
 }
 
 const fetchInventoryItems = async (router: NextRouter) => {
-  const response = await fetch(
-    `${urls.api.inventoryItems.lowStock}${constructQueryString(
-      router.query as { [key: string]: string },
-      true
-    )}`,
-    {
-      method: 'GET',
-    }
-  )
-  const data = await response.json()
+  const url = `${urls.api.inventoryItems.lowStock}${constructQueryString(
+    router.query as { [key: string]: string },
+    true
+  )}`
 
+  const response = await fetch(url, {
+    method: 'GET',
+  })
+  const data = await response.json()
   return data.payload
 }
 
