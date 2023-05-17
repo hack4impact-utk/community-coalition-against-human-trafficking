@@ -11,7 +11,7 @@ export default function useBackendPaginationCache<TData>(
 
   // whenever the total changes or orderBy changes, reset the cache to an empty array of size total
   React.useEffect(() => {
-    setItemCache(Array(total).fill(undefined))
+    clearCache(total)
   }, [total, orderBy, order])
 
   const updateCache = React.useCallback(
