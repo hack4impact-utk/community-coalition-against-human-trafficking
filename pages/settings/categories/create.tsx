@@ -33,7 +33,6 @@ export default function CategoryCreateForm() {
   const handleSubmit = async (categoryFormData: CategoryFormData) => {
     // form validation
     const zodResponse = categoryFormSchema.safeParse(categoryFormData)
-    console.log(categoryFormData)
     if (!zodResponse.success) {
       setErrors(transformZodErrors(zodResponse.error))
       return
