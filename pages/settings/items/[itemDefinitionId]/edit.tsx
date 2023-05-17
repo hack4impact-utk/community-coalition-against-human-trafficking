@@ -20,6 +20,7 @@ import {
 } from 'utils/types'
 import urls from 'utils/urls'
 import transformZodErrors from 'utils/transformZodErrors'
+import { bulkRemoveURLQueryParams } from 'utils/queryParams'
 
 export default function ItemDefinitionEditForm() {
   const [itemDefinition, setItemDefinition] = useState<ItemDefinitionResponse>()
@@ -122,7 +123,7 @@ export default function ItemDefinitionEditForm() {
   }
 
   const handleClose = async () => {
-    await router.push(urls.pages.settings.itemDefinitions)
+    await bulkRemoveURLQueryParams(router, ['id', 'showDialog'])
   }
 
   return (
