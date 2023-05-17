@@ -17,7 +17,7 @@ export default function useBackendPaginationCache<TData>(
   const updateCache = React.useCallback(
     (data: TData[], page: number, limit: number) => {
       const cacheStart = page * limit
-      const cacheEnd = cacheStart + limit
+      const cacheEnd = Math.min(cacheStart + limit, total)
       setItemCache((prev) => {
         for (let i = cacheStart; i < cacheEnd; i++) {
           const dataIdx = i - cacheStart
@@ -26,7 +26,7 @@ export default function useBackendPaginationCache<TData>(
         return prev
       })
     },
-    [setItemCache]
+    [setItemCache, total]
   )
 
   const clearCache = React.useCallback((n: number) => {
@@ -36,22 +36,23 @@ export default function useBackendPaginationCache<TData>(
   const cacheFor = React.useCallback(
     (page: number, limit: number) => {
       const cacheStart = page * limit
-      const cacheEnd = cacheStart + limit
+      const cacheEnd = Math.min(cacheStart + limit, total)
       return itemCache.slice(cacheStart, cacheEnd)
     },
-    [itemCache]
+    [itemCache, total]
   )
 
   const isCached = React.useCallback(
     (page: number, limit: number) => {
       const cacheStart = page * limit
-      const cacheEnd = cacheStart + limit
-      return (
-        itemCache[cacheStart] !== undefined &&
-        itemCache[cacheEnd - 1] !== undefined
-      )
+      const cacheEnd = Math.min(cacheStart + limit, total)
+      for (let i = cacheStart; i < cacheEnd; i += 5) {
+        if (itemCache[i] === undefined) return false
+      }
+      if (itemCache[cacheEnd - 1] === undefined) return false
+      return true
     },
-    [itemCache]
+    [itemCache, total]
   )
 
   return { itemCache, updateCache, clearCache, cacheFor, isCached }
