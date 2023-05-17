@@ -35,6 +35,7 @@ export const attributeResponseSchema = z.array(
       z.array(z.string()),
     ]),
     color: hexColor,
+    softDelete: z.boolean().optional(),
   })
 )
 
@@ -144,7 +145,7 @@ export const checkInOutFormSchema = z
     }
   )
 
-export const newItemFormSchema = itemDefinitionResponseSchema
+export const itemDefinitionFormSchema = itemDefinitionResponseSchema
   .extend({
     _id: objectId.optional(),
     attributes: attributeResponseSchema.optional(),
@@ -157,6 +158,15 @@ export const newItemFormSchema = itemDefinitionResponseSchema
       message:
         'Low stock threshold must be greater than or equal to critical stock threshold',
       path: ['lowStockThreshold'],
+    }
+  )
+  .refine(
+    (schema) => {
+      return schema.name !== ''
+    },
+    {
+      message: 'Required',
+      path: ['name'],
     }
   )
 

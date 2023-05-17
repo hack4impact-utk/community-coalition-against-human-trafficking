@@ -88,7 +88,7 @@ export default function MobileItemDefinitionListItem({
         }
       />
       <ListItemSecondaryAction>
-        <ItemDefinitionListItemKebab />
+        <ItemDefinitionListItemKebab itemDefinition={itemDefinition} />
       </ListItemSecondaryAction>
     </ListItem>
   )

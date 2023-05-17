@@ -17,6 +17,7 @@ export default {
       createAttribute: '/settings/attributes/create',
       editCategory: (id: string) => `/settings/categories/${id}/edit`,
       createCategory: '/settings/categories/create',
+      editItemDefinition: (id: string) => `/settings/items/${id}/edit`,
       createItemDefinition: '/items/new',
     },
   },

@@ -26,4 +26,8 @@ export const dialogRoutes: DialogRoute[] = [
     name: 'createItem',
     path: urls.pages.dialogs.createItemDefinition,
   },
+  {
+    name: 'editItemDefinition',
+    path: '/settings/items/:id/edit',
+  },
 ]

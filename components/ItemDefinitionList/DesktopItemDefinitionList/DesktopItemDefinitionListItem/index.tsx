@@ -54,7 +54,7 @@ export default function DesktopItemDefinitionListItem({
         </Stack>
       </TableCell>
       <TableCell>
-        <ItemDefinitionListItemKebab />
+        <ItemDefinitionListItemKebab itemDefinition={itemDefinition} />
       </TableCell>
     </TableRow>
   )
