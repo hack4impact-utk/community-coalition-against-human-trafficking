@@ -214,6 +214,7 @@ function searchAggregate(search: string): PipelineStage[] {
           },
           { 'item.assignee.name': { $regex: search, $options: 'i' } },
           { 'item.attributeSearch': { $regex: search, $options: 'i' } },
+          { 'staff.name': { $regex: search, $options: 'i' } },
         ],
       },
     },
