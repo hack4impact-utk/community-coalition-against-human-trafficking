@@ -104,13 +104,13 @@ export default function ItemDefinitionEditForm() {
 
     const data = await response.json()
     if (data.success) {
+      await handleClose()
       dispatch(
         showSnackbar({
           message: 'Item successfully edited',
           severity: 'success',
         })
       )
-      await handleClose()
     } else {
       dispatch(
         showSnackbar({
