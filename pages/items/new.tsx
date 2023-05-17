@@ -16,7 +16,7 @@ import {
   AttributeResponse,
   CategoryResponse,
   ItemDefinitionFormData,
-  newItemFormSchema,
+  itemDefinitionFormSchema,
 } from 'utils/types'
 import urls from 'utils/urls'
 
@@ -56,7 +56,7 @@ export default function NewItemPage({ redirectBack }: Props) {
 
   const createItem = React.useCallback(
     async (formData: ItemDefinitionFormData) => {
-      const zodResult = newItemFormSchema.safeParse(formData)
+      const zodResult = itemDefinitionFormSchema.safeParse(formData)
       if (!zodResult.success) {
         setErrors(transformZodErrors(zodResult.error))
         return
@@ -73,15 +73,25 @@ export default function NewItemPage({ redirectBack }: Props) {
       })
 
       const data = await response.json()
-      await redirectBack(router, data.payload)
-      setLoading(false)
-      // @ts-ignore
-      dispatch(
-        showSnackbar({
-          message: 'Item successfully created.',
-          severity: 'success',
-        })
-      )
+      if (data.success) {
+        await redirectBack(router, data.payload)
+        setLoading(false)
+        // @ts-ignore
+        dispatch(
+          showSnackbar({
+            message: 'Item successfully created.',
+            severity: 'success',
+          })
+        )
+      } else {
+        dispatch(
+          showSnackbar({
+            message: data.message,
+            severity: 'error',
+          })
+        )
+        setLoading(false)
+      }
     },
     [router, redirectBack, setLoading, dispatch]
   )

@@ -24,7 +24,7 @@ const matchParams = (href: string, definedHref: string): MatchResult => {
       mr.params[key] = hrefParts[i]
     } else {
       if (hrefParts[i] !== definedHrefParts[i]) {
-        mr.params = {}
+        mr.params = mr.params || {}
         return mr
       }
     }
@@ -45,7 +45,10 @@ const constructDialogRoute = (
 }
 
 export const dialogPush = (router: NextRouter, href: string) => {
-  let mr: MatchResult = { success: false, params: {} }
+  let mr: MatchResult = {
+    success: false,
+    params: {},
+  }
   const f = () => {
     const attemptedDr = dialogRoutes.find((dr) => dr.path === href)
 
@@ -62,6 +65,7 @@ export const dialogPush = (router: NextRouter, href: string) => {
   }
   const dr = f()
 
+  mr.params = { ...mr.params, ...(router.query as { [key: string]: string }) }
   const actualRoute = constructDialogRoute(mr.params, dr)
 
   router.push(`${actualRoute}`)

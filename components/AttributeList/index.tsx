@@ -5,14 +5,16 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   TableSortLabel,
 } from '@mui/material'
 import { visuallyHidden } from '@mui/utils'
 import { AttributeResponse } from 'utils/types'
-import { useState, useEffect, useCallback } from 'react'
 import AttributeListItem from './AttributeListItem'
+import usePagination from 'utils/hooks/usePagination'
+import React from 'react'
+import SettingsTablePagination from 'components/SettingsTablePagination'
+import NoResultsText from 'components/NoResultsText'
 
 interface AttributeTableData extends AttributeResponse {
   kebab: string
@@ -32,7 +34,7 @@ function sortTable(
   tableData: AttributeResponse[],
   sortBy: keyof AttributeTableData,
   order: Order
-) {
+): AttributeResponse[] {
   const orderByHeadCell = headCells.filter(
     (headCell) => headCell.id === sortBy.toString()
   )[0]
@@ -64,7 +66,7 @@ const headCells: readonly HeadCell[] = [
     label: 'Attribute Name',
     sortable: true,
     sortFn(a, b) {
-      return comparator(a.name, b.name)
+      return comparator(a.name.toLowerCase(), b.name.toLowerCase())
     },
   },
   {
@@ -155,35 +157,15 @@ export default function AttributeList({
   attributes,
   search,
 }: AttributeListProps) {
-  const [order, setOrder] = useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] =
-    useState<keyof AttributeTableData>(DEFAULT_ORDER_BY)
-  const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_ROWS_PER_PAGE)
-  const [visibleRows, setVisibleRows] = useState<AttributeResponse[] | null>(
-    null
-  )
-  const [sortedTableData, setSortedTableData] = useState<AttributeResponse[]>(
-    []
-  )
-
-  useEffect(() => {
-    let newTableData = attributes.map((attribute) => {
-      return {
-        _id: attribute._id,
-        name: attribute.name,
-        possibleValues: attribute.possibleValues,
-        color: attribute.color,
-        kebab: '',
-      }
-    })
-
-    if (search) {
-      const lowercaseSearch = search.toLowerCase()
-      newTableData = [
-        ...newTableData.filter((attribute) => {
+  const searches = React.useMemo(
+    () => [
+      {
+        search,
+        filterFn: (attribute: AttributeResponse, search: string) => {
+          if (!search) return true
+          const lowercaseSearch = search.toLowerCase()
           return (
-            attribute.name.toLowerCase().includes(search) ||
+            attribute.name.toLowerCase().includes(lowercaseSearch) ||
             (typeof attribute.possibleValues === 'string' &&
               attribute.possibleValues.includes(lowercaseSearch)) ||
             (typeof attribute.possibleValues === 'object' &&
@@ -192,99 +174,56 @@ export default function AttributeList({
                 .join(' ')
                 .includes(lowercaseSearch))
           )
-        }),
-      ]
-    }
-
-    const newSortedData = sortTable(
-      newTableData,
-      DEFAULT_ORDER_BY,
-      DEFAULT_ORDER
-    )
-    setSortedTableData(newSortedData)
-    const rowsOnMount = newSortedData.slice(
-      0 * DEFAULT_ROWS_PER_PAGE,
-      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
-    )
-    setPage(0)
-
-    setVisibleRows(rowsOnMount)
-  }, [search])
-
-  const handleRequestSort = useCallback(
-    (
-      event: React.MouseEvent<unknown>,
-      newOrderBy: keyof AttributeTableData
-    ) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder = isAsc ? 'desc' : 'asc'
-      setOrder(toggledOrder)
-      setOrderBy(newOrderBy)
-
-      const newSortedTableData = sortTable(
-        sortedTableData,
-        newOrderBy,
-        toggledOrder
-      )
-      setPage(0)
-      setSortedTableData(newSortedTableData)
-      const newVisibleRows = newSortedTableData.slice(
-        0 * rowsPerPage,
-        0 * rowsPerPage + rowsPerPage
-      )
-      setVisibleRows(newVisibleRows)
-    },
-    [order, orderBy, page, rowsPerPage, sortedTableData]
+        },
+      },
+    ],
+    [search]
   )
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-    const newVisibleRows = sortedTableData.slice(
-      newPage * rowsPerPage,
-      newPage * rowsPerPage + rowsPerPage
-    )
-    setVisibleRows(newVisibleRows)
-  }
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(updatedRowsPerPage)
-    setPage(0)
-    const newVisibleRows = sortedTableData.slice(
-      0 * updatedRowsPerPage,
-      0 * updatedRowsPerPage + updatedRowsPerPage
-    )
-    setVisibleRows(newVisibleRows)
-  }
+  const pagination = usePagination<AttributeResponse, keyof AttributeTableData>(
+    attributes,
+    DEFAULT_ROWS_PER_PAGE,
+    DEFAULT_ORDER_BY,
+    DEFAULT_ORDER,
+    sortTable,
+    searches
+  )
 
   return (
     <Box sx={{ width: '100%' }}>
-      <TableContainer>
+      <SettingsTablePagination
+        {...pagination}
+        visible={!!pagination.visibleRows?.length}
+      />
+      <TableContainer
+        sx={{
+          visibility: pagination.visibleRows?.length ? 'default' : 'hidden',
+        }}
+      >
         <Table aria-labelledby="tableTitle" size="medium">
           <AttributeListHeader
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            order={pagination.order}
+            orderBy={pagination.orderBy}
+            onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((item) => (
+            {pagination.visibleRows?.length &&
+              pagination.visibleRows.map((item) => (
                 <AttributeListItem attribute={item} key={item._id} />
               ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={sortedTableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {!pagination.visibleRows?.length && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <NoResultsText />
+        </Box>
+      )}
     </Box>
   )
 }

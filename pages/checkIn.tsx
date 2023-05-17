@@ -61,9 +61,13 @@ export default function CheckInPage({
   const router = useRouter()
   const [errors, setErrors] = React.useState<Record<string, string>>({})
   const dispatch = useAppDispatch()
-  const inventoryItem = !!router.query.inventoryItem
-    ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
-    : undefined
+  const inventoryItem = React.useMemo(
+    () =>
+      !!router.query.inventoryItem
+        ? JSON.parse(decodeURIComponent(router.query.inventoryItem as string))
+        : undefined,
+    [router.query.inventoryItem]
+  )
   const [defaultItemDef, setDefaultItemDef] = React.useState(
     itemDefinitions.find((id) => id._id === router.query.item)
   )
@@ -113,13 +117,6 @@ export default function CheckInPage({
       },
       body: JSON.stringify(checkInOutRequest),
     })
-    setFormData((formData) => {
-      return {
-        user: formData.user,
-        date: new Date(),
-        quantityDelta: 0,
-      } as CheckInOutFormData
-    })
 
     const data = await response.json()
     setLoading(false)
@@ -132,6 +129,13 @@ export default function CheckInPage({
           severity: 'success',
         })
       )
+      setFormData((formData) => {
+        return {
+          user: formData.user,
+          date: new Date(),
+          quantityDelta: 0,
+        } as CheckInOutFormData
+      })
     } else {
       // @ts-ignore
       dispatch(showSnackbar({ message: data.message, severity: 'error' }))
@@ -187,8 +191,10 @@ export default function CheckInPage({
       </Grid2>
       <RoutableDialog>
         <NewItemPage
-          redirectBack={async (router, itemId) => {
-            await router.push(`${urls.pages.checkIn}?item=${itemId}`)
+          redirectBack={async (router, itemId?) => {
+            if (itemId)
+              await router.push(`${urls.pages.checkIn}?item=${itemId}`)
+            else await router.push(urls.pages.checkIn)
           }}
         />
       </RoutableDialog>

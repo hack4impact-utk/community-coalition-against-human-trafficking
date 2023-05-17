@@ -5,7 +5,7 @@ import { getFilteredLogs } from 'server/actions/Logs'
 import { createLogsCsvAsString } from 'utils/csv'
 import { historyPaginationDefaults } from 'utils/constants'
 
-// @route GET api/logs/export - Returns a CSV of the logs filtered and sorted by the query parameters - Private
+// @route GET api/logs/export - Returns a CSV of the logs filtered by the query parameters - Private
 export default async function logsHandler(
   req: NextApiRequest,
   res: NextApiResponse

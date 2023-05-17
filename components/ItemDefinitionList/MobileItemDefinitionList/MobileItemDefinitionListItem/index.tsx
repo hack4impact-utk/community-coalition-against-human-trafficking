@@ -11,6 +11,9 @@ import { AttributeResponse, ItemDefinitionResponse } from 'utils/types'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import theme from 'utils/theme'
 import ItemDefinitionListItemKebab from 'components/ItemDefinitionList/ItemDefinitionListItemKebab'
+import React from 'react'
+import { useAppSelector } from 'store'
+import { sortAttributes } from 'utils/sortAttributes'
 
 interface Props {
   itemDefinition: ItemDefinitionResponse
@@ -40,6 +43,10 @@ export default function MobileItemDefinitionListItem({
   itemDefinition,
 }: Props) {
   const rowSpacing = 1
+  const { defaultAttributes } = useAppSelector((state) => state.config)
+  const sortedAttributes = React.useMemo(() => {
+    return sortAttributes(itemDefinition.attributes, defaultAttributes)
+  }, [itemDefinition.attributes, defaultAttributes])
 
   return (
     <ListItem alignItems="flex-start" divider>
@@ -63,7 +70,7 @@ export default function MobileItemDefinitionListItem({
             sx={{ display: 'block', mt: theme.spacing(rowSpacing) }}
           >
             <Stack direction="column" spacing={rowSpacing}>
-              {renderAttributeChips(itemDefinition.attributes)}
+              {renderAttributeChips(sortedAttributes)}
               <Stack
                 direction="row"
                 divider={<Divider orientation="vertical" flexItem />}
@@ -81,7 +88,7 @@ export default function MobileItemDefinitionListItem({
         }
       />
       <ListItemSecondaryAction>
-        <ItemDefinitionListItemKebab />
+        <ItemDefinitionListItemKebab itemDefinition={itemDefinition} />
       </ListItemSecondaryAction>
     </ListItem>
   )

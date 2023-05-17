@@ -6,6 +6,7 @@ const AttributeSchema = new Schema(
     name: {
       type: String,
       required: true,
+      unique: true,
     },
     // TODO: change from mixed to one of "text", "number" or string[]
     possibleValues: {

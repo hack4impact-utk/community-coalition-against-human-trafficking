@@ -97,6 +97,44 @@ const softDeleteRequestPipeline: PipelineStage[] = [
   },
 ]
 
+const presentItemDefinitionsPipeline: PipelineStage[] = [
+  ...softDeleteRequestPipeline,
+  // pull in all inventory items for each item definition
+  {
+    $lookup: {
+      from: 'inventoryItems',
+      localField: '_id',
+      foreignField: 'itemDefinition',
+      as: 'inventoryItems',
+    },
+  },
+
+  // filter out inventory items with quantity 0
+  {
+    $set: {
+      inventoryItems: {
+        $filter: {
+          input: '$inventoryItems',
+          as: 'item',
+          cond: { $gt: ['$$item.quantity', 0] },
+        },
+      },
+    },
+  },
+
+  // at this point, each document (itemDefinition) has an array called "inventoryItems"
+  // that contains all inventory items that have that itemDefinition
+
+  // filter out item definitions where Document.inventoryItems.length === 0
+  // this indicates that there are no inventory items with quantity > 0 in the warehouse
+  // with the given itemDefinitionId
+  {
+    $match: {
+      inventoryItems: { $ne: [] },
+    },
+  },
+]
+
 /**
  * Finds an itemDefinition by its id
  * @id The id of the ItemDefinition object to find
@@ -118,6 +156,16 @@ export async function getItemDefinitions() {
   return (await getEntities(
     ItemDefinitionSchema,
     softDeleteRequestPipeline
+  )) as ItemDefinitionResponse[]
+}
+
+/**
+ * Finds all itemDefinitions have corresponding inventory items with quantity > 0
+ * @returns All itemDefinitions that have inventory items with quantity > 0
+ */
+export async function getPresentItemDefinitions() {
+  return (await ItemDefinitionSchema.aggregate(
+    presentItemDefinitionsPipeline
   )) as ItemDefinitionResponse[]
 }
 

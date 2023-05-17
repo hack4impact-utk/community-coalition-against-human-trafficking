@@ -16,9 +16,11 @@ import {
   removeURLQueryParam,
   addURLQueryParam,
   bulkAddURLQueryParams,
+  bulkRemoveURLQueryParams,
 } from 'utils/queryParams'
-import { LinearProgress } from '@mui/material'
 import { historyPaginationDefaults } from 'utils/constants'
+import NoResultsText from 'components/NoResultsText'
+import DesktopHistoryListSkeleton from './DesktopHistoryListSkeleton'
 
 type Order = 'asc' | 'desc'
 
@@ -89,14 +91,25 @@ interface EnhancedTableProps {
 function HistoryListHeader(props: EnhancedTableProps) {
   const { order, orderBy, router } = props
   const createSortHandler = (property: keyof HistoryTableData) => async () => {
-    const orderBy = router.query.orderBy
-    const order = router.query.order
     const isAsc = orderBy === property && order === 'asc'
     const newOrder = isAsc ? 'desc' : 'asc'
-    await bulkAddURLQueryParams(router, {
-      order: newOrder,
-      orderBy: property,
-    })
+    if (
+      newOrder === historyPaginationDefaults.order &&
+      property === historyPaginationDefaults.orderBy
+    ) {
+      await bulkRemoveURLQueryParams(router, ['order', 'orderBy'])
+    } else if (property === historyPaginationDefaults.orderBy) {
+      await removeURLQueryParam(router, 'orderBy')
+      await addURLQueryParam(router, 'order', newOrder)
+    } else if (newOrder === historyPaginationDefaults.order) {
+      await removeURLQueryParam(router, 'order')
+      await addURLQueryParam(router, 'orderBy', property)
+    } else {
+      await bulkAddURLQueryParams(router, {
+        order: newOrder,
+        orderBy: property,
+      })
+    }
   }
 
   return (
@@ -153,66 +166,97 @@ export default function DesktopHistoryList(props: Props) {
   // when a header is clicked
 
   // when the change page buttons are clicked
-  const handleChangePage = (_e: unknown, newPage: number) => {
+  const handleChangePage = async (_e: unknown, newPage: number) => {
     if (newPage === historyPaginationDefaults.page) {
-      removeURLQueryParam(router, 'page')
+      await removeURLQueryParam(router, 'page')
     } else {
-      updateQuery(router, 'page', newPage.toString())
+      await updateQuery(router, 'page', newPage.toString())
     }
   }
 
-  const handleChangeRowsPerPage = (
+  const handleChangeRowsPerPage = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    removeURLQueryParam(router, 'page')
     if (Number(event.target.value) === historyPaginationDefaults.limit) {
-      removeURLQueryParam(router, 'limit')
+      await bulkRemoveURLQueryParams(router, ['page', 'limit'])
     } else {
-      updateQuery(router, 'limit', event.target.value)
+      await removeURLQueryParam(router, 'page')
+      await updateQuery(router, 'limit', event.target.value)
     }
   }
+
+  const limit = React.useMemo(() => {
+    const queryLimit = Number(router.query.limit)
+    return queryLimit ? queryLimit : historyPaginationDefaults.limit
+  }, [router.query.limit])
+
+  const page = React.useMemo(() => {
+    const queryPage = Number(router.query.page)
+    return queryPage ? queryPage : historyPaginationDefaults.page
+  }, [router.query.page])
+  const order = React.useMemo(() => {
+    const queryOrder = router.query.order
+    return queryOrder ? (queryOrder as Order) : historyPaginationDefaults.order
+  }, [router.query.order])
+  const orderBy = React.useMemo(() => {
+    const queryOrderBy = router.query.orderBy
+    return queryOrderBy
+      ? (queryOrderBy as keyof HistoryTableData)
+      : historyPaginationDefaults.orderBy
+  }, [router.query.orderBy])
 
   return (
     <Box sx={{ width: '100%' }}>
-      {props.loading && (
-        <LinearProgress
-          variant="indeterminate"
-          sx={{
-            height: 3,
-          }}
-        />
-      )}
-      <TableContainer>
-        <Table
-          aria-labelledby="tableTitle"
-          size="medium"
-          sx={{ mt: props.loading ? '0' : '3px' }} // lets us have the page not shift when loading
-        >
-          <HistoryListHeader
-            order={router.query.order as Order}
-            orderBy={router.query.orderBy as string}
-            router={router}
-          />
-          <TableBody>
-            {props.logs.map((log) => (
-              <HistoryListItem log={log} key={log._id} />
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
         count={props.total}
-        rowsPerPage={Number(
-          router.query.limit || historyPaginationDefaults.limit.toString()
-        )}
-        page={Number(
-          router.query.page || historyPaginationDefaults.page.toString()
-        )}
+        rowsPerPage={limit}
+        page={page}
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
+        sx={{
+          position: 'sticky',
+          top: 0,
+          backgroundColor: 'white',
+          zIndex: 999,
+          visibility: props.logs.length ? 'default' : 'hidden',
+        }}
       />
+      <TableContainer
+        sx={{ visibility: props.logs.length ? 'default' : 'hidden' }}
+      >
+        <Table aria-labelledby="tableTitle" size="medium">
+          <HistoryListHeader
+            order={order as Order}
+            orderBy={orderBy}
+            router={router}
+          />
+          <TableBody>
+            {props.loading ? (
+              <DesktopHistoryListSkeleton
+                rowsPerPage={Number(
+                  router.query.limit || historyPaginationDefaults.limit
+                )}
+              />
+            ) : (
+              props.logs.map((log) => (
+                <HistoryListItem log={log} key={log._id} />
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      {!props.logs.length && !props.loading && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <NoResultsText />
+        </Box>
+      )}
     </Box>
   )
 }

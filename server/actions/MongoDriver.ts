@@ -34,9 +34,10 @@ export async function getEntity<Schema extends Document>(
 
   // if aggregate is defined, use that instead of simple find
   if (!!aggregate) {
+    const pipeline = [...aggregate]
     const objectId = new Types.ObjectId(id)
-    aggregate.push({ $match: { _id: objectId } })
-    response = (await dbSchema.aggregate(aggregate))[0]
+    pipeline.push({ $match: { _id: objectId } })
+    response = (await dbSchema.aggregate(pipeline))[0]
   } else {
     response = await dbSchema.findById(id)
   }
@@ -78,7 +79,13 @@ export async function createEntity<
 >(dbSchema: Model<Schema>, document: T): Promise<HydratedDocument<Schema>> {
   await mongoDb()
 
-  const response = await dbSchema.create(document)
+  const response = await dbSchema.create(document).catch((err) => {
+    if (err.code === 11000) {
+      throw new ApiError(400, errors.duplicate)
+    } else {
+      throw new ApiError(500, errors.serverError)
+    }
+  })
   return response
 }
 
@@ -98,7 +105,15 @@ export async function updateEntity<
 ): Promise<HydratedDocument<Schema>> {
   await mongoDb()
 
-  const response = await dbSchema.findByIdAndUpdate(id, document)
+  const response = await dbSchema
+    .findByIdAndUpdate(id, document)
+    .catch((err) => {
+      if (err.code === 11000) {
+        throw new ApiError(400, errors.duplicate)
+      } else {
+        throw new ApiError(500, errors.serverError)
+      }
+    })
   if (!response) throw new ApiError(404, errors.notFound)
   return response
 }

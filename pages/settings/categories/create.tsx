@@ -11,23 +11,26 @@ import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
 import UpsertCategoryForm from 'components/UpsertCategoryForm'
 import transformZodErrors from 'utils/transformZodErrors'
-import { categoryFormSchema } from 'utils/types'
+import { CategoryFormData, categoryFormSchema } from 'utils/types'
 import urls from 'utils/urls'
+import { removeURLQueryParam } from 'utils/queryParams'
 
 export default function CategoryCreateForm() {
   const [loading, setLoading] = useState(false)
-  const [categoryFormData, setCategoryFormData] = useState<string>('')
+  const [categoryFormData, setCategoryFormData] = useState<CategoryFormData>({
+    name: '',
+  })
 
   const router = useRouter()
   const dispatch = useDispatch()
 
   const handleClose = async () => {
-    await router.push(urls.pages.settings.categories)
+    await removeURLQueryParam(router, 'showDialog')
   }
   const [errors, setErrors] = useState<Record<string, string>>(
     {} as Record<string, string>
   )
-  const handleSubmit = async (categoryFormData: string) => {
+  const handleSubmit = async (categoryFormData: CategoryFormData) => {
     // form validation
     const zodResponse = categoryFormSchema.safeParse(categoryFormData)
     if (!zodResponse.success) {
@@ -38,9 +41,7 @@ export default function CategoryCreateForm() {
     const response = await fetch(urls.api.categories.categories, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: categoryFormData,
-      }),
+      body: JSON.stringify(categoryFormData),
     })
     // close dialog
     await handleClose()
@@ -67,9 +68,9 @@ export default function CategoryCreateForm() {
   return (
     <>
       <DialogTitle>Create Category</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ overflowY: 'visible' }}>
         <UpsertCategoryForm
-          onChange={(categoryFormData) => setCategoryFormData(categoryFormData)}
+          onChange={(name) => setCategoryFormData({ name })}
           errors={errors}
         />
       </DialogContent>

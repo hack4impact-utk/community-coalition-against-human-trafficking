@@ -62,9 +62,10 @@ export interface Log {
   date: Date
 }
 
-export interface NotificationEmail {
+export interface AppConfig {
   _id?: string
   emails: string[]
+  defaultAttributes: Array<string | Attribute>
 }
 
 export type ServerModel =
@@ -74,4 +75,4 @@ export type ServerModel =
   | Category
   | Attribute
   | Log
-  | NotificationEmail
+  | AppConfig

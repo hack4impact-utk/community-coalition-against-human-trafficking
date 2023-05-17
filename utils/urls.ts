@@ -17,6 +17,7 @@ export default {
       createAttribute: '/settings/attributes/create',
       editCategory: (id: string) => `/settings/categories/${id}/edit`,
       createCategory: '/settings/categories/create',
+      editItemDefinition: (id: string) => `/settings/items/${id}/edit`,
       createItemDefinition: '/items/new',
     },
   },
@@ -29,7 +30,7 @@ export default {
 
     categories: {
       categories: '/api/categories',
-      category: (categoryId: string) => `/api/categories${categoryId}`,
+      category: (categoryId: string) => `/api/categories/${categoryId}`,
     },
 
     inventoryItems: {
@@ -55,10 +56,9 @@ export default {
       export: `/api/logs/export`,
     },
 
-    notificationEmails: {
-      notificationEmails: '/api/notificationEmails',
-      notificationEmail: (notificationEmailId: string) =>
-        `/api/notificationEmails${notificationEmailId}`,
+    appConfigs: {
+      appConfigs: '/api/appConfigs',
+      appConfig: (appConfigId: string) => `/api/appConfigs/${appConfigId}`,
     },
 
     users: {

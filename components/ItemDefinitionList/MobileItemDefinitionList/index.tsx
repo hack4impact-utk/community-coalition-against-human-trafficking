@@ -2,6 +2,7 @@ import { List } from '@mui/material'
 import { AttributeResponse, ItemDefinitionResponse } from 'utils/types'
 import React from 'react'
 import MobileItemDefinitionListItem from 'components/ItemDefinitionList/MobileItemDefinitionList/MobileItemDefinitionListItem'
+import NoResultsText from 'components/NoResultsText'
 
 interface Props {
   itemDefinitions: ItemDefinitionResponse[]
@@ -61,12 +62,16 @@ export default function MobileItemDefinitionList({
 
   return (
     <List sx={{ width: '100%' }}>
-      {tableData.map((itemDefinition) => (
-        <MobileItemDefinitionListItem
-          key={itemDefinition.id}
-          itemDefinition={itemDefinition.itemDefinitionResponse}
-        />
-      ))}
+      {tableData.length ? (
+        tableData.map((itemDefinition) => (
+          <MobileItemDefinitionListItem
+            key={itemDefinition.id}
+            itemDefinition={itemDefinition.itemDefinitionResponse}
+          />
+        ))
+      ) : (
+        <NoResultsText />
+      )}
     </List>
   )
 }

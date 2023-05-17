@@ -13,6 +13,7 @@ export default function App({
   pageProps: { session, ...pageProps },
 }: AppProps) {
   const { store } = wrapper.useWrappedStore(pageProps)
+
   return (
     <>
       <Provider store={store}>

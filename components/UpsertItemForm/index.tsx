@@ -17,6 +17,7 @@ import {
   AttributeResponse,
   CategoryResponse,
   ItemDefinitionFormData,
+  ItemDefinitionResponse,
   AttributeFormData,
 } from 'utils/types'
 import React from 'react'
@@ -26,8 +27,10 @@ import getContrastYIQ from 'utils/getContrastYIQ'
 import theme from 'utils/theme'
 import transformZodErrors from 'utils/transformZodErrors'
 import urls from 'utils/urls'
+import { useAppSelector } from 'store'
 
 interface Props {
+  itemDefinition?: ItemDefinitionResponse
   categories: CategoryResponse[]
   attributes: AttributeResponse[]
   onChange: (formData: ItemDefinitionFormData) => void
@@ -35,6 +38,7 @@ interface Props {
 }
 
 export default function UpsertItemForm({
+  itemDefinition,
   categories,
   attributes,
   onChange,
@@ -47,6 +51,7 @@ export default function UpsertItemForm({
   const [attrFormData, setAttrFormData] = React.useState(
     {} as AttributeFormData
   )
+  const { defaultAttributes } = useAppSelector((state) => state.config)
   const [formData, setFormData] = React.useState({
     internal: false,
   } as ItemDefinitionFormData)
@@ -57,6 +62,18 @@ export default function UpsertItemForm({
   React.useEffect(() => {
     setProxyAttributes(attributes)
   }, [attributes])
+
+  React.useEffect(() => {
+    setFormData(itemDefinition || ({} as ItemDefinitionFormData))
+  }, [itemDefinition])
+
+  // Update the formData when the defaultAttributes change
+  React.useEffect(() => {
+    setFormData((fd) => ({
+      ...fd,
+      attributes: defaultAttributes,
+    }))
+  }, [defaultAttributes])
 
   const createNewAttribute = async (fd: AttributeFormData) => {
     const zodResult = attributeFormSchema.safeParse(fd)
@@ -105,12 +122,14 @@ export default function UpsertItemForm({
         getOptionLabel={(option) => option.name}
         renderInput={(params) => <TextField {...params} label="Category" />}
         sx={{ marginTop: 4 }}
+        isOptionEqualToValue={(option, value) => option._id === value._id}
         onChange={(_e, val) => {
           setFormData((fd) => ({
             ...fd,
             category: val as CategoryResponse,
           }))
         }}
+        value={formData.category || null}
       />
 
       <FormControlLabel
@@ -123,6 +142,7 @@ export default function UpsertItemForm({
             internal: !val,
           }))
         }}
+        value={formData.internal}
       />
 
       <TextField
@@ -135,6 +155,7 @@ export default function UpsertItemForm({
             name: e.target.value,
           }))
         }}
+        value={formData.name || ''}
         error={!!errors.name}
         helperText={errors.name}
       />
@@ -167,6 +188,7 @@ export default function UpsertItemForm({
               />
             ))
           }
+          isOptionEqualToValue={(option, value) => option._id === value._id}
           value={formData.attributes || []}
           onChange={(_e, val) => {
             setFormData((fd) => ({
@@ -251,6 +273,7 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
+          value={formData.lowStockThreshold || ''}
           error={!!errors['lowStockThreshold']}
         />
       </Box>
@@ -284,6 +307,7 @@ export default function UpsertItemForm({
           InputProps={{
             inputProps: { min: 1, style: { textAlign: 'center' } },
           }}
+          value={formData.criticalStockThreshold || ''}
           error={
             !!errors['criticalStockThreshold'] || !!errors['lowStockThreshold']
           }

@@ -2,6 +2,9 @@ import { AttributeResponse, ItemDefinitionResponse } from 'utils/types'
 import { Chip, Stack, TableCell, TableRow, Typography } from '@mui/material'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import ItemDefinitionListItemKebab from 'components/ItemDefinitionList/ItemDefinitionListItemKebab'
+import { sortAttributes } from 'utils/sortAttributes'
+import { useAppSelector } from 'store'
+import React from 'react'
 
 interface Props {
   itemDefinition: ItemDefinitionResponse
@@ -30,10 +33,14 @@ const renderAttributeChips = (attributes?: AttributeResponse[]) => {
 export default function DesktopItemDefinitionListItem({
   itemDefinition,
 }: Props) {
+  const { defaultAttributes } = useAppSelector((state) => state.config)
+  const sortedAttributes = React.useMemo(() => {
+    return sortAttributes(itemDefinition.attributes, defaultAttributes)
+  }, [itemDefinition.attributes, defaultAttributes])
   return (
     <TableRow>
       <TableCell>{itemDefinition.name}</TableCell>
-      <TableCell>{renderAttributeChips(itemDefinition.attributes)}</TableCell>
+      <TableCell>{renderAttributeChips(sortedAttributes)}</TableCell>
       <TableCell>{itemDefinition.category?.name}</TableCell>
       <TableCell>{itemDefinition.internal ? 'Staff' : 'Clients'}</TableCell>
       <TableCell>
@@ -47,7 +54,7 @@ export default function DesktopItemDefinitionListItem({
         </Stack>
       </TableCell>
       <TableCell>
-        <ItemDefinitionListItemKebab />
+        <ItemDefinitionListItemKebab itemDefinition={itemDefinition} />
       </TableCell>
     </TableRow>
   )

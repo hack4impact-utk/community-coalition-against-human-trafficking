@@ -13,6 +13,8 @@ import { showSnackbar } from 'store/snackbar'
 import { AttributeFormData, attributeFormSchema } from 'utils/types'
 import transformZodErrors from 'utils/transformZodErrors'
 import urls from 'utils/urls'
+import React from 'react'
+import { removeURLQueryParam } from 'utils/queryParams'
 
 export default function AttributeCreateDialog() {
   const [loading, setLoading] = useState(false)
@@ -26,9 +28,9 @@ export default function AttributeCreateDialog() {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  const handleClose = () => {
-    router.push(urls.pages.settings.attributes)
-  }
+  const handleClose = React.useCallback(async () => {
+    await removeURLQueryParam(router, 'showDialog')
+  }, [router])
 
   const handleSubmit = async (attributeFormData: AttributeFormData) => {
     // form validation
@@ -53,7 +55,7 @@ export default function AttributeCreateDialog() {
     })
 
     // close dialog
-    await router.push(urls.api.attributes.attributes)
+    await handleClose()
 
     // handle snackbar logic
     const data = await response.json()
