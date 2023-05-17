@@ -155,7 +155,7 @@ export const newItemFormSchema = itemDefinitionResponseSchema
       idSchema.lowStockThreshold || 0 >= (idSchema.criticalStockThreshold || 0),
     {
       message:
-        'Low stock threshold must be greater than critical stock threshold',
+        'Low stock threshold must be greater than or equal to critical stock threshold',
       path: ['lowStockThreshold'],
     }
   )
