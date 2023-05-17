@@ -21,7 +21,7 @@ import NoResultsText from 'components/NoResultsText'
 
 interface HeaderCellData {
   key: string
-  labels: string[]
+  label: string
   sortable?: boolean
   sortFn?(a: ItemDefinitionResponse, b: ItemDefinitionResponse): number
 }
@@ -86,35 +86,35 @@ function internalString(internal?: boolean) {
 const headerCells: HeaderCellData[] = [
   {
     key: 'name',
-    labels: ['Name'],
+    label: 'Name',
     sortable: true,
     sortFn: (a, b) => comparator(a.name, b.name),
   },
   {
     key: 'attributes',
-    labels: ['Item Attributes'],
+    label: 'Item Attributes',
     sortable: false,
   },
   {
     key: 'category',
-    labels: ['Category'],
+    label: 'Category',
     sortable: true,
     sortFn: (a, b) => comparator(a.category?.name, b.category?.name),
   },
   {
     key: 'internal',
-    labels: ['Consumer'],
+    label: 'Consumer',
     sortable: true,
     sortFn: (a, b) => internalComparator(a.internal, b.internal),
   },
   {
     key: 'threshold',
-    labels: ['Low quantity', 'Critically low quantity'],
+    label: 'Low quantity / Critically low quantity',
     sortable: false,
   },
   {
     key: 'kebab',
-    labels: [''],
+    label: '',
     sortable: false,
   },
 ]
@@ -146,20 +146,16 @@ function ItemDefinitionListHeader({
                 onClick={createSortHandler(headerCell.key as HeadKey)}
               >
                 <Stack direction="column">
-                  {headerCell.labels.map((label, index) => (
-                    <Typography key={index} variant="body2" fontWeight="bold">
-                      {label}
-                    </Typography>
-                  ))}
+                  <Typography variant="body2" fontWeight="bold">
+                    {headerCell.label}
+                  </Typography>
                 </Stack>
               </TableSortLabel>
             ) : (
               <Stack direction="column">
-                {headerCell.labels.map((label, index) => (
-                  <Typography key={index} variant="body2" fontWeight="bold">
-                    {label}
-                  </Typography>
-                ))}
+                <Typography variant="body2" fontWeight="bold">
+                  {headerCell.label}
+                </Typography>
               </Stack>
             )}
           </TableCell>
