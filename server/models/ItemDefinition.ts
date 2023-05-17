@@ -6,6 +6,7 @@ const ItemDefinitionSchema = new Schema(
     name: {
       type: String,
       required: true,
+      unique: true,
     },
     category: {
       type: Schema.Types.ObjectId,
