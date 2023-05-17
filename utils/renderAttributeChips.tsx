@@ -1,11 +1,26 @@
 import { Chip } from '@mui/material'
+import React from 'react'
+import { useAppSelector } from 'store'
 import getContrastYIQ from './getContrastYIQ'
+import { sortItemAttributes } from './sortAttributes'
 import { InventoryItemAttributeResponse } from './types'
 
-const renderAttributeChips = (
+const RenderAttributeChips = (
   attributes?: InventoryItemAttributeResponse[]
 ) => {
-  return attributes?.map((itemAttribute, i) => {
+  const config = useAppSelector((state) => state.config)
+  const defaultAttrs = config.defaultAttributes
+
+  const sortedAttrs = React.useMemo(
+    () => sortItemAttributes(attributes || [], defaultAttrs),
+    [attributes, defaultAttrs]
+  )
+
+  if (!attributes) {
+    return null
+  }
+
+  return sortedAttrs.map((itemAttribute, i) => {
     // attributes that are strings or numbers show the attribute name
     // attributes that are list types do not
 
@@ -32,4 +47,4 @@ const renderAttributeChips = (
   })
 }
 
-export default renderAttributeChips
+export default RenderAttributeChips
