@@ -110,6 +110,7 @@ export default function ItemDefinitionEditForm() {
           severity: 'success',
         })
       )
+      await handleClose()
     } else {
       dispatch(
         showSnackbar({
@@ -118,7 +119,6 @@ export default function ItemDefinitionEditForm() {
         })
       )
     }
-    await handleClose()
   }
 
   const handleClose = async () => {
