@@ -348,6 +348,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
           internal={!!router.query.internal}
           total={totalLogs}
           setTableData={setTableData}
+          loading={loading}
         />
       ) : (
         <DesktopHistoryList

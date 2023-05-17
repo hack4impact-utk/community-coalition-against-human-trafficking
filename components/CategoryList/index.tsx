@@ -168,7 +168,7 @@ export default function DesktopCategoryList(props: Props) {
       />
       <TableContainer
         sx={{
-          visibility: !!pagination.visibleRows?.length ? 'default' : 'hidden',
+          visibility: pagination.visibleRows?.length ? 'default' : 'hidden',
         }}
       >
         <Table aria-labelledby="tableTitle" size="medium">
@@ -178,21 +178,23 @@ export default function DesktopCategoryList(props: Props) {
             onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {pagination.visibleRows &&
+            {pagination.visibleRows?.length &&
               pagination.visibleRows.map((category) => (
                 <CategoryListItem category={category} key={category._id} />
               ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <Box
-        sx={{
-          display: !!pagination.visibleRows?.length ? 'none' : 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <NoResultsText />
-      </Box>
+      {!pagination.visibleRows?.length && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <NoResultsText />
+        </Box>
+      )}
     </Box>
   )
 }

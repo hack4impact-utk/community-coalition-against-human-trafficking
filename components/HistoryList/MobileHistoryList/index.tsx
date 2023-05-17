@@ -18,6 +18,7 @@ interface Props {
   internal: boolean
   total: number
   setTableData: React.Dispatch<React.SetStateAction<LogResponse[]>>
+  loading: boolean
 }
 
 function dateComparator(v1: Date, v2: Date) {
@@ -85,9 +86,13 @@ export default function MobileHistoryList(props: Props) {
             <MobileHistoryListItem log={log} key={log._id} />
           ))
         ) : (
-          <Box sx={{ display: !loading ? 'none' : 'default' }}>
-            <NoResultsText />
-          </Box>
+          <>
+            {!loading && !props.loading && (
+              <Box>
+                <NoResultsText />
+              </Box>
+            )}
+          </>
         )}
       </List>
     </InfiniteScroll>

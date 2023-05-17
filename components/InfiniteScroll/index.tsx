@@ -16,6 +16,10 @@ export default function InfiniteScroll({
 }: InfiniteScrollProps) {
   const [loading, setLoading] = React.useState(false)
 
+  React.useEffect(() => {
+    setParentLoading(false)
+  }, [])
+
   const onScroll = React.useCallback(async () => {
     const scrollTop = document.documentElement.scrollTop
     const scrollHeight = document.documentElement.scrollHeight

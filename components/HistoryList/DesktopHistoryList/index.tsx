@@ -220,11 +220,11 @@ export default function DesktopHistoryList(props: Props) {
           top: 0,
           backgroundColor: 'white',
           zIndex: 999,
-          visibility: props.logs.length > 0 ? 'default' : 'hidden',
+          visibility: props.logs.length ? 'default' : 'hidden',
         }}
       />
       <TableContainer
-        sx={{ visibility: props.logs.length > 0 ? 'default' : 'hidden' }}
+        sx={{ visibility: props.logs.length ? 'default' : 'hidden' }}
       >
         <Table aria-labelledby="tableTitle" size="medium">
           <HistoryListHeader
@@ -247,14 +247,16 @@ export default function DesktopHistoryList(props: Props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box
-        sx={{
-          display: !props.logs.length && !props.loading ? 'none' : 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <NoResultsText />
-      </Box>
+      {!props.logs.length && !props.loading && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <NoResultsText />
+        </Box>
+      )}
     </Box>
   )
 }

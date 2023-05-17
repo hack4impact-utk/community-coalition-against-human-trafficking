@@ -14,11 +14,13 @@ interface MobileInventoryItemListProps {
   search: string
   category: string
   total: number
+  loading: boolean
 }
 
 export default function MobileInventoryItemList({
   inventoryItems,
   total,
+  loading: initLoading,
 }: MobileInventoryItemListProps) {
   const [visibleRows, setVisibleRows] =
     React.useState<InventoryItemResponse[]>(inventoryItems)
@@ -70,13 +72,13 @@ export default function MobileInventoryItemList({
             />
           ))
         ) : (
-          <Box
-            sx={{
-              display: visibleRows.length ? 'none' : 'default',
-            }}
-          >
-            <NoResultsText />
-          </Box>
+          <>
+            {!loading && !initLoading && (
+              <Box>
+                <NoResultsText />
+              </Box>
+            )}
+          </>
         )}
       </List>
     </InfiniteScroll>
