@@ -175,14 +175,6 @@ export default function DesktopHistoryList(props: Props) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      {props.loading && (
-        <LinearProgress
-          variant="indeterminate"
-          sx={{
-            height: 3,
-          }}
-        />
-      )}
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
@@ -203,11 +195,7 @@ export default function DesktopHistoryList(props: Props) {
         }}
       />
       <TableContainer>
-        <Table
-          aria-labelledby="tableTitle"
-          size="medium"
-          sx={{ mt: props.loading ? '0' : '3px' }} // lets us have the page not shift when loading
-        >
+        <Table aria-labelledby="tableTitle" size="medium">
           <HistoryListHeader
             order={router.query.order as Order}
             orderBy={router.query.orderBy as string}
