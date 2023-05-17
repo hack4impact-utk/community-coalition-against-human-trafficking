@@ -182,7 +182,7 @@ type Order = 'asc' | 'desc'
 // Constants
 const DEFAULT_ORDER: Order = 'asc'
 const DEFAULT_ORDER_BY: HeadKey = 'name'
-const DEFAULT_ROWS_PER_PAGE = 5
+const DEFAULT_ROWS_PER_PAGE = 10
 
 export default function ItemDefinitionList({
   itemDefinitions,
