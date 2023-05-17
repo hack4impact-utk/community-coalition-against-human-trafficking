@@ -82,7 +82,7 @@ export async function createEntity<
     if (err.code === 11000) {
       throw new ApiError(400, errors.duplicate)
     } else {
-      throw new ApiError(400, errors.badRequest)
+      throw new ApiError(500, errors.serverError)
     }
   })
   return response

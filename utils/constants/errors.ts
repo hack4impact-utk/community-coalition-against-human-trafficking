@@ -11,4 +11,5 @@ export const errors = {
   unauthorized: 'Unauthorized',
   duplicate: 'Name must be unique',
   badRequest: 'Bad Request',
+  serverError: 'Internal Server Error',
 }
