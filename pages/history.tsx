@@ -239,7 +239,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
             <Grid2 xs={6}>{renderInternalCheckbox(router, isMobileView)}</Grid2>
           )}
         </Grid2>
-        <Grid2 xs={12} md={4} direction="row">
+        <Grid2 xs={12} md={5} direction="row">
           <Box
             sx={{
               display: 'flex',
