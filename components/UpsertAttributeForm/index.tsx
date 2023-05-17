@@ -46,8 +46,6 @@ function transformAttributeToFormData(
     }
   }
 
-  console.log({ ...result, valueType: attr.possibleValues })
-
   return {
     ...result,
     valueType: attr.possibleValues,
