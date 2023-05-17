@@ -101,8 +101,6 @@ export default function ItemDefinitionEditForm() {
       }
     )
 
-    await handleClose()
-
     const data = await response.json()
     if (data.success) {
       dispatch(
@@ -119,6 +117,7 @@ export default function ItemDefinitionEditForm() {
         })
       )
     }
+    await handleClose()
   }
 
   const handleClose = async () => {

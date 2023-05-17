@@ -65,7 +65,7 @@ export default function ItemsPage({ itemDefinitions }: Props) {
           }}
         />
       </RoutableDialog>
-      <RoutableDialog>
+      <RoutableDialog name="editItemDefinition">
         <ItemDefinitionEditForm />
       </RoutableDialog>
     </>
