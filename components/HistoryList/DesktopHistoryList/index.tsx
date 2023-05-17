@@ -20,6 +20,7 @@ import {
 } from 'utils/queryParams'
 import { LinearProgress } from '@mui/material'
 import { historyPaginationDefaults } from 'utils/constants'
+import DesktopHistoryListSkeleton from './DesktopHistoryListSkeleton'
 
 type Order = 'asc' | 'desc'
 
@@ -206,14 +207,6 @@ export default function DesktopHistoryList(props: Props) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      {props.loading && (
-        <LinearProgress
-          variant="indeterminate"
-          sx={{
-            height: 3,
-          }}
-        />
-      )}
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
@@ -230,20 +223,24 @@ export default function DesktopHistoryList(props: Props) {
         }}
       />
       <TableContainer>
-        <Table
-          aria-labelledby="tableTitle"
-          size="medium"
-          sx={{ mt: props.loading ? '0' : '3px' }} // lets us have the page not shift when loading
-        >
+        <Table aria-labelledby="tableTitle" size="medium">
           <HistoryListHeader
             order={order as Order}
             orderBy={orderBy}
             router={router}
           />
           <TableBody>
-            {props.logs.map((log) => (
-              <HistoryListItem log={log} key={log._id} />
-            ))}
+            {props.loading ? (
+              <DesktopHistoryListSkeleton
+                rowsPerPage={Number(
+                  router.query.limit || historyPaginationDefaults.limit
+                )}
+              />
+            ) : (
+              props.logs.map((log) => (
+                <HistoryListItem log={log} key={log._id} />
+              ))
+            )}
           </TableBody>
         </Table>
       </TableContainer>
