@@ -30,6 +30,7 @@ function transformAttributeToFormData(
       name: '',
       color: '#ebebeb',
       listOptions: [],
+      valueType: null,
     }
 
   const result = {
@@ -44,6 +45,8 @@ function transformAttributeToFormData(
       listOptions: attr.possibleValues,
     }
   }
+
+  console.log({ ...result, valueType: attr.possibleValues })
 
   return {
     ...result,
