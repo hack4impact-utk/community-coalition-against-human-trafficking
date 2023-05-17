@@ -4,7 +4,7 @@ import HeaderAppBar from 'components/HeaderAppBar'
 import Box from '@mui/material/Box'
 import { useAppDispatch, useAppSelector } from 'store'
 import { clearSnackbar } from 'store/snackbar'
-import { Alert, Snackbar } from '@mui/material'
+import { Alert, Snackbar, Typography } from '@mui/material'
 import { updateConfig } from 'store/config'
 import urls from 'utils/urls'
 interface DefaultLayoutProps {
@@ -82,6 +82,20 @@ export default function DefaultLayout({ children }: DefaultLayoutProps) {
               {snackbar.message}
             </Alert>
           </Snackbar>
+        </Box>
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            width: '100%',
+            height: '50',
+          }}
+        >
+          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Typography variant="caption" align="justify">
+              Made by Hack4Impact UTK 2023
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </>
