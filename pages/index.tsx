@@ -16,6 +16,7 @@ import { removeURLQueryParam } from 'utils/queryParams'
 import urls from 'utils/urls'
 import { constructQueryString } from 'utils/constructQueryString'
 import categoriesHandler from '@api/categories'
+import { dashboardPaginationDefaults } from 'utils/constants'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -77,7 +78,7 @@ export default function DashboardPage({ categories }: Props) {
         setOrder(router.query.order as string | undefined)
       }
       setInventoryItems(items.data)
-      setTotal(items.length)
+      if (total !== items.total) setTotal(items.total)
       setLoading(false)
     }
     getItems()
