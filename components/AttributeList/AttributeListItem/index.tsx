@@ -24,6 +24,7 @@ export default function AttributeListItem({
                 key={`${possibleValue}-${index}`}
                 sx={{
                   mr: 1,
+                  my: 0.5,
                   backgroundColor: attribute.color,
                   '& .MuiChip-label': {
                     color: getContrastYIQ(attribute.color),
