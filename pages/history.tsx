@@ -65,7 +65,7 @@ const renderInternalCheckbox = (router: NextRouter, isMobileView: boolean) => {
         }}
         checked={router.query.internal === 'true' ? true : false}
       />
-      <Typography>Internal only</Typography>
+      <Typography lineHeight={1 / 4}>Internal</Typography>
     </Grid2>
   )
 }
@@ -336,7 +336,15 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
             />
           </Box>
         </Grid2>
-        {!isMobileView && renderInternalCheckbox(router, isMobileView)}
+        <Box
+          mt={16}
+          style={{
+            position: 'absolute',
+            zIndex: '9000',
+          }}
+        >
+          {!isMobileView && renderInternalCheckbox(router, isMobileView)}
+        </Box>
       </Grid2>
       {isMobileView ? (
         <MobileHistoryList
