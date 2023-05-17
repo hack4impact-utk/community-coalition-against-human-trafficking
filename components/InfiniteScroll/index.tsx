@@ -5,14 +5,20 @@ interface InfiniteScrollProps {
   children: React.ReactNode
   next: () => Promise<void>
   hasMore: boolean
+  setParentLoading: (loading: boolean) => void
 }
 
 export default function InfiniteScroll({
   children,
   next,
   hasMore,
+  setParentLoading,
 }: InfiniteScrollProps) {
   const [loading, setLoading] = React.useState(false)
+
+  React.useEffect(() => {
+    setParentLoading(false)
+  }, [])
 
   const onScroll = React.useCallback(async () => {
     const scrollTop = document.documentElement.scrollTop
@@ -21,7 +27,9 @@ export default function InfiniteScroll({
 
     if (scrollTop + clientHeight >= scrollHeight && hasMore && !loading) {
       setLoading(true)
+      setParentLoading(true)
       await next()
+      setParentLoading(false)
       setLoading(false)
     }
   }, [hasMore, next, loading, setLoading])

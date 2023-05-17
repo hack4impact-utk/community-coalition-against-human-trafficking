@@ -4,7 +4,7 @@ import usePagination from 'utils/hooks/usePagination'
 
 type Pagination<TData, TDataKey extends string> = ReturnType<
   typeof usePagination<TData, TDataKey>
->
+> & { visible: boolean }
 
 export default function SettingsTablePagination<TData, TDataKey extends string>(
   pagination: Pagination<TData, TDataKey>
@@ -23,6 +23,7 @@ export default function SettingsTablePagination<TData, TDataKey extends string>(
         top: 0,
         backgroundColor: 'white',
         zIndex: 999,
+        visibility: pagination.visible ? 'default' : 'hidden',
       }}
     />
   )

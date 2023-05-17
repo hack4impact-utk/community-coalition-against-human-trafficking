@@ -18,8 +18,8 @@ import {
   bulkAddURLQueryParams,
   bulkRemoveURLQueryParams,
 } from 'utils/queryParams'
-import { LinearProgress } from '@mui/material'
 import { historyPaginationDefaults } from 'utils/constants'
+import NoResultsText from 'components/NoResultsText'
 import DesktopHistoryListSkeleton from './DesktopHistoryListSkeleton'
 
 type Order = 'asc' | 'desc'
@@ -220,9 +220,12 @@ export default function DesktopHistoryList(props: Props) {
           top: 0,
           backgroundColor: 'white',
           zIndex: 999,
+          visibility: props.logs.length ? 'default' : 'hidden',
         }}
       />
-      <TableContainer>
+      <TableContainer
+        sx={{ visibility: props.logs.length ? 'default' : 'hidden' }}
+      >
         <Table aria-labelledby="tableTitle" size="medium">
           <HistoryListHeader
             order={order as Order}
@@ -244,6 +247,16 @@ export default function DesktopHistoryList(props: Props) {
           </TableBody>
         </Table>
       </TableContainer>
+      {!props.logs.length && !props.loading && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <NoResultsText />
+        </Box>
+      )}
     </Box>
   )
 }

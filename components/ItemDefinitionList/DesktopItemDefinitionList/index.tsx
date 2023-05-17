@@ -15,6 +15,7 @@ import { ItemDefinitionResponse } from 'utils/types'
 import ItemDefinitionListItem from 'components/ItemDefinitionList/DesktopItemDefinitionList/DesktopItemDefinitionListItem'
 import usePagination from 'utils/hooks/usePagination'
 import SettingsTablePagination from 'components/SettingsTablePagination'
+import NoResultsText from 'components/NoResultsText'
 
 /// HEADER ///
 
@@ -223,8 +224,15 @@ export default function ItemDefinitionList({
   )
   return (
     <Box width={'100%'}>
-      <SettingsTablePagination {...pagination} />
-      <TableContainer>
+      <SettingsTablePagination
+        {...pagination}
+        visible={!!pagination.visibleRows?.length}
+      />
+      <TableContainer
+        sx={{
+          visibility: pagination.visibleRows?.length ? 'default' : 'hidden',
+        }}
+      >
         <Table>
           <ItemDefinitionListHeader
             order={pagination.order}
@@ -232,7 +240,7 @@ export default function ItemDefinitionList({
             onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {pagination.visibleRows &&
+            {pagination.visibleRows?.length &&
               pagination.visibleRows.map((itemDefinition) => (
                 <ItemDefinitionListItem
                   key={itemDefinition._id}
@@ -242,6 +250,16 @@ export default function ItemDefinitionList({
           </TableBody>
         </Table>
       </TableContainer>
+      {!pagination.visibleRows?.length && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <NoResultsText />
+        </Box>
+      )}
     </Box>
   )
 }

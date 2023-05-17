@@ -12,6 +12,7 @@ import { CategoryResponse } from 'utils/types'
 import CategoryListItem from 'components/CategoryList/CategoryListItem'
 import usePagination from 'utils/hooks/usePagination'
 import SettingsTablePagination from 'components/SettingsTablePagination'
+import NoResultsText from 'components/NoResultsText'
 
 type Order = 'asc' | 'desc'
 
@@ -161,8 +162,15 @@ export default function DesktopCategoryList(props: Props) {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <SettingsTablePagination {...pagination} />
-      <TableContainer>
+      <SettingsTablePagination
+        {...pagination}
+        visible={!!pagination.visibleRows?.length}
+      />
+      <TableContainer
+        sx={{
+          visibility: pagination.visibleRows?.length ? 'default' : 'hidden',
+        }}
+      >
         <Table aria-labelledby="tableTitle" size="medium">
           <CategoryListHeader
             order={pagination.order}
@@ -170,13 +178,23 @@ export default function DesktopCategoryList(props: Props) {
             onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {pagination.visibleRows &&
+            {pagination.visibleRows?.length &&
               pagination.visibleRows.map((category) => (
                 <CategoryListItem category={category} key={category._id} />
               ))}
           </TableBody>
         </Table>
       </TableContainer>
+      {!pagination.visibleRows?.length && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <NoResultsText />
+        </Box>
+      )}
     </Box>
   )
 }

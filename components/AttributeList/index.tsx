@@ -14,6 +14,7 @@ import AttributeListItem from './AttributeListItem'
 import usePagination from 'utils/hooks/usePagination'
 import React from 'react'
 import SettingsTablePagination from 'components/SettingsTablePagination'
+import NoResultsText from 'components/NoResultsText'
 
 interface AttributeTableData extends AttributeResponse {
   kebab: string
@@ -190,8 +191,15 @@ export default function AttributeList({
 
   return (
     <Box sx={{ width: '100%' }}>
-      <SettingsTablePagination {...pagination} />
-      <TableContainer>
+      <SettingsTablePagination
+        {...pagination}
+        visible={!!pagination.visibleRows?.length}
+      />
+      <TableContainer
+        sx={{
+          visibility: pagination.visibleRows?.length ? 'default' : 'hidden',
+        }}
+      >
         <Table aria-labelledby="tableTitle" size="medium">
           <AttributeListHeader
             order={pagination.order}
@@ -199,13 +207,23 @@ export default function AttributeList({
             onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {pagination.visibleRows &&
+            {pagination.visibleRows?.length &&
               pagination.visibleRows.map((item) => (
                 <AttributeListItem attribute={item} key={item._id} />
               ))}
           </TableBody>
         </Table>
       </TableContainer>
+      {!pagination.visibleRows?.length && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <NoResultsText />
+        </Box>
+      )}
     </Box>
   )
 }
