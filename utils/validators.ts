@@ -238,12 +238,12 @@ export const itemDefinitionRequestModelProperties: Property[] = [
   {
     key: 'lowStockThreshold',
     types: 'number',
-    required: true,
+    required: false,
   },
   {
     key: 'criticalStockThreshold',
     types: 'number',
-    required: true,
+    required: false,
   },
 ]
 

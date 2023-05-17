@@ -73,15 +73,25 @@ export default function NewItemPage({ redirectBack }: Props) {
       })
 
       const data = await response.json()
-      await redirectBack(router, data.payload)
-      setLoading(false)
-      // @ts-ignore
-      dispatch(
-        showSnackbar({
-          message: 'Item successfully created.',
-          severity: 'success',
-        })
-      )
+      if (data.success) {
+        await redirectBack(router, data.payload)
+        setLoading(false)
+        // @ts-ignore
+        dispatch(
+          showSnackbar({
+            message: 'Item successfully created.',
+            severity: 'success',
+          })
+        )
+      } else {
+        dispatch(
+          showSnackbar({
+            message: data.message,
+            severity: 'error',
+          })
+        )
+        setLoading(false)
+      }
     },
     [router, redirectBack, setLoading, dispatch]
   )

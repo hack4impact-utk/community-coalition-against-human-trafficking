@@ -29,7 +29,7 @@ export default {
 
     categories: {
       categories: '/api/categories',
-      category: (categoryId: string) => `/api/categories${categoryId}`,
+      category: (categoryId: string) => `/api/categories/${categoryId}`,
     },
 
     inventoryItems: {
