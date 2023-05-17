@@ -104,7 +104,15 @@ export async function updateEntity<
 ): Promise<HydratedDocument<Schema>> {
   await mongoDb()
 
-  const response = await dbSchema.findByIdAndUpdate(id, document)
+  const response = await dbSchema
+    .findByIdAndUpdate(id, document)
+    .catch((err) => {
+      if (err.code === 11000) {
+        throw new ApiError(400, errors.duplicate)
+      } else {
+        throw new ApiError(500, errors.serverError)
+      }
+    })
   if (!response) throw new ApiError(404, errors.notFound)
   return response
 }
