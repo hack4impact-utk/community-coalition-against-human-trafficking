@@ -39,58 +39,62 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   }
 
   return (
-    <AppBar
-      position={isMobileView ? 'fixed' : 'relative'}
-      sx={{ background: 'white', px: 2, backfaceVisibility: 'hidden' }}
-    >
-      <Toolbar disableGutters>
-        <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
-          <IconButton
-            size="large"
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            color="inherit"
-            onClick={() => props.setDrawerOpen(true)}
-            sx={{ color: theme.palette.grey['800'] }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Box>
-        {/* keeps the sign in user circle in the right most corner */}
-        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
+    <>
+      <AppBar
+        position={isMobileView ? 'fixed' : 'relative'}
+        sx={{ background: 'white', px: 2, backfaceVisibility: 'hidden' }}
+      >
+        <Toolbar disableGutters>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              color="inherit"
+              onClick={() => props.setDrawerOpen(true)}
+              sx={{ color: theme.palette.grey['800'] }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Box>
+          {/* keeps the sign in user circle in the right most corner */}
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}></Box>
 
-        <Box sx={{ flexGrow: 0 }}>
-          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar
-              src={session?.user?.image || ''}
-              imgProps={{ referrerPolicy: 'no-referrer' }}
-            />
-          </IconButton>
-          <Menu
-            sx={{ mt: '45px' }}
-            id="menu-appbar"
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right',
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
-          >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={onSignOut}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-      </Toolbar>
-    </AppBar>
+          <Box sx={{ flexGrow: 0 }}>
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar
+                src={session?.user?.image || ''}
+                imgProps={{ referrerPolicy: 'no-referrer' }}
+              />
+            </IconButton>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={onSignOut}>
+                  <Typography textAlign="center">{setting}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+        </Toolbar>
+      </AppBar>
+      {/* gross hack but this is pretty much the recommended way to do this */}
+      <Toolbar />
+    </>
   )
 }
