@@ -85,6 +85,7 @@ function CheckInOutForm({
   const initialFormData: Partial<CheckInOutFormData> = {
     category: inventoryItem?.itemDefinition?.category,
     itemDefinition: inventoryItem?.itemDefinition,
+    assignee: inventoryItem?.assignee,
     attributes: inventoryItem?.attributes
       ?.filter((attr) => attr.attribute.possibleValues instanceof Array)
       .map((attr) => ({
@@ -340,6 +341,7 @@ function CheckInOutForm({
               helperText={errors['assignee'] || ''}
             />
           )}
+          isOptionEqualToValue={(option, value) => option._id === value._id}
           getOptionLabel={(user) => user.name}
           renderOption={(props, option) => {
             return (
@@ -355,6 +357,7 @@ function CheckInOutForm({
               })
             )
           }}
+          value={formData.assignee || null}
         />
       )}
 
