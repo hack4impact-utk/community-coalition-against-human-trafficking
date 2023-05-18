@@ -1,6 +1,5 @@
 import { TableRow, TableCell, Box, Avatar, useMediaQuery } from '@mui/material'
 import { LogResponse } from 'utils/types'
-import HistoryListItemKebab from '../../HistoryListItemKebab'
 import Grid2 from '@mui/material/Unstable_Grid2'
 import theme from 'utils/theme'
 import renderAttributeChips from 'utils/renderAttributeChips'
@@ -46,11 +45,6 @@ export default function HistoryListItem({ log }: HistoryListItemProps) {
         {`${log.quantityDelta > 0 ? '+' : ''}${log.quantityDelta}`}
       </TableCell>
       <TableCell>{dateToReadableDateString(log.date)}</TableCell>
-      <TableCell sx={{ width: '10px' }}>
-        <Box sx={{ flexGrow: 0, ml: 'auto' }}>
-          <HistoryListItemKebab log={log} />
-        </Box>
-      </TableCell>
     </TableRow>
   )
 }

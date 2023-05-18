@@ -1,7 +1,7 @@
 import { Skeleton, TableCell, TableRow, Typography } from '@mui/material'
 
 // an array of all the cells in the row, if true, then it will render a skeleton
-const skeletonCell = [true, true, true, true, true, false]
+const skeletonCell = [true, true, true, true, true]
 
 export default function DesktopHistoryListItemSkeleton() {
   return (
