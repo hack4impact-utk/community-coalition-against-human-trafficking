@@ -96,7 +96,7 @@ describe('api/inventoryItems', () => {
       expect(payload.data).toEqual(validInventoryItemResponse)
     })
 
-    test('valid call with no data returns 204', async () => {
+    test('valid call with no data returns empty array', async () => {
       const mockGetEntities = jest
         .spyOn(MongoDriver, 'getEntities')
         .mockImplementation(async () => [])

@@ -28,8 +28,7 @@ export default async function usersHandler(
       case 'GET':
         await serverAuth(req, res)
         const users: UserResponse[] = await MongoDriver.getEntities(UserSchema)
-        const resStatus = users.length ? 200 : 204
-        return res.status(resStatus).json({
+        return res.status(200).json({
           success: true,
           payload: users,
         })

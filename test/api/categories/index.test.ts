@@ -96,7 +96,7 @@ describe('api/categories', () => {
       expect(data).toEqual(validCategoryResponse)
     })
 
-    test('valid call with no data returns 204', async () => {
+    test('valid call with no data returns empty array', async () => {
       const mockGetEntities = jest
         .spyOn(MongoDriver, 'findEntitiesByQuery')
         .mockImplementation(async () => [])
@@ -115,7 +115,6 @@ describe('api/categories', () => {
       expect(mockGetEntities).lastCalledWith(CategorySchema, {
         softDelete: { $exists: false },
       })
-      expect(response.statusCode).toBe(204)
       expect(data).toEqual([])
     })
   })

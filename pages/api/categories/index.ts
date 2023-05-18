@@ -22,8 +22,7 @@ export default async function categoriesHandler(
           await MongoDriver.findEntitiesByQuery(CategorySchema, {
             softDelete: { $exists: false },
           })
-        const resStatus = categories.length ? 200 : 204
-        return res.status(resStatus).json({
+        return res.status(200).json({
           success: true,
           payload: categories,
         })

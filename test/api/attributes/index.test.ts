@@ -92,7 +92,7 @@ describe('api/attributes', () => {
       expect(data).toEqual(validAttributeResponse)
     })
 
-    test('valid call with no data returns 204', async () => {
+    test('valid call with no data returns empty array', async () => {
       const mockGetEntities = jest
         .spyOn(MongoDriver, 'findEntitiesByQuery')
         .mockImplementation(async () => [])
@@ -111,7 +111,6 @@ describe('api/attributes', () => {
       expect(mockGetEntities).lastCalledWith(AttributeSchema, {
         softDelete: { $exists: false },
       })
-      expect(response.statusCode).toBe(204)
       expect(data).toEqual([])
     })
   })

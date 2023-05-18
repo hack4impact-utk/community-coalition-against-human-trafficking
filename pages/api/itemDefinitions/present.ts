@@ -17,8 +17,7 @@ export default async function presentItemDefinitionsHandler(
       case 'GET': {
         const items: ItemDefinitionResponse[] =
           await getPresentItemDefinitions()
-        const resStatus = items.length ? 200 : 204
-        return res.status(resStatus).json({
+        return res.status(200).json({
           success: true,
           payload: items,
         })

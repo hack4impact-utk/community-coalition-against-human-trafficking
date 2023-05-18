@@ -93,7 +93,7 @@ describe('api/users', () => {
       expect(data).toEqual(validUserResponse)
     })
 
-    test('valid call with no data returns 204', async () => {
+    test('valid call with no data returns empty array', async () => {
       const mockGetEntities = jest
         .spyOn(MongoDriver, 'getEntities')
         .mockImplementation(async () => [])
@@ -110,7 +110,6 @@ describe('api/users', () => {
 
       expect(mockGetEntities).toHaveBeenCalledTimes(1)
       expect(mockGetEntities).lastCalledWith(UserSchema)
-      expect(response.statusCode).toBe(204)
       expect(data).toEqual([])
     })
   })

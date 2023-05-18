@@ -24,8 +24,7 @@ export default async function itemDefinitionsHandler(
     switch (req.method) {
       case 'GET': {
         const items: ItemDefinitionResponse[] = await getItemDefinitions()
-        const resStatus = items.length ? 200 : 204
-        return res.status(resStatus).json({
+        return res.status(200).json({
           success: true,
           payload: items,
         })

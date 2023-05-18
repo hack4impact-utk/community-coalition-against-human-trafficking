@@ -22,8 +22,7 @@ export default async function attributesHandler(
           await MongoDriver.findEntitiesByQuery(AttributeSchema, {
             softDelete: { $exists: false },
           })
-        const resStatus = attributes.length ? 200 : 204
-        return res.status(resStatus).json({
+        return res.status(200).json({
           succcess: true,
           payload: attributes,
         })
