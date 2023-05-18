@@ -34,9 +34,13 @@ export async function addURLQueryParam(
   key: string,
   val: string
 ) {
-  await router.replace({
-    query: { ...router.query, [key]: val },
-  })
+  await router.replace(
+    {
+      query: { ...router.query, [key]: val },
+    },
+    undefined,
+    { scroll: false }
+  )
 }
 
 /**
@@ -52,9 +56,13 @@ export async function addURLQueryParam(
 export async function removeURLQueryParam(router: NextRouter, key: string) {
   delete router.query[key]
 
-  await router.replace({
-    query: { ...router.query },
-  })
+  await router.replace(
+    {
+      query: { ...router.query },
+    },
+    undefined,
+    { scroll: false }
+  )
 }
 
 export async function bulkAddURLQueryParams(
@@ -64,9 +72,13 @@ export async function bulkAddURLQueryParams(
   const nonEmptyParams = Object.fromEntries(
     Object.entries(params).filter(([_, v]) => v != null)
   )
-  await router.replace({
-    query: { ...router.query, ...nonEmptyParams },
-  })
+  await router.replace(
+    {
+      query: { ...router.query, ...nonEmptyParams },
+    },
+    undefined,
+    { scroll: false }
+  )
 }
 
 export async function bulkRemoveURLQueryParams(
@@ -75,7 +87,11 @@ export async function bulkRemoveURLQueryParams(
 ) {
   params.forEach((param) => delete router.query[param])
 
-  await router.replace({
-    query: { ...router.query },
-  })
+  await router.replace(
+    {
+      query: { ...router.query },
+    },
+    undefined,
+    { scroll: false }
+  )
 }
