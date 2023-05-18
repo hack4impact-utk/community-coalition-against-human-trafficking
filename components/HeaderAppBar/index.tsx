@@ -94,7 +94,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
         </Toolbar>
       </AppBar>
       {/* gross hack but this is pretty much the recommended way to do this */}
-      <Toolbar />
+      {isMobileView && <Toolbar />}
     </>
   )
 }
