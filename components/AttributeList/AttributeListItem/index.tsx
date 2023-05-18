@@ -3,6 +3,7 @@ import CircleIcon from '@mui/icons-material/Circle'
 import { AttributeResponse } from 'utils/types'
 import AttributeListItemKebab from '../AttributeListItemKebab'
 import React from 'react'
+import getContrastYIQ from 'utils/getContrastYIQ'
 
 interface AttributeListItemProps {
   attribute: AttributeResponse
@@ -11,11 +12,6 @@ interface AttributeListItemProps {
 export default function AttributeListItem({
   attribute,
 }: AttributeListItemProps) {
-  // React.useEffect(() => {
-  //   if (attribute.name === 'Oven Type') {
-  //     console.log(attribute)
-  //   }
-  // }, [attribute])
   return (
     <TableRow>
       <TableCell>{attribute.name}</TableCell>
@@ -26,6 +22,14 @@ export default function AttributeListItem({
                 size="small"
                 label={possibleValue}
                 key={`${possibleValue}-${index}`}
+                sx={{
+                  mr: 1,
+                  my: 0.5,
+                  backgroundColor: attribute.color,
+                  '& .MuiChip-label': {
+                    color: getContrastYIQ(attribute.color),
+                  },
+                }}
               />
             ))
           : attribute.possibleValues.charAt(0).toUpperCase() +

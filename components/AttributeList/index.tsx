@@ -149,7 +149,7 @@ interface AttributeListProps {
   search: string
 }
 
-const DEFAULT_ROWS_PER_PAGE = 5
+const DEFAULT_ROWS_PER_PAGE = 10
 const DEFAULT_ORDER_BY = 'name'
 const DEFAULT_ORDER = 'asc'
 
