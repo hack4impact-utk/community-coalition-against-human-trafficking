@@ -1,7 +1,7 @@
 import { Box, Chip, TableCell, TableRow } from '@mui/material'
 import CircleIcon from '@mui/icons-material/Circle'
 import { AttributeResponse } from 'utils/types'
-import AttributeListItemKebab from '../AttributeListItemKebab'
+import AttributeListItemKebab from '../../AttributeListItemKebab'
 import React from 'react'
 import getContrastYIQ from 'utils/getContrastYIQ'
 

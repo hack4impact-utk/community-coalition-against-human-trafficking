@@ -6,6 +6,7 @@ import TableContainer from '@mui/material/TableContainer'
 import { CategoryResponse } from 'utils/types'
 import CategoryListItem from 'components/CategoryList/CategoryListItem'
 import deepCopy from 'utils/deepCopy'
+import NoResultsText from 'components/NoResultsText'
 
 interface Props {
   categories: CategoryResponse[]
@@ -14,6 +15,7 @@ interface Props {
 
 export default function MobileCategoryList(props: Props) {
   const [tableData, setTableData] = React.useState<CategoryResponse[]>([])
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     let newTableData: CategoryResponse[] = deepCopy(props.categories)
@@ -26,6 +28,7 @@ export default function MobileCategoryList(props: Props) {
       ]
     }
     setTableData(newTableData)
+    setLoading(false)
   }, [props.search])
 
   return (
@@ -39,6 +42,11 @@ export default function MobileCategoryList(props: Props) {
           </TableBody>
         </Table>
       </TableContainer>
+      {!tableData.length && !loading && (
+        <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <NoResultsText />
+        </Box>
+      )}
     </Box>
   )
 }
