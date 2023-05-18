@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, ItemDefinitionResponse } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { getPaginatedInventoryItems } from 'server/actions/InventoryItems'
 import { inventoryPaginationDefaults } from 'utils/constants'
