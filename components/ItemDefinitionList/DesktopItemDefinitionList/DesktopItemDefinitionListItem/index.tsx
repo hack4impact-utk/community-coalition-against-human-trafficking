@@ -45,10 +45,10 @@ export default function DesktopItemDefinitionListItem({
       <TableCell>{itemDefinition.internal ? 'Staff' : 'Clients'}</TableCell>
       <TableCell>
         <Stack direction="column">
-          <Typography variant="body1">
+          <Typography variant="body2">
             {itemDefinition.lowStockThreshold}
           </Typography>
-          <Typography variant="body1">
+          <Typography variant="body2">
             {itemDefinition.criticalStockThreshold}
           </Typography>
         </Stack>
