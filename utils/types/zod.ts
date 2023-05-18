@@ -43,8 +43,8 @@ export const itemDefinitionResponseSchema = z.object({
   _id: objectId,
   name: z.string(),
   internal: z.boolean(),
-  lowStockThreshold: z.number().int().optional(),
-  criticalStockThreshold: z.number().int().optional(),
+  lowStockThreshold: z.number().int(),
+  criticalStockThreshold: z.number().int(),
   category: categoryResponseSchema.optional(),
   attributes: attributeResponseSchema,
 })
@@ -150,6 +150,8 @@ export const itemDefinitionFormSchema = itemDefinitionResponseSchema
     _id: objectId.optional(),
     attributes: attributeResponseSchema.optional(),
     category: categoryResponseSchema.nullable().optional(),
+    lowStockThreshold: z.number().int().optional(),
+    criticalStockThreshold: z.number().int().optional(),
   })
   .refine(
     (idSchema) =>

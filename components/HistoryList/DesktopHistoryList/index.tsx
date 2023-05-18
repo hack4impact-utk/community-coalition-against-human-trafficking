@@ -25,7 +25,6 @@ import DesktopHistoryListSkeleton from './DesktopHistoryListSkeleton'
 type Order = 'asc' | 'desc'
 
 interface HistoryTableData extends LogResponse {
-  kebab: string
   category: string | CategoryResponse
 }
 
@@ -72,13 +71,6 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Date',
     sortable: true,
-  },
-  {
-    id: 'kebab',
-    numeric: false,
-    disablePadding: false,
-    label: '',
-    sortable: false,
   },
 ]
 

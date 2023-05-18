@@ -37,7 +37,7 @@ export default function ItemsPage({ itemDefinitions }: Props) {
 
   return (
     <>
-      <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
+      <Grid2 container my={2} sx={{ flexGrow: 1 }} gap={2}>
         <Grid2 xs={12} container direction={'row'}>
           <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
             Items

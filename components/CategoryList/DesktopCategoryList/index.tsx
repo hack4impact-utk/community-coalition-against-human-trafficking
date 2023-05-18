@@ -1,45 +1,44 @@
-import {
-  Box,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
-} from '@mui/material'
+import * as React from 'react'
+import Box from '@mui/material/Box'
+import Table from '@mui/material/Table'
+import TableBody from '@mui/material/TableBody'
+import TableCell from '@mui/material/TableCell'
+import TableContainer from '@mui/material/TableContainer'
+import TableHead from '@mui/material/TableHead'
+import TableRow from '@mui/material/TableRow'
+import TableSortLabel from '@mui/material/TableSortLabel'
 import { visuallyHidden } from '@mui/utils'
-import { AttributeResponse } from 'utils/types'
-import AttributeListItem from './AttributeListItem'
+import { CategoryResponse } from 'utils/types'
+import CategoryListItem from 'components/CategoryList/CategoryListItem'
 import usePagination from 'utils/hooks/usePagination'
-import React from 'react'
 import SettingsTablePagination from 'components/SettingsTablePagination'
 import NoResultsText from 'components/NoResultsText'
 
-interface AttributeTableData extends AttributeResponse {
+type Order = 'asc' | 'desc'
+
+interface CategoryTableData extends CategoryResponse {
   kebab: string
 }
-type Order = 'asc' | 'desc'
 
 interface HeadCell {
   disablePadding: boolean
-  id: keyof AttributeTableData
+  id: keyof CategoryTableData
   label: string
   numeric: boolean
   sortable?: boolean
-  sortFn?(a: AttributeResponse, b: AttributeResponse): number
+  sortFn?(a: CategoryResponse, b: CategoryResponse): number
 }
 
 function sortTable(
-  tableData: AttributeResponse[],
-  sortBy: keyof AttributeTableData,
+  tableData: CategoryResponse[],
+  sortBy: keyof CategoryTableData,
   order: Order
-): AttributeResponse[] {
+) {
   const orderByHeadCell = headCells.filter(
     (headCell) => headCell.id === sortBy.toString()
   )[0]
 
-  return tableData.sort((a: AttributeResponse, b: AttributeResponse) =>
+  return tableData.sort((a: CategoryResponse, b: CategoryResponse) =>
     order === 'asc'
       ? orderByHeadCell.sortFn!(a, b)
       : orderByHeadCell.sortFn!(b, a)
@@ -63,25 +62,14 @@ const headCells: readonly HeadCell[] = [
     id: 'name',
     numeric: false,
     disablePadding: true,
-    label: 'Attribute Name',
+    label: 'Name',
     sortable: true,
-    sortFn(a, b) {
-      return comparator(a.name.toLowerCase(), b.name.toLowerCase())
+    sortFn: (category1: CategoryResponse, category2: CategoryResponse) => {
+      return comparator(
+        category1.name.toLowerCase(),
+        category2.name.toLowerCase()
+      )
     },
-  },
-  {
-    id: 'possibleValues',
-    numeric: false,
-    disablePadding: false,
-    label: 'Possible Values',
-    sortable: false,
-  },
-  {
-    id: 'color',
-    numeric: false,
-    disablePadding: false,
-    label: 'Color',
-    sortable: false,
   },
   {
     id: 'kebab',
@@ -92,22 +80,19 @@ const headCells: readonly HeadCell[] = [
   },
 ]
 
-interface AttributeListHeaderProps {
+interface EnhancedTableProps {
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof AttributeTableData
+    property: keyof CategoryTableData
   ) => void
   order: Order
   orderBy: string
 }
 
-function AttributeListHeader({
-  order,
-  orderBy,
-  onRequestSort,
-}: AttributeListHeaderProps) {
+function CategoryListHeader(props: EnhancedTableProps) {
+  const { order, orderBy, onRequestSort } = props
   const createSortHandler =
-    (property: keyof AttributeTableData) =>
+    (property: keyof CategoryTableData) =>
     (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property)
     }
@@ -120,7 +105,6 @@ function AttributeListHeader({
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
             sx={{ fontWeight: 'bold' }}
-            // padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             {headCell.sortable ? (
@@ -144,8 +128,8 @@ function AttributeListHeader({
   )
 }
 
-interface AttributeListProps {
-  attributes: AttributeResponse[]
+interface Props {
+  categories: CategoryResponse[]
   search: string
 }
 
@@ -153,35 +137,22 @@ const DEFAULT_ROWS_PER_PAGE = 10
 const DEFAULT_ORDER_BY = 'name'
 const DEFAULT_ORDER = 'asc'
 
-export default function AttributeList({
-  attributes,
-  search,
-}: AttributeListProps) {
-  const searches = React.useMemo(
-    () => [
+export default function DesktopCategoryList(props: Props) {
+  const searches = React.useMemo(() => {
+    return [
       {
-        search,
-        filterFn: (attribute: AttributeResponse, search: string) => {
-          if (!search) return true
-          const lowercaseSearch = search.toLowerCase()
-          return (
-            attribute.name.toLowerCase().includes(lowercaseSearch) ||
-            (typeof attribute.possibleValues === 'string' &&
-              attribute.possibleValues.includes(lowercaseSearch)) ||
-            (typeof attribute.possibleValues === 'object' &&
-              attribute.possibleValues
-                .map((value) => value.toLowerCase())
-                .join(' ')
-                .includes(lowercaseSearch))
-          )
+        search: props.search,
+        filterFn: (category: CategoryResponse, s: string) => {
+          if (!s) return true
+          const search = s.toLowerCase()
+          return category.name.toLowerCase().includes(search)
         },
       },
-    ],
-    [search]
-  )
+    ]
+  }, [props.search])
 
-  const pagination = usePagination<AttributeResponse, keyof AttributeTableData>(
-    attributes,
+  const pagination = usePagination<CategoryResponse, keyof CategoryTableData>(
+    props.categories,
     DEFAULT_ROWS_PER_PAGE,
     DEFAULT_ORDER_BY,
     DEFAULT_ORDER,
@@ -201,15 +172,15 @@ export default function AttributeList({
         }}
       >
         <Table aria-labelledby="tableTitle" size="medium">
-          <AttributeListHeader
+          <CategoryListHeader
             order={pagination.order}
             orderBy={pagination.orderBy}
             onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
             {pagination.visibleRows?.length &&
-              pagination.visibleRows.map((item) => (
-                <AttributeListItem attribute={item} key={item._id} />
+              pagination.visibleRows.map((category) => (
+                <CategoryListItem category={category} key={category._id} />
               ))}
           </TableBody>
         </Table>

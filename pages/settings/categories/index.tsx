@@ -29,12 +29,12 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   return (
     <>
-      <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
+      <Grid2 container my={2} sx={{ flexGrow: 1 }} gap={2}>
         <Grid2 xs={12} container direction={'row'}>
           <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
             Categories
           </Typography>
-          <Grid2 ml={isMobileView ? '0' : 'auto'}>
+          <Grid2 ml="auto" mr={isMobileView ? 2 : 6}>
             <DialogLink href={urls.pages.dialogs.createCategory}>
               <Button variant="outlined" sx={{ width: '100%' }}>
                 Create New Category
@@ -46,7 +46,7 @@ export default function CategoriesPage({ categories }: CategoriesPageProps) {
           <SearchField />
         </Grid2>
         <CategoryList
-          categories={categories}
+          category={categories}
           search={router.query.search as string}
         />
       </Grid2>

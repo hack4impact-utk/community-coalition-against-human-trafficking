@@ -1,4 +1,10 @@
-import { TableRow, TableCell, Box, useMediaQuery } from '@mui/material'
+import {
+  TableRow,
+  TableCell,
+  Box,
+  useMediaQuery,
+  Typography,
+} from '@mui/material'
 import { CategoryResponse } from 'utils/types'
 import CategoryListItemKebab from 'components/CategoryList/CategoryListItemKebab'
 import Grid2 from '@mui/material/Unstable_Grid2'
@@ -9,18 +15,16 @@ interface CategoryListItemProps {
 }
 
 export default function CategoryListItem({ category }: CategoryListItemProps) {
-  const isMediumView = useMediaQuery(theme.breakpoints.down('lg'))
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
 
   return (
     <TableRow>
       <TableCell>
-        <Grid2
-          container
-          direction={isMediumView ? 'column' : 'row'}
-          sx={{ alignItems: 'center' }}
-        >
+        <Grid2 container direction={isMobileView ? 'column' : 'row'}>
           <Grid2 md={12} lg={4}>
-            {category.name}
+            <Typography component="span" variant="body1">
+              {category.name}
+            </Typography>
           </Grid2>
         </Grid2>
       </TableCell>
