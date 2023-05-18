@@ -5,7 +5,6 @@ import GoogleProvider from 'next-auth/providers/google'
 import dbConnect from 'server'
 
 const clientPromise = dbConnect().then((mon) => {
-  console.log(mon.connection)
   return mon.connection.getClient()
 })
 
