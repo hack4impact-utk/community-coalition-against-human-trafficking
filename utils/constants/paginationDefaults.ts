@@ -11,3 +11,10 @@ export const inventoryPaginationDefaults = {
   orderBy: 'name',
   order: 'asc',
 }
+
+export const dashboardPaginationDefaults = {
+  page: 0,
+  limit: 10,
+  orderBy: 'quantity',
+  order: 'asc',
+}

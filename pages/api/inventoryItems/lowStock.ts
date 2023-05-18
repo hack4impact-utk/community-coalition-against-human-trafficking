@@ -1,7 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, ItemDefinitionResponse } from 'utils/types'
+import { ApiError } from 'utils/types'
 import { serverAuth } from 'utils/auth'
-import { getInventoryItems } from 'server/actions/InventoryItems'
+import { getPaginatedInventoryItems } from 'server/actions/InventoryItems'
+import { inventoryPaginationDefaults } from 'utils/constants'
+
+const sortPathMap = {
+  name: 'itemDefinition.name',
+  category: 'itemDefinition.category.name',
+  quantity: 'quantity',
+  assignee: 'assignee.name',
+}
 
 // @route GET api/inventoryItems/lowStock - Returns a list of all the inventoryItems in low stock - Private
 export default async function inventoryItemsLowStockHandler(
@@ -11,17 +19,24 @@ export default async function inventoryItemsLowStockHandler(
   try {
     // ensure user is logged in
     await serverAuth(req, res)
+    const { orderBy, order, limit, page, search, category } = req.query
 
     switch (req.method) {
       case 'GET': {
-        let items = await getInventoryItems()
-        items = items.filter(
-          (item) =>
-            item.quantity <
-            (item.itemDefinition as ItemDefinitionResponse).lowStockThreshold
+        const items = await getPaginatedInventoryItems(
+          Number(page || inventoryPaginationDefaults.page),
+          Number(limit || inventoryPaginationDefaults.limit),
+          sortPathMap[
+            (orderBy as keyof typeof sortPathMap) ||
+              inventoryPaginationDefaults.orderBy
+          ],
+          (order as string) || inventoryPaginationDefaults.order,
+          search as string,
+          category as string,
+          true
         )
-        const resStatus = items.length ? 200 : 204
-        return res.status(resStatus).json({
+
+        return res.status(200).json({
           success: true,
           payload: items,
         })
