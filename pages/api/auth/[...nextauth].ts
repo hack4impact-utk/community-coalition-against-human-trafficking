@@ -4,7 +4,10 @@ import NextAuth, { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import dbConnect from 'server'
 
-const clientPromise = dbConnect().then((mon) => mon.connection.getClient())
+const clientPromise = dbConnect().then((mon) => {
+  console.log(mon.connection)
+  return mon.connection.getClient()
+})
 
 export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise as Promise<MongoClient>),

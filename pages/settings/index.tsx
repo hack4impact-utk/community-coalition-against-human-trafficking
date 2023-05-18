@@ -87,7 +87,7 @@ export default function SettingsPage({
       //@ts-ignore
       dispatch(
         showSnackbar({
-          message: 'Emails successfully saved.',
+          message: 'Settings successfully saved.',
           severity: 'success',
         })
       )
@@ -142,7 +142,7 @@ export default function SettingsPage({
                 textError: 'Enter a valid email address',
               }
             }}
-            value={appConfigData.emails}
+            value={appConfigData.emails || []}
             onChange={handleChange}
             hideClearAll
           />

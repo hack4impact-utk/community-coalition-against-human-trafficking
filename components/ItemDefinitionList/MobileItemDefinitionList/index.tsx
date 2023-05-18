@@ -59,7 +59,7 @@ export default function MobileItemDefinitionList({
     filteredData.sort((a, b) => (a.name > b.name ? 1 : -1))
     setLoading(false)
     setTableData(filteredData)
-  }, [search])
+  }, [search, itemDefinitions])
 
   return (
     <List sx={{ width: '100%' }}>

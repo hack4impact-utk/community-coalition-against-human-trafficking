@@ -36,7 +36,7 @@ export default function MobileAttributeList({
     })
     setTableData(filteredAttributes)
     setLoading(false)
-  }, [search])
+  }, [search, attributes])
   return (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {tableData.length || loading ? (

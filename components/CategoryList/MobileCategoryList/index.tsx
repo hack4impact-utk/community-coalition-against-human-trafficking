@@ -29,7 +29,7 @@ export default function MobileCategoryList(props: Props) {
     }
     setTableData(newTableData)
     setLoading(false)
-  }, [props.search])
+  }, [props.search, props.categories])
 
   return (
     <Box sx={{ width: '100%' }}>

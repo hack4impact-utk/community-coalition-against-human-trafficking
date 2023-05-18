@@ -64,7 +64,9 @@ export default function UpsertItemForm({
   }, [attributes])
 
   React.useEffect(() => {
-    setFormData(itemDefinition || ({} as ItemDefinitionFormData))
+    setFormData(
+      itemDefinition || ({ internal: false } as ItemDefinitionFormData)
+    )
   }, [itemDefinition])
 
   // Update the formData when the defaultAttributes change
