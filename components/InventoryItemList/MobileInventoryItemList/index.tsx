@@ -1,4 +1,4 @@
-import { List } from '@mui/material'
+import { Box, List } from '@mui/material'
 import React from 'react'
 import { InventoryItemResponse } from 'utils/types'
 import MobileInventoryItemListItem from 'components/InventoryItemList/MobileInventoryItemList/MobileInventoryItemListItem'
@@ -7,21 +7,25 @@ import { inventoryPaginationDefaults } from 'utils/constants'
 import { useRouter } from 'next/router'
 import urls from 'utils/urls'
 import { constructQueryString } from 'utils/constructQueryString'
+import NoResultsText from 'components/NoResultsText'
 
 interface MobileInventoryItemListProps {
   inventoryItems: InventoryItemResponse[]
   search: string
   category: string
   total: number
+  loading: boolean
 }
 
 export default function MobileInventoryItemList({
   inventoryItems,
   total,
+  loading: initLoading,
 }: MobileInventoryItemListProps) {
   const [visibleRows, setVisibleRows] =
     React.useState<InventoryItemResponse[]>(inventoryItems)
   const [page, setPage] = React.useState<number>(0)
+  const [loading, setLoading] = React.useState(true)
   const { limit } = inventoryPaginationDefaults
   const router = useRouter()
 
@@ -52,18 +56,30 @@ export default function MobileInventoryItemList({
   React.useEffect(() => {
     setVisibleRows(inventoryItems)
   }, [inventoryItems])
+
   return (
     <InfiniteScroll
       next={nextFn}
       hasMore={Number(page) * limit + limit < total}
+      setParentLoading={setLoading}
     >
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-        {visibleRows.map((inventoryItem) => (
-          <MobileInventoryItemListItem
-            inventoryItem={inventoryItem}
-            key={inventoryItem._id}
-          />
-        ))}
+        {visibleRows.length ? (
+          visibleRows.map((inventoryItem) => (
+            <MobileInventoryItemListItem
+              inventoryItem={inventoryItem}
+              key={inventoryItem._id}
+            />
+          ))
+        ) : (
+          <>
+            {!loading && !initLoading && (
+              <Box>
+                <NoResultsText />
+              </Box>
+            )}
+          </>
+        )}
       </List>
     </InfiniteScroll>
   )

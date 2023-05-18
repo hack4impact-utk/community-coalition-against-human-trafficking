@@ -65,7 +65,7 @@ export default function MobileInventoryItemListItem({
         }
       />
       <ListItemSecondaryAction sx={{ display: 'flex', alignItems: 'center' }}>
-        {!!inventoryItem.assignee && (
+        {inventoryItem.assignee && (
           <Avatar src={inventoryItem.assignee.image} sx={{ mr: 2 }} />
         )}
         <InventoryItemListItemKebab inventoryItem={inventoryItem} />

@@ -1,7 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, CheckInOutRequest, LogPostRequest } from 'utils/types'
+import {
+  ApiError,
+  CheckInOutRequest,
+  InventoryItemResponse,
+  LogPostRequest,
+} from 'utils/types'
 import { serverAuth } from 'utils/auth'
-import { checkOutInventoryItem } from 'server/actions/InventoryItems'
+import {
+  checkOutInventoryItem,
+  getInventoryItem,
+  sendCriticallyLowStockEmail,
+} from 'server/actions/InventoryItems'
 import { createLog } from 'server/actions/Logs'
 
 // @route POST /api/inventoryItems/checkOut - Checks out an inventory item - Private
@@ -21,7 +30,21 @@ export default async function inventoryItemsCheckOutHandler(
           checkInOutRequest.inventoryItem,
           quantity
         )
+        const inventoryItem = (await getInventoryItem(
+          response.toString()
+        )) as InventoryItemResponse
 
+        const emailSent =
+          inventoryItem.quantity + quantity <
+          inventoryItem.itemDefinition.criticalStockThreshold
+
+        if (
+          inventoryItem.quantity <
+            inventoryItem.itemDefinition.criticalStockThreshold &&
+          !emailSent
+        ) {
+          sendCriticallyLowStockEmail(inventoryItem)
+        }
         const log: LogPostRequest = {
           staff: checkInOutRequest.staff,
           date: checkInOutRequest.date,

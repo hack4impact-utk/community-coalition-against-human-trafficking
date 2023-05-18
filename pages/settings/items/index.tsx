@@ -15,7 +15,9 @@ import DialogLink from 'components/DialogLink'
 import theme from 'utils/theme'
 import RoutableDialog from 'components/RoutableDialog'
 import NewItemPage from 'pages/items/new'
+import ItemDefinitionEditForm from './[itemDefinitionId]/edit'
 import urls from 'utils/urls'
+import { bulkRemoveURLQueryParams } from 'utils/queryParams'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -35,7 +37,7 @@ export default function ItemsPage({ itemDefinitions }: Props) {
 
   return (
     <>
-      <Grid2 container my={2} sx={{ flexGrow: 1, px: 2 }} gap={2}>
+      <Grid2 container my={2} sx={{ flexGrow: 1 }} gap={2}>
         <Grid2 xs={12} container direction={'row'}>
           <Typography variant="h5" sx={{ mb: 2, ml: 2 }}>
             Items
@@ -56,12 +58,15 @@ export default function ItemsPage({ itemDefinitions }: Props) {
           search={router.query.search as string}
         />
       </Grid2>
-      <RoutableDialog>
+      <RoutableDialog name="createItem">
         <NewItemPage
           redirectBack={async (router) => {
-            await router.push(urls.pages.settings.itemDefinitions)
+            await bulkRemoveURLQueryParams(router, ['showDialog', 'id'])
           }}
         />
+      </RoutableDialog>
+      <RoutableDialog name="editItemDefinition">
+        <ItemDefinitionEditForm />
       </RoutableDialog>
     </>
   )

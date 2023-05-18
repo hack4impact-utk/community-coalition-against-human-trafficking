@@ -6,7 +6,6 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
   TableSortLabel,
   Typography,
@@ -14,12 +13,15 @@ import {
 import React from 'react'
 import { ItemDefinitionResponse } from 'utils/types'
 import ItemDefinitionListItem from 'components/ItemDefinitionList/DesktopItemDefinitionList/DesktopItemDefinitionListItem'
+import usePagination from 'utils/hooks/usePagination'
+import SettingsTablePagination from 'components/SettingsTablePagination'
+import NoResultsText from 'components/NoResultsText'
 
 /// HEADER ///
 
 interface HeaderCellData {
   key: string
-  labels: string[]
+  label: string
   sortable?: boolean
   sortFn?(a: ItemDefinitionResponse, b: ItemDefinitionResponse): number
 }
@@ -84,35 +86,35 @@ function internalString(internal?: boolean) {
 const headerCells: HeaderCellData[] = [
   {
     key: 'name',
-    labels: ['Name'],
+    label: 'Name',
     sortable: true,
     sortFn: (a, b) => comparator(a.name, b.name),
   },
   {
     key: 'attributes',
-    labels: ['Item Attributes'],
+    label: 'Item Attributes',
     sortable: false,
   },
   {
     key: 'category',
-    labels: ['Category'],
+    label: 'Category',
     sortable: true,
     sortFn: (a, b) => comparator(a.category?.name, b.category?.name),
   },
   {
     key: 'internal',
-    labels: ['Consumer'],
+    label: 'Consumer',
     sortable: true,
     sortFn: (a, b) => internalComparator(a.internal, b.internal),
   },
   {
     key: 'threshold',
-    labels: ['Low quantity', 'Critically low quantity'],
+    label: 'Low quantity / Critically low quantity',
     sortable: false,
   },
   {
     key: 'kebab',
-    labels: [''],
+    label: '',
     sortable: false,
   },
 ]
@@ -144,20 +146,16 @@ function ItemDefinitionListHeader({
                 onClick={createSortHandler(headerCell.key as HeadKey)}
               >
                 <Stack direction="column">
-                  {headerCell.labels.map((label, index) => (
-                    <Typography key={index} variant="body2" fontWeight="bold">
-                      {label}
-                    </Typography>
-                  ))}
+                  <Typography variant="body2" fontWeight="bold">
+                    {headerCell.label}
+                  </Typography>
                 </Stack>
               </TableSortLabel>
             ) : (
               <Stack direction="column">
-                {headerCell.labels.map((label, index) => (
-                  <Typography key={index} variant="body2" fontWeight="bold">
-                    {label}
-                  </Typography>
-                ))}
+                <Typography variant="body2" fontWeight="bold">
+                  {headerCell.label}
+                </Typography>
               </Stack>
             )}
           </TableCell>
@@ -180,34 +178,20 @@ type Order = 'asc' | 'desc'
 // Constants
 const DEFAULT_ORDER: Order = 'asc'
 const DEFAULT_ORDER_BY: HeadKey = 'name'
-const DEFAULT_ROWS_PER_PAGE = 5
+const DEFAULT_ROWS_PER_PAGE = 10
 
 export default function ItemDefinitionList({
   itemDefinitions,
   search,
 }: ItemDefinitionListProps) {
-  const [tableData, setTableData] = React.useState<ItemDefinitionResponse[]>([])
-  const [visibleRows, setVisibleRows] = React.useState<
-    ItemDefinitionResponse[] | null
-  >(null)
-
-  // Sorting hooks
-  const [order, setOrder] = React.useState<Order>(DEFAULT_ORDER)
-  const [orderBy, setOrderBy] = React.useState<HeadKey>(DEFAULT_ORDER_BY)
-
-  // Pagination hooks
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(DEFAULT_ROWS_PER_PAGE)
-
-  // useEffect updates table data whenever search prop changes
-  React.useEffect(() => {
-    let filteredData = itemDefinitions
-
-    if (search) {
-      const searchLowerCase = search.toLowerCase()
-      filteredData = [
-        ...filteredData.filter(
-          (itemDefinition) =>
+  const searches = React.useMemo(() => {
+    return [
+      {
+        search: search,
+        filterFn: (itemDefinition: ItemDefinitionResponse, search: string) => {
+          if (!search) return true
+          const searchLowerCase = search.toLowerCase()
+          return (
             itemDefinition.name.toLowerCase().includes(searchLowerCase) ||
             (itemDefinition.attributes &&
               itemDefinition.attributes
@@ -221,83 +205,39 @@ export default function ItemDefinitionList({
             internalString(itemDefinition.internal)
               .toLowerCase()
               .includes(searchLowerCase)
-        ),
-      ]
-    }
-
-    setTableData(filteredData)
-
-    let rowsOnMount = sortTable(filteredData, orderBy, order)
-    rowsOnMount = rowsOnMount.slice(
-      0 * DEFAULT_ROWS_PER_PAGE,
-      0 * DEFAULT_ROWS_PER_PAGE + DEFAULT_ROWS_PER_PAGE
-    )
-    setPage(0)
-
-    setVisibleRows(rowsOnMount)
+          )
+        },
+      },
+    ]
   }, [search])
-
-  const handleRequestSort = React.useCallback(
-    (event: React.MouseEvent<unknown>, newOrderBy: HeadKey) => {
-      const isAsc = orderBy === newOrderBy && order === 'asc'
-      const toggledOrder: Order = isAsc ? 'desc' : 'asc'
-      setOrder(toggledOrder)
-      setOrderBy(newOrderBy)
-
-      const sortedRows = sortTable(tableData, newOrderBy, toggledOrder)
-      const updatedRows = sortedRows.slice(
-        page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
-      )
-      setVisibleRows(updatedRows)
-    },
-    [order, orderBy, page, rowsPerPage, tableData]
+  const pagination = usePagination<ItemDefinitionResponse, HeadKey>(
+    itemDefinitions,
+    DEFAULT_ROWS_PER_PAGE,
+    DEFAULT_ORDER_BY,
+    DEFAULT_ORDER,
+    sortTable,
+    searches
   )
-
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-    const updatedRows = tableData.slice(
-      newPage * rowsPerPage,
-      newPage * rowsPerPage + rowsPerPage
-    )
-    setVisibleRows(updatedRows)
-  }
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const updatedRowsPerPage = parseInt(event.target.value, 10)
-    setRowsPerPage(updatedRowsPerPage)
-    setPage(0)
-
-    const updatedRows = tableData.slice(
-      0 * updatedRowsPerPage,
-      0 * updatedRowsPerPage + updatedRowsPerPage
-    )
-    setVisibleRows(updatedRows)
-  }
-
   return (
     <Box width={'100%'}>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={tableData.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
+      <SettingsTablePagination
+        {...pagination}
+        visible={!!pagination.visibleRows?.length}
       />
-      <TableContainer>
+      <TableContainer
+        sx={{
+          visibility: pagination.visibleRows?.length ? 'default' : 'hidden',
+        }}
+      >
         <Table>
           <ItemDefinitionListHeader
-            order={order}
-            orderBy={orderBy}
-            onRequestSort={handleRequestSort}
+            order={pagination.order}
+            orderBy={pagination.orderBy}
+            onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {visibleRows &&
-              visibleRows.map((itemDefinition) => (
+            {pagination.visibleRows?.length &&
+              pagination.visibleRows.map((itemDefinition) => (
                 <ItemDefinitionListItem
                   key={itemDefinition._id}
                   itemDefinition={itemDefinition}
@@ -306,6 +246,16 @@ export default function ItemDefinitionList({
           </TableBody>
         </Table>
       </TableContainer>
+      {!pagination.visibleRows?.length && (
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          <NoResultsText />
+        </Box>
+      )}
     </Box>
   )
 }

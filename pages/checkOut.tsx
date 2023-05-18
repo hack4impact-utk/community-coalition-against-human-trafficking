@@ -113,17 +113,17 @@ export default function CheckOutPage({
           severity: 'success',
         })
       )
+      setFormData((formData) => {
+        return {
+          user: formData.user,
+          date: new Date(),
+          quantityDelta: 0,
+        } as CheckInOutFormData
+      })
     } else {
       // @ts-ignore
       dispatch(showSnackbar({ message: data.message, severity: 'error' }))
     }
-    setFormData((formData) => {
-      return {
-        user: formData.user,
-        date: new Date(),
-        quantityDelta: 0,
-      } as CheckInOutFormData
-    })
   }
 
   const kioskMode = useAppSelector((state) => state.kiosk)

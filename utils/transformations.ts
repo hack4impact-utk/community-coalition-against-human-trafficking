@@ -75,7 +75,13 @@ export function attributeFormDataToAttributeRequest(
 
 export function itemDefinitionFormDataToItemDefinitionRequest(
   formData: ItemDefinitionFormData
-): ItemDefinitionRequest {
+): Omit<
+  ItemDefinitionRequest,
+  'lowStockThreshold' | 'criticalStockThreshold' // nasty type hack, not sure a better way
+> & {
+  lowStockThreshold?: number
+  criticalStockThreshold?: number
+} {
   return {
     ...formData,
     category: formData.category?._id,

@@ -9,7 +9,8 @@ import MenuIcon from '@mui/icons-material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { signOut } from 'next-auth/react'
 import { useSession } from 'next-auth/react'
-import { Avatar } from '@mui/material'
+import { Avatar, useMediaQuery } from '@mui/material'
+import theme from 'utils/theme'
 
 const settings = ['Sign out']
 
@@ -21,6 +22,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   )
+  const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   const { data: session } = useSession()
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -37,7 +39,10 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
   }
 
   return (
-    <AppBar color="transparent" position="relative" sx={{ px: 2 }}>
+    <AppBar
+      position={isMobileView ? 'fixed' : 'relative'}
+      sx={{ background: 'white', px: 2, backfaceVisibility: 'hidden' }}
+    >
       <Toolbar disableGutters>
         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
           <IconButton
@@ -47,6 +52,7 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
             aria-haspopup="true"
             color="inherit"
             onClick={() => props.setDrawerOpen(true)}
+            sx={{ color: theme.palette.grey['800'] }}
           >
             <MenuIcon />
           </IconButton>

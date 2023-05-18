@@ -7,7 +7,6 @@ import {
   Avatar,
   useTheme,
 } from '@mui/material'
-import HistoryListItemKebab from 'components/HistoryList/HistoryListItemKebab'
 import renderAttributeChips from 'utils/renderAttributeChips'
 import { dateToReadableDateString } from 'utils/transformations'
 import { LogResponse } from 'utils/types'
@@ -58,7 +57,6 @@ export default function MobileHistoryListItem({ log }: Props) {
       </Box>
       <ListItemSecondaryAction sx={{ display: 'flex' }}>
         <Avatar src={log.staff.image} sx={{ mr: 2 }} />
-        <HistoryListItemKebab log={log} />
       </ListItemSecondaryAction>
     </ListItem>
   )

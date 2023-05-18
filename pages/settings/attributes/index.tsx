@@ -47,22 +47,13 @@ export default function AttributesPage({ attributes }: AttributesPageProps) {
             </DialogLink>
           </Grid2>
         </Grid2>
-        <Grid2
-          container
-          xs={12}
-          gap={isMobileView ? 2 : 0}
-          sx={{ px: 2, xs: 12, md: 4 }}
-        >
-          <Grid2 xs={12} md={4}>
-            <SearchField />
-          </Grid2>
+        <Grid2 xs={12} md={5} lg={4} sx={{ px: 2 }}>
+          <SearchField />
         </Grid2>
-        <Grid2 xs={12} sx={{ px: isMobileView ? 0 : 2 }}>
-          <AttributeList
-            attributes={attributes}
-            search={router.query.search as string}
-          />
-        </Grid2>
+        <AttributeList
+          attributes={attributes}
+          search={router.query.search as string}
+        />
       </Grid2>
 
       {/* These RoutableDialogs provide functionality to buttons that open dialogs */}

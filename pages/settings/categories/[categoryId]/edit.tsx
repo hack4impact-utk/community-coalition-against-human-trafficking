@@ -11,6 +11,7 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { showSnackbar } from 'store/snackbar'
+import { bulkRemoveURLQueryParams } from 'utils/queryParams'
 import transformZodErrors from 'utils/transformZodErrors'
 import { CategoryResponse, categoryFormSchema } from 'utils/types'
 import urls from 'utils/urls'
@@ -27,7 +28,7 @@ export default function CategoryEditForm() {
   const dispatch = useDispatch()
 
   const handleClose = async () => {
-    await router.push(urls.pages.settings.categories)
+    await bulkRemoveURLQueryParams(router, ['showDialog', 'id'])
   }
 
   // get id from URL and get categories
@@ -84,7 +85,7 @@ export default function CategoryEditForm() {
   return (
     <>
       <DialogTitle>Edit Category</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ overflowY: 'visible' }}>
         <UpsertCategoryForm
           category={categoryFormData}
           onChange={(newName) => {
