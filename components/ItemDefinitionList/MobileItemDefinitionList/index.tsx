@@ -23,6 +23,7 @@ export default function MobileItemDefinitionList({
   search,
 }: Props) {
   const [tableData, setTableData] = React.useState<SearchableData[]>([])
+  const [loading, setLoading] = React.useState(true)
 
   React.useEffect(() => {
     let filteredData = itemDefinitions.map(
@@ -62,7 +63,7 @@ export default function MobileItemDefinitionList({
 
   return (
     <List sx={{ width: '100%' }}>
-      {tableData.length ? (
+      {tableData.length || loading ? (
         tableData.map((itemDefinition) => (
           <MobileItemDefinitionListItem
             key={itemDefinition.id}
