@@ -9,6 +9,11 @@ const objectId = z
   .refine((val) => validateObjectId(val), 'Invalid ObjectId')
 
 const hexColor = z.string().refine((val) => /^#[0-9A-F]{6}$/i.test(val))
+const nonWhitespaceString = z
+  .string()
+  .refine((val) => val.trim() !== '', {
+    message: 'Input must not be only whitespace',
+  })
 
 /*
   RESPONSES
@@ -22,13 +27,13 @@ export const userResponseSchema = z.object({
 
 export const categoryResponseSchema = z.object({
   _id: objectId,
-  name: z.string(),
+  name: nonWhitespaceString,
 })
 
 export const attributeResponseSchema = z.array(
   z.object({
     _id: objectId,
-    name: z.string(),
+    name: nonWhitespaceString,
     possibleValues: z.union([
       z.literal('text'),
       z.literal('number'),
@@ -41,7 +46,7 @@ export const attributeResponseSchema = z.array(
 
 export const itemDefinitionResponseSchema = z.object({
   _id: objectId,
-  name: z.string(),
+  name: nonWhitespaceString,
   internal: z.boolean(),
   lowStockThreshold: z.number().int(),
   criticalStockThreshold: z.number().int(),
