@@ -22,9 +22,14 @@ interface AttributeFormProps {
   errors: Record<keyof AttributeFormData, string>
 }
 
+// simple helper type to allow all fields in a type to be null
+type Nullable<T> = {
+  [P in keyof T]: T[P] | null
+}
+
 function transformAttributeToFormData(
   attr?: Attribute
-): Partial<AttributeFormData> {
+): Partial<Nullable<AttributeFormData>> {
   if (!attr)
     return {
       name: '',

@@ -7,13 +7,11 @@ import {
   Checkbox,
   Chip,
   TextField,
-  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material'
 import Grid2 from '@mui/material/Unstable_Grid2'
-import InfoIcon from '@mui/icons-material/Info'
 import { useAppDispatch, useAppSelector } from 'store'
 import { toggleKioskMode } from 'store/kiosk'
 import { AppConfigResponse, AttributeResponse } from 'utils/types'

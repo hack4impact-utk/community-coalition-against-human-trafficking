@@ -15,7 +15,8 @@ export default function NoResultsText() {
         No results found
       </Typography>
       <Typography variant="body2" mt={2} color="text.secondary">
-        Try adjusting your search or filter to find what you're looking for.
+        Try adjusting your search or filter to find what you&apos;re looking
+        for.
       </Typography>
     </Box>
   )

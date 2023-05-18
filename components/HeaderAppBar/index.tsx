@@ -11,7 +11,6 @@ import { signOut } from 'next-auth/react'
 import { useSession } from 'next-auth/react'
 import { Avatar, useMediaQuery } from '@mui/material'
 import theme from 'utils/theme'
-import { relative } from 'path'
 
 const settings = ['Sign out']
 
