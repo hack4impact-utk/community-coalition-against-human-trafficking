@@ -16,6 +16,10 @@ import ItemDefinitionListItem from 'components/ItemDefinitionList/DesktopItemDef
 import usePagination from 'utils/hooks/usePagination'
 import SettingsTablePagination from 'components/SettingsTablePagination'
 import NoResultsText from 'components/NoResultsText'
+import {
+  ItemDefinitionContext,
+  ItemDefinitionContextType,
+} from '../ItemDefintionContext'
 
 /// HEADER ///
 
@@ -168,7 +172,6 @@ function ItemDefinitionListHeader({
 /// TABLE ///
 
 interface ItemDefinitionListProps {
-  itemDefinitions: ItemDefinitionResponse[]
   search: string
 }
 
@@ -181,9 +184,11 @@ const DEFAULT_ORDER_BY: HeadKey = 'name'
 const DEFAULT_ROWS_PER_PAGE = 10
 
 export default function ItemDefinitionList({
-  itemDefinitions,
   search,
 }: ItemDefinitionListProps) {
+  const { itemDefinitions } = React.useContext(
+    ItemDefinitionContext
+  ) as ItemDefinitionContextType
   const searches = React.useMemo(() => {
     return [
       {
