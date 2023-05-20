@@ -27,6 +27,7 @@ export default function MobileAttributeList({ search }: AttributeListProps) {
   const { attributes } = React.useContext(
     AttributeContext
   ) as AttributeContextType
+
   React.useEffect(() => {
     if (!search) {
       setTableData(attributes.sort(attributeComparator))
