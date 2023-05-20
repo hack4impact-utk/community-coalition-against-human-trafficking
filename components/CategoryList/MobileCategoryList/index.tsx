@@ -13,10 +13,12 @@ interface Props {
 }
 
 function categoryComparator(a: CategoryResponse, b: CategoryResponse) {
-  if (a.name < b.name) {
+  const name1 = a.name.toLowerCase()
+  const name2 = b.name.toLowerCase()
+  if (name1 < name2) {
     return -1
   }
-  if (a.name > b.name) {
+  if (name1 > name2) {
     return 1
   }
   return 0

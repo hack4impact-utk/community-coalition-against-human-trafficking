@@ -10,10 +10,12 @@ interface AttributeListProps {
 }
 
 function attributeComparator(a: AttributeResponse, b: AttributeResponse) {
-  if (a.name < b.name) {
+  const name1 = a.name.toLowerCase()
+  const name2 = b.name.toLowerCase()
+  if (name1 < name2) {
     return -1
   }
-  if (a.name > b.name) {
+  if (name1 > name2) {
     return 1
   }
   return 0
@@ -50,9 +52,6 @@ export default function MobileAttributeList({ search }: AttributeListProps) {
     setLoading(false)
   }, [search, attributes])
 
-  React.useEffect(() => {
-    setTableData(tableData.sort(attributeComparator))
-  }, [tableData])
   return (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {tableData.length || loading ? (
