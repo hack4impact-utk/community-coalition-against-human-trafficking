@@ -9,11 +9,9 @@ const objectId = z
   .refine((val) => validateObjectId(val), 'Invalid ObjectId')
 
 const hexColor = z.string().refine((val) => /^#[0-9A-F]{6}$/i.test(val))
-const nonWhitespaceString = z
-  .string()
-  .refine((val) => val.trim() !== '', {
-    message: 'Input must not be only whitespace',
-  })
+const nonWhitespaceString = z.string().refine((val) => val.trim() !== '', {
+  message: 'Field cannot be left blank',
+})
 
 /*
   RESPONSES
@@ -37,7 +35,7 @@ export const attributeResponseSchema = z.array(
     possibleValues: z.union([
       z.literal('text'),
       z.literal('number'),
-      z.array(z.string()),
+      z.array(nonWhitespaceString),
     ]),
     color: hexColor,
     softDelete: z.boolean().optional(),
@@ -77,7 +75,7 @@ export const checkInOutFormSchema = z
     assignee: userResponseSchema.optional(),
     attributes: inventoryItemAttributeSchema.optional(),
     textFieldAttributes: z
-      .record(z.string(), z.union([z.string(), z.number()]))
+      .record(z.string(), z.union([nonWhitespaceString, z.number()]))
       .optional(),
     quantityDelta: z
       .number()
@@ -179,14 +177,14 @@ export const itemDefinitionFormSchema = itemDefinitionResponseSchema
 
 export const attributeFormSchema = z
   .object({
-    name: z.string(),
+    name: nonWhitespaceString,
     color: hexColor,
     valueType: z.union([
       z.literal('text'),
       z.literal('number'),
       z.literal('list'),
     ]),
-    listOptions: z.array(z.string()).optional(),
+    listOptions: z.array(nonWhitespaceString).optional(),
   })
   .refine(
     (schema) => {
@@ -214,13 +212,5 @@ export const attributeFormSchema = z
   )
 
 export const categoryFormSchema = z.object({
-  name: z.string().refine(
-    (schema: string) => {
-      return schema !== ''
-    },
-    {
-      message: 'Required',
-      path: ['name'],
-    }
-  ),
+  name: nonWhitespaceString,
 })

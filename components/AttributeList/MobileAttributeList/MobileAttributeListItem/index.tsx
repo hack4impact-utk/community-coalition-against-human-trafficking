@@ -33,7 +33,7 @@ export default function MobileAttributeListItem({
           </Typography>
         }
         secondary={
-          <Box sx={{ maxWidth: '80%', mt: 1 }}>
+          <Box sx={{ maxWidth: '80%', mt: 1, color: 'black' }}>
             {typeof attribute.possibleValues === 'object'
               ? attribute.possibleValues.map((possibleValue, index) => (
                   <Chip

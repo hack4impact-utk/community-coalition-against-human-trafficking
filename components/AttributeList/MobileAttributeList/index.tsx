@@ -38,7 +38,7 @@ export default function MobileAttributeList({
     setLoading(false)
   }, [search, attributes])
   return (
-    <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+    <List sx={{ width: '100%' }}>
       {tableData.length || loading ? (
         tableData.map((attribute) => (
           <MobileAttributeListItem attribute={attribute} key={attribute._id} />
