@@ -2,10 +2,16 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { useAppDispatch } from 'store'
+import { showSnackbar } from 'store/snackbar'
 import { dialogPush } from 'utils/dialogLink'
 import theme from 'utils/theme'
 import { ItemDefinitionResponse } from 'utils/types'
 import urls from 'utils/urls'
+import {
+  ItemDefinitionContext,
+  ItemDefinitionContextType,
+} from '../ItemDefintionContext'
 
 interface Props {
   itemDefinition: ItemDefinitionResponse
@@ -13,6 +19,10 @@ interface Props {
 
 export default function ItemDefinitionListItemKebab({ itemDefinition }: Props) {
   const router = useRouter()
+  const { deleteItemDefinition } = React.useContext(
+    ItemDefinitionContext
+  ) as ItemDefinitionContextType
+  const dispatch = useAppDispatch()
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
   )
@@ -50,7 +60,13 @@ export default function ItemDefinitionListItemKebab({ itemDefinition }: Props) {
               method: 'DELETE',
             }
           )
-          window.location.reload()
+          deleteItemDefinition(itemDefinition._id)
+          dispatch(
+            showSnackbar({
+              message: 'Item deleted successfully.',
+              severity: 'success',
+            })
+          )
         }
       },
     },

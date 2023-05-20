@@ -13,6 +13,7 @@ import CategoryListItem from 'components/CategoryList/CategoryListItem'
 import usePagination from 'utils/hooks/usePagination'
 import SettingsTablePagination from 'components/SettingsTablePagination'
 import NoResultsText from 'components/NoResultsText'
+import { CategoryContextType, CategoryContext } from '../CategoryContext'
 
 type Order = 'asc' | 'desc'
 
@@ -129,7 +130,6 @@ function CategoryListHeader(props: EnhancedTableProps) {
 }
 
 interface Props {
-  categories: CategoryResponse[]
   search: string
 }
 
@@ -138,6 +138,9 @@ const DEFAULT_ORDER_BY = 'name'
 const DEFAULT_ORDER = 'asc'
 
 export default function DesktopCategoryList(props: Props) {
+  const { categories } = React.useContext(
+    CategoryContext
+  ) as CategoryContextType
   const searches = React.useMemo(() => {
     return [
       {
@@ -152,7 +155,7 @@ export default function DesktopCategoryList(props: Props) {
   }, [props.search])
 
   const pagination = usePagination<CategoryResponse, keyof CategoryTableData>(
-    props.categories,
+    categories,
     DEFAULT_ROWS_PER_PAGE,
     DEFAULT_ORDER_BY,
     DEFAULT_ORDER,

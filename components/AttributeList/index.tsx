@@ -1,5 +1,6 @@
 import { useMediaQuery, useTheme } from '@mui/material'
 import { AttributeResponse } from 'utils/types'
+import AttributeProvider from './AttributeContext'
 import DesktopAttributeList from './DesktopAttributeList'
 import MobileAttributeList from './MobileAttributeList'
 
@@ -14,11 +15,13 @@ export default function AttributeList(props: AttributeListProps) {
 
   return (
     <>
-      {isMobileView ? (
-        <MobileAttributeList {...props} />
-      ) : (
-        <DesktopAttributeList {...props} />
-      )}
+      <AttributeProvider initialAttributes={props.attributes}>
+        {isMobileView ? (
+          <MobileAttributeList {...props} />
+        ) : (
+          <DesktopAttributeList {...props} />
+        )}
+      </AttributeProvider>
     </>
   )
 }

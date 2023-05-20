@@ -15,6 +15,7 @@ import usePagination from 'utils/hooks/usePagination'
 import React from 'react'
 import SettingsTablePagination from 'components/SettingsTablePagination'
 import NoResultsText from 'components/NoResultsText'
+import { AttributeContext, AttributeContextType } from '../AttributeContext'
 
 interface AttributeTableData extends AttributeResponse {
   kebab: string
@@ -145,7 +146,6 @@ function AttributeListHeader({
 }
 
 interface AttributeListProps {
-  attributes: AttributeResponse[]
   search: string
 }
 
@@ -153,10 +153,11 @@ const DEFAULT_ROWS_PER_PAGE = 10
 const DEFAULT_ORDER_BY = 'name'
 const DEFAULT_ORDER = 'asc'
 
-export default function DesktopAttributeList({
-  attributes,
-  search,
-}: AttributeListProps) {
+export default function DesktopAttributeList({ search }: AttributeListProps) {
+  const { attributes } = React.useContext(
+    AttributeContext
+  ) as AttributeContextType
+
   const searches = React.useMemo(
     () => [
       {

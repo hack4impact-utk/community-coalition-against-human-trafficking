@@ -2,10 +2,13 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import React from 'react'
+import { useAppDispatch } from 'store'
+import { showSnackbar } from 'store/snackbar'
 import { dialogPush } from 'utils/dialogLink'
 import theme from 'utils/theme'
 import { AttributeResponse } from 'utils/types'
 import urls from 'utils/urls'
+import { AttributeContext, AttributeContextType } from '../AttributeContext'
 
 interface AttributeListItemKebabOption {
   name: string
@@ -20,7 +23,11 @@ export default function AttributeListItemKebab({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   attribute,
 }: AttributeListItemKebabProps) {
+  const { deleteAttribute } = React.useContext(
+    AttributeContext
+  ) as AttributeContextType
   const router = useRouter()
+  const dispatch = useAppDispatch()
   // kebab menu functionality
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
@@ -49,7 +56,13 @@ export default function AttributeListItemKebab({
           await fetch(urls.api.attributes.attribute(attribute._id), {
             method: 'DELETE',
           })
-          window.location.reload()
+          deleteAttribute(attribute._id)
+          dispatch(
+            showSnackbar({
+              message: 'Attribute deleted successfully.',
+              severity: 'success',
+            })
+          )
         }
       },
     },

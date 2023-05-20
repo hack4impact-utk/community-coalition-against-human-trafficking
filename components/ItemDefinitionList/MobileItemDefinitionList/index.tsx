@@ -3,9 +3,12 @@ import { AttributeResponse, ItemDefinitionResponse } from 'utils/types'
 import React from 'react'
 import MobileItemDefinitionListItem from 'components/ItemDefinitionList/MobileItemDefinitionList/MobileItemDefinitionListItem'
 import NoResultsText from 'components/NoResultsText'
+import {
+  ItemDefinitionContext,
+  ItemDefinitionContextType,
+} from '../ItemDefintionContext'
 
 interface Props {
-  itemDefinitions: ItemDefinitionResponse[]
   search: string
 }
 
@@ -18,10 +21,10 @@ interface SearchableData {
   itemDefinitionResponse: ItemDefinitionResponse
 }
 
-export default function MobileItemDefinitionList({
-  itemDefinitions,
-  search,
-}: Props) {
+export default function MobileItemDefinitionList({ search }: Props) {
+  const { itemDefinitions } = React.useContext(
+    ItemDefinitionContext
+  ) as ItemDefinitionContextType
   const [tableData, setTableData] = React.useState<SearchableData[]>([])
   const [loading, setLoading] = React.useState(true)
 

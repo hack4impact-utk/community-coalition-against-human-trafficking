@@ -2,10 +2,13 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import router from 'next/router'
 import React from 'react'
+import { useAppDispatch } from 'store'
+import { showSnackbar } from 'store/snackbar'
 import { dialogPush } from 'utils/dialogLink'
 import theme from 'utils/theme'
 import { CategoryResponse } from 'utils/types'
 import urls from 'utils/urls'
+import { CategoryContext, CategoryContextType } from '../CategoryContext'
 
 interface CategoryListItemKebabOption {
   name: string
@@ -19,6 +22,11 @@ interface CategoryListItemKebabProps {
 export default function CategoryListItemKebab({
   category,
 }: CategoryListItemKebabProps) {
+  const { deleteCategory } = React.useContext(
+    CategoryContext
+  ) as CategoryContextType
+  const dispatch = useAppDispatch()
+
   // kebab menu functionality
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
@@ -46,7 +54,13 @@ export default function CategoryListItemKebab({
           await fetch(urls.api.categories.category(category._id), {
             method: 'DELETE',
           })
-          window.location.reload()
+          deleteCategory(category._id)
+          dispatch(
+            showSnackbar({
+              message: 'Category successfully deleted',
+              severity: 'success',
+            })
+          )
         }
       },
     },
