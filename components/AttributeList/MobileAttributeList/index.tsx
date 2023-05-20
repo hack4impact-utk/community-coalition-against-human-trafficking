@@ -25,6 +25,7 @@ export default function MobileAttributeList({ search }: AttributeListProps) {
   const { attributes } = React.useContext(
     AttributeContext
   ) as AttributeContextType
+
   React.useEffect(() => {
     if (!search) {
       setTableData(attributes.sort(attributeComparator))
@@ -50,9 +51,6 @@ export default function MobileAttributeList({ search }: AttributeListProps) {
     setLoading(false)
   }, [search, attributes])
 
-  React.useEffect(() => {
-    setTableData(tableData.sort(attributeComparator))
-  }, [tableData])
   return (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {tableData.length || loading ? (
