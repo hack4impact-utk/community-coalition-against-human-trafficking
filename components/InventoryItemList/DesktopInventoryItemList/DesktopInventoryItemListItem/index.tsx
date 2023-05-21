@@ -71,7 +71,7 @@ export default function DesktopInventoryItemListItem({
           justifyContent: 'center',
         }}
       >
-        {inventoryItem.itemDefinition.category?.name || '-'}
+        {inventoryItem.itemDefinition.category?.name || '—'}
       </TableCell>
       <TableCell
         sx={{
@@ -104,7 +104,7 @@ export default function DesktopInventoryItemListItem({
             {inventoryItem.assignee.name}
           </Box>
         ) : (
-          '-'
+          '—'
         )}
       </TableCell>
       <TableCell sx={{ width: '10px' }}>

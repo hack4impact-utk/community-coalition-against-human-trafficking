@@ -22,7 +22,7 @@ interface Props {
 
 const renderAttributeChips = (attributes?: AttributeResponse[]) => {
   if (!attributes?.length) {
-    return '-'
+    return '—'
   }
 
   return (
@@ -82,10 +82,10 @@ export default function MobileItemDefinitionListItem({
                 spacing={1}
               >
                 <Typography color={theme.palette.warning.main}>
-                  {itemDefinition.lowStockThreshold || '-'}
+                  {itemDefinition.lowStockThreshold || '—'}
                 </Typography>
                 <Typography color={theme.palette.error.main}>
-                  {itemDefinition.criticalStockThreshold || '-'}
+                  {itemDefinition.criticalStockThreshold || '—'}
                 </Typography>
               </Stack>
             </Stack>

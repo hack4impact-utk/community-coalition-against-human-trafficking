@@ -424,25 +424,25 @@ export async function sendCriticallyLowStockEmail(
 function createEmailBody(inventoryItem: InventoryItemResponse) {
   return `The following item is critically low in stock: \n
 Name: ${inventoryItem.itemDefinition.name}
-Category: ${inventoryItem.itemDefinition.category?.name || '-'}
+Category: ${inventoryItem.itemDefinition.category?.name || '—'}
 Attributes: \n    ${
     inventoryItem.attributes
       ?.map(
         (inventoryItemAttribute) =>
           `${inventoryItemAttribute.attribute.name}: ${inventoryItemAttribute.value}`
       )
-      .join('\n    ') || '-'
+      .join('\n    ') || '—'
   }\n 
-Assignee: ${inventoryItem.assignee?.name || '-'}
+Assignee: ${inventoryItem.assignee?.name || '—'}
 Current Quantity: ${inventoryItem.quantity} \n
 Low Stock Threshold: ${
     inventoryItem.itemDefinition.lowStockThreshold === 0
-      ? '-'
+      ? '—'
       : inventoryItem.itemDefinition.lowStockThreshold
   }
 Critically Low Stock Threshold: ${
     inventoryItem.itemDefinition.criticalStockThreshold === 0
-      ? '-'
+      ? '—'
       : inventoryItem.itemDefinition.criticalStockThreshold
   }\n
 View here: ${process.env.NEXTAUTH_URL}${

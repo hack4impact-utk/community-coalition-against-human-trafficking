@@ -40,7 +40,7 @@ export default function HistoryListItem({ log }: HistoryListItemProps) {
           </Grid2>
         </Grid2>
       </TableCell>
-      <TableCell>{log.item.itemDefinition.category?.name || '-'}</TableCell>
+      <TableCell>{log.item.itemDefinition.category?.name || '—'}</TableCell>
       <TableCell>
         {`${log.quantityDelta > 0 ? '+' : ''}${log.quantityDelta}`}
       </TableCell>
