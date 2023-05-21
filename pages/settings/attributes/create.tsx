@@ -54,12 +54,11 @@ export default function AttributeCreateDialog() {
       }),
     })
 
-    // close dialog
-    await handleClose()
-
     // handle snackbar logic
     const data = await response.json()
     if (data.success) {
+      // close dialog
+      await handleClose()
       dispatch(
         showSnackbar({
           message: 'Attribute successfully added',

@@ -43,12 +43,12 @@ export default function CategoryCreateForm() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(categoryFormData),
     })
-    // close dialog
-    await handleClose()
 
     // handle snackbar logic
     const data = await response.json()
     if (data.success) {
+      // close dialog
+      await handleClose()
       dispatch(
         showSnackbar({
           message: 'Category successfully added',

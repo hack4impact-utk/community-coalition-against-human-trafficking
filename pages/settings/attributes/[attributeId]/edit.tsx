@@ -79,10 +79,9 @@ export default function AttributeEditDialog() {
       // handle snackbar logic
       const data = await response.json()
 
-      // close dialog
-      await handleClose()
-
       if (data.success) {
+        // close dialog
+        await handleClose()
         dispatch(
           showSnackbar({
             message: 'Attribute successfully edited',
