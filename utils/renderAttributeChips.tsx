@@ -17,7 +17,7 @@ const RenderAttributeChips = (
   )
 
   if (!attributes) {
-    return null
+    return '-'
   }
 
   return sortedAttrs.map((itemAttribute, i) => {
