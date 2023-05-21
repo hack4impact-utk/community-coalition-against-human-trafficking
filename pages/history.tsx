@@ -248,6 +248,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
             }}
           >
             <DatePicker
+              maxDate={router.query.endDate}
               disableFuture
               label="Start Date"
               renderInput={(params) => (
@@ -293,6 +294,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
               <HorizontalRuleIcon sx={{ color: theme.palette.grey['500'] }} />
             </Box>
             <DatePicker
+              minDate={router.query.startDate}
               disableFuture
               label="End Date"
               renderInput={(params) => (
