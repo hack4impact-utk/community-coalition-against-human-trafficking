@@ -1,4 +1,5 @@
 import {
+  Box,
   Chip,
   Divider,
   ListItem,
@@ -20,6 +21,10 @@ interface Props {
 }
 
 const renderAttributeChips = (attributes?: AttributeResponse[]) => {
+  if (!attributes?.length) {
+    return '-'
+  }
+
   return (
     <Stack direction="row" spacing={1}>
       {attributes?.map((attribute) => {
@@ -70,17 +75,17 @@ export default function MobileItemDefinitionListItem({
             sx={{ display: 'block', mt: theme.spacing(rowSpacing) }}
           >
             <Stack direction="column" spacing={rowSpacing}>
-              {renderAttributeChips(sortedAttributes)}
+              <Box>{renderAttributeChips(sortedAttributes)}</Box>
               <Stack
                 direction="row"
                 divider={<Divider orientation="vertical" flexItem />}
                 spacing={1}
               >
                 <Typography color={theme.palette.warning.main}>
-                  {itemDefinition.lowStockThreshold}
+                  {itemDefinition.lowStockThreshold || '-'}
                 </Typography>
                 <Typography color={theme.palette.error.main}>
-                  {itemDefinition.criticalStockThreshold}
+                  {itemDefinition.criticalStockThreshold || '-'}
                 </Typography>
               </Stack>
             </Stack>
