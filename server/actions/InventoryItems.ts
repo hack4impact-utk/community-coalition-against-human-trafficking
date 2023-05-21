@@ -449,8 +449,10 @@ View here: ${process.env.NEXTAUTH_URL}${
     urls.pages.inventory
   }${constructQueryString(
     {
-      search: inventoryItem.itemDefinition.name,
-      category: inventoryItem.itemDefinition.category?.name || '',
+      search: encodeURIComponent(inventoryItem.itemDefinition.name),
+      category: encodeURIComponent(
+        inventoryItem.itemDefinition.category?.name || ''
+      ),
       orderBy: 'quantity',
     },
     true
