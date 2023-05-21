@@ -97,6 +97,11 @@ export default function CheckInPage({
   }, [formData.itemDefinition])
 
   const onSubmit = async (formData: CheckInOutFormData) => {
+    // necessary for navigation from kebab, which encodes assignee as null
+    if (formData.assignee === null) {
+      formData.assignee = undefined
+    }
+
     const res = checkInOutFormSchema.safeParse(formData)
 
     if (!res.success) {
