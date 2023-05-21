@@ -16,7 +16,7 @@ const RenderAttributeChips = (
     [attributes, defaultAttrs]
   )
 
-  if (!attributes) {
+  if (!attributes?.length) {
     return '-'
   }
 
