@@ -7,6 +7,7 @@ const ItemDefinitionSchema = new Schema(
       type: String,
       required: true,
       unique: true,
+      partialFilterExpression: { softDelete: { $eq: null } },
     },
     category: {
       type: Schema.Types.ObjectId,
@@ -41,6 +42,11 @@ const ItemDefinitionSchema = new Schema(
   {
     versionKey: false,
   }
+)
+
+ItemDefinitionSchema.index(
+  { name: 1 },
+  { unique: true, partialFilterExpression: { softDelete: { $eq: null } } }
 )
 
 export interface ItemDefinitionDocument
