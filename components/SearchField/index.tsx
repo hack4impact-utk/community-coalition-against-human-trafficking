@@ -14,7 +14,7 @@ const updateSearchQuery = (search: string, router: NextRouter) => {
   else addURLQueryParam(router, 'search', search)
 }
 
-const debouncedUpdateSearchQuery = debounce(updateSearchQuery, 300)
+const debouncedUpdateSearchQuery = debounce(updateSearchQuery, 550)
 
 export default function SearchField() {
   const { router } = useRouterQuery()
@@ -32,21 +32,24 @@ export default function SearchField() {
       fullWidth
       endAdornment={
         <>
-        { search &&
-          <InputAdornment position='end'>
-            <IconButton size='small' sx={{ p: 0 }} onClick={() => onChange("")}>
-              <Close fontSize='small' />
-            </IconButton>
+          {search && (
+            <InputAdornment position="end">
+              <IconButton
+                size="small"
+                sx={{ p: 0 }}
+                onClick={() => onChange('')}
+              >
+                <Close fontSize="small" />
+              </IconButton>
+            </InputAdornment>
+          )}
+          <InputAdornment position="end">
+            <Search />
           </InputAdornment>
-        }
-        <InputAdornment position="end">
-          <Search />
-        </InputAdornment>
         </>
       }
       onChange={(e) => onChange(e.target.value)}
       value={search}
-      
     ></OutlinedInput>
   )
 }
