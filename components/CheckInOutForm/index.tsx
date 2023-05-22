@@ -403,7 +403,7 @@ function CheckInOutForm({
               (
                 existingTextAttrVals?.find((val) => val._id === textAttr._id)
                   ?.values as string[]
-              ).sort(stringCompareFn()) || []
+              )?.sort(stringCompareFn()) || []
             }
             sx={{ marginTop: 4 }}
             renderInput={(params) => (
