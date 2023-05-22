@@ -209,7 +209,6 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
           </Grid2>
         )}
       </Grid2>
-
       {/* Filter views -- search, category dropdown, date range, internal only checkbox */}
       <Grid2
         container
@@ -218,12 +217,12 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
         gap={isMobileView ? 2 : 4}
         sx={{ px: 2, alignItems: 'center' }}
       >
-        <Grid2 xs={12} md={2}>
+        <Grid2 xs={12} md={5}>
           <SearchField />
         </Grid2>
         <Grid2
           xs={12}
-          md={2}
+          md={5}
           container
           direction="row"
           sx={{ alignItems: 'center' }}
@@ -239,7 +238,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
             <Grid2 xs={6}>{renderInternalCheckbox(router, isMobileView)}</Grid2>
           )}
         </Grid2>
-        <Grid2 xs={12} md={5} direction="row">
+        <Grid2 xs={12} md={9} direction="row">
           <Box
             sx={{
               display: 'flex',
@@ -336,13 +335,7 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
             />
           </Box>
         </Grid2>
-        <Box
-          mt={16}
-          style={{
-            position: 'absolute',
-            zIndex: '9000',
-          }}
-        >
+        <Box>
           {!isMobileView && renderInternalCheckbox(router, isMobileView)}
         </Box>
       </Grid2>
