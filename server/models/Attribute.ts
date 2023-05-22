@@ -6,7 +6,6 @@ const AttributeSchema = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     // TODO: change from mixed to one of "text", "number" or string[]
     possibleValues: {
@@ -25,6 +24,11 @@ const AttributeSchema = new Schema(
   {
     versionKey: false,
   }
+)
+
+AttributeSchema.index(
+  { name: 1 },
+  { unique: true, partialFilterExpression: { softDelete: { $eq: null } } }
 )
 
 export interface AttributeDocument extends Omit<Attribute, '_id'>, Document {}
