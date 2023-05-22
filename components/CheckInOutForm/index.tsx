@@ -9,6 +9,10 @@ import {
   CheckInOutFormData,
   TextFieldAttributesInternalRepresentation,
   InventoryItemExistingAttributeValuesResponse,
+  ListAttribute,
+  ListAttributeResponse,
+  TextAttributeResponse,
+  NumberAttributeResponse,
 } from 'utils/types'
 import QuantityForm from 'components/CheckInOutForm/QuantityForm'
 import AttributeAutocomplete, {
@@ -21,6 +25,7 @@ import {
 import { usePrevious } from 'utils/hooks/usePrevious'
 import { useSession } from 'next-auth/react'
 import urls from 'utils/urls'
+import { stringCompareFn, stringPropertyCompareFn } from 'utils/sortFns'
 
 interface Props {
   kioskMode: boolean
@@ -236,7 +241,9 @@ function CheckInOutForm({
       {kioskMode && (
         <Autocomplete
           autoHighlight
-          options={users}
+          options={[...users].sort(
+            stringPropertyCompareFn<UserResponse>('name')
+          )}
           isOptionEqualToValue={(option, value) => option._id === value._id}
           renderInput={(params) => (
             <TextField
@@ -280,7 +287,9 @@ function CheckInOutForm({
       </Box>
       <Autocomplete
         autoHighlight
-        options={categories}
+        options={[...categories].sort(
+          stringPropertyCompareFn<CategoryResponse>('name')
+        )}
         sx={{ marginTop: 4 }}
         renderInput={(params) => (
           <TextField
@@ -304,7 +313,9 @@ function CheckInOutForm({
       />
       <Autocomplete
         autoHighlight
-        options={filteredItemDefinitions}
+        options={[...filteredItemDefinitions].sort(
+          stringPropertyCompareFn<ItemDefinitionResponse>('name')
+        )}
         sx={{ marginTop: 4 }}
         renderInput={(params) => (
           <TextField
@@ -331,7 +342,9 @@ function CheckInOutForm({
       {/* Assignee Autocomplete */}
       {formData.itemDefinition?.internal && (
         <Autocomplete
-          options={users}
+          options={[...users].sort(
+            stringPropertyCompareFn<UserResponse>('name')
+          )}
           sx={{ mt: 4 }}
           renderInput={(params) => (
             <TextField
@@ -364,7 +377,9 @@ function CheckInOutForm({
       {/* Attribute Autocomplete */}
       {splitAttrs.list.length > 0 && (
         <AttributeAutocomplete
-          attributes={splitAttrs.list}
+          attributes={[...splitAttrs.list].sort(
+            stringPropertyCompareFn<ListAttributeResponse>('name')
+          )}
           sx={{ mt: 4 }}
           onChange={(_e, attributes) => {
             setFormData((formData) =>
@@ -379,62 +394,69 @@ function CheckInOutForm({
         />
       )}
       {/* Text Fields */}
-      {splitAttrs.text.map((textAttr) => (
-        <Autocomplete
-          key={textAttr._id}
-          options={
-            existingTextAttrVals
-              ?.find((val) => val._id === textAttr._id)
-              ?.values.sort() || []
-          }
-          sx={{ marginTop: 4 }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label={textAttr.name}
-              error={!!errors['textFieldAttributes']}
-              helperText={errors['textFieldAttributes']}
-            />
-          )}
-          isOptionEqualToValue={(option, value) => option === value}
-          onChange={(_e, textAttrVal) => {
-            updateTextFieldAttributes(textAttrVal as string, textAttr._id)
-          }}
-          getOptionLabel={(attrValue) => attrValue as string}
-          value={formData.textFieldAttributes?.[textAttr._id] || ''}
-          freeSolo
-          autoSelect
-        />
-      ))}
+      {[...splitAttrs.text]
+        .sort(stringPropertyCompareFn<TextAttributeResponse>('name'))
+        .map((textAttr) => (
+          <Autocomplete
+            key={textAttr._id}
+            options={
+              (
+                existingTextAttrVals?.find((val) => val._id === textAttr._id)
+                  ?.values as string[]
+              ).sort(stringCompareFn()) || []
+            }
+            sx={{ marginTop: 4 }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={textAttr.name}
+                error={!!errors['textFieldAttributes']}
+                helperText={errors['textFieldAttributes']}
+              />
+            )}
+            isOptionEqualToValue={(option, value) => option === value}
+            onChange={(_e, textAttrVal) => {
+              updateTextFieldAttributes(textAttrVal as string, textAttr._id)
+            }}
+            getOptionLabel={(attrValue) => attrValue as string}
+            value={
+              (formData.textFieldAttributes?.[textAttr._id] as string) || ''
+            }
+            freeSolo
+            autoSelect
+          />
+        ))}
 
       {/* Number Fields */}
-      {splitAttrs.number.map((numAttr) => (
-        <Autocomplete
-          key={numAttr._id}
-          options={
-            existingNumAttrVals
-              ?.find((val) => val._id === numAttr._id)
-              ?.values.sort((v1, v2) => Number(v1) - Number(v2)) || []
-          }
-          sx={{ marginTop: 4 }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label={numAttr.name}
-              error={!!errors['textFieldAttributes']}
-              helperText={errors['textFieldAttributes']}
-            />
-          )}
-          isOptionEqualToValue={(option, value) => option === value}
-          onChange={(_e, numAttrVal) => {
-            updateTextFieldAttributes(Number(numAttrVal), numAttr._id)
-          }}
-          getOptionLabel={(attrValue) => String(attrValue)}
-          value={formData.textFieldAttributes?.[numAttr._id] || ''}
-          freeSolo
-          autoSelect
-        />
-      ))}
+      {[...splitAttrs.number]
+        .sort(stringPropertyCompareFn<NumberAttributeResponse>('name'))
+        .map((numAttr) => (
+          <Autocomplete
+            key={numAttr._id}
+            options={
+              existingNumAttrVals
+                ?.find((val) => val._id === numAttr._id)
+                ?.values.sort((v1, v2) => Number(v1) - Number(v2)) || []
+            }
+            sx={{ marginTop: 4 }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={numAttr.name}
+                error={!!errors['textFieldAttributes']}
+                helperText={errors['textFieldAttributes']}
+              />
+            )}
+            isOptionEqualToValue={(option, value) => option === value}
+            onChange={(_e, numAttrVal) => {
+              updateTextFieldAttributes(Number(numAttrVal), numAttr._id)
+            }}
+            getOptionLabel={(attrValue) => String(attrValue)}
+            value={formData.textFieldAttributes?.[numAttr._id] || ''}
+            freeSolo
+            autoSelect
+          />
+        ))}
 
       <QuantityForm
         setQuantity={(quantity) => {
