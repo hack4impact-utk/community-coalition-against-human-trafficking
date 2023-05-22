@@ -1,5 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { ApiError, AttributePutRequest, AttributeResponse } from 'utils/types'
+import {
+  ApiError,
+  AppConfigPutRequest,
+  AppConfigResponse,
+  AttributePutRequest,
+  AttributeResponse,
+} from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import {
   apiAttributeValidation,
@@ -8,6 +14,8 @@ import {
 import * as MongoDriver from 'server/actions/MongoDriver'
 import AttributeSchema from 'server/models/Attribute'
 import { errors } from 'utils/constants/errors'
+import { getAppConfigs } from 'server/actions/AppConfig'
+import AppConfigSchema from 'server/models/AppConfig'
 
 // @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId - Private
 // @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by attributeId) with a new Attribute object - Private
@@ -51,6 +59,27 @@ export default async function attributeHandler(
       }
       case 'DELETE': {
         await MongoDriver.softDeleteEntity(AttributeSchema, attributeId)
+
+        // if the attribute is in the appConfigs.defaultAttributes array, remove it
+        const appConfigs: AppConfigResponse = (await getAppConfigs())[0]
+        const newDefaultAttributes = appConfigs.defaultAttributes.filter(
+          (attr) => attr._id != attributeId
+        )
+
+        if (
+          newDefaultAttributes.length !== appConfigs.defaultAttributes.length
+        ) {
+          const updatedAppConfig: AppConfigPutRequest = {
+            ...appConfigs,
+            defaultAttributes: newDefaultAttributes.map((attr) => attr._id),
+          }
+
+          await MongoDriver.updateEntity(
+            AppConfigSchema,
+            appConfigs._id,
+            updatedAppConfig
+          )
+        }
 
         return res.status(200).json({
           success: true,

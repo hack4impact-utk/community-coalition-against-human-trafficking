@@ -12,8 +12,10 @@ import {
   validAttributeResponse,
   mockObjectId,
   validAttributePutRequest,
+  validAppConfigResponse,
 } from 'test/testData'
 import urls from 'utils/urls'
+import * as AppConfigActions from 'server/actions/AppConfig'
 
 beforeAll(() => {
   jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
@@ -145,6 +147,12 @@ describe('api/attributes/[attributeId]', () => {
         .spyOn(MongoDriver, 'softDeleteEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => {})
+
+      const mockGetAppConfig = jest
+        .spyOn(AppConfigActions, 'getAppConfigs')
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        .mockImplementation(async () => validAppConfigResponse)
+
       const request = createRequest({
         method: 'DELETE',
         url: urls.api.attributes.attribute(mockObjectId),
