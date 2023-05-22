@@ -6,7 +6,6 @@ const CategorySchema = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     softDelete: {
       type: Boolean,
@@ -16,6 +15,11 @@ const CategorySchema = new Schema(
   {
     versionKey: false,
   }
+)
+
+CategorySchema.index(
+  { name: 1 },
+  { unique: true, partialFilterExpression: { softDelete: { $eq: null } } }
 )
 
 export interface CategoryDocument extends Omit<Category, '_id'>, Document {}
