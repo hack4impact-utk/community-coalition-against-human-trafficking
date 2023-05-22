@@ -11,6 +11,10 @@ interface Props {
 }
 
 const renderAttributeChips = (attributes?: AttributeResponse[]) => {
+  if (!attributes?.length) {
+    return '—'
+  }
+
   return (
     <Stack direction="row" spacing={1}>
       {attributes?.map((attribute) => {
@@ -41,15 +45,15 @@ export default function DesktopItemDefinitionListItem({
     <TableRow>
       <TableCell>{itemDefinition.name}</TableCell>
       <TableCell>{renderAttributeChips(sortedAttributes)}</TableCell>
-      <TableCell>{itemDefinition.category?.name}</TableCell>
+      <TableCell>{itemDefinition.category?.name || '—'}</TableCell>
       <TableCell>{itemDefinition.internal ? 'Staff' : 'Clients'}</TableCell>
       <TableCell>
         <Stack direction="column">
           <Typography variant="body2">
-            {itemDefinition.lowStockThreshold}
+            {itemDefinition.lowStockThreshold || '—'}
           </Typography>
           <Typography variant="body2">
-            {itemDefinition.criticalStockThreshold}
+            {itemDefinition.criticalStockThreshold || '—'}
           </Typography>
         </Stack>
       </TableCell>

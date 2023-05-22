@@ -71,7 +71,7 @@ export default function DesktopInventoryItemListItem({
           justifyContent: 'center',
         }}
       >
-        {inventoryItem.itemDefinition.category?.name}
+        {inventoryItem.itemDefinition.category?.name || '—'}
       </TableCell>
       <TableCell
         sx={{
@@ -92,7 +92,7 @@ export default function DesktopInventoryItemListItem({
           wordBreak: 'break-word',
         }}
       >
-        {inventoryItem.assignee && (
+        {inventoryItem.assignee ? (
           <Box
             sx={{
               display: 'flex',
@@ -103,6 +103,8 @@ export default function DesktopInventoryItemListItem({
             <Avatar sx={{ mr: 2 }} src={inventoryItem.assignee.image || ''} />
             {inventoryItem.assignee.name}
           </Box>
+        ) : (
+          '—'
         )}
       </TableCell>
       <TableCell sx={{ width: '10px' }}>
