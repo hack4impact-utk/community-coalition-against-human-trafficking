@@ -28,6 +28,7 @@ import theme from 'utils/theme'
 import transformZodErrors from 'utils/transformZodErrors'
 import urls from 'utils/urls'
 import { useAppSelector } from 'store'
+import { stringPropertyCompareFn } from 'utils/sortFns'
 
 interface Props {
   itemDefinition?: ItemDefinitionResponse
@@ -120,7 +121,9 @@ export default function UpsertItemForm({
     <FormControl fullWidth>
       <Autocomplete
         autoHighlight
-        options={categories}
+        options={[...categories].sort(
+          stringPropertyCompareFn<CategoryResponse>('name')
+        )}
         getOptionLabel={(option) => option.name}
         renderInput={(params) => <TextField {...params} label="Category" />}
         sx={{ marginTop: 4 }}
@@ -174,7 +177,9 @@ export default function UpsertItemForm({
         <Autocomplete
           autoHighlight
           multiple
-          options={proxyAttributes}
+          options={[...proxyAttributes].sort(
+            stringPropertyCompareFn<AttributeResponse>('name')
+          )}
           getOptionLabel={(option) => option.name}
           renderInput={(params) => <TextField {...params} label="Attributes" />}
           renderTags={(tagValue, getTagProps) =>
