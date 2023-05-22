@@ -152,7 +152,10 @@ function searchAggregate(search: string): PipelineStage[] {
   return [
     // pull each attributes.attribute out of the array into its own document
     {
-      $unwind: '$attributes',
+      $unwind: {
+        path: '$attributes',
+        preserveNullAndEmptyArrays: true,
+      },
     },
 
     // create a new field as "attributeSearch": `${attributeName}: ${attributeValue}`
