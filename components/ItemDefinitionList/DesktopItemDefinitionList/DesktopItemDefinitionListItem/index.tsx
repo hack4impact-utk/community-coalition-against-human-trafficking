@@ -2,7 +2,7 @@ import { AttributeResponse, ItemDefinitionResponse } from 'utils/types'
 import { Chip, Stack, TableCell, TableRow, Typography } from '@mui/material'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import ItemDefinitionListItemKebab from 'components/ItemDefinitionList/ItemDefinitionListItemKebab'
-import { sortAttributes } from 'utils/sortAttributes'
+import { sortAttributes } from 'utils/sortFns'
 import { useAppSelector } from 'store'
 import React from 'react'
 

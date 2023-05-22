@@ -2,7 +2,7 @@ import { Chip } from '@mui/material'
 import React from 'react'
 import { useAppSelector } from 'store'
 import getContrastYIQ from './getContrastYIQ'
-import { sortItemAttributes } from './sortAttributes'
+import { sortItemAttributes } from 'utils/sortFns'
 import { InventoryItemAttributeResponse } from './types'
 
 const RenderAttributeChips = (
