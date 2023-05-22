@@ -6,8 +6,6 @@ const ItemDefinitionSchema = new Schema(
     name: {
       type: String,
       required: true,
-      unique: true,
-      partialFilterExpression: { softDelete: { $eq: null } },
     },
     category: {
       type: Schema.Types.ObjectId,
