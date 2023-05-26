@@ -14,9 +14,8 @@ import theme from 'utils/theme'
 
 const settings = ['Sign out']
 
-// import pkg from 'package.json'
-// const version = pkg.version
-const version = 'test'
+import pkg from 'package.json'
+const version = pkg.version
 
 interface HeaderAppBarProps {
   setDrawerOpen: (status: boolean) => void

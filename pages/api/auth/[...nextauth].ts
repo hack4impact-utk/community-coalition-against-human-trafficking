@@ -25,7 +25,11 @@ export const authOptions: NextAuthOptions = {
       // get allowed emails (for dev and troubleshooting)
       const allowedEmails = process.env.ALLOWED_EMAILS?.split(',')
       // Ensure that only users with the proper email domain or email may say in
-      if (account?.provider === 'google') {
+      if (
+        account?.provider === 'google' &&
+        (profile?.email?.endsWith('@ccaht.org') ||
+          allowedEmails?.includes(profile?.email || ''))
+      ) {
         return profile?.email_verified
       }
       return true
