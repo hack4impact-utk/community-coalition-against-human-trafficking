@@ -9,10 +9,14 @@ import MenuIcon from '@mui/icons-material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { signOut } from 'next-auth/react'
 import { useSession } from 'next-auth/react'
-import { Avatar, useMediaQuery } from '@mui/material'
+import { Avatar, Divider, useMediaQuery } from '@mui/material'
 import theme from 'utils/theme'
 
 const settings = ['Sign out']
+
+// import pkg from 'package.json'
+// const version = pkg.version
+const version = 'test'
 
 interface HeaderAppBarProps {
   setDrawerOpen: (status: boolean) => void
@@ -89,6 +93,21 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
+              {version && (
+                <>
+                  <Divider />
+                  <MenuItem
+                    disabled
+                    sx={{
+                      '&.Mui-disabled': {
+                        opacity: 1,
+                      },
+                    }}
+                  >
+                    <Typography color="text.secondary">v{version}</Typography>
+                  </MenuItem>
+                </>
+              )}
             </Menu>
           </Box>
         </Toolbar>

@@ -22,7 +22,9 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ account, profile }) {
-      // Ensure that only users with the proper email domain may say in
+      // get allowed emails (for dev and troubleshooting)
+      const allowedEmails = process.env.ALLOWED_EMAILS?.split(',')
+      // Ensure that only users with the proper email domain or email may say in
       if (account?.provider === 'google') {
         return profile?.email_verified
       }
