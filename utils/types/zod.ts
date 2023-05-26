@@ -84,19 +84,20 @@ export const checkInOutFormSchema = z
         return val > 0
       }, 'Quantity must be positive'),
   })
-  .refine(
-    // assert that there is an assignee if the item is internal
-    (schema) => {
-      if (schema.itemDefinition.internal && !schema.assignee) {
-        return false
-      }
-      return true
-    },
-    {
-      message: 'Must assign internal items',
-      path: ['assignee'],
-    }
-  )
+  // this should really only happen on check out... we need to figure out a better way to handle internal items...
+  // .refine(
+  //   // assert that there is an assignee if the item is internal
+  //   (schema) => {
+  //     if (schema.itemDefinition.internal && !schema.assignee) {
+  //       return false
+  //     }
+  //     return true
+  //   },
+  //   {
+  //     message: 'Must assign internal items',
+  //     path: ['assignee'],
+  //   }
+  // )
   .refine(
     // assert that all defined attributes are set
     (schema) => {
