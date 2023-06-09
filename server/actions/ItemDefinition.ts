@@ -99,6 +99,14 @@ const softDeleteRequestPipeline: PipelineStage[] = [
 
 const presentItemDefinitionsPipeline: PipelineStage[] = [
   ...softDeleteRequestPipeline,
+
+  // filter out internal items
+  {
+    $match: {
+      internal: false,
+    },
+  },
+
   // pull in all inventory items for each item definition
   {
     $lookup: {
@@ -160,8 +168,8 @@ export async function getItemDefinitions() {
 }
 
 /**
- * Finds all itemDefinitions have corresponding inventory items with quantity > 0
- * @returns All itemDefinitions that have inventory items with quantity > 0
+ * Finds all itemDefinitions have corresponding inventory items with quantity > 0 and not internal
+ * @returns All itemDefinitions that have inventory items with quantity > 0 and not internal
  */
 export async function getPresentItemDefinitions() {
   return (await ItemDefinitionSchema.aggregate(
