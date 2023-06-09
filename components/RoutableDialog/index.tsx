@@ -22,8 +22,13 @@ export default function RoutableDialog({
       open={shouldShowDialog}
       fullScreen={isMobileView}
       onClose={() => router.back()}
+      sx={{
+        '& .MuiDialog-paper': {
+          minWidth: '20vw',
+        },
+      }}
     >
-      {children}
+      {shouldShowDialog && children}
     </Dialog>
   )
 }

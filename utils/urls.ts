@@ -37,6 +37,8 @@ export default {
       inventoryItems: '/api/inventoryItems',
       inventoryItem: (inventoryItemId: string) =>
         `/api/inventoryItems/${inventoryItemId}`,
+      assign: (inventoryItemId: string) =>
+        `/api/inventoryItems/${inventoryItemId}/assign`,
       checkIn: '/api/inventoryItems/checkIn',
       checkOut: '/api/inventoryItems/checkOut',
       lowStock: '/api/inventoryItems/lowStock',

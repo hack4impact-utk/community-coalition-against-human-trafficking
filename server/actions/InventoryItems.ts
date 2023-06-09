@@ -8,13 +8,17 @@ import {
   InventoryItemResponse,
 } from 'utils/types'
 import { ApiError } from 'utils/types'
-import { apiInventoryItemValidation } from 'utils/apiValidators'
+import {
+  apiInventoryItemValidation,
+  apiObjectIdValidation,
+} from 'utils/apiValidators'
 import { PipelineStage } from 'mongoose'
 import { errors } from 'utils/constants/errors'
 import deepCopy from 'utils/deepCopy'
 import { createTransport } from 'nodemailer'
 import { constructQueryString } from 'utils/constructQueryString'
 import urls from 'utils/urls'
+import mongoose from 'mongoose'
 
 // aggregate pipeline does the following:
 // looks up itemDefinition _id in inventoryItem
@@ -381,6 +385,29 @@ export async function checkOutInventoryItem(
     return res._id
   } else {
     throw new ApiError(404, errors.notFound)
+  }
+}
+
+export async function setAssignee(
+  inventoryItemId: string,
+  assigneeId?: string
+) {
+  apiObjectIdValidation(inventoryItemId)
+  if (assigneeId) {
+    apiObjectIdValidation(assigneeId)
+    const assignee = new mongoose.Types.ObjectId(assigneeId)
+    await InventoryItemSchema.findByIdAndUpdate(inventoryItemId, {
+      assignee: assigneeId,
+    }).catch((err) => {
+      console.error(err)
+    })
+  } else {
+    console.log('wtf???')
+    await InventoryItemSchema.findByIdAndUpdate(inventoryItemId, {
+      $unset: { assignee: 1 },
+    }).catch((err) => {
+      console.error(err)
+    })
   }
 }
 
