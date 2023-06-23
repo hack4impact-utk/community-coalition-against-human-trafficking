@@ -27,6 +27,7 @@ import { historyPaginationDefaults } from 'utils/constants'
 import urls from 'utils/urls'
 import { constructQueryString } from 'utils/constructQueryString'
 import useBackendPaginationCache from 'utils/hooks/useBackendPaginationCache'
+import { stringCompareFn } from 'utils/sortFns'
 
 type Order = 'asc' | 'desc'
 
@@ -231,7 +232,9 @@ export default function HistoryPage({ categories }: HistoryPageProps) {
           <Grid2 xs={isMobileView ? 6 : 12}>
             <SearchAutocomplete
               searchKey="category"
-              options={categories.map((category) => category.name)}
+              options={categories
+                .map((category) => category.name)
+                .sort(stringCompareFn())}
               placeholder="Category"
             ></SearchAutocomplete>
           </Grid2>

@@ -23,6 +23,8 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemButton from '@mui/material/ListItemButton'
 import urls from 'utils/urls'
+import { useAppSelector } from 'store'
+import { KioskState } from 'store/types'
 
 interface NavigationDrawerProps {
   open: boolean
@@ -37,6 +39,10 @@ export default function NavigationDrawer({
   const drawerWidth = 280
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const kioskMode = useAppSelector(
+    (state: { kiosk: KioskState }) => state.kiosk
+  )
+
   // Logo definition
   const logo = (
     <Image
@@ -56,7 +62,7 @@ export default function NavigationDrawer({
   // Drawer setup
   return (
     <Drawer
-      variant={isMobile ? 'temporary' : 'permanent'}
+      variant={isMobile || kioskMode.enabled ? 'temporary' : 'permanent'}
       sx={{
         width: drawerWidth,
         flexShrink: 0,
