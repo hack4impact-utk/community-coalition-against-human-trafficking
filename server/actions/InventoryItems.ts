@@ -396,7 +396,6 @@ export async function setAssignee(
   inventoryItemId: string,
   assigneeId?: string
 ) {
-  apiObjectIdValidation(inventoryItemId)
   if (assigneeId) {
     apiObjectIdValidation(assigneeId)
     await InventoryItemSchema.findByIdAndUpdate(inventoryItemId, {
