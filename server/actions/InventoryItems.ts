@@ -402,12 +402,14 @@ export async function setAssignee(
       assignee: assigneeId,
     }).catch((err) => {
       console.error(err)
+      throw new ApiError(500, errors.serverError)
     })
   } else {
     await InventoryItemSchema.findByIdAndUpdate(inventoryItemId, {
       $unset: { assignee: 1 },
     }).catch((err) => {
       console.error(err)
+      throw new ApiError(500, errors.serverError)
     })
   }
 }
