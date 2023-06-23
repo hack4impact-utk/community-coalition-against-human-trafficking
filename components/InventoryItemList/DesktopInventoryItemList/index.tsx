@@ -226,6 +226,23 @@ export default function DesktopInventoryItemList(props: Props) {
           zIndex: 999,
           visibility: itemsFound ? 'default' : 'hidden',
         }}
+        SelectProps={{
+          disabled: props.loading,
+        }}
+        backIconButtonProps={
+          props.loading
+            ? {
+                disabled: props.loading,
+              }
+            : undefined
+        }
+        nextIconButtonProps={
+          props.loading
+            ? {
+                disabled: props.loading,
+              }
+            : undefined
+        }
       />
       <TableContainer sx={{ visibility: itemsFound ? 'default' : 'hidden' }}>
         <Table aria-labelledby="tableTitle" size="medium">

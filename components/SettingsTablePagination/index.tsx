@@ -13,7 +13,7 @@ export default function SettingsTablePagination<TData, TDataKey extends string>(
     <TablePagination
       rowsPerPageOptions={[5, 10, 25]}
       component="div"
-      count={pagination.sortedTableData.length}
+      count={pagination.sortedTableData?.length || 0}
       rowsPerPage={pagination.rowsPerPage}
       page={pagination.page}
       onPageChange={pagination.handleChangePage}

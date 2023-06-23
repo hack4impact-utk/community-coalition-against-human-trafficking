@@ -163,15 +163,17 @@ export default function DesktopCategoryList(props: Props) {
     searches
   )
 
+  const shouldShowTable = React.useMemo(
+    () => pagination.visibleRows === null || !!pagination.visibleRows?.length,
+    [pagination.visibleRows]
+  )
+
   return (
     <Box sx={{ width: '100%' }}>
-      <SettingsTablePagination
-        {...pagination}
-        visible={!!pagination.visibleRows?.length}
-      />
+      <SettingsTablePagination {...pagination} visible={shouldShowTable} />
       <TableContainer
         sx={{
-          visibility: pagination.visibleRows?.length ? 'default' : 'hidden',
+          visibility: shouldShowTable ? 'default' : 'hidden',
         }}
       >
         <Table aria-labelledby="tableTitle" size="medium">
@@ -181,14 +183,13 @@ export default function DesktopCategoryList(props: Props) {
             onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {pagination.visibleRows?.length &&
-              pagination.visibleRows.map((category) => (
-                <CategoryListItem category={category} key={category._id} />
-              ))}
+            {pagination?.visibleRows?.map((category) => (
+              <CategoryListItem category={category} key={category._id} />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
-      {!pagination.visibleRows?.length && (
+      {!shouldShowTable && (
         <Box
           sx={{
             display: 'flex',

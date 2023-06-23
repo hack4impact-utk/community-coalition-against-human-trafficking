@@ -99,26 +99,32 @@ export default function HeaderAppBar(props: HeaderAppBarProps) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={onSignOut}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-              {version && (
-                <>
-                  <Divider />
-                  <MenuItem
-                    disabled
-                    sx={{
-                      '&.Mui-disabled': {
-                        opacity: 1,
-                      },
-                    }}
-                  >
-                    <Typography color="text.secondary">v{version}</Typography>
+              {settings
+                .map((setting) => (
+                  <MenuItem key={setting} onClick={onSignOut}>
+                    <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
-                </>
-              )}
+                ))
+                .concat(
+                  version
+                    ? [
+                        <Divider key="divider" />,
+                        <MenuItem
+                          key="version"
+                          disabled
+                          sx={{
+                            '&.Mui-disabled': {
+                              opacity: 1,
+                            },
+                          }}
+                        >
+                          <Typography color="text.secondary">
+                            v{version}
+                          </Typography>
+                        </MenuItem>,
+                      ]
+                    : []
+                )}
             </Menu>
           </Box>
         </Toolbar>

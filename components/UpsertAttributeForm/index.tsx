@@ -162,6 +162,24 @@ export default function UpsertAttributeForm({
               )}
               options={[]}
               onChange={(_e, value) => {
+                // prevent string of whitespace from being an attribute
+                let bad = false
+                value.forEach((v) => {
+                  if (v instanceof Array) {
+                    v.forEach((val) => {
+                      if (val.trim() === '') {
+                        bad = true
+                        return
+                      }
+                    })
+                  } else {
+                    if (v.trim() === '') {
+                      bad = true
+                      return
+                    }
+                  }
+                })
+                if (bad) return
                 setFormData({
                   ...formData,
                   listOptions: value,

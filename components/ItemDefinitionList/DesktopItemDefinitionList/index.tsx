@@ -223,15 +223,17 @@ export default function ItemDefinitionList({
     sortTable,
     searches
   )
+
+  const shouldShowTable = React.useMemo(
+    () => pagination.visibleRows === null || !!pagination.visibleRows?.length,
+    [pagination.visibleRows]
+  )
   return (
     <Box width={'100%'}>
-      <SettingsTablePagination
-        {...pagination}
-        visible={!!pagination.visibleRows?.length}
-      />
+      <SettingsTablePagination {...pagination} visible={shouldShowTable} />
       <TableContainer
         sx={{
-          visibility: pagination.visibleRows?.length ? 'default' : 'hidden',
+          visibility: shouldShowTable ? 'default' : 'hidden',
         }}
       >
         <Table>
@@ -241,17 +243,16 @@ export default function ItemDefinitionList({
             onRequestSort={pagination.handleRequestSort}
           />
           <TableBody>
-            {pagination.visibleRows?.length &&
-              pagination.visibleRows.map((itemDefinition) => (
-                <ItemDefinitionListItem
-                  key={itemDefinition._id}
-                  itemDefinition={itemDefinition}
-                />
-              ))}
+            {pagination?.visibleRows?.map((itemDefinition) => (
+              <ItemDefinitionListItem
+                key={itemDefinition._id}
+                itemDefinition={itemDefinition}
+              />
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
-      {!pagination.visibleRows?.length && (
+      {!shouldShowTable && (
         <Box
           sx={{
             display: 'flex',

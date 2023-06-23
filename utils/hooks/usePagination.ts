@@ -21,7 +21,9 @@ export default function usePagination<TData, TDataKey extends string>(
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(defaultRowsPerPage)
   const [visibleRows, setVisibleRows] = React.useState<TData[] | null>(null)
-  const [sortedTableData, setSortedTableData] = React.useState<TData[]>([])
+  const [sortedTableData, setSortedTableData] = React.useState<TData[] | null>(
+    null
+  )
 
   React.useEffect(() => {
     let newTableData = items
@@ -40,6 +42,7 @@ export default function usePagination<TData, TDataKey extends string>(
   }, [searches, items, orderBy, order])
 
   React.useEffect(() => {
+    if (sortedTableData === null) return
     const newVisibleRows = sortedTableData.slice(
       0 * rowsPerPage,
       0 * rowsPerPage + rowsPerPage
@@ -49,6 +52,7 @@ export default function usePagination<TData, TDataKey extends string>(
   }, [searches])
 
   React.useEffect(() => {
+    if (sortedTableData === null) return
     const rowsOnMount = sortedTableData.slice(
       page * rowsPerPage,
       page * rowsPerPage + rowsPerPage
@@ -59,6 +63,7 @@ export default function usePagination<TData, TDataKey extends string>(
 
   const handleRequestSort = React.useCallback(
     (event: React.MouseEvent<unknown>, newOrderBy: TDataKey) => {
+      if (sortedTableData === null) return
       const isAsc = orderBy === newOrderBy && order === 'asc'
       const toggledOrder = isAsc ? 'desc' : 'asc'
       setOrder(toggledOrder)
@@ -82,6 +87,7 @@ export default function usePagination<TData, TDataKey extends string>(
 
   const handleChangePage = React.useCallback(
     (event: unknown, newPage: number) => {
+      if (sortedTableData === null) return
       setPage(newPage)
       const newVisibleRows = sortedTableData.slice(
         newPage * rowsPerPage,
@@ -94,6 +100,7 @@ export default function usePagination<TData, TDataKey extends string>(
 
   const handleChangeRowsPerPage = React.useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (sortedTableData === null) return
       const updatedRowsPerPage = parseInt(event.target.value, 10)
       setRowsPerPage(updatedRowsPerPage)
       setPage(0)
