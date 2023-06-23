@@ -14,7 +14,7 @@ import theme from 'utils/theme'
 import ItemDefinitionListItemKebab from 'components/ItemDefinitionList/ItemDefinitionListItemKebab'
 import React from 'react'
 import { useAppSelector } from 'store'
-import { sortAttributes } from 'utils/sortAttributes'
+import { sortAttributes } from 'utils/sortFns'
 
 interface Props {
   itemDefinition: ItemDefinitionResponse

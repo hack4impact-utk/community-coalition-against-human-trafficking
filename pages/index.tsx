@@ -18,6 +18,7 @@ import { constructQueryString } from 'utils/constructQueryString'
 import categoriesHandler from '@api/categories'
 import { dashboardPaginationDefaults } from 'utils/constants'
 import useBackendPaginationCache from 'utils/hooks/useBackendPaginationCache'
+import { stringCompareFn } from 'utils/sortFns'
 
 type Order = 'asc' | 'desc'
 
@@ -138,7 +139,7 @@ export default function DashboardPage({ categories }: Props) {
         <Grid2 xs={12} md={5} lg={4} sx={{ px: 2 }}>
           <SearchAutocomplete
             searchKey="category"
-            options={categories}
+            options={categories.sort(stringCompareFn())}
             placeholder="Category"
           />
         </Grid2>

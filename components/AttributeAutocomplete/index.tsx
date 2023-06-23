@@ -3,6 +3,7 @@ import { Autocomplete, Chip, TextField } from '@mui/material'
 import React from 'react'
 import { ListAttributeResponse } from 'utils/types'
 import getContrastYIQ from 'utils/getContrastYIQ'
+import { stringCompareFn } from 'utils/sortFns'
 
 export interface AutocompleteAttributeOption {
   id: string
@@ -30,7 +31,14 @@ function buildAutocompleteOptions(
     return [] as AutocompleteAttributeOption[]
   }
 
-  return attributes.reduce((acc, attribute) => {
+  const attributesWithPossibleValuesSorted = attributes.map((attr) => {
+    return {
+      ...attr,
+      possibleValues: [...attr.possibleValues].sort(stringCompareFn()),
+    }
+  })
+
+  return attributesWithPossibleValuesSorted.reduce((acc, attribute) => {
     const options = attribute.possibleValues.map((value) => ({
       id: attribute._id,
       label: attribute.name,
