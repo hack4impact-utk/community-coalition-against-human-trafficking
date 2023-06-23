@@ -4,7 +4,8 @@ import { serverAuth } from 'utils/auth'
 import { getPresentItemDefinitions } from 'server/actions/ItemDefinition'
 import { errors } from 'utils/constants/errors'
 
-// @route GET api/itemDefintions/present - Returns a list of all itemDefintions in the database that have some stock in the warehouse - Private
+// @route GET api/itemDefintions/present - Returns a list of all itemDefintions in the database that
+// have some stock in the warehouse and are not internal - Private
 export default async function presentItemDefinitionsHandler(
   req: NextApiRequest,
   res: NextApiResponse
