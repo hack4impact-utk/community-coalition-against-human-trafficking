@@ -14,6 +14,7 @@ import { showSnackbar } from 'store/snackbar'
 import { bulkRemoveURLQueryParams } from 'utils/queryParams'
 import { InventoryItemResponse, UserResponse } from 'utils/types'
 import urls from 'utils/urls'
+import { stringPropertyCompareFn } from 'utils/sortFns'
 
 interface Props {
   refetch: () => Promise<void>
@@ -41,7 +42,7 @@ export default function AssignItemDialog({ refetch }: Props) {
         method: 'GET',
       })
       const data = await response.json()
-      setUsers(data.payload)
+      setUsers(data.payload.sort(stringPropertyCompareFn('name')))
     }
     const getItem = async () => {
       const response = await fetch(urls.api.inventoryItems.inventoryItem(id), {
@@ -85,7 +86,7 @@ export default function AssignItemDialog({ refetch }: Props) {
         })
       )
     }
-  }, [id, assignee])
+  }, [id, assignee, dispatch, handleClose, refetch])
 
   return (
     <>

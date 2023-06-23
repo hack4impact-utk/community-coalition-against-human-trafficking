@@ -2,7 +2,7 @@ import { AttributeResponse, InventoryItemAttributeResponse } from 'utils/types'
 
 export function stringPropertyCompareFn<T>(
   propertyPath: string,
-  reverse: boolean = false
+  reverse = false
 ): (a: T, b: T) => number {
   const stringCompare = stringCompareFn(reverse)
 
@@ -13,6 +13,7 @@ export function stringPropertyCompareFn<T>(
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function getProperty(obj: any, propertyPath: string): any {
   const properties = propertyPath.split('.')
   let value = obj
@@ -27,7 +28,7 @@ function getProperty(obj: any, propertyPath: string): any {
 }
 
 export function stringCompareFn(
-  reverse: boolean = false
+  reverse = false
 ): (a: string, b: string) => number {
   return (a: string, b: string) => {
     const val1 = a.toLowerCase()
