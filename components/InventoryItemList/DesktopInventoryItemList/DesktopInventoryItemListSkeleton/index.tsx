@@ -1,4 +1,3 @@
-import React from 'react'
 import DesktopInventoryItemListItemSkeleton from './DesktopInventoryItemListItemSkeleton'
 
 interface DesktopInventoryItemListSkeletonProps {
