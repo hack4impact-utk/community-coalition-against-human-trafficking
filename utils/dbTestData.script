@@ -503,13 +503,13 @@ db.itemDefinitions.insertMany([
 
 
 
-const userId1 = ObjectId("646921456cc1c0ed84bf30e7");
-const userId2 = ObjectId("64668876ba5060c738eae4b4");
-const userId3 = ObjectId("64668876ba5060c738eae4b4");
-const userId4 = ObjectId("646921456cc1c0ed84bf30e7");
-const userId5 = ObjectId("646921456cc1c0ed84bf30e7");
-const userId6 = ObjectId("646921456cc1c0ed84bf30e7");
-const userId7 = ObjectId("64669ee738cf9edbcd45c0e2");
+const userId1 = ObjectId("648283f5211c1feb5addde70");
+const userId2 = ObjectId("648283f5211c1feb5addde70");
+const userId3 = ObjectId("648283f5211c1feb5addde70");
+const userId4 = ObjectId("648283f5211c1feb5addde70");
+const userId5 = ObjectId("648283f5211c1feb5addde70");
+const userId6 = ObjectId("648283f5211c1feb5addde70");
+const userId7 = ObjectId("648283f5211c1feb5addde70");
 
 // creates 115 inventoryItemId variables
 for (let i = 1; i <= 115; i++) {

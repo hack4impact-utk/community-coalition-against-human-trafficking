@@ -2,11 +2,12 @@ import { MoreVert } from '@mui/icons-material'
 import { IconButton, Menu, MenuItem, Typography } from '@mui/material'
 import React from 'react'
 import theme from 'utils/theme'
-import { InventoryItem } from 'utils/types'
+import { InventoryItemResponse } from 'utils/types'
 import { useRouter } from 'next/router'
 import { showSnackbar } from 'store/snackbar'
 import { useAppDispatch } from 'store'
 import urls from 'utils/urls'
+import { dialogPush } from 'utils/dialogLink'
 
 interface InventoryItemListItemKebabOption {
   name: string
@@ -14,7 +15,7 @@ interface InventoryItemListItemKebabOption {
 }
 
 interface InventoryItemListItemKebabProps {
-  inventoryItem: InventoryItem
+  inventoryItem: InventoryItemResponse
 }
 
 export default function InventoryItemListItemKebab({
@@ -34,26 +35,44 @@ export default function InventoryItemListItemKebab({
   }
   const router = useRouter()
   const dispatch = useAppDispatch()
-  const option: InventoryItemListItemKebabOption[] = [
-    {
-      name: 'Check in',
-      onClick: () =>
-        router.push(
-          `/checkIn?inventoryItem=${encodeURIComponent(
-            JSON.stringify(inventoryItem)
-          )}`
-        ),
-    },
-    {
-      name: 'Check out',
-      onClick: () =>
-        router.push(
-          `/checkOut?inventoryItem=${encodeURIComponent(
-            JSON.stringify(inventoryItem)
-          )}`
-        ),
-    },
-    {
+
+  const options: InventoryItemListItemKebabOption[] = React.useMemo(() => {
+    const options = []
+
+    // if the item is internal and not assigned, add assign option
+    // if the item is internal and assigned, add reassign option
+    // otherwise, add check in/out options
+    if (inventoryItem.itemDefinition.internal) {
+      options.push({
+        name: inventoryItem.assignee ? 'Reassign' : 'Assign',
+        onClick: () =>
+          dialogPush(
+            router,
+            urls.pages.dialogs.assignInventoryItem(inventoryItem._id)
+          ),
+      })
+    } else {
+      options.push({
+        name: 'Check in',
+        onClick: () =>
+          router.push(
+            urls.pages.checkInItem(
+              encodeURIComponent(JSON.stringify(inventoryItem))
+            )
+          ),
+      })
+      options.push({
+        name: 'Check out',
+        onClick: () =>
+          router.push(
+            urls.pages.checkOutItem(
+              encodeURIComponent(JSON.stringify(inventoryItem))
+            )
+          ),
+      })
+    }
+
+    options.push({
       name: 'Delete',
       onClick: () => {
         if (
@@ -61,7 +80,7 @@ export default function InventoryItemListItemKebab({
             'Are you sure you want to delete this from the inventory?'
           )
         ) {
-          fetch(urls.api.inventoryItems.inventoryItem(inventoryItem._id!), {
+          fetch(urls.api.inventoryItems.inventoryItem(inventoryItem._id), {
             method: 'DELETE',
           }).then(() => {
             window.location.reload()
@@ -75,8 +94,11 @@ export default function InventoryItemListItemKebab({
           })
         }
       },
-    },
-  ]
+    })
+
+    return options
+  }, [router, inventoryItem, dispatch])
+
   return (
     <>
       <IconButton onClick={handleOpenKebabMenu}>
@@ -98,7 +120,7 @@ export default function InventoryItemListItemKebab({
         open={Boolean(anchorElKebab)}
         onClose={handleCloseKebabMenu}
       >
-        {option.map((option) => (
+        {options.map((option) => (
           <MenuItem
             key={option.name}
             onClick={() => {

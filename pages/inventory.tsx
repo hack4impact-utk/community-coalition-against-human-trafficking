@@ -18,6 +18,8 @@ import urls from 'utils/urls'
 import { constructQueryString } from 'utils/constructQueryString'
 import { inventoryPaginationDefaults } from 'utils/constants'
 import useBackendPaginationCache from 'utils/hooks/useBackendPaginationCache'
+import AssignItemDialog from 'components/dialogs/AssignItemDialog'
+import RoutableDialog from 'components/RoutableDialog'
 import { stringCompareFn } from 'utils/sortFns'
 
 type Order = 'asc' | 'desc'
@@ -69,7 +71,23 @@ export default function InventoryPage({ categories }: Props) {
       router.query.order as Order
     )
 
+  const refetch = React.useCallback(async () => {
+    const page = Number(router.query.page) || inventoryPaginationDefaults.page
+    const limit =
+      Number(router.query.limit) || inventoryPaginationDefaults.limit
+    setLoading(true)
+    // get new items
+    const items = await fetchInventoryItems(router)
+
+    // set the new items and update the cache
+    setInventoryItems(items.data)
+    if (total !== items.total) setTotal(items.total)
+    updateCache(items.data, page, limit)
+    setLoading(false)
+  }, [router, total, updateCache])
+
   React.useEffect(() => {
+    if (router.query.showDialog) return
     const getItems = async () => {
       setLoading(true)
       const page = Number(router.query.page) || inventoryPaginationDefaults.page
@@ -107,14 +125,7 @@ export default function InventoryPage({ categories }: Props) {
         }
       }
 
-      // get new items
-      const items = await fetchInventoryItems(router)
-
-      // set the new items and update the cache
-      setInventoryItems(items.data)
-      if (total !== items.total) setTotal(items.total)
-      updateCache(items.data, page, limit)
-      setLoading(false)
+      refetch()
     }
     getItems()
   }, [
@@ -124,6 +135,7 @@ export default function InventoryPage({ categories }: Props) {
     router.query.limit,
     router.query.orderBy,
     router.query.order,
+    router.query.showDialog,
   ])
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -155,6 +167,9 @@ export default function InventoryPage({ categories }: Props) {
           loading={loading}
         />
       </Grid2>
+      <RoutableDialog name="assignItem">
+        <AssignItemDialog refetch={refetch} />
+      </RoutableDialog>
     </>
   )
 }

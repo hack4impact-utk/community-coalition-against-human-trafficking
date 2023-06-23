@@ -30,4 +30,8 @@ export const dialogRoutes: DialogRoute[] = [
     name: 'editItemDefinition',
     path: '/settings/items/:id/edit',
   },
+  {
+    name: 'assignItem',
+    path: '/inventory/:id/assign',
+  },
 ]

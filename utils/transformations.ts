@@ -6,6 +6,8 @@ import {
   ItemDefinitionRequest,
   ItemDefinitionFormData,
   AttributeFormData,
+  InventoryItemResponse,
+  InventoryItemRequest,
 } from 'utils/types'
 
 /**
@@ -106,4 +108,20 @@ export function dateToReadableDateString(date: Date) {
   }
 
   return new Date(date).toLocaleString('en-US', dateOptions).replace(' at', '')
+}
+
+export function inventoryItemResponseToInventoryItemRequest(
+  inventoryItemResponse: InventoryItemResponse
+): InventoryItemRequest {
+  const inventoryItemRequest: InventoryItemRequest = {
+    quantity: inventoryItemResponse.quantity,
+    itemDefinition: inventoryItemResponse.itemDefinition._id,
+    assignee: inventoryItemResponse.assignee?._id,
+    attributes: inventoryItemResponse?.attributes?.map((attr) => ({
+      attribute: attr.attribute._id,
+      value: attr.value,
+    })),
+  }
+
+  return inventoryItemRequest
 }

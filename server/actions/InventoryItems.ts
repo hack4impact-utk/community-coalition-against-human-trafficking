@@ -8,7 +8,10 @@ import {
   InventoryItemResponse,
 } from 'utils/types'
 import { ApiError } from 'utils/types'
-import { apiInventoryItemValidation } from 'utils/apiValidators'
+import {
+  apiInventoryItemValidation,
+  apiObjectIdValidation,
+} from 'utils/apiValidators'
 import { PipelineStage } from 'mongoose'
 import { errors } from 'utils/constants/errors'
 import deepCopy from 'utils/deepCopy'
@@ -381,6 +384,33 @@ export async function checkOutInventoryItem(
     return res._id
   } else {
     throw new ApiError(404, errors.notFound)
+  }
+}
+
+/**
+ * Sets or clears an assignee for an inventory item based on the assigneeId
+ * @param inventoryItemId The id of the inventory item to set the assignee for
+ * @param assigneeId The id of the assignee to set for the inventory item
+ */
+export async function setAssignee(
+  inventoryItemId: string,
+  assigneeId?: string
+) {
+  if (assigneeId) {
+    apiObjectIdValidation(assigneeId)
+    await InventoryItemSchema.findByIdAndUpdate(inventoryItemId, {
+      assignee: assigneeId,
+    }).catch((err) => {
+      console.error(err)
+      throw new ApiError(500, errors.serverError)
+    })
+  } else {
+    await InventoryItemSchema.findByIdAndUpdate(inventoryItemId, {
+      $unset: { assignee: 1 },
+    }).catch((err) => {
+      console.error(err)
+      throw new ApiError(500, errors.serverError)
+    })
   }
 }
 
