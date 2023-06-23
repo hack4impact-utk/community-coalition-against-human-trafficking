@@ -184,7 +184,9 @@ export default function DesktopInventoryItemList(props: Props) {
     }
   }
 
-  const itemsFound = props.inventoryItems.length > 0
+  const itemsFound = React.useMemo(() => {
+    return props.inventoryItems.length > 0 || props.loading
+  }, [props.inventoryItems, props.loading])
   const limit = React.useMemo(() => {
     const queryLimit = Number(router.query.limit)
     return queryLimit ? queryLimit : inventoryPaginationDefaults.limit
@@ -243,7 +245,7 @@ export default function DesktopInventoryItemList(props: Props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {!itemsFound && !props.loading && (
+      {!itemsFound && (
         <Box
           sx={{
             display: 'flex',
