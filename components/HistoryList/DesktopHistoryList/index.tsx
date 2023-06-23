@@ -197,6 +197,10 @@ export default function DesktopHistoryList(props: Props) {
       : historyPaginationDefaults.orderBy
   }, [router.query.orderBy])
 
+  const itemsFound = React.useMemo(() => {
+    return props.logs.length > 0 || props.loading
+  }, [props.logs, props.loading])
+
   return (
     <Box sx={{ width: '100%' }}>
       <TablePagination
@@ -212,12 +216,10 @@ export default function DesktopHistoryList(props: Props) {
           top: 0,
           backgroundColor: 'white',
           zIndex: 999,
-          visibility: props.logs.length ? 'default' : 'hidden',
+          visibility: itemsFound ? 'default' : 'hidden',
         }}
       />
-      <TableContainer
-        sx={{ visibility: props.logs.length ? 'default' : 'hidden' }}
-      >
+      <TableContainer sx={{ visibility: itemsFound ? 'default' : 'hidden' }}>
         <Table aria-labelledby="tableTitle" size="medium">
           <HistoryListHeader
             order={order as Order}
@@ -239,7 +241,7 @@ export default function DesktopHistoryList(props: Props) {
           </TableBody>
         </Table>
       </TableContainer>
-      {!props.logs.length && !props.loading && (
+      {!itemsFound && (
         <Box
           sx={{
             display: 'flex',
