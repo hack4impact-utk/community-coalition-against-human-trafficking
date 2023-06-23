@@ -9,7 +9,6 @@ import {
   CheckInOutFormData,
   TextFieldAttributesInternalRepresentation,
   InventoryItemExistingAttributeValuesResponse,
-  ListAttribute,
   ListAttributeResponse,
   TextAttributeResponse,
   NumberAttributeResponse,

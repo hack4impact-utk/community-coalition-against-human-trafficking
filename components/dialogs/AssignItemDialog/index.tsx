@@ -32,9 +32,9 @@ export default function AssignItemDialog({ refetch }: Props) {
   const dispatch = useDispatch()
   const { id } = router.query as { id: string }
 
-  const handleClose = async () => {
+  const handleClose = React.useCallback(async () => {
     await bulkRemoveURLQueryParams(router, ['showDialog', 'id'])
-  }
+  }, [router])
 
   React.useEffect(() => {
     const getUsers = async () => {

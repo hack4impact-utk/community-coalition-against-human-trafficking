@@ -117,7 +117,7 @@ export function inventoryItemResponseToInventoryItemRequest(
     quantity: inventoryItemResponse.quantity,
     itemDefinition: inventoryItemResponse.itemDefinition._id,
     assignee: inventoryItemResponse.assignee?._id,
-    attributes: inventoryItemResponse.attributes.map((attr) => ({
+    attributes: inventoryItemResponse?.attributes?.map((attr) => ({
       attribute: attr.attribute._id,
       value: attr.value,
     })),
