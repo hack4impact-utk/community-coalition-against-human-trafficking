@@ -62,7 +62,6 @@ export default function InventoryPage({ categories }: Props) {
   const [category, setCategory] = React.useState<string | undefined>(undefined)
   const [orderBy, setOrderBy] = React.useState<string | undefined>(undefined)
   const [order, setOrder] = React.useState<string | undefined>(undefined)
-  const [dialog, setDialog] = React.useState<string | undefined>(undefined)
 
   const { updateCache, cacheFor, isCached } =
     useBackendPaginationCache<InventoryItemResponse>(
@@ -70,6 +69,21 @@ export default function InventoryPage({ categories }: Props) {
       router.query.orderBy as string,
       router.query.order as Order
     )
+
+  const refetch = React.useCallback(async () => {
+    const page = Number(router.query.page) || inventoryPaginationDefaults.page
+    const limit =
+      Number(router.query.limit) || inventoryPaginationDefaults.limit
+    setLoading(true)
+    // get new items
+    const items = await fetchInventoryItems(router)
+
+    // set the new items and update the cache
+    setInventoryItems(items.data)
+    if (total !== items.total) setTotal(items.total)
+    updateCache(items.data, page, limit)
+    setLoading(false)
+  }, [router, total, updateCache])
 
   React.useEffect(() => {
     if (router.query.showDialog) return
@@ -84,8 +98,7 @@ export default function InventoryPage({ categories }: Props) {
         router.query.search === search &&
         router.query.category === category &&
         router.query.orderBy === orderBy &&
-        router.query.order === order &&
-        router.query.showDialog === dialog
+        router.query.order === order
       ) {
         if (isCached(page, limit)) {
           setInventoryItems(cacheFor(page, limit))
@@ -109,19 +122,9 @@ export default function InventoryPage({ categories }: Props) {
           removeURLQueryParam(router, 'page')
           setOrder(router.query.order as string | undefined)
         }
-        if (router.query.showDialog !== order) {
-          setDialog(router.query.showDialog as string | undefined)
-        }
       }
 
-      // get new items
-      const items = await fetchInventoryItems(router)
-
-      // set the new items and update the cache
-      setInventoryItems(items.data)
-      if (total !== items.total) setTotal(items.total)
-      updateCache(items.data, page, limit)
-      setLoading(false)
+      refetch()
     }
     getItems()
   }, [
@@ -164,7 +167,7 @@ export default function InventoryPage({ categories }: Props) {
         />
       </Grid2>
       <RoutableDialog name="assignItem">
-        <AssignItemDialog />
+        <AssignItemDialog refetch={refetch} />
       </RoutableDialog>
     </>
   )

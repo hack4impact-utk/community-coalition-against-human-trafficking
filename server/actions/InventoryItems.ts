@@ -18,7 +18,6 @@ import deepCopy from 'utils/deepCopy'
 import { createTransport } from 'nodemailer'
 import { constructQueryString } from 'utils/constructQueryString'
 import urls from 'utils/urls'
-import mongoose from 'mongoose'
 
 // aggregate pipeline does the following:
 // looks up itemDefinition _id in inventoryItem
@@ -388,6 +387,11 @@ export async function checkOutInventoryItem(
   }
 }
 
+/**
+ * Sets or clears an assignee for an inventory item based on the assigneeId
+ * @param inventoryItemId The id of the inventory item to set the assignee for
+ * @param assigneeId The id of the assignee to set for the inventory item
+ */
 export async function setAssignee(
   inventoryItemId: string,
   assigneeId?: string
@@ -395,14 +399,12 @@ export async function setAssignee(
   apiObjectIdValidation(inventoryItemId)
   if (assigneeId) {
     apiObjectIdValidation(assigneeId)
-    const assignee = new mongoose.Types.ObjectId(assigneeId)
     await InventoryItemSchema.findByIdAndUpdate(inventoryItemId, {
       assignee: assigneeId,
     }).catch((err) => {
       console.error(err)
     })
   } else {
-    console.log('wtf???')
     await InventoryItemSchema.findByIdAndUpdate(inventoryItemId, {
       $unset: { assignee: 1 },
     }).catch((err) => {

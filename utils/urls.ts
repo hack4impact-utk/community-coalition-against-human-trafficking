@@ -4,6 +4,10 @@ export default {
     checkOut: '/checkOut',
     history: '/history',
     inventory: '/inventory',
+    checkInItem: (encodedItem: string) =>
+      `/checkIn?inventoryItem=${encodedItem}`,
+    checkOutItem: (encodedItem: string) =>
+      `/checkOut?inventoryItem=${encodedItem}`,
     dashboard: '/',
     settings: {
       general: '/settings',
@@ -19,6 +23,7 @@ export default {
       createCategory: '/settings/categories/create',
       editItemDefinition: (id: string) => `/settings/items/${id}/edit`,
       createItemDefinition: '/items/new',
+      assignInventoryItem: (id: string) => `/inventory/${id}/assign`,
     },
   },
 

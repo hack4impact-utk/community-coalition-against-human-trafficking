@@ -15,7 +15,11 @@ import { bulkRemoveURLQueryParams } from 'utils/queryParams'
 import { InventoryItemResponse, UserResponse } from 'utils/types'
 import urls from 'utils/urls'
 
-export default function AssignItemDialog() {
+interface Props {
+  refetch: () => Promise<void>
+}
+
+export default function AssignItemDialog({ refetch }: Props) {
   const [assignee, setAssignee] = React.useState<UserResponse | undefined>(
     undefined
   )
@@ -72,6 +76,7 @@ export default function AssignItemDialog() {
           severity: 'success',
         })
       )
+      refetch()
     } else {
       dispatch(
         showSnackbar({

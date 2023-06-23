@@ -4,9 +4,7 @@ import { ApiError } from 'utils/types'
 import { serverAuth } from 'utils/auth'
 import { apiObjectIdValidation } from 'utils/apiValidators'
 
-// @route GET api/itemDefintions/[inventoryItemId] - Returns a single InventoryItem object given a inventoryItemId - Private
-// @route PUT api/itemDefintions/[inventoryItemId] - Updates an existing InventoryItem object (identified by inventoryItemId) with a new InventoryItem object - Private
-// @route DELETE api/itemDefintions/[inventoryItemId] - Deletes a single InventoryItem object (identified by inventoryItemId) - Private
+// @route PUT api/itemDefintions/[inventoryItemId]/assign - Assigns an inventory item to a user - Private
 export default async function inventoryItemHandler(
   req: NextApiRequest,
   res: NextApiResponse

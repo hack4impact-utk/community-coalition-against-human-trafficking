@@ -46,25 +46,28 @@ export default function InventoryItemListItemKebab({
       options.push({
         name: inventoryItem.assignee ? 'Reassign' : 'Assign',
         onClick: () =>
-          dialogPush(router, `/inventory/${inventoryItem._id}/assign`),
+          dialogPush(
+            router,
+            urls.pages.dialogs.assignInventoryItem(inventoryItem._id)
+          ),
       })
     } else {
       options.push({
         name: 'Check in',
         onClick: () =>
           router.push(
-            `/checkIn?inventoryItem=${encodeURIComponent(
-              JSON.stringify(inventoryItem)
-            )}`
+            urls.pages.checkInItem(
+              encodeURIComponent(JSON.stringify(inventoryItem))
+            )
           ),
       })
       options.push({
         name: 'Check out',
         onClick: () =>
           router.push(
-            `/checkOut?inventoryItem=${encodeURIComponent(
-              JSON.stringify(inventoryItem)
-            )}`
+            urls.pages.checkOutItem(
+              encodeURIComponent(JSON.stringify(inventoryItem))
+            )
           ),
       })
     }
