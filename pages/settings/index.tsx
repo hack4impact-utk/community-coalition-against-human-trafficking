@@ -24,6 +24,7 @@ import urls from 'utils/urls'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import attributesHandler from '@api/attributes'
 import { updateConfig } from 'store/config'
+import { stringPropertyCompareFn } from 'utils/sortFns'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -170,7 +171,9 @@ export default function SettingsPage({
               )}
               isOptionEqualToValue={(option, value) => option._id === value._id}
               getOptionLabel={(option) => option.name}
-              options={attributes}
+              options={[...attributes].sort(
+                stringPropertyCompareFn<AttributeResponse>('name')
+              )}
               onChange={(_e, newValue) => {
                 setAppConfigData((emailData) => ({
                   ...emailData,
