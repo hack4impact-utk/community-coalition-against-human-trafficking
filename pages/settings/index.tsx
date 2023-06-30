@@ -23,6 +23,7 @@ import { LoadingButton } from '@mui/lab'
 import urls from 'utils/urls'
 import getContrastYIQ from 'utils/getContrastYIQ'
 import attributesHandler from '@api/attributes'
+import { updateConfig } from 'store/config'
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
@@ -84,6 +85,8 @@ export default function SettingsPage({
 
     if (data.success) {
       setInitialAppConfigData(appConfigData)
+      // update the store
+      dispatch(updateConfig(appConfigData))
       //@ts-ignore
       dispatch(
         showSnackbar({
