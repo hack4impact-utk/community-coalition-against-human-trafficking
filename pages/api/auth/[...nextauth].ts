@@ -28,11 +28,12 @@ export const authOptions: NextAuthOptions = {
       if (
         account?.provider === 'google' &&
         (profile?.email?.endsWith('@ccaht.org') ||
-          allowedEmails?.includes(profile?.email || ''))
+          allowedEmails?.includes(profile?.email!))
       ) {
         return profile?.email_verified
+      } else {
+        return false
       }
-      return true
     },
     // modifies the session returned to have the user's id. to find this, we use the token.sub which is the subject of the token.
     async session({ session, token }) {
