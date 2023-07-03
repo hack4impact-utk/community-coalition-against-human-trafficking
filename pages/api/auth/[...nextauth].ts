@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
       if (
         account?.provider === 'google' &&
         (profile?.email?.endsWith('@ccaht.org') ||
-          allowedEmails?.includes(profile?.email!))
+          allowedEmails?.includes(profile?.email || ''))
       ) {
         return profile?.email_verified
       } else {
