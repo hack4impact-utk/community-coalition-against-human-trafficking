@@ -90,7 +90,6 @@ export default function InventoryItemListItemKebab({
           fetch(urls.api.inventoryItems.inventoryItem(inventoryItem._id), {
             method: 'DELETE',
           }).then(() => {
-            // window.location.reload()
             refetch()
             // @ts-ignore
             dispatch(
