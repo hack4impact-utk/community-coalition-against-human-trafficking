@@ -8,6 +8,10 @@ import { showSnackbar } from 'store/snackbar'
 import { useAppDispatch } from 'store'
 import urls from 'utils/urls'
 import { dialogPush } from 'utils/dialogLink'
+import {
+  InventoryItemContext,
+  InventoryItemContextType,
+} from '../InventoryItemContext'
 
 interface InventoryItemListItemKebabOption {
   name: string
@@ -21,6 +25,9 @@ interface InventoryItemListItemKebabProps {
 export default function InventoryItemListItemKebab({
   inventoryItem,
 }: InventoryItemListItemKebabProps) {
+  const { refetch } = React.useContext(
+    InventoryItemContext
+  ) as InventoryItemContextType
   // kebab menu functionality
   const [anchorElKebab, setAnchorElKebab] = React.useState<null | HTMLElement>(
     null
@@ -83,7 +90,8 @@ export default function InventoryItemListItemKebab({
           fetch(urls.api.inventoryItems.inventoryItem(inventoryItem._id), {
             method: 'DELETE',
           }).then(() => {
-            window.location.reload()
+            // window.location.reload()
+            refetch()
             // @ts-ignore
             dispatch(
               showSnackbar({

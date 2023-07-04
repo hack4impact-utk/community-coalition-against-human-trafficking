@@ -165,6 +165,7 @@ export default function InventoryPage({ categories }: Props) {
           category={router.query.category as string}
           total={total}
           loading={loading}
+          refetch={refetch}
         />
       </Grid2>
       <RoutableDialog name="assignItem">
