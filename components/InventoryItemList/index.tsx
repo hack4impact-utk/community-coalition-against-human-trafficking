@@ -3,6 +3,7 @@ import DesktopInventoryItemList from 'components/InventoryItemList/DesktopInvent
 import MobileInventoryItemList from 'components/InventoryItemList/MobileInventoryItemList'
 import React from 'react'
 import { InventoryItemResponse } from 'utils/types'
+import InventoryItemProvider from './InventoryItemContext'
 
 interface InventoryItemListProps {
   inventoryItems: InventoryItemResponse[]
@@ -10,6 +11,7 @@ interface InventoryItemListProps {
   category: string
   total: number
   loading: boolean
+  refetch: () => void
 }
 
 export default function InventoryItemList({
@@ -18,11 +20,12 @@ export default function InventoryItemList({
   category,
   total,
   loading,
+  refetch,
 }: InventoryItemListProps) {
   const theme = useTheme()
   const isMobileView = useMediaQuery(theme.breakpoints.down('md'))
   return (
-    <>
+    <InventoryItemProvider refetch={refetch}>
       {isMobileView ? (
         <MobileInventoryItemList
           inventoryItems={inventoryItems}
@@ -40,6 +43,6 @@ export default function InventoryItemList({
           loading={loading}
         />
       )}
-    </>
+    </InventoryItemProvider>
   )
 }
