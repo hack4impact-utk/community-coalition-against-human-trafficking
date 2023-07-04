@@ -67,6 +67,20 @@ export default function DashboardPage({ categories }: Props) {
       router.query.orderBy as string,
       router.query.order as Order
     )
+  const refetch = React.useCallback(async () => {
+    const page = Number(router.query.page) || dashboardPaginationDefaults.page
+    const limit =
+      Number(router.query.limit) || dashboardPaginationDefaults.limit
+    setLoading(true)
+    // get new items
+    const items = await fetchInventoryItems(router)
+
+    // set the new items and update the cache
+    setInventoryItems(items.data)
+    if (total !== items.total) setTotal(items.total)
+    updateCache(items.data, page, limit)
+    setLoading(false)
+  }, [router, total, updateCache])
 
   React.useEffect(() => {
     const getItems = async () => {
@@ -104,14 +118,8 @@ export default function DashboardPage({ categories }: Props) {
           setOrder(router.query.order as string | undefined)
         }
       }
-      // get new items
-      const items = await fetchInventoryItems(router)
 
-      // set the new items and update the cache
-      setInventoryItems(items.data)
-      if (total !== items.total) setTotal(items.total)
-      updateCache(items.data, page, limit)
-      setLoading(false)
+      refetch()
     }
     getItems()
   }, [
@@ -150,6 +158,7 @@ export default function DashboardPage({ categories }: Props) {
           category={router.query.category as string}
           total={total}
           loading={loading}
+          refetch={refetch}
         />
       </Grid2>
     </>
