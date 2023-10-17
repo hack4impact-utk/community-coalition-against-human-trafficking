@@ -312,36 +312,53 @@ export async function getInventoryItem(id: string) {
 /**
  * Checks to see if an item is in the inventory and will add to the quantity or
  * create the item if needed.
- * @param item the item that will be added (checkedIn) to db
+ * @param itemSearch the item that will be added (checkedIn) to db
  * @param quantity of item to add
  */
 export async function checkInInventoryItem(
-  item: Partial<InventoryItem>,
+  itemSearch: Partial<InventoryItem>,
   itemQuantity: number
 ) {
   if (itemQuantity < 1) {
     throw new ApiError(400, 'Check in quantity should be greater than 0')
   }
-  item.attributes?.sort((a, b) => (a.attribute > b.attribute ? 1 : -1))
+  itemSearch.attributes?.sort((a, b) => (a.attribute > b.attribute ? 1 : -1))
 
   let res
 
-  const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
+  let itemMatches = await MongoDriver.findEntities(InventoryItemSchema, {
+    itemDefinition: itemSearch.itemDefinition,
+  })
+
+  itemMatches = itemMatches.filter((i) => {
+    let match = true
+    itemSearch.attributes?.forEach((attr) => {
+      const matchedAttr = i.attributes?.find(
+        (a) => a.attribute.toString() === attr.attribute.toString()
+      )
+      if (!matchedAttr || matchedAttr.value !== attr.value) {
+        match = false
+        return
+      }
+    })
+
+    return match
+  })
   if (itemMatches.length) {
     itemMatches[0].quantity += itemQuantity
-    item = deepCopy(itemMatches[0])
-    apiInventoryItemValidation(item, 'PUT')
+    itemSearch = deepCopy(itemMatches[0])
+    apiInventoryItemValidation(itemSearch, 'PUT')
     res = await MongoDriver.updateEntity(
       InventoryItemSchema,
-      item._id as string,
-      item as InventoryItemPutRequest
+      itemSearch._id as string,
+      itemSearch as InventoryItemPutRequest
     )
   } else {
-    item.quantity = itemQuantity
-    apiInventoryItemValidation(item, 'POST')
+    itemSearch.quantity = itemQuantity
+    apiInventoryItemValidation(itemSearch, 'POST')
     res = await MongoDriver.createEntity(
       InventoryItemSchema,
-      item as InventoryItemPostRequest
+      itemSearch as InventoryItemPostRequest
     )
   }
   return res._id
@@ -350,35 +367,57 @@ export async function checkInInventoryItem(
 /**
  * Checks to see if an item is in the inventory and will remove an amount or
  * 400 error if it does not exist.
- * @param item the item that will be removed (checkOut) from db
+ * @param itemSearch the item that will be removed (checkOut) from db
  * @param quantity of item to remove
  * @throws ApiError: 400 when checking out an item would result a negative quantity in the db
  * @throws ApiError: 404 when attempting to check out an item that is not in the db
  */
 export async function checkOutInventoryItem(
-  item: Partial<InventoryItem>,
+  itemSearch: Partial<InventoryItem>,
   quantityRemoved: number
 ) {
-  item.attributes?.sort((a, b) => (a.attribute > b.attribute ? 1 : -1))
+  itemSearch.attributes?.sort((a, b) => (a.attribute > b.attribute ? 1 : -1))
   if (quantityRemoved < 1) {
     throw new ApiError(400, 'Check out quantity should be greater than 0')
   }
 
   let res
 
-  const itemMatches = await MongoDriver.findEntities(InventoryItemSchema, item)
+  let itemMatches = await MongoDriver.findEntities(InventoryItemSchema, {
+    itemDefinition: itemSearch.itemDefinition,
+  })
+
+  itemMatches = itemMatches.filter((i) => {
+    let match = true
+    itemSearch.attributes?.forEach((attr) => {
+      const matchedAttr = i.attributes?.find(
+        (a) => a.attribute.toString() === attr.attribute.toString()
+      )
+      if (!matchedAttr || matchedAttr.value !== attr.value) {
+        match = false
+        return
+      }
+    })
+
+    return match
+  })
+
   if (itemMatches.length) {
     itemMatches[0].quantity -= quantityRemoved
-    item = deepCopy(itemMatches[0])
-    if (item.quantity! < 0) {
+    itemSearch = deepCopy(itemMatches[0])
+    if (
+      itemSearch.quantity === undefined ||
+      itemSearch.quantity === null ||
+      itemSearch.quantity < 0
+    ) {
       throw new ApiError(400, 'Check out would result in negative quantity.')
     } else {
-      item = deepCopy(itemMatches[0])
-      apiInventoryItemValidation(item, 'PUT')
+      itemSearch = deepCopy(itemMatches[0])
+      apiInventoryItemValidation(itemSearch, 'PUT')
       res = await MongoDriver.updateEntity(
         InventoryItemSchema,
-        item._id as string,
-        item as InventoryItemPutRequest
+        itemSearch._id as string,
+        itemSearch as InventoryItemPutRequest
       )
     }
     return res._id
