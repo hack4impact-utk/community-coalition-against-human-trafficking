@@ -8,6 +8,7 @@ import {
 } from 'utils/apiValidators'
 import * as MongoDriver from 'server/actions/MongoDriver'
 import InventoryItemSchema from 'server/models/InventoryItem'
+import { logInventoryItemSoftDeletion } from 'utils/log'
 
 // @route GET api/itemDefintions/[inventoryItemId] - Returns a single InventoryItem object given a inventoryItemId - Private
 // @route PUT api/itemDefintions/[inventoryItemId] - Updates an existing InventoryItem object (identified by inventoryItemId) with a new InventoryItem object - Private
@@ -18,7 +19,7 @@ export default async function inventoryItemHandler(
 ) {
   try {
     // ensure user is logged in
-    await serverAuth(req, res)
+    const { user } = await serverAuth(req, res)
 
     apiObjectIdValidation(req?.query?.inventoryItemId as string)
     const inventoryItemId = req.query.inventoryItemId as string
@@ -46,7 +47,13 @@ export default async function inventoryItemHandler(
         })
       }
       case 'DELETE': {
-        await MongoDriver.softDeleteEntity(InventoryItemSchema, inventoryItemId)
+        const item = await MongoDriver.softDeleteEntity(
+          InventoryItemSchema,
+          inventoryItemId
+        )
+
+        // log action
+        logInventoryItemSoftDeletion(user, item)
 
         return res.status(200).json({
           success: true,

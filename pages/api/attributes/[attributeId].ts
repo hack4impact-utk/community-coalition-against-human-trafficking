@@ -16,6 +16,7 @@ import AttributeSchema from 'server/models/Attribute'
 import { errors } from 'utils/constants/errors'
 import { getAppConfigs } from 'server/actions/AppConfig'
 import AppConfigSchema from 'server/models/AppConfig'
+import { logSoftDeletion } from 'utils/log'
 
 // @route GET api/attributes/[attributeId] - Returns a single Attribute object given by a attributeId - Private
 // @route PUT api/attributes/[attributeId] - Updates an existing Attribute object (identified by attributeId) with a new Attribute object - Private
@@ -26,7 +27,7 @@ export default async function attributeHandler(
 ) {
   try {
     // ensure user is logged in
-    await serverAuth(req, res)
+    const { user } = await serverAuth(req, res)
     apiObjectIdValidation(req?.query?.attributeId as string)
     const attributeId = req.query.attributeId as string
 
@@ -58,7 +59,13 @@ export default async function attributeHandler(
         })
       }
       case 'DELETE': {
-        await MongoDriver.softDeleteEntity(AttributeSchema, attributeId)
+        const attribute = await MongoDriver.softDeleteEntity(
+          AttributeSchema,
+          attributeId
+        )
+
+        // log action
+        logSoftDeletion(user, attribute)
 
         // if the attribute is in the appConfigs.defaultAttributes array, remove it
         const appConfigs: AppConfigResponse = (await getAppConfigs())[0]
