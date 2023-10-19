@@ -152,7 +152,12 @@ describe('api/inventoryItems/[inventoryItemId]', () => {
       const mockDeleteEntity = jest
         .spyOn(MongoDriver, 'softDeleteEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        .mockImplementation(async () => {})
+        .mockImplementation(
+          async () =>
+            ({ collection: { collectionName: 'inventory_items' } } as Awaited<
+              ReturnType<typeof MongoDriver.softDeleteEntity>
+            >)
+        )
       const request = createRequest({
         method: 'DELETE',
         url: urls.api.inventoryItems.inventoryItem(mockObjectId),

@@ -150,10 +150,13 @@ describe('api/attributes/[attributeId]', () => {
         .spyOn(MongoDriver, 'softDeleteEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(
-          async () => ({} as ReturnType<typeof MongoDriver.softDeleteEntity>)
+          async () =>
+            ({ collection: { collectionName: 'attributes' } } as Awaited<
+              ReturnType<typeof MongoDriver.softDeleteEntity>
+            >)
         )
 
-      const mockGetAppConfig = jest
+      jest
         .spyOn(AppConfigActions, 'getAppConfigs')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => validAppConfigResponse)

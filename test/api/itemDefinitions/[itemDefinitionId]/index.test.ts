@@ -152,7 +152,10 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
         .spyOn(MongoDriver, 'softDeleteEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(
-          async () => ({} as ReturnType<typeof MongoDriver.softDeleteEntity>)
+          async () =>
+            ({ collection: { collectionName: 'item_defintions' } } as Awaited<
+              ReturnType<typeof MongoDriver.softDeleteEntity>
+            >)
         )
       const request = createRequest({
         method: 'DELETE',
