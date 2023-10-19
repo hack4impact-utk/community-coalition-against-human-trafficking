@@ -15,12 +15,15 @@ import {
   validItemDefinitionPutRequest,
 } from 'test/testData'
 import urls from 'utils/urls'
+import { serverAuthMock } from 'test/helpers/serverAuth'
 
 // TODO: add assertion for GET 'called with' aggregate stuff
 // this may need to have different functionality
 
 beforeAll(() => {
-  jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
+  jest
+    .spyOn(auth, 'serverAuth')
+    .mockImplementation(() => Promise.resolve(serverAuthMock))
   jest.spyOn(apiValidator, 'apiObjectIdValidation').mockImplementation()
 })
 
@@ -148,7 +151,9 @@ describe('api/itemDefinitions/[itemDefinitionId]', () => {
       const mockDeleteEntity = jest
         .spyOn(MongoDriver, 'softDeleteEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        .mockImplementation(async () => {})
+        .mockImplementation(
+          async () => ({} as ReturnType<typeof MongoDriver.softDeleteEntity>)
+        )
       const request = createRequest({
         method: 'DELETE',
         url: urls.api.itemDefinitions.itemDefinition(mockObjectId),

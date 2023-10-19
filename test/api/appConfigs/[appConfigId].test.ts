@@ -13,9 +13,12 @@ import {
   validAppConfigPutRequest,
 } from 'test/testData'
 import urls from 'utils/urls'
+import { serverAuthMock } from 'test/helpers/serverAuth'
 
 beforeAll(() => {
-  jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
+  jest
+    .spyOn(auth, 'serverAuth')
+    .mockImplementation(() => Promise.resolve(serverAuthMock))
   jest.spyOn(apiValidator, 'apiObjectIdValidation').mockImplementation()
 })
 

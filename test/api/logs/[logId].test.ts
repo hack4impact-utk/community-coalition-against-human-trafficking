@@ -13,12 +13,15 @@ import {
   validLogPutRequest,
 } from 'test/testData'
 import urls from 'utils/urls'
+import { serverAuthMock } from 'test/helpers/serverAuth'
 
 // TODO: add assertion for GET 'called with' aggregate stuff
 // this may need to have different functionality
 
 beforeAll(() => {
-  jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
+  jest
+    .spyOn(auth, 'serverAuth')
+    .mockImplementation(() => Promise.resolve(serverAuthMock))
   jest.spyOn(apiValidator, 'apiObjectIdValidation').mockImplementation()
 })
 
