@@ -15,9 +15,12 @@ import {
   validItemDefinitionPostRequest,
 } from 'test/testData'
 import urls from 'utils/urls'
+import { serverAuthMock } from 'test/helpers/serverAuth'
 
 beforeAll(() => {
-  jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
+  jest
+    .spyOn(auth, 'serverAuth')
+    .mockImplementation(() => Promise.resolve(serverAuthMock))
 })
 
 // restore mocked implementations and close db connections
@@ -69,7 +72,7 @@ describe('api/itemDefinitions', () => {
     test('valid call returns correct data', async () => {
       const serverAuth = jest
         .spyOn(auth, 'serverAuth')
-        .mockImplementation(() => Promise.resolve())
+        .mockImplementation(() => Promise.resolve(serverAuthMock))
       const mockGetEntities = jest
         .spyOn(MongoDriver, 'getEntities')
         .mockImplementation(

@@ -204,10 +204,7 @@ describe('MongoDriver', () => {
         .fn()
         .mockImplementation(async () => [validCategoryResponse]))
 
-      const categories = await MongoDriver.softDeleteEntity(
-        CategorySchema,
-        mockObjectId
-      )
+      await MongoDriver.softDeleteEntity(CategorySchema, mockObjectId)
 
       expect(mockUpdate).toHaveBeenCalledTimes(1)
     })

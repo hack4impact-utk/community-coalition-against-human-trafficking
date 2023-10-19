@@ -17,9 +17,12 @@ import {
   validCheckInOutRequest,
 } from 'test/testData'
 import urls from 'utils/urls'
+import { serverAuthMock } from 'test/helpers/serverAuth'
 
 beforeAll(() => {
-  jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
+  jest
+    .spyOn(auth, 'serverAuth')
+    .mockImplementation(() => Promise.resolve(serverAuthMock))
 })
 
 // restore mocked implementations and close db connections

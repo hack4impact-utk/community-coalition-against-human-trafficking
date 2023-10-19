@@ -1,5 +1,4 @@
 import ItemDefinitionSchema from 'server/models/ItemDefinition'
-import InventoryItemSchema from 'server/models/InventoryItem'
 import { getEntities, getEntity } from 'server/actions/MongoDriver'
 import {
   InventoryItemExistingAttributeValuesResponse,

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth'
+import { Session, getServerSession } from 'next-auth'
 import { authOptions } from '@api/auth/[...nextauth]'
 import { ApiError } from 'utils/types'
 import { errors } from 'utils/constants/errors'
@@ -25,9 +25,14 @@ export async function userEndpointServerAuth(
   }
 }
 
-export async function serverAuth(req: NextApiRequest, res: NextApiResponse) {
+export async function serverAuth(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<Session> {
   const session = await getServerSession(req, res, authOptions)
   if (!session) {
     throw new ApiError(401, 'Unauthenticated')
   }
+
+  return session
 }

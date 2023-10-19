@@ -143,13 +143,15 @@ export async function deleteEntity<Schema extends Document>(
 export async function softDeleteEntity<Schema extends Document>(
   dbSchema: Model<Schema>,
   id: string
-): Promise<void> {
+): Promise<HydratedDocument<Schema, unknown, unknown>> {
   await mongoDb()
 
   const response = await dbSchema.findByIdAndUpdate(id, { softDelete: true })
   if (!response) {
     throw new ApiError(404, errors.notFound)
   }
+
+  return response
 }
 
 /**

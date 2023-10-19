@@ -16,9 +16,12 @@ import {
 } from 'test/testData'
 import urls from 'utils/urls'
 import * as AppConfigActions from 'server/actions/AppConfig'
+import { serverAuthMock } from 'test/helpers/serverAuth'
 
 beforeAll(() => {
-  jest.spyOn(auth, 'serverAuth').mockImplementation(() => Promise.resolve())
+  jest
+    .spyOn(auth, 'serverAuth')
+    .mockImplementation(() => Promise.resolve(serverAuthMock))
 
   jest.spyOn(apiValidator, 'apiObjectIdValidation').mockImplementation()
 })
@@ -146,9 +149,14 @@ describe('api/attributes/[attributeId]', () => {
       const mockDeleteEntity = jest
         .spyOn(MongoDriver, 'softDeleteEntity')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
-        .mockImplementation(async () => {})
+        .mockImplementation(
+          async () =>
+            ({ collection: { collectionName: 'attributes' } } as Awaited<
+              ReturnType<typeof MongoDriver.softDeleteEntity>
+            >)
+        )
 
-      const mockGetAppConfig = jest
+      jest
         .spyOn(AppConfigActions, 'getAppConfigs')
         // eslint-disable-next-line @typescript-eslint/no-empty-function
         .mockImplementation(async () => validAppConfigResponse)
